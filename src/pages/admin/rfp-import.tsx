@@ -29,6 +29,12 @@ const LEAD_SOURCES = [
     description: "Free federal government contracts via SAM.gov",
     endpoint: "/api/integrations/sam/fetch"
   },
+  { 
+    id: "permits", 
+    name: "Construction Permits", 
+    description: "Free hot leads from new construction projects needing post-construction cleaning",
+    endpoint: "/api/integrations/permits/fetch"
+  },
 ];
 
 /**
@@ -45,6 +51,8 @@ export default function RfpImportPage() {
   const [postedFrom, setFrom] = useState<string>("");
   const [postedTo, setTo] = useState<string>("");
   const [limit, setLimit] = useState(25);
+  const [permitSource, setPermitSource] = useState("austin");
+  const [minValue, setMinValue] = useState(25000);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -87,6 +95,14 @@ export default function RfpImportPage() {
           body.postedTo = postedTo;
         }
       }
+      // Construction permits specific parameters
+      else if (selectedSource === "permits") {
+        body = {
+          ...body,
+          source: permitSource,
+          minValue
+        };
+      }
 
       const r = await fetch(source.endpoint, {
         method: "POST",
@@ -122,19 +138,25 @@ export default function RfpImportPage() {
         </div>
 
         {/* Source Selection */}
+        {/* Source Selection */}
         <div className="rounded-2xl border p-5 space-y-4">
           <div>
-            <span className="text-sm font-medium">Available Sources</span>
-            <div className="mt-2">
+            <span className="text-sm font-medium">Lead Source</span>
+            <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-3">
               {LEAD_SOURCES.map((source) => (
-                <div
+                <button
                   key={source.id}
-                  className="p-4 rounded-lg border bg-white"
+                  onClick={() => setSelectedSource(source.id)}
+                  className={`p-4 rounded-lg border text-left transition-colors ${
+                    selectedSource === source.id 
+                      ? "bg-black text-white border-black" 
+                      : "bg-white hover:bg-gray-50"
+                  }`}
                 >
                   <div className="font-medium">{source.name}</div>
                   <div className="text-sm opacity-75 mt-1">{source.description}</div>
                   <div className="text-xs text-green-600 mt-2 font-medium">FREE - No per-lead costs</div>
-                </div>
+                </button>
               ))}
             </div>
           </div>
@@ -220,6 +242,43 @@ export default function RfpImportPage() {
             </>
           )}
 
+          {/* Construction permits specific fields */}
+          {selectedSource === "permits" && (
+            <>
+              <div>
+                <span className="text-sm font-medium">Permit Source</span>
+                <div className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-2">
+                  {["austin", "louisville", "montgomery"].map((source) => (
+                    <button
+                      key={source}
+                      onClick={() => setPermitSource(source)}
+                      className={`px-3 py-2 rounded border text-sm ${
+                        permitSource === source ? "bg-black text-white" : ""
+                      }`}
+                    >
+                      {source.charAt(0).toUpperCase() + source.slice(1)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <label className="block">
+                <span className="text-sm font-medium">Minimum Project Value ($)</span>
+                <input
+                  type="number"
+                  min={1000}
+                  step={1000}
+                  className="mt-1 w-full border rounded px-3 py-2"
+                  value={minValue}
+                  onChange={(e) => setMinValue(parseInt(e.target.value || "25000", 10))}
+                />
+                <div className="text-xs text-gray-500 mt-1">
+                  Higher value projects are better hot leads for post-construction cleaning
+                </div>
+              </label>
+            </>
+          )}
+
           <label className="block">
             <span className="text-sm font-medium">Keywords (space-separated)</span>
             <input
@@ -232,7 +291,8 @@ export default function RfpImportPage() {
 
           {/* Source-specific help text */}
           <div className="text-xs text-gray-600 bg-gray-50 p-3 rounded">
-            SAM.gov searches federal contracts. Use NAICS/PSC codes for precise targeting of cleaning and janitorial opportunities.
+            {selectedSource === "sam" && "SAM.gov searches federal contracts. Use NAICS/PSC codes for precise targeting of cleaning and janitorial opportunities."}
+            {selectedSource === "permits" && "Construction permits provide HOT LEADS for post-construction cleaning. New buildings and renovations need immediate cleaning services when completed."}
           </div>
 
           <div className="flex items-center gap-3">
