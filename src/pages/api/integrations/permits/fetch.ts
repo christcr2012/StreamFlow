@@ -330,7 +330,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           zip: permit.zip || "",
           address: permit.propertyAddress || "",
           aiScore: score.score,
-          source: LeadSource.RFP,
+          sourceType: LeadSource.RFP,
           status: LeadStatus.NEW,
           enrichmentJson: enrichment,
         }
