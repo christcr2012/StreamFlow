@@ -1,0 +1,50 @@
+:root{
+  /* Neutrals (swap to Radix Gray/Sand later) */
+  --bg: #0f1115;
+  --bg-elev: #131620;
+  --bg-soft: #0f1115 radial-gradient(1200px 600px at 20% -10%, rgba(51,76,138,0.14), transparent 60%) no-repeat,
+             radial-gradient(900px 480px at 110% 10%, rgba(12,149,120,0.10), transparent 60%) no-repeat;
+  --surface: #151923;
+  --surface-2: #1a1f2b;
+
+  /* Text */
+  --text-1: #e6e8ef;
+  --text-2: #b7c0d8;
+  --muted:  #8b93a7;
+
+  /* Accent */
+  --brand: #4f7fff;
+  --brand-2: #2e6bff;
+  --brand-3: #85a7ff;
+
+  /* Borders & shadows */
+  --border: rgba(180, 192, 220, 0.16);
+  --ring: rgba(79,127,255,.45);
+  --shadow-1: 0 1px 1px rgba(0,0,0,.25), 0 10px 30px rgba(0,0,0,.35);
+
+  /* Radii & spacing */
+  --r-lg: 14px; --r-xl: 18px; --r-2xl: 22px;
+  --pad-card: 22px 20px 20px;
+
+  /* Component tokens */
+  --btn-bg: var(--brand);
+  --btn-fg: #0b1020;
+  --input-bg: #0f1420;
+  --input-bd: var(--border);
+  --table-row: rgba(255,255,255,.02);
+}
+
+html,body{background: var(--bg-soft); color: var(--text-1);}
+.app-card{background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-xl); box-shadow: var(--shadow-1);}
+.app-input,.app-select,.app-textarea{
+  background: var(--input-bg); color: var(--text-1); border:1px solid var(--input-bd); border-radius: 12px; padding:10px 12px;
+}
+.app-input:focus,.app-select:focus,.app-textarea:focus{ outline: none; box-shadow: 0 0 0 3px var(--ring); border-color: var(--brand-3); }
+.app-btn{ background: var(--btn-bg); color: var(--btn-fg); border:0; border-radius: 12px; padding:10px 14px; font-weight:600;}
+.app-btn:hover{ filter: brightness(1.05); }
+.app-table{ width:100%; border-collapse: separate; border-spacing:0; }
+.app-table th, .app-table td{ padding:10px 12px; border-bottom:1px solid var(--border); }
+.app-table tbody tr:hover{ background: var(--table-row); }
+.pill{ display:inline-block; padding:4px 8px; border-radius:999px; font-size:12px; }
+.pill--rel{ border:1px solid rgba(12,149,120,.35); background: rgba(12,149,120,.12);}
+.pill--job{ border:1px solid rgba(255,184,108,.35); background: rgba(255,184,108,.12);}

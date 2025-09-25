@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    /* -------- Original settings (preserved) -------- */
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": { "@/*": ["src/*"] },
+    "types": ["node"],
+
+    /* -------- Safe, non-breaking additions -------- */
+    "useUnknownInCatchVariables": false,   /* friendlier existing catch handlers */
+    "exactOptionalPropertyTypes": false,   /* avoids churn in JSON/Prisma shapes */
+    "noUncheckedIndexedAccess": false,     /* don’t explode indexed lookups with undefined */
+    "noFallthroughCasesInSwitch": true,    /* tiny safety net; zero runtime change */
+    "sourceMap": true                      /* better debugging; Next ignores on prod build */
+  },
+
+  /* Keep includes broad so Next + scripts are covered */
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+
+  /* Keep excludes minimal */
+  "exclude": [
+    "node_modules"
+  ]
+}

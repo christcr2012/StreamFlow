@@ -1,0 +1,15 @@
+# RUNBOOK — Provider Federation Activation
+
+This runbook tells you exactly **what to set**, **when to set it**, and **how to verify**.
+
+---
+
+## Phases
+
+### Phase 0 — Default (MVP+)
+- Keep federation **disabled** (default).
+- Providers manage billing directly in each client instance.
+
+### Phase 1 — Portal Alpha (pilot a centralized Provider Portal)
+1. **Pick 1–2 client instances** for pilot.
+2. On each client instance, set environment:

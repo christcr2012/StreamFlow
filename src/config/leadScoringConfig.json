@@ -1,0 +1,38 @@
+{
+  // Geographic priority scores. Keys are city or county names (lowercase) and values are
+  // points added when a lead’s city matches. You can adjust these values to reflect
+  // your market focus. Sterling/Greeley/Logan/Weld counties are high priority. Additional
+  // cities like Fort Collins, Evans, Windsor and Loveland receive modest boosts.
+  "geoPriority": {
+    "sterling": 20,
+    "greeley": 15,
+    "logan": 12,
+    "weld": 12,
+    "fort collins": 8,
+    "evans": 6,
+    "windsor": 6,
+    "loveland": 6
+  },
+
+  // Service weights. Keys are lowercase substrings of a service description (e.g. janitorial
+  // services or carpet cleaning). A match adds the specified number of points. Adjust or
+  // extend this map to reflect the services your business prioritizes.
+  "serviceWeights": {
+    "janitorial": 20,
+    "carpet": 15,
+    "floorcare": 12,
+    "disinfection": 8,
+    "window": 5
+  },
+
+  // Source weights. These numbers are added based on the sourceType of the lead. RFPs and
+  // other system-generated leads are weighted highest. Employee referrals are intentionally
+  // non-billable and therefore receive no score boost.
+  "sourceWeights": {
+    "RFP": 12,
+    "SYSTEM": 10,
+    "EMPLOYEE_REFERRAL": 0,
+    "MANUAL": 5,
+    "LSA": 15
+  }
+}

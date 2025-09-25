@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/billing/invoices.create?range=d30",
+      "schedule": "0 10 1 * *"
+    }
+  ]
+}
