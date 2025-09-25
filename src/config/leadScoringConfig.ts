@@ -51,9 +51,6 @@ const config: LeadScoringConfig = {
     EMPLOYEE_REFERRAL: 0,
     MANUAL: 5,
     LSA: 15,
-    STATE_RFP: 10,
-    FINDRFP: 11,
-    MUNICIPAL: 8,
   },
 };
 
