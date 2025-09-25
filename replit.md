@@ -4,6 +4,20 @@
 
 Mountain Vista is a comprehensive lead management and billing platform built for service businesses, particularly focusing on janitorial and cleaning companies. The system handles lead generation, scoring, conversion tracking, and automated billing for converted leads. It features integration with external data sources (SAM.gov for RFP imports), Stripe for payment processing, and includes role-based access control (RBAC) for multi-user organizations.
 
+## Recent Changes
+
+**January 25, 2025 - Enhanced Lead Generation System:**
+- Added Find RFP integration for expanded government contract opportunities
+- Implemented state procurement sources for Colorado, Utah, and Wyoming
+- Enhanced lead scoring system with new source types (STATE_RFP, FINDRFP, MUNICIPAL)
+- Updated admin interface to support multiple lead sources with dynamic configuration
+- Created unified lead import workflow supporting 3 distinct data sources
+
+**Lead Source Pricing Structure:**
+- Federal contracts (SAM.gov): $100/lead
+- Multi-level opportunities (Find RFP): $80/lead  
+- State/local contracts: $60/lead
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
@@ -33,12 +47,16 @@ Preferred communication style: Simple, everyday language.
 - **Lead Management**: Comprehensive lead tracking with deduplication and scoring
 
 ### Key Features
-1. **Lead Management**: Import, score, track, and convert leads
-2. **RFP Integration**: Automated import from SAM.gov for government contracts
+1. **Enhanced Lead Management**: Import, score, track, and convert leads from multiple sources
+2. **Multi-Source RFP Integration**: 
+   - SAM.gov for federal contracts ($100/lead)
+   - Find RFP for federal, state, and local opportunities ($80/lead) 
+   - State procurement portals for CO, UT, WY ($60/lead)
 3. **Billing System**: Automated billing for converted leads with Stripe integration
-4. **Multi-tenant**: Organization-based data isolation
-5. **Role-based Access**: Granular permissions system
-6. **Provider Federation**: Framework for cross-instance provider portal integration
+4. **AI-Powered Lead Scoring**: Enhanced scoring system supporting multiple source types
+5. **Multi-tenant**: Organization-based data isolation
+6. **Role-based Access**: Granular permissions system
+7. **Provider Federation**: Framework for cross-instance provider portal integration
 
 ### Data Flow Patterns
 - **Lead Ingestion**: External sources → Deduplication → Scoring → Storage

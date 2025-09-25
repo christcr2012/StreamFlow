@@ -22,13 +22,37 @@ const PSC = [
 const DEFAULT_KWS =
   "janitorial custodial housekeeping cleaning window disinfecting sanitizing floor";
 
+const LEAD_SOURCES = [
+  { 
+    id: "sam", 
+    name: "SAM.gov (Federal)", 
+    description: "Federal government contracts via SAM.gov",
+    pricing: "$100/lead",
+    endpoint: "/api/integrations/sam/fetch"
+  },
+  { 
+    id: "findrfp", 
+    name: "Find RFP", 
+    description: "Federal, state, and local opportunities",
+    pricing: "$80/lead",
+    endpoint: "/api/integrations/findrfp/fetch"
+  },
+  { 
+    id: "state", 
+    name: "State Procurement", 
+    description: "State and local government contracts",
+    pricing: "$60/lead",
+    endpoint: "/api/integrations/state/fetch"
+  },
+];
+
 /**
- * Advanced RFP Import page allows admins to customize SAM.gov query parameters for
- * location (state), NAICS/PSC filters, optional posted date range, keywords and
- * result limit. The import runs via the /api/integrations/sam/fetch API.
+ * Enhanced RFP Import page supports multiple lead sources including SAM.gov, Find RFP,
+ * and state procurement portals. Users can select the source and customize parameters.
  */
 export default function RfpImportPage() {
   const { me, loading } = useMe();
+  const [selectedSource, setSelectedSource] = useState("sam");
   const [state, setState] = useState("CO");
   const [naics, setNaics] = useState<string[]>(["561720", "561740", "561790"]);
   const [pscCodes, setPscCodes] = useState<string[]>(["S201", "S214", "S299"]);
@@ -56,28 +80,48 @@ export default function RfpImportPage() {
     setMsg(null);
     setErr(null);
     try {
-      const body: {
-        state: string;
-        naics: string[];
-        psc: string[];
-        limit: number;
-        keywords: string[];
-        postedFrom?: string;
-        postedTo?: string;
-      } = { state, naics, psc: pscCodes, limit, keywords: keywords.split(/\s+/).filter(Boolean) };
-      if (postedFrom || postedTo) {
-        if (!postedFrom || !postedTo) throw new Error("Both Posted From and Posted To are required when using dates.");
-        body.postedFrom = postedFrom;
-        body.postedTo = postedTo;
+      const source = LEAD_SOURCES.find(s => s.id === selectedSource);
+      if (!source) throw new Error("Invalid source selected");
+
+      let body: Record<string, unknown> = { 
+        state, 
+        limit, 
+        keywords: keywords.split(/\s+/).filter(Boolean) 
+      };
+
+      // SAM.gov specific parameters
+      if (selectedSource === "sam") {
+        body = { 
+          ...body, 
+          naics, 
+          psc: pscCodes 
+        };
+        if (postedFrom || postedTo) {
+          if (!postedFrom || !postedTo) throw new Error("Both Posted From and Posted To are required when using dates.");
+          body.postedFrom = postedFrom;
+          body.postedTo = postedTo;
+        }
       }
-      const r = await fetch("/api/integrations/sam/fetch", {
+      // Find RFP specific parameters
+      else if (selectedSource === "findrfp") {
+        body = {
+          ...body,
+          query: keywords,
+          category: "government"
+        };
+      }
+
+      const r = await fetch(source.endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
       const j = await r.json();
       if (!r.ok || j.ok === false) throw new Error(j.error || `HTTP ${r.status}`);
-      setMsg(`Imported ${j.imported} • Skipped ${j.skipped}`);
+      
+      const created = j.items?.filter((item: any) => item.created).length || 0;
+      const skipped = j.items?.filter((item: any) => !item.created).length || 0;
+      setMsg(`Imported ${created} leads • Skipped ${skipped} • Total value: $${j.totalDollars || "0.00"}`);
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : "Failed";
       setErr(message);
@@ -90,7 +134,33 @@ export default function RfpImportPage() {
     <>
       <Head><title>RFP Import</title></Head>
       <div className="mx-auto max-w-[900px] px-4 py-6 space-y-6">
-        <h1 className="text-2xl font-semibold">Advanced RFP Import (SAM.gov)</h1>
+        <h1 className="text-2xl font-semibold">Lead Generation - RFP Import</h1>
+        
+        {/* Source Selection */}
+        <div className="rounded-2xl border p-5 space-y-4">
+          <div>
+            <span className="text-sm font-medium">Lead Source</span>
+            <div className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-3">
+              {LEAD_SOURCES.map((source) => (
+                <button
+                  key={source.id}
+                  onClick={() => setSelectedSource(source.id)}
+                  className={`p-4 rounded-lg border text-left transition-colors ${
+                    selectedSource === source.id 
+                      ? "bg-black text-white border-black" 
+                      : "bg-white hover:bg-gray-50"
+                  }`}
+                >
+                  <div className="font-medium">{source.name}</div>
+                  <div className="text-sm opacity-75 mt-1">{source.description}</div>
+                  <div className="text-xs opacity-60 mt-2">{source.pricing}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Configuration */}
         <div className="rounded-2xl border p-5 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <label className="block">
@@ -114,65 +184,80 @@ export default function RfpImportPage() {
             </label>
           </div>
 
-          <div>
-            <span className="text-sm font-medium">NAICS</span>
-            <div className="mt-2 flex flex-wrap gap-2">
-              {NAICS.map((n) => (
-                <button
-                  key={n.code}
-                  onClick={() => toggle(naics, n.code, setNaics)}
-                  className={`px-3 py-1 rounded border ${naics.includes(n.code) ? "bg-black text-white" : ""}`}
-                >
-                  {n.code} — {n.label}
-                </button>
-              ))}
-            </div>
-          </div>
+          {/* SAM.gov specific fields */}
+          {selectedSource === "sam" && (
+            <>
+              <div>
+                <span className="text-sm font-medium">NAICS Codes</span>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {NAICS.map((n) => (
+                    <button
+                      key={n.code}
+                      onClick={() => toggle(naics, n.code, setNaics)}
+                      className={`px-3 py-1 rounded border ${naics.includes(n.code) ? "bg-black text-white" : ""}`}
+                    >
+                      {n.code} — {n.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-          <div>
-            <span className="text-sm font-medium">PSC</span>
-            <div className="mt-2 flex flex-wrap gap-2">
-              {PSC.map((p) => (
-                <button
-                  key={p.code}
-                  onClick={() => toggle(pscCodes, p.code, setPscCodes)}
-                  className={`px-3 py-1 rounded border ${pscCodes.includes(p.code) ? "bg-black text-white" : ""}`}
-                >
-                  {p.code} — {p.label}
-                </button>
-              ))}
-            </div>
-          </div>
+              <div>
+                <span className="text-sm font-medium">PSC Codes</span>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {PSC.map((p) => (
+                    <button
+                      key={p.code}
+                      onClick={() => toggle(pscCodes, p.code, setPscCodes)}
+                      className={`px-3 py-1 rounded border ${pscCodes.includes(p.code) ? "bg-black text-white" : ""}`}
+                    >
+                      {p.code} — {p.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <label className="block">
-              <span className="text-sm font-medium">Posted From (YYYY-MM-DD)</span>
-              <input
-                className="mt-1 w-full border rounded px-3 py-2"
-                value={postedFrom}
-                onChange={(e) => setFrom(e.target.value)}
-                placeholder="2025-08-01"
-              />
-            </label>
-            <label className="block">
-              <span className="text-sm font-medium">Posted To (YYYY-MM-DD)</span>
-              <input
-                className="mt-1 w-full border rounded px-3 py-2"
-                value={postedTo}
-                onChange={(e) => setTo(e.target.value)}
-                placeholder="2025-09-24"
-              />
-            </label>
-          </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label className="block">
+                  <span className="text-sm font-medium">Posted From (YYYY-MM-DD)</span>
+                  <input
+                    className="mt-1 w-full border rounded px-3 py-2"
+                    value={postedFrom}
+                    onChange={(e) => setFrom(e.target.value)}
+                    placeholder="2025-08-01"
+                  />
+                </label>
+                <label className="block">
+                  <span className="text-sm font-medium">Posted To (YYYY-MM-DD)</span>
+                  <input
+                    className="mt-1 w-full border rounded px-3 py-2"
+                    value={postedTo}
+                    onChange={(e) => setTo(e.target.value)}
+                    placeholder="2025-09-24"
+                  />
+                </label>
+              </div>
+            </>
+          )}
 
           <label className="block">
-            <span className="text-sm font-medium">Keywords (space-separated)</span>
+            <span className="text-sm font-medium">
+              {selectedSource === "sam" ? "Keywords (space-separated)" : "Search Keywords"}
+            </span>
             <input
               className="mt-1 w-full border rounded px-3 py-2"
               value={keywords}
               onChange={(e) => setKeywords(e.target.value)}
+              placeholder={selectedSource === "findrfp" ? "cleaning janitorial facilities maintenance" : keywords}
             />
           </label>
+
+          {/* Source-specific help text */}
+          <div className="text-xs text-gray-600 bg-gray-50 p-3 rounded">
+            {selectedSource === "sam" && "SAM.gov searches federal contracts. Use NAICS/PSC codes for precise targeting."}
+            {selectedSource === "findrfp" && "Find RFP aggregates federal, state, and local opportunities. Keywords are matched against titles and descriptions."}
+            {selectedSource === "state" && "State procurement searches government portals for CO, UT, and WY. Focus on location-specific opportunities."}
+          </div>
 
           <div className="flex items-center gap-3">
             <button
