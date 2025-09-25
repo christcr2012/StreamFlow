@@ -277,7 +277,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
-    const totalCents = items.reduce((sum, it) => sum + (it.unitPriceCents || 0), 0);
+    const totalCents = items.filter(it => it.created).reduce((sum, it) => sum + (it.unitPriceCents || 0), 0);
 
     return res.status(200).json({
       ok: true,
