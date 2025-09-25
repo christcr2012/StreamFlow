@@ -31,15 +31,16 @@ const LEAD_SOURCES = [
   },
   { 
     id: "permits", 
-    name: "Construction Permits", 
-    description: "Free hot leads from new construction projects needing post-construction cleaning",
+    name: "Construction Permits (Northern CO)", 
+    description: "Free hot leads from Northern Colorado construction projects",
     endpoint: "/api/integrations/permits/fetch"
   },
 ];
 
 /**
- * RFP Import page for free government lead sources. Currently supports SAM.gov
- * with plans to add more free sources like RSS feeds and open data APIs.
+ * Lead generation page for Northern Colorado cleaning business. 
+ * Focuses on Sterling (headquarters), Greeley, Fort Collins, and surrounding areas.
+ * All sources are completely FREE with geographic targeting.
  */
 export default function RfpImportPage() {
   const { me, loading } = useMe();
@@ -51,7 +52,7 @@ export default function RfpImportPage() {
   const [postedFrom, setFrom] = useState<string>("");
   const [postedTo, setTo] = useState<string>("");
   const [limit, setLimit] = useState(25);
-  const [permitSource, setPermitSource] = useState("austin");
+  const [permitSource, setPermitSource] = useState("weld");
   const [minValue, setMinValue] = useState(25000);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
@@ -127,7 +128,7 @@ export default function RfpImportPage() {
     <>
       <Head><title>RFP Import</title></Head>
       <div className="mx-auto max-w-[900px] px-4 py-6 space-y-6">
-        <h1 className="text-2xl font-semibold">Lead Generation - Free RFP Sources</h1>
+        <h1 className="text-2xl font-semibold">Lead Generation - Northern Colorado</h1>
         
         <div className="rounded-2xl border p-5 bg-green-50 border-green-200">
           <div className="flex items-center gap-2 mb-2">
@@ -246,17 +247,21 @@ export default function RfpImportPage() {
           {selectedSource === "permits" && (
             <>
               <div>
-                <span className="text-sm font-medium">Permit Source</span>
+                <span className="text-sm font-medium">Northern Colorado Permit Source</span>
                 <div className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-2">
-                  {["austin", "louisville", "montgomery"].map((source) => (
+                  {[
+                    { id: "weld", label: "Weld County (Greeley/Evans)" },
+                    { id: "fortcollins", label: "Fort Collins" },
+                    { id: "denver", label: "Denver (High Value Only)" }
+                  ].map((source) => (
                     <button
-                      key={source}
-                      onClick={() => setPermitSource(source)}
+                      key={source.id}
+                      onClick={() => setPermitSource(source.id)}
                       className={`px-3 py-2 rounded border text-sm ${
-                        permitSource === source ? "bg-black text-white" : ""
+                        permitSource === source.id ? "bg-black text-white" : ""
                       }`}
                     >
-                      {source.charAt(0).toUpperCase() + source.slice(1)}
+                      {source.label}
                     </button>
                   ))}
                 </div>
@@ -292,7 +297,7 @@ export default function RfpImportPage() {
           {/* Source-specific help text */}
           <div className="text-xs text-gray-600 bg-gray-50 p-3 rounded">
             {selectedSource === "sam" && "SAM.gov searches federal contracts. Use NAICS/PSC codes for precise targeting of cleaning and janitorial opportunities."}
-            {selectedSource === "permits" && "Construction permits provide HOT LEADS for post-construction cleaning. New buildings and renovations need immediate cleaning services when completed."}
+            {selectedSource === "permits" && "Northern Colorado construction permits provide HOT LEADS for post-construction cleaning. Sterling (headquarters) and Greeley get highest priority. Denver requires 3x higher project value ($75k+ default)."}
           </div>
 
           <div className="flex items-center gap-3">

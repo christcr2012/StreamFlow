@@ -29,14 +29,26 @@ export interface LeadScoringConfig {
 
 const config: LeadScoringConfig = {
   geoPriority: {
-    sterling: 20,
-    greeley: 15,
-    logan: 12,
-    weld: 12,
-    "fort collins": 8,
-    evans: 6,
-    windsor: 6,
-    loveland: 6,
+    // Sterling headquarters - highest priority
+    sterling: 25,
+    // Weld County coverage areas
+    greeley: 20,        // High priority, high value
+    evans: 15,          // Near Greeley
+    weld: 15,           // County-level contracts
+    // Northern Colorado surrounding areas  
+    "fort collins": 12,
+    loveland: 12,
+    windsor: 10,
+    // Logan County
+    logan: 18,          // County seat is Sterling
+    // Denver area - only very high value
+    denver: 8,
+    arvada: 6,
+    westminster: 6,
+    thornton: 6,
+    // Other Northern Colorado
+    longmont: 8,
+    boulder: 8,
   },
   serviceWeights: {
     janitorial: 20,

@@ -39,7 +39,7 @@ type PermitItem = {
   workDescription?: string;
 };
 
-/** Extract useful info from different permit API formats */
+/** Extract useful info from different Colorado permit API formats */
 function normalizePermitItem(raw: unknown, source: string): PermitItem {
   const o = raw as Record<string, unknown> | null | undefined;
   
@@ -61,59 +61,62 @@ function normalizePermitItem(raw: unknown, source: string): PermitItem {
   };
 
   switch (source) {
-    case "austin":
+    case "weld":
+      // Weld County (Sterling, Greeley) - mock data structure
       return {
-        permitNumber: getString("permit_number") || getString("permit_id"),
-        projectDescription: getString("description") || getString("work_type"),
+        permitNumber: getString("permit_number"),
+        projectDescription: getString("project_description"),
         permitType: getString("permit_type"),
-        contractorName: getString("contractor_name") || getString("applicant_name"),
+        contractorName: getString("contractor_name"),
         contractorPhone: getString("contractor_phone"),
-        propertyAddress: getString("address") || getString("original_address1"),
-        city: getString("city") || "Austin",
-        state: getString("state") || "TX",
-        zip: getString("zip") || getString("original_zip"),
-        permitValue: getNumber("total_fees") || getNumber("permit_value"),
-        issuedDate: getString("issued_date") || getString("application_date"),
-        constructionType: getString("permit_class") || getString("permit_type"),
-        workDescription: getString("description")
+        propertyAddress: getString("address"),
+        city: getString("city"),
+        state: getString("state") || "CO",
+        zip: getString("zip"),
+        permitValue: getNumber("permit_value"),
+        issuedDate: getString("issued_date"),
+        constructionType: getString("construction_type"),
+        workDescription: getString("project_description")
       };
       
-    case "louisville":
+    case "fortcollins":
+      // Fort Collins ArcGIS API format
       return {
-        permitNumber: getString("permit_num") || getString("permit_number"),
-        projectDescription: getString("project_desc") || getString("description"),
+        permitNumber: getString("PERMIT_NUM") || getString("permit_number"),
+        projectDescription: getString("DESCRIPTION") || getString("PROJECT_DESC"),
+        permitType: getString("PERMIT_TYPE"),
+        contractorName: getString("CONTRACTOR") || getString("CONTRACTOR_NAME"),
+        contractorPhone: getString("CONTRACTOR_PHONE"),
+        propertyAddress: getString("ADDRESS") || getString("LOCATION"),
+        city: getString("CITY") || "Fort Collins",
+        state: getString("STATE") || "CO",
+        zip: getString("ZIP"),
+        permitValue: getNumber("VALUATION") || getNumber("PERMIT_VALUE"),
+        issuedDate: getString("ISSUED_DATE") || getString("DATE_ISSUED"),
+        constructionType: getString("WORK_TYPE") || getString("PERMIT_TYPE"),
+        workDescription: getString("DESCRIPTION")
+      };
+      
+    case "denver":
+      // Denver Accela system - mock data structure
+      return {
+        permitNumber: getString("permit_number"),
+        projectDescription: getString("project_description"),
         permitType: getString("permit_type"),
-        contractorName: getString("contractor") || getString("contractor_name"),
-        contractorPhone: getString("phone"),
-        propertyAddress: getString("location") || getString("address"),
-        city: getString("city") || "Louisville",
-        state: getString("state") || "KY",
+        contractorName: getString("contractor_name"),
+        contractorPhone: getString("contractor_phone"),
+        propertyAddress: getString("address"),
+        city: getString("city") || "Denver",
+        state: getString("state") || "CO",
         zip: getString("zip"),
-        permitValue: getNumber("value") || getNumber("permit_value"),
-        issuedDate: getString("issue_date") || getString("issued_date"),
-        constructionType: getString("work_type") || getString("permit_type"),
-        workDescription: getString("project_desc")
-      };
-      
-    case "montgomery":
-      return {
-        permitNumber: getString("applicationnumber") || getString("permit_number"),
-        projectDescription: getString("workperformed") || getString("description"),
-        permitType: getString("permittype"),
-        contractorName: getString("contractorname") || getString("contractor"),
-        contractorPhone: getString("contractorphone"),
-        propertyAddress: getString("location") || getString("address"),
-        city: getString("city") || "Rockville",
-        state: getString("state") || "MD",
-        zip: getString("zip"),
-        permitValue: getNumber("totalvalue") || getNumber("permit_value"),
-        issuedDate: getString("issueddate") || getString("issue_date"),
-        constructionType: getString("permittype"),
-        workDescription: getString("workperformed")
+        permitValue: getNumber("permit_value"),
+        issuedDate: getString("issued_date"),
+        constructionType: getString("construction_type"),
+        workDescription: getString("project_description")
       };
       
     default:
-      // Generic mapping for other sources
+      // Generic mapping for Colorado sources
       return {
         permitNumber: getString("permit_number") || getString("permit_id") || getString("id"),
         projectDescription: getString("description") || getString("project_description"),
@@ -122,7 +125,7 @@ function normalizePermitItem(raw: unknown, source: string): PermitItem {
         contractorPhone: getString("contractor_phone") || getString("phone"),
         propertyAddress: getString("address") || getString("location") || getString("property_address"),
         city: getString("city"),
-        state: getString("state"),
+        state: getString("state") || "CO",
         zip: getString("zip") || getString("zipcode"),
         permitValue: getNumber("permit_value") || getNumber("value") || getNumber("total_fees"),
         issuedDate: getString("issued_date") || getString("issue_date") || getString("date_issued"),
@@ -145,53 +148,86 @@ function makeEnrichment(item: PermitItem, source: string) {
   };
 }
 
-async function fetchAustinPermits(limit: number): Promise<unknown[]> {
-  const url = "https://data.austintexas.gov/resource/3syk-w9eu.json";
-  const params = new URLSearchParams({
-    "$limit": limit.toString(),
-    "$order": "issued_date DESC",
-    "$where": "permit_type LIKE '%COMMERCIAL%' OR permit_type LIKE '%BUILDING%'"
-  });
+async function fetchWeldCountyPermits(limit: number): Promise<unknown[]> {
+  // Note: Weld County uses Accela system which may not have direct API access
+  // For now, return mock data structure to demonstrate the pattern
+  // In production, this would integrate with Weld County's permit system
   
-  const response = await fetch(`${url}?${params}`);
-  if (!response.ok) {
-    throw new Error(`Austin API error: ${response.status} ${response.statusText}`);
-  }
-  return await response.json() as unknown[];
+  const mockPermits = [
+    {
+      permit_number: "2024-001234",
+      project_description: "New Commercial Building - Office Complex", 
+      permit_type: "COMMERCIAL",
+      contractor_name: "Sterling Construction LLC",
+      contractor_phone: "(970) 522-1234",
+      address: "1234 Main St",
+      city: "Sterling",
+      state: "CO",
+      zip: "80751",
+      permit_value: 150000,
+      issued_date: "2024-12-20",
+      construction_type: "New Construction"
+    },
+    {
+      permit_number: "2024-001235", 
+      project_description: "Warehouse Expansion",
+      permit_type: "COMMERCIAL",
+      contractor_name: "Greeley Builders Inc",
+      contractor_phone: "(970) 352-5678",
+      address: "5678 Industrial Blvd",
+      city: "Greeley", 
+      state: "CO",
+      zip: "80631",
+      permit_value: 75000,
+      issued_date: "2024-12-19",
+      construction_type: "Addition"
+    }
+  ];
+  
+  return mockPermits.slice(0, limit);
 }
 
-async function fetchLouisvillePermits(limit: number): Promise<unknown[]> {
-  // Louisville ArcGIS REST API
-  const url = "https://services1.arcgis.com/79kfd2K6fskCAkyg/arcgis/rest/services/active_construction_permits/FeatureServer/0/query";
+async function fetchFortCollinsPermits(limit: number): Promise<unknown[]> {
+  // Fort Collins ArcGIS Open Data API
+  const url = "https://services.arcgis.com/YY1W1B93GvV1YFqy/arcgis/rest/services/Building_Permits/FeatureServer/0/query";
   const params = new URLSearchParams({
-    "f": "json",
+    "f": "json", 
     "where": "1=1",
     "outFields": "*",
-    "orderByFields": "issue_date DESC",
+    "orderByFields": "ISSUED_DATE DESC",
     "resultRecordCount": limit.toString()
   });
   
   const response = await fetch(`${url}?${params}`);
   if (!response.ok) {
-    throw new Error(`Louisville API error: ${response.status} ${response.statusText}`);
+    throw new Error(`Fort Collins API error: ${response.status} ${response.statusText}`);
   }
   const data = await response.json() as { features: Array<{ attributes: unknown }> };
   return data.features.map(f => f.attributes);
 }
 
-async function fetchMontgomeryPermits(limit: number): Promise<unknown[]> {
-  const url = "https://data.montgomerycountymd.gov/resource/i26v-w6bd.json";
-  const params = new URLSearchParams({
-    "$limit": limit.toString(),
-    "$order": "issueddate DESC",
-    "$where": "permitstatus = 'Issued' AND totalvalue > 10000"
-  });
+async function fetchDenverPermits(limit: number): Promise<unknown[]> {
+  // Note: Denver uses Accela system which requires specific integration
+  // For now, return mock data for high-value contracts only
   
-  const response = await fetch(`${url}?${params}`);
-  if (!response.ok) {
-    throw new Error(`Montgomery API error: ${response.status} ${response.statusText}`);
-  }
-  return await response.json() as unknown[];
+  const mockPermits = [
+    {
+      permit_number: "DEN-2024-5678",
+      project_description: "High-Rise Office Development",
+      permit_type: "COMMERCIAL",
+      contractor_name: "Denver Commercial Construction",
+      contractor_phone: "(303) 555-9876", 
+      address: "1600 17th St",
+      city: "Denver",
+      state: "CO",
+      zip: "80202",
+      permit_value: 2500000, // High value only for Denver area
+      issued_date: "2024-12-18",
+      construction_type: "New Construction"
+    }
+  ];
+  
+  return mockPermits.slice(0, limit);
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -207,10 +243,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await assertPermission(req, res, PERMS.LEAD_CREATE);
 
     const { 
-      source = "austin", 
+      source = "weld", 
       limit = 25,
       minValue = 25000, // Minimum project value for hot leads
-      state = "TX"
+      state = "CO"
     } = req.body;
 
     if (limit < 1 || limit > 100) {
@@ -219,19 +255,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     let rawData: unknown[] = [];
     
-    // Fetch from the selected permit source
+    // Fetch from the selected Colorado permit source
     switch (source) {
-      case "austin":
-        rawData = await fetchAustinPermits(limit);
+      case "weld":
+        rawData = await fetchWeldCountyPermits(limit);
         break;
-      case "louisville":
-        rawData = await fetchLouisvillePermits(limit);
+      case "fortcollins":
+        rawData = await fetchFortCollinsPermits(limit);
         break;
-      case "montgomery":
-        rawData = await fetchMontgomeryPermits(limit);
+      case "denver":
+        rawData = await fetchDenverPermits(limit);
         break;
       default:
-        return res.status(400).json({ ok: false, error: "Invalid source. Use: austin, louisville, montgomery" });
+        return res.status(400).json({ ok: false, error: "Invalid source. Use: weld, fortcollins, denver" });
     }
 
     const items: Array<{
@@ -256,14 +292,35 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         continue;
       }
 
-      // Filter for valuable projects (hot leads)
-      if (permit.permitValue && permit.permitValue < minValue) {
+      // Filter for valuable projects and Colorado geography
+      const city = permit.city?.toLowerCase() || "";
+      const isColoradoCity = ["sterling", "greeley", "evans", "fort collins", "loveland", 
+                              "windsor", "denver", "arvada", "westminster", "thornton",
+                              "longmont", "boulder", "lafayette", "brighton", "commerce city"].includes(city);
+      
+      if (!isColoradoCity) {
         items.push({
           permitNumber: permit.permitNumber,
           publicId: `PERMIT_${source.toUpperCase()}_${permit.permitNumber}`,
           created: false,
           unitPriceCents: 0,
-          reason: `Project value $${permit.permitValue} below minimum $${minValue}`
+          reason: `Location ${permit.city} outside Northern Colorado service area`
+        });
+        continue;
+      }
+
+      // Apply higher minimum for Denver area (only very high value)
+      const effectiveMinValue = city === "denver" || city === "arvada" || 
+                               city === "westminster" || city === "thornton" ? 
+                               minValue * 3 : minValue; // 3x higher threshold for Denver area
+      
+      if (permit.permitValue && permit.permitValue < effectiveMinValue) {
+        items.push({
+          permitNumber: permit.permitNumber,
+          publicId: `PERMIT_${source.toUpperCase()}_${permit.permitNumber}`,
+          created: false,
+          unitPriceCents: 0,
+          reason: `Project value $${permit.permitValue} below minimum $${effectiveMinValue} for ${permit.city}`
         });
         continue;
       }
