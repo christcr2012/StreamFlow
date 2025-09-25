@@ -114,7 +114,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       user: {
         email: user.email,
         name: user.name,
-        baseRole: (user.role || "VIEWER") as MeResponse["user"]["baseRole"],
+        baseRole: (user.role || "VIEWER") as "OWNER" | "MANAGER" | "STAFF" | "PROVIDER" | "ACCOUNTANT" | "VIEWER",
         rbacRoles: rbacSlugs,
         isOwner,
         isProvider,
