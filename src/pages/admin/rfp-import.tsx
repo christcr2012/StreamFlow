@@ -26,29 +26,14 @@ const LEAD_SOURCES = [
   { 
     id: "sam", 
     name: "SAM.gov (Federal)", 
-    description: "Federal government contracts via SAM.gov",
-    pricing: "$100/lead",
+    description: "Free federal government contracts via SAM.gov",
     endpoint: "/api/integrations/sam/fetch"
-  },
-  { 
-    id: "findrfp", 
-    name: "Find RFP", 
-    description: "Federal, state, and local opportunities",
-    pricing: "$80/lead",
-    endpoint: "/api/integrations/findrfp/fetch"
-  },
-  { 
-    id: "state", 
-    name: "State Procurement", 
-    description: "State and local government contracts",
-    pricing: "$60/lead",
-    endpoint: "/api/integrations/state/fetch"
   },
 ];
 
 /**
- * Enhanced RFP Import page supports multiple lead sources including SAM.gov, Find RFP,
- * and state procurement portals. Users can select the source and customize parameters.
+ * RFP Import page for free government lead sources. Currently supports SAM.gov
+ * with plans to add more free sources like RSS feeds and open data APIs.
  */
 export default function RfpImportPage() {
   const { me, loading } = useMe();
@@ -102,14 +87,6 @@ export default function RfpImportPage() {
           body.postedTo = postedTo;
         }
       }
-      // Find RFP specific parameters
-      else if (selectedSource === "findrfp") {
-        body = {
-          ...body,
-          query: keywords,
-          category: "government"
-        };
-      }
 
       const r = await fetch(source.endpoint, {
         method: "POST",
@@ -121,7 +98,7 @@ export default function RfpImportPage() {
       
       const created = j.items?.filter((item: any) => item.created).length || 0;
       const skipped = j.items?.filter((item: any) => !item.created).length || 0;
-      setMsg(`Imported ${created} leads • Skipped ${skipped} • Total value: $${j.totalDollars || "0.00"}`);
+      setMsg(`Imported ${created} leads • Skipped ${skipped} duplicates • All leads are FREE`);
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : "Failed";
       setErr(message);
@@ -134,27 +111,30 @@ export default function RfpImportPage() {
     <>
       <Head><title>RFP Import</title></Head>
       <div className="mx-auto max-w-[900px] px-4 py-6 space-y-6">
-        <h1 className="text-2xl font-semibold">Lead Generation - RFP Import</h1>
+        <h1 className="text-2xl font-semibold">Lead Generation - Free RFP Sources</h1>
         
+        <div className="rounded-2xl border p-5 bg-green-50 border-green-200">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+            <span className="text-sm font-medium text-green-800">100% Free Lead Sources</span>
+          </div>
+          <p className="text-sm text-green-700">All lead generation sources are completely free with no per-lead costs or subscriptions.</p>
+        </div>
+
         {/* Source Selection */}
         <div className="rounded-2xl border p-5 space-y-4">
           <div>
-            <span className="text-sm font-medium">Lead Source</span>
-            <div className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-3">
+            <span className="text-sm font-medium">Available Sources</span>
+            <div className="mt-2">
               {LEAD_SOURCES.map((source) => (
-                <button
+                <div
                   key={source.id}
-                  onClick={() => setSelectedSource(source.id)}
-                  className={`p-4 rounded-lg border text-left transition-colors ${
-                    selectedSource === source.id 
-                      ? "bg-black text-white border-black" 
-                      : "bg-white hover:bg-gray-50"
-                  }`}
+                  className="p-4 rounded-lg border bg-white"
                 >
                   <div className="font-medium">{source.name}</div>
                   <div className="text-sm opacity-75 mt-1">{source.description}</div>
-                  <div className="text-xs opacity-60 mt-2">{source.pricing}</div>
-                </button>
+                  <div className="text-xs text-green-600 mt-2 font-medium">FREE - No per-lead costs</div>
+                </div>
               ))}
             </div>
           </div>
@@ -241,22 +221,18 @@ export default function RfpImportPage() {
           )}
 
           <label className="block">
-            <span className="text-sm font-medium">
-              {selectedSource === "sam" ? "Keywords (space-separated)" : "Search Keywords"}
-            </span>
+            <span className="text-sm font-medium">Keywords (space-separated)</span>
             <input
               className="mt-1 w-full border rounded px-3 py-2"
               value={keywords}
               onChange={(e) => setKeywords(e.target.value)}
-              placeholder={selectedSource === "findrfp" ? "cleaning janitorial facilities maintenance" : keywords}
+              placeholder={DEFAULT_KWS}
             />
           </label>
 
           {/* Source-specific help text */}
           <div className="text-xs text-gray-600 bg-gray-50 p-3 rounded">
-            {selectedSource === "sam" && "SAM.gov searches federal contracts. Use NAICS/PSC codes for precise targeting."}
-            {selectedSource === "findrfp" && "Find RFP aggregates federal, state, and local opportunities. Keywords are matched against titles and descriptions."}
-            {selectedSource === "state" && "State procurement searches government portals for CO, UT, and WY. Focus on location-specific opportunities."}
+            SAM.gov searches federal contracts. Use NAICS/PSC codes for precise targeting of cleaning and janitorial opportunities.
           </div>
 
           <div className="flex items-center gap-3">
