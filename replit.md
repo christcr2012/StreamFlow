@@ -6,17 +6,18 @@ Mountain Vista is a comprehensive lead management and billing platform built for
 
 ## Recent Changes
 
-**January 25, 2025 - Enhanced Lead Generation System:**
-- Added Find RFP integration for expanded government contract opportunities
-- Implemented state procurement sources for Colorado, Utah, and Wyoming
-- Enhanced lead scoring system with new source types (STATE_RFP, FINDRFP, MUNICIPAL)
-- Updated admin interface to support multiple lead sources with dynamic configuration
-- Created unified lead import workflow supporting 3 distinct data sources
+**January 25, 2025 - FREE Lead Generation System:**
+- Redesigned system to focus exclusively on FREE lead sources
+- Maintained SAM.gov federal contracts integration (100% free)
+- Removed all paid integrations and per-lead billing
+- Updated admin interface to emphasize free sources only
+- Simplified lead scoring system to focus on core source types
 
-**Lead Source Pricing Structure:**
-- Federal contracts (SAM.gov): $100/lead
-- Multi-level opportunities (Find RFP): $80/lead  
-- State/local contracts: $60/lead
+**Lead Source Strategy:**
+- 100% FREE lead generation - no per-lead costs or subscriptions
+- SAM.gov for federal contracts (completely free)
+- Future: RSS/Atom feeds from government agencies (free)
+- Future: Socrata open data APIs for municipal data (free)
 
 ## User Preferences
 
@@ -47,13 +48,10 @@ Preferred communication style: Simple, everyday language.
 - **Lead Management**: Comprehensive lead tracking with deduplication and scoring
 
 ### Key Features
-1. **Enhanced Lead Management**: Import, score, track, and convert leads from multiple sources
-2. **Multi-Source RFP Integration**: 
-   - SAM.gov for federal contracts ($100/lead)
-   - Find RFP for federal, state, and local opportunities ($80/lead) 
-   - State procurement portals for CO, UT, WY ($60/lead)
+1. **FREE Lead Generation**: 100% free lead sources with no per-lead costs or subscriptions
+2. **SAM.gov Integration**: Federal government contracts via free SAM.gov API
 3. **Billing System**: Automated billing for converted leads with Stripe integration
-4. **AI-Powered Lead Scoring**: Enhanced scoring system supporting multiple source types
+4. **AI-Powered Lead Scoring**: Intelligent scoring system for lead prioritization
 5. **Multi-tenant**: Organization-based data isolation
 6. **Role-based Access**: Granular permissions system
 7. **Provider Federation**: Framework for cross-instance provider portal integration

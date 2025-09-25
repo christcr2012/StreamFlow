@@ -8,8 +8,8 @@ import { scoreLeadNormalized } from "@/lib/leadScoringAdapter";
 
 const SAM_BASE = "https://api.sam.gov/opportunities/v2/search";
 
-// Price knob per converted lead (cents). You can later read from PricingPlan/org settings.
-const DEFAULT_UNIT_PRICE_CENTS = 10000; // $100.00
+// All leads are now FREE - no billing charges
+const DEFAULT_UNIT_PRICE_CENTS = 0; // $0.00 - Free lead generation
 
 function sha256_24(s: string) {
   return crypto.createHash("sha256").update(s).digest("hex").slice(0, 24);
