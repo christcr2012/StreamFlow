@@ -7,7 +7,7 @@
   },
   "scripts": {
     "setpwd": "tsx scripts/set-password.ts",
-    "dev": "next dev",
+    "dev": "next dev -p 5000",
     "build": "prisma migrate deploy && next build",
     "start": "next start",
     "postinstall": "prisma generate",
