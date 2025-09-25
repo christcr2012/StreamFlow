@@ -7,21 +7,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    // Test Austin API connection (it's public, no API key needed)
-    const testUrl = "https://data.austintexas.gov/resource/3syk-w9eu.json?$limit=1";
+    // Test Fort Collins API connection (it's public, no API key needed)
+    const testUrl = "https://services.arcgis.com/YY1W1B93GvV1YFqy/arcgis/rest/services/Building_Permits/FeatureServer/0/query?f=json&where=1=1&outFields=*&resultRecordCount=1";
     const response = await fetch(testUrl);
     
     if (!response.ok) {
       return res.status(200).json({ 
         ok: false, 
-        error: `Austin permits API not accessible: ${response.status}`
+        error: `Fort Collins permits API not accessible: ${response.status}`
       });
     }
 
     return res.status(200).json({ 
       ok: true, 
-      message: "Construction permits APIs are accessible",
-      sources: ["austin", "louisville", "montgomery"],
+      message: "Northern Colorado construction permits APIs are accessible",
+      sources: ["weld", "fortcollins", "denver"],
+      coverage: "Sterling, Greeley, Fort Collins, Loveland, and Denver (high value only)",
       note: "All sources are FREE with no API keys required"
     });
 
