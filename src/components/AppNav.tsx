@@ -46,21 +46,26 @@ export default function AppNav() {
   const { me } = useMe();
 
   // Build left-side links conditionally
-  // Build left nav links based on the user's role. Owners and providers both see
-  // the Admin link (which surfaces the appropriate settings for them). Only
-  // providers see the Billing link. Staff/managers see just Dashboard and Leads.
-  const leftLinks = [
+  // Provider-only navigation: Providers should only see their dedicated portal
+  // All other roles see the standard client-facing navigation
+  const isProvider = me?.role === "PROVIDER";
+  
+  const leftLinks = isProvider ? [
+    { href: "/provider", label: "Provider Portal" },
+  ] : [
     { href: "/dashboard", label: "Dashboard" },
     { href: "/leads", label: "Leads" },
-    ...(me?.role === "PROVIDER" || me?.role === "OWNER"
+    ...(me?.role === "OWNER"
       ? [{ href: "/admin", label: "Admin" }]
-      : []),
-    ...(me?.role === "PROVIDER"
-      ? [{ href: "/admin/billing", label: "Billing" }]
       : []),
   ];
 
-  const rightLinks = [
+  const rightLinks = isProvider ? [
+    { href: "/provider/clients", label: "Clients" },
+    { href: "/provider/analytics", label: "Analytics" },
+    { href: "/provider/revenue", label: "Revenue" },
+    { href: "/provider/settings", label: "Settings" },
+  ] : [
     { href: "/reports", label: "Reports" },
     { href: "/settings", label: "Settings" },
     { href: "/profile", label: "Profile" },
@@ -72,13 +77,13 @@ export default function AppNav() {
       borderColor: 'var(--border-primary)' 
     }}>
       <div className="mx-auto flex max-w-[1400px] items-center gap-2 px-4 py-4">
-        {/* Premium Brand */}
-        <Link href="/dashboard" className="mr-4 flex items-center gap-3">
+        {/* Premium Brand - Different home link for Providers */}
+        <Link href={isProvider ? "/provider" : "/dashboard"} className="mr-4 flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
             <span className="text-white font-bold text-sm">MV</span>
           </div>
           <span className="text-lg font-bold text-gradient">
-            Mountain Vista
+            {isProvider ? "Mountain Vista Provider" : "Mountain Vista"}
           </span>
         </Link>
 
