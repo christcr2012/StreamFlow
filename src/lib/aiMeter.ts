@@ -14,24 +14,26 @@ type OrgWithAI = {
   aiPlan: 'BASE' | 'PRO' | 'ELITE';
 };
 
-// Credit conversion: 1 credit = $0.001, so $50 = 50,000 credits
+// CLIENT-FACING CREDIT SYSTEM: 1 credit = $0.05 (50x markup from provider cost)
+// Provider costs stay under $50/month while clients see value-based pricing
+// Each conversion worth $100, so credit costs reflect lead generation value
 const CREDIT_RATES = {
   'gpt-4o-mini': {
-    input: 0.15,    // $0.15 per 1M tokens = 150 credits per 1M tokens = 0.15 credits per 1k tokens  
-    output: 0.6,    // $0.60 per 1M tokens = 600 credits per 1M tokens = 0.6 credits per 1k tokens
+    input: 7.5,     // $0.15 per 1M tokens = 7.5 credits per 1M tokens = 0.0075 credits per 1k tokens  
+    output: 30,     // $0.60 per 1M tokens = 30 credits per 1M tokens = 0.03 credits per 1k tokens
   }
 } as const;
 
-// Convert budget from cents to credits: $50 (5000 cents) = 50,000 credits
+// Convert budget from cents to credits: $50 (5000 cents) = 1,000 credits at $0.05/credit
 function convertBudgetCentsToCredits(cents: number): number {
-  return cents * 10; // 1 cent = 10 credits (since 1 credit = $0.001)
+  return cents / 5; // 1 credit = $0.05, so 5000 cents / 5 = 1000 credits
 }
 
 export interface AiMeterOptions {
   feature: string;           // 'lead_analysis', 'rfp_strategy', 'pricing', 'response_gen'
   orgId: string;
   userId?: string;
-  maxCredits?: number;       // Override default per-call limit
+  maxCredits?: number;       // Override default per-call limit (default: 50 credits)
   fallbackValue?: any;       // Return this if budget exceeded
 }
 
@@ -51,7 +53,7 @@ export interface AiUsageResult<T> {
 export async function checkAiBudget(
   orgId: string, 
   feature: string, 
-  estimatedCredits: number = 1000
+  estimatedCredits: number = 50
 ): Promise<{ allowed: boolean; reason?: string; creditsRemaining: number }> {
   try {
     const org = await prisma.org.findUnique({
@@ -81,7 +83,7 @@ export async function checkAiBudget(
     });
 
     const creditsUsedThisMonth = monthlyUsage?.creditsUsed || 0;
-    const budgetCredits = convertBudgetCentsToCredits(org.aiMonthlyBudgetCents); // 5000 cents = 50,000 credits
+    const budgetCredits = convertBudgetCentsToCredits(org.aiMonthlyBudgetCents); // 5000 cents = 1,000 credits
     
     if (creditsUsedThisMonth + estimatedCredits > budgetCredits) {
       return {
@@ -116,7 +118,7 @@ export async function aiMeter<T>(
     usage: { prompt_tokens: number; completion_tokens: number; total_tokens: number }
   }>
 ): Promise<AiUsageResult<T>> {
-  const { feature, orgId, userId, maxCredits = 5000, fallbackValue } = options;
+  const { feature, orgId, userId, maxCredits = 50, fallbackValue } = options;
   const requestId = `ai-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
   try {
