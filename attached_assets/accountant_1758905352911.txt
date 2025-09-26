@@ -1,0 +1,43 @@
+{
+  "action": "create_or_modify_role",
+  "role_name": "Accountant",
+  "goal": "Provide finance professionals access only to accounting and reporting functions — secure, compliant, and separated from business ops.",
+  "scope": "Tenant-specific; restricted to financial modules, integrations, and reports.",
+  "capabilities": {
+    "accounting_ops": [
+      "Access to general ledger, accounts payable/receivable, invoicing, and expense tracking",
+      "Generate, view, and export financial reports (e.g., P&L, balance sheets, cash flow)",
+      "Manage tax-related data, payments, and filings"
+    ],
+    "integrations": [
+      "Connect and sync with external accounting systems (QuickBooks, Xero, NetSuite, etc.)",
+      "Configure import/export of transaction data with banking or payment providers"
+    ],
+    "financial_controls": [
+      "Reconcile bank accounts and payments",
+      "Tag, categorize, and audit financial transactions",
+      "Submit financial adjustments subject to Owner approval (if enabled)"
+    ],
+    "limited_self_service": [
+      "Update personal login/security details (passwords, MFA)",
+      "Receive notifications for payment deadlines, anomalies, or failed syncs"
+    ]
+  },
+  "constraints_and_safeguards": [
+    "No access to business operations, scheduling, staff/customer management, or provider portal",
+    "No ability to create/disable user accounts, roles, or permissions",
+    "All exports and sensitive report views logged to audit trail",
+    "Owner can further restrict by module (e.g., payroll vs. AR/AP)"
+  ],
+  "audit_and_compliance": {
+    "financial_logging": "Immutable logs for all financial changes, downloads, and exports",
+    "compliance": "Features aligned with GAAP/IFRS; support for audit-readiness and SOC 2 logging",
+    "data_residency": "Respect local data retention, privacy, and financial regulations"
+  },
+  "provisioning_flows": {
+    "role_assignment": "Owner creates Accountant role account, invite via email or credentials",
+    "onboarding": "Walkthrough of accounting dashboards and integrations",
+    "offboarding": "Immediate termination of access, archive of historical finance activity"
+  },
+  "notes": "This role isolates accounting tasks for security and compliance. Owner retains override authority and can restrict features to match company needs or industry regulations."
+}

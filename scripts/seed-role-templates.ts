@@ -317,6 +317,44 @@ const industryTemplates: RoleTemplateData[] = [
     },
     isSystemTemplate: true,
     isPublic: true
+  },
+
+  // === FINANCE & ACCOUNTING ===
+  {
+    name: "Accountant",
+    description: "Finance professional with access to accounting, reporting, and compliance functions. Secure and compliant financial operations.",
+    industry: "Finance",
+    category: "Accounting",
+    complexity: "INTERMEDIATE",
+    permissions: [
+      "accounting:ledger:read", "accounting:ledger:create",
+      "accounting:ap:read", "accounting:ap:create", "accounting:ap:process",
+      "accounting:ar:read", "accounting:ar:create", "accounting:ar:collect",
+      "accounting:invoice:read", "accounting:invoice:create", "accounting:invoice:send",
+      "accounting:expense:read", "accounting:expense:create",
+      "reports:financial:view", "reports:financial:export", "reports:custom:create",
+      "tax:data:read", "tax:data:create", "tax:payments:process", "tax:filings:prepare",
+      "banking:accounts:view", "banking:reconcile", "banking:transactions:import",
+      "integration:accounting:setup", "integration:data:sync",
+      "compliance:audit_trail:view", "compliance:reports:generate",
+      "profile:read", "profile:update", "notifications:manage"
+    ],
+    config: {
+      defaultDashboard: "accounting",
+      allowedModules: ["accounting", "financial_reporting", "tax_management", "banking", "compliance"],
+      restrictedAreas: ["business_operations", "user_management", "system_admin"],
+      financialDataOnly: true,
+      auditLogging: true,
+      complianceLevel: "high"
+    },
+    scopeConfig: {
+      tenantIsolation: true,
+      financialModulesOnly: true,
+      approvalRequired: ["major_adjustments", "sensitive_reports"],
+      exportLogging: true
+    },
+    isSystemTemplate: true,
+    isPublic: true
   }
 ];
 
@@ -331,7 +369,7 @@ async function seedRoleTemplates() {
 
     // Create new templates
     const created = await Promise.all(
-      industryTemplates.map(template => 
+      industryTemplates.map((template: RoleTemplateData) => 
         db.roleTemplate.create({
           data: {
             ...template,
@@ -345,13 +383,13 @@ async function seedRoleTemplates() {
     console.log(`✅ Successfully created ${created.length} industry role templates:`);
     
     // Group by industry for reporting
-    const byIndustry = created.reduce((acc, template) => {
+    const byIndustry = created.reduce((acc: Record<string, string[]>, template: any) => {
       if (!acc[template.industry]) acc[template.industry] = [];
       acc[template.industry].push(template.name);
       return acc;
     }, {} as Record<string, string[]>);
 
-    Object.entries(byIndustry).forEach(([industry, roles]) => {
+    Object.entries(byIndustry).forEach(([industry, roles]: [string, string[]]) => {
       console.log(`  📁 ${industry}: ${roles.join(', ')}`);
     });
 
