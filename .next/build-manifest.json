@@ -23,10 +23,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/provider/revenue": [
+    "/provider/settings": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/provider/revenue.js"
+      "static/chunks/pages/provider/settings.js"
     ]
   },
   "ampFirstPages": []

@@ -18,6 +18,12 @@ export default function OrgSettingsPage() {
   // settingsJson but we surface it separately for convenience.
   const [settingsJson, setSettingsJson] = useState<string>("{}");
   const [samApiKey, setSamApiKey] = useState<string>("");
+  // Client-managed environment variables
+  const [stripeSecretKey, setStripeSecretKey] = useState<string>("");
+  const [stripePublicKey, setStripePublicKey] = useState<string>("");
+  const [twilioAccountSid, setTwilioAccountSid] = useState<string>("");
+  const [twilioAuthToken, setTwilioAuthToken] = useState<string>("");
+  const [sendgridApiKey, setSendgridApiKey] = useState<string>("");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -32,9 +38,14 @@ export default function OrgSettingsPage() {
             setBrandName(bc.name || "");
             setBrandColor(bc.color || "");
             setBrandLogoUrl(bc.logoUrl || "");
-            // Extract samApiKey from settingsJson if present
+            // Extract samApiKey and other environment variables from settingsJson if present
             const settings = j.settingsJson || {};
             setSamApiKey(settings.samApiKey || "");
+            setStripeSecretKey(settings.stripeSecretKey || "");
+            setStripePublicKey(settings.stripePublicKey || "");
+            setTwilioAccountSid(settings.twilioAccountSid || "");
+            setTwilioAuthToken(settings.twilioAuthToken || "");
+            setSendgridApiKey(settings.sendgridApiKey || "");
             setSettingsJson(JSON.stringify(settings, null, 2));
           }
         })
@@ -53,12 +64,42 @@ export default function OrgSettingsPage() {
       } catch {
         throw new Error("Settings JSON must be valid JSON");
       }
-      // Inject samApiKey into settingsJson so the API can pick it up.
+      // Inject API keys into settingsJson so the API can pick them up.
       if (samApiKey) {
         parsedSettings.samApiKey = samApiKey;
       } else {
-        // If empty, remove from settings
         delete parsedSettings.samApiKey;
+      }
+      
+      // Client environment variables
+      if (stripeSecretKey) {
+        parsedSettings.stripeSecretKey = stripeSecretKey;
+      } else {
+        delete parsedSettings.stripeSecretKey;
+      }
+      
+      if (stripePublicKey) {
+        parsedSettings.stripePublicKey = stripePublicKey;
+      } else {
+        delete parsedSettings.stripePublicKey;
+      }
+      
+      if (twilioAccountSid) {
+        parsedSettings.twilioAccountSid = twilioAccountSid;
+      } else {
+        delete parsedSettings.twilioAccountSid;
+      }
+      
+      if (twilioAuthToken) {
+        parsedSettings.twilioAuthToken = twilioAuthToken;
+      } else {
+        delete parsedSettings.twilioAuthToken;
+      }
+      
+      if (sendgridApiKey) {
+        parsedSettings.sendgridApiKey = sendgridApiKey;
+      } else {
+        delete parsedSettings.sendgridApiKey;
       }
       const body = {
         brandConfig: {
@@ -138,6 +179,97 @@ export default function OrgSettingsPage() {
               placeholder="Enter your SAM.gov API Key"
             />
           </label>
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-medium mb-4">Client Environment Variables</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                These API keys are specific to your organization and are used for client-specific integrations.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block">
+                    <span className="text-sm font-medium">Stripe Secret Key</span>
+                    <input
+                      className="mt-1 w-full border rounded px-3 py-2"
+                      type="password"
+                      value={stripeSecretKey}
+                      onChange={(e) => setStripeSecretKey(e.target.value)}
+                      placeholder="sk_..."
+                    />
+                  </label>
+                </div>
+                
+                <div>
+                  <label className="block">
+                    <span className="text-sm font-medium">Stripe Public Key</span>
+                    <input
+                      className="mt-1 w-full border rounded px-3 py-2"
+                      type="text"
+                      value={stripePublicKey}
+                      onChange={(e) => setStripePublicKey(e.target.value)}
+                      placeholder="pk_..."
+                    />
+                  </label>
+                </div>
+                
+                <div>
+                  <label className="block">
+                    <span className="text-sm font-medium">Twilio Account SID</span>
+                    <input
+                      className="mt-1 w-full border rounded px-3 py-2"
+                      type="password"
+                      value={twilioAccountSid}
+                      onChange={(e) => setTwilioAccountSid(e.target.value)}
+                      placeholder="AC..."
+                    />
+                  </label>
+                </div>
+                
+                <div>
+                  <label className="block">
+                    <span className="text-sm font-medium">Twilio Auth Token</span>
+                    <input
+                      className="mt-1 w-full border rounded px-3 py-2"
+                      type="password"
+                      value={twilioAuthToken}
+                      onChange={(e) => setTwilioAuthToken(e.target.value)}
+                      placeholder="Auth token"
+                    />
+                  </label>
+                </div>
+                
+                <div className="md:col-span-2">
+                  <label className="block">
+                    <span className="text-sm font-medium">SendGrid API Key</span>
+                    <input
+                      className="mt-1 w-full border rounded px-3 py-2"
+                      type="password"
+                      value={sendgridApiKey}
+                      onChange={(e) => setSendgridApiKey(e.target.value)}
+                      placeholder="SG..."
+                    />
+                  </label>
+                </div>
+              </div>
+              
+              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+                    <span className="text-white text-xs">i</span>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium text-blue-800">Client Configuration</div>
+                    <div className="text-xs text-blue-600">
+                      These keys are managed by your organization and used for billing, communications, and email delivery.
+                      Provider-level keys (OpenAI, Session secrets) are managed separately in the Provider portal.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <label className="block">
             <span className="text-sm font-medium">Settings (JSON)</span>
             <textarea
