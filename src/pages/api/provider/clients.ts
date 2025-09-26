@@ -1,27 +1,43 @@
 // Provider API - Get all client subscriptions and their status
 // Referenced: javascript_stripe integration for subscription management
 
-import { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
-// Using middleware for auth - will work with existing session system
+import type { NextApiRequest, NextApiResponse } from "next";
+import { prisma as db } from "@/lib/prisma";
+import { getEmailFromReq } from "@/lib/rbac";
 
-const prisma = new PrismaClient();
+// Ensure only providers can access this endpoint
+async function ensureProvider(req: NextApiRequest, res: NextApiResponse) {
+  const email = getEmailFromReq(req);
+  if (!email) {
+    res.status(401).json({ ok: false, error: "Unauthorized" });
+    return null;
+  }
+
+  const user = await db.user.findUnique({
+    where: { email },
+    select: { id: true, role: true },
+  });
+
+  if (!user || user.role !== 'PROVIDER') {
+    res.status(403).json({ ok: false, error: "Provider access required" });
+    return null;
+  }
+
+  return user;
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    res.setHeader('Allow', 'GET');
+    return res.status(405).json({ ok: false, error: 'Method not allowed' });
   }
 
   try {
-    // Simple auth check - Provider portal access
-    // TODO: Add proper Provider role verification
-    const cookies = req.headers.cookie;
-    if (!cookies?.includes('mv_user')) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
+    const user = await ensureProvider(req, res);
+    if (!user) return;
 
     // Get all organizations for Provider dashboard
-    const orgs = await prisma.org.findMany({
+    const orgs = await db.org.findMany({
       select: {
         id: true,
         name: true,
@@ -82,15 +98,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     res.status(200).json({
-      success: true,
+      ok: true,
       clients
     });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Provider clients API error:', error);
     res.status(500).json({ 
-      success: false, 
-      error: 'Failed to fetch client data' 
+      ok: false, 
+      error: error.message || 'Failed to fetch client data' 
     });
   }
 }
