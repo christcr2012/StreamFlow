@@ -3,8 +3,9 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/worker/home": "pages/worker/home.js",
+  "/login": "pages/login.js",
   "/dashboard": "pages/dashboard.js",
   "/api/dashboard/summary": "pages/api/dashboard/summary.js",
-  "/login": "pages/login.js",
+  "/": "pages/index.js",
   "/api/me": "pages/api/me.js"
 }
