@@ -1,14 +1,9 @@
 {
   "/_app": "pages/_app.js",
-  "/_document": "pages/_document.js",
   "/_error": "pages/_error.js",
+  "/_document": "pages/_document.js",
+  "/": "pages/index.js",
   "/worker/home": "pages/worker/home.js",
-  "/dashboard": "pages/dashboard.js",
-  "/api/me": "pages/api/me.js",
-  "/api/leads.list": "pages/api/leads.list.js",
-  "/api/dashboard/summary": "pages/api/dashboard/summary.js",
-  "/api/auth/logout": "pages/api/auth/logout.js",
   "/login": "pages/login.js",
-  "/schedule": "pages/schedule.js",
-  "/": "pages/index.js"
+  "/api/me": "pages/api/me.js"
 }
