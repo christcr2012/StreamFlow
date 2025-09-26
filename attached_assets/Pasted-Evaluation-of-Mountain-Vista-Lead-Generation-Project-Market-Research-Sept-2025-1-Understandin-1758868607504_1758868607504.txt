@@ -1,0 +1,346 @@
+Evaluation of Mountain Vista Lead‑Generation
+Project & Market Research (Sept 2025)
+1. Understanding the Current Project
+Repository structure (from prior exploration)
+Next.js front‑end – the project uses a TypeScript Next.js app with pages such as /leads , /
+billing , /settings and /provider . Lead pages show lead details, allow marking a lead as
+Converted and display conversion status. Billing pages show usage totals and draft invoices. Settings
+pages allow the client to set provider API keys and billing preferences. Many pages leverage shadcn/
+ui components for tables and forms.
+API routes – serverless functions in /pages/api/… handle lead fetching and updates. For
+example sam/fetch.ts fetches new leads from SAM.gov and normalizes them; leads.tsx lists
+leads; leads/[id].ts updates a lead’s status and conversion flag; billing/preview.tsx
+produces draft invoices summarizing converted leads at $100 per lead; and stripe/webhook.ts
+updates invoice status after payment.
+Lead attribution & scoring – new leads are tagged with a source_type ( SYSTEM ,
+EMPLOYEE_REFERRAL , MANUAL_ENTRY ) and optional source_details (campaign, referral
+employee). Only system‑generated leads are billable. A simple lead‑scoring adapter maps attributes
+(industry, contract value, etc.) to a numeric score; manual overrides are available. A
+leadConversion event triggers billing logic when a lead’s is_converted flag is set.
+Billing & invoicing – a billing service records each converted, billable lead and aggregates them at
+period‑end. The system integrates with Stripe for invoicing; invoices show the number of converted
+leads and the total charge (e.g. “7 × $100” in phase 2). Payment status is updated via Stripe
+webhooks. The architecture is modular so pricing logic can evolve.
+Anti‑fraud logic – the data model prevents clients from editing source_type . Audit logs capture
+any changes to source attribution and conversion status. Non‑billable sources (manual entry,
+employee referrals) are permanently exempt. Duplicate detection and dispute workflows allow the
+owner to flag leads and receive credit on the next invoice. The design emphasises transparent
+line‑item invoices and robust source attribution.
+Real‑time dashboard – the owner dashboard shows the running count of converted, billable leads
+and an estimated invoice total; this reduces invoice shock by providing visibility during the billing
+period.
+Existing roadmap (summary)
+Phase   2 introduces conversion‑based billing with $100/lead pricing, monthly draft invoices, Stripe
+integration and an invoice page. Phase 3 adds an RFP parser and bid helper that extracts key information
+from uploaded RFP PDFs/DOCX files (scope, due dates, walkthroughs, insurance/bond requirements) and
+creates a checklist; an optional AI summary highlights important points. Parsed briefs attach to the lead.
+Phase 4 focuses on disputes & anti‑gaming with audit logs, dispute workflows and an admin tool for
+•
+•
+•
+•
+•
+•
+1
+reclassifying leads and issuing credits. Phase 5 is polish & white‑label, giving the interface a shadcn/ui
+makeover and introducing brand configuration (name, colours, logo) plus settings/profile pages. Phase 6
+proposes optional accelerators: prepaid lead packs, tiered pricing, additional lead sources (LSA and state/
+county portals) and hybrid base/usage plans. Success criteria include accurate lead fetching,
+conversion‑based billing, Stripe‑powered invoices, permanent free employee referrals, dispute resolution
+and a polished, white‑label interface.
+2. Market Research: Sources & Tools for Premium Lead Generation
+Government procurement platforms
+Samsearch – Samsearch aggregates federal, state and local procurement data (SAM.gov,
+FedBizOpps, GSA schedules, DIBBS, etc.) and uses AI to match opportunities to a firm’s capabilities. It
+monitors more than 10 000 government websites and allows filtering by NAICS codes, geographic
+region, contract value and deadlines . Advanced features include AI‑generated summaries of
+RFPs, competitor analysis and win‑probability scoring .
+SAM.gov – the official U.S. federal contracting portal. All opportunities over $25 k are posted here
+. Registration is mandatory for federal contracting.
+GovWin (Deltek) and Bloomberg Government – enterprise‑level platforms providing long‑range
+spending forecasts and analytics .
+BidNet Direct – organizes bids and RFPs from state and local agencies into regional purchasing
+groups. Vendors can register to receive matched opportunities; the platform sends automatic
+notifications when new bids match a vendor’s criteria . The site lists purchasing groups for every
+state and allows vendors to access exclusive opportunities .
+These sources show that beyond SAM.gov there are many SLED (state, local, education) portals and
+specialized bid boards (DIBBS for defence, NASA SEWP, state purchasing portals). Integrating more of these
+sources will increase available leads.
+Local online advertising: Google Local Services Ads (LSA)
+Local Services Ads are pay‑per‑lead ads for service‑oriented businesses. An LSA appears at the top of
+Google search results and displays the business name, star rating, hours, and a call or message button .
+LSAs differ from standard Google Ads because:
+Pay per lead – businesses pay only when a consumer contacts them through the ad . Google sets
+a fixed cost per lead by industry and location .
+Budget control – advertisers choose the number of leads they want per week, making costs
+predictable .
+High visibility & trust – LSAs appear above normal ads and include a “Google Guarantee” badge if
+the business passes verification; the badge enhances consumer trust .
+Refunds for invalid leads – advertisers can request refunds for spam or irrelevant leads .
+These features make LSAs an attractive low‑risk channel for service businesses. Integrating LSA lead
+retrieval and verification into the platform can broaden lead sources and create another revenue stream.
+•
+1
+2
+•
+3
+•
+4
+•
+5
+6
+7
+• 8
+8
+•
+9
+•
+10
+• 11
+2
+Commercial lead‑generation tools & CRM platforms
+Researching popular lead‑generation software highlights features expected of premium platforms:
+Platform Key features & pricing Why it matters
+Pipedrive
+Starting at $14 per seat per month
+with a 14‑day trial . Provides an
+intuitive drag‑and‑drop pipeline,
+activity‑based selling prompts and
+robust reporting .
+Visual pipelines and activity
+reminders help sales teams
+manage leads efficiently; low
+cost suits SMB budgets.
+HubSpot Marketing Hub
+Free tier available . Combines
+landing‑page builder, form creation,
+email marketing, social media
+management and CRM integration .
+An all‑in‑one inbound
+marketing platform
+streamlines content marketing
+and lead nurturing without
+high costs.
+Agile CRM
+Free tier; premium plans add
+telephony and gamification features
+. Drag‑and‑drop campaign builder
+and gamified lead generation keep
+teams engaged .
+Small businesses gain
+enterprise‑level automation
+and motivational tools.
+CallPage
+$31/user/month. Adds a callback
+widget to convert website visitors into
+leads; routes calls intelligently and
+records conversations .
+Immediate phone connection
+captures hot leads and
+provides call analytics.
+AeroLeads
+$39/user/month (B2B prospecting).
+Browser extension collects and verifies
+contact information from social
+networks and directories .
+Automates contact discovery
+and ensures email
+deliverability for outbound
+campaigns.
+LeadsBridge
+Free starting tier; 14‑day trial .
+Automatically pushes leads from ad
+platforms (Facebook, Google, LinkedIn)
+into CRMs, eliminating data entry .
+Ensures no leads are lost when
+transferring data between
+marketing and sales systems.
+OptinMonster
+$7/month. Provides advanced
+targeting and personalization for
+website pop‑ups; A/B testing and
+exit‑intent triggers help maximise
+conversions .
+Affordable conversion
+optimization tool to capture
+leads directly from website
+traffic.
+Modern lead‑generation suites also emphasise marketing automation. Invesp reports that marketing
+automation drives 14.5   % higher sales productivity and 12.2   % lower marketing overhead .
+Four‑fifths of marketing‑automation users saw an increase in leads and 77 % reported higher conversions
+. The primary strategic goals of automation include increasing lead generation (61 %), lead nurturing
+(57   %) and sales revenue (47   %) . These statistics highlight that integrating marketing‑automation
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+3
+capabilities—such as automated email sequences, segmentation, lead scoring and A/B testing—can
+significantly improve lead quantity and quality.
+3. Recommendations for Building an Ultra‑Premium, Low‑Cost
+Platform
+Based on the existing project and market research, the following roadmap enhancements and new features
+will elevate the product while keeping costs manageable:
+3.1 Expand Lead Sources
+Integrate state and local procurement portals – Extend the existing SAM.gov integration to
+include additional SLED portals. Use scraping or API connectors to fetch opportunities from BidNet
+Direct and individual state procurement sites. Vendors registered with regional purchasing groups
+receive automatic bid notifications ; tapping into these feeds will increase the volume of RFPs and
+opportunities for clients.
+Leverage Samsearch’s AI‑powered government contracting data – Use Samsearch (or a similar
+aggregator) to access consolidated federal, state and local procurement data and AI‑generated
+opportunity matches . This reduces the complexity of maintaining multiple scrapers and provides
+enriched metadata like NAICS codes, deadlines and win‑probability scores.
+Add Google Local Services Ads integration – Provide clients with an interface to manage LSAs,
+import leads and track ROI. Emphasize LSAs’ pay‑per‑lead pricing , fixed cost per lead , budget
+control and refund options . Integrating LSAs will generate consumer leads beyond government
+procurement and offers predictable costs.
+Offer curated private sector leads – Partner with commercial lead‑generation providers (CallPage,
+AeroLeads, LeadFuze) to feed high‑value B2B opportunities. Provide clients with optional paid lead
+packs; design the system so that premium leads (e.g. from LeadFuze or Samsearch) are priced
+higher while still preserving the pay‑per‑conversion model.
+3.2 Enhance Lead Management & Automation
+RFP parser and bid assistant (Phase 3) – Implement a local text‑extraction service using
+open‑source libraries (e.g. pdfplumber , docx2txt ) to extract content from uploaded RFP
+documents. Use natural‑language processing to detect dates, scope, insurance/bond requirements
+and create a checklist. Offer an optional AI summarization feature that uses a generative model to
+produce talking points. Store the parsed summary and checklist on the lead record for easy
+reference. Provide a “Send to Proposal Builder” button to generate template responses.
+Advanced lead scoring & segmentation – Expand the current scoring adapter to include
+machine‑learning models that consider historical conversion rates by source, value and buyer
+personas. Integrate marketing‑automation features such as automated nurturing sequences
+triggered by lead score thresholds. Use segmentation to deliver personalised content via email or
+SMS.
+CRM integrations – Offer connectors to popular CRMs (Pipedrive, HubSpot, Agile CRM). Use
+LeadsBridge‑style integrations to automatically push generated leads into the client’s CRM and pull
+back status updates . Provide configuration UI for mapping fields and controlling when leads
+sync.
+1.
+5
+2.
+1
+3.
+26 8
+11
+4.
+1.
+2.
+3.
+20
+4
+Automation & analytics – Add marketing‑automation capabilities: behaviour‑based email
+sequences, campaign tracking, A/B testing, web‑tracking and lead scoring. Invesp’s research shows
+automation can increase sales productivity and reduce marketing overhead ; offering these
+features will make the product more competitive. Provide analytics dashboards that show conversion
+rates by source, cost per conversion, ROI and pipeline velocity.
+3.3 Billing & Pricing Improvements
+Conversion‑based billing – Keep the $100/lead flat rate for system‑generated leads (Phase 2).
+Provide volume discounts or tiered pricing as optional features (Phase 6). Use pre‑paid lead packs
+where clients deposit funds and the system deducts credits upon conversion.
+Hybrid subscription model – Offer a small monthly base fee to cover platform usage (e.g. analytics
+and management features) plus per‑lead charges. Provide transparent breakdowns so clients know
+exactly what they are paying for.
+Multi‑currency & taxation – Design invoices to support multiple currencies and automatically apply
+taxes based on the client’s location and lead source (future enhancement recommended in the PDF).
+Smart invoicing – Continue using Stripe for invoice creation and payment collection. Provide a
+real‑time invoice preview on the dashboard and allow clients to download a CSV of billed leads.
+Implement auto‑retry logic for failed payments and email reminders.
+3.4 Trust & Fairness Mechanisms
+Enhanced anti‑gaming – Extend audit logging to capture any changes to source attribution,
+conversion status or invoice adjustments. Use duplicate detection to flag leads imported multiple
+times and automatically merge duplicates. Provide a dispute workflow where clients can flag leads
+for review; admin can approve or deny disputes and issue credits.
+Lead quality guarantees – Offer a quality guarantee (similar to Google’s guarantee badge) for leads
+that meet defined criteria (complete contact information, within the target region, etc.). Credits or
+refunds could be issued for invalid leads, building trust with clients.
+Compliance & verification – For LSA leads, implement checks for business verification, licensing
+and insurance as required by Google LSA guidelines . For government leads, validate vendor
+eligibility (e.g. registration in SAM.gov, NAICS codes) before presenting leads.
+3.5 Polished UI & White‑Labeling (Phase 5)
+Adopt the shadcn/ui design system across the app to create consistent, modern components
+(tables, buttons, forms). Use environment variables to load branding (logo, colours, company name)
+so the platform can be re‑branded for different clients with minimal configuration. Provide a settings
+page where clients can update their organisation profile, payment method (Stripe portal) and
+manage users.
+Build modular dashboard widgets that show conversion metrics, lead sources, ROI and invoice
+previews. Allow clients to rearrange or hide widgets based on their priorities.
+4.
+23
+1.
+2.
+3.
+4.
+1.
+2.
+3.
+27
+•
+•
+5
+3.6 Optional Accelerators (Phase 6)
+Lead packs & credit balance – Implement a wallet system where clients purchase bundles of leads
+at a discount; each conversion deducts credit from their balance. Show remaining credits and
+upcoming replenishment suggestions.
+Tiered pricing & hybrid plans – Provide discount tiers based on monthly conversion volume. For
+example, $100/lead up to 10 leads, $90/lead for 11–30 leads, and $80/lead beyond. Clients with high
+volumes get better rates while the platform maintains predictable revenue.
+Additional lead sources – After integrating state portals and LSAs, explore partnerships with
+franchise directories, property‑management associations, or industry‑specific networks to generate
+unique leads. Normalise these leads to the existing lead model for scoring and conversion tracking.
+4. Next Steps
+Prioritise Phase 2 implementation – Finalise conversion‑based billing and Stripe integration.
+Provide clear invoices showing number of billable leads and allow the owner to preview charges
+during the month.
+Research and prototype data ingestion from state procurement portals and LSAs. Assess API
+availability and scraping constraints. Build adapters to normalise leads into the existing schema.
+Develop the RFP parser – Build a micro‑service for PDF/DOCX extraction and create UI for
+uploading files. Start with rule‑based extraction of due dates, scope keywords and mandatory
+requirements; later add AI summarisation.
+Design the enhanced UI – Prepare a design system using shadcn/ui, focusing on readability and
+spacing. Implement brand configuration via environment variables.
+Plan marketing‑automation features – Evaluate open‑source or low‑cost marketing‑automation
+libraries and define triggers for drip campaigns, follow‑ups and lead nurturing.
+Set up analytics & reporting – Define key metrics (conversion rate by source, cost per conversion,
+ROI). Use data visualisation libraries to add charts and tables to the dashboard.
+By expanding lead sources, integrating automation, and improving billing and UI/UX, the Mountain Vista
+platform can evolve into an ultra‑premium, low‑cost lead‑generation system. Leveraging AI‑powered
+opportunity matching and marketing automation will help clients acquire more qualified leads while
+maintaining transparency and fairness in billing.
+SamSearch - Top 10 Websites to Find Government Contracts in 2025 | The Ultimate Guide
+https://samsearch.co/blog/top-10-websites-find-government-contracts-2025
+Government Purchasing Groups | BidNet Direct
+https://www.bidnetdirect.com/purchasing-groups
+Understanding Google’s Local Services Ads for Small Business Growth - Wingman
+Planning | Digital Marketing & SEO Specialist in Monmouth County, NJ
+https://wingmanplanning.com/understanding-googles-local-services-ads-for-small-business-growth/
+A Buyer’s Guide to the 10 Best Lead Generation Software Solutions
+for 2025
+https://www.retreva.com/best-lead-generation-software/
+1.
+2.
+3.
+•
+•
+•
+•
+•
+•
+1 2 3 4
+5 6
+7 8 9 10 11 26 27
+12 13 14 15 16 17 18 19 20 21 22
+6
+The Rise of Marketing Automation - Statistics and Trends [Infographic] - Invesp
+https://www.invespcro.com/blog/marketing-automation/
+23 24 25
+7

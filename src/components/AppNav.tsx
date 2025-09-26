@@ -36,40 +36,89 @@ function NavLink({ href, label }: { href: string; label: string }) {
 }
 
 /**
- * App-wide top navigation bar.
- * - Highlights active route
- * - Provides quick links
- * - Includes Logout button (calls /api/auth/logout then redirects to /login)
+ * Multi-portal navigation bar for Robinson Solutions Business OS.
+ * Supports Admin/Manager, Employee, Client, Accountant, and Provider portals.
+ * - Role-based navigation with portal-specific routes
+ * - Mobile-optimized for employee portal
+ * - Premium styling with Robinson Solutions branding
  */
 export default function AppNav() {
-  // Pull current user flags for nav gating
+  // Pull current user for portal routing
   const { me } = useMe();
+  const userRole = me?.role;
 
-  // Build left-side links conditionally
-  // Provider-only navigation: Providers should only see their dedicated portal
-  // All other roles see the standard client-facing navigation
-  const isProvider = me?.role === "PROVIDER";
-  
-  const leftLinks = isProvider ? [
-    { href: "/provider", label: "Provider Portal" },
-  ] : [
-    { href: "/dashboard", label: "Dashboard" },
-    { href: "/leads", label: "Leads" },
-    ...(me?.role === "OWNER"
-      ? [{ href: "/admin", label: "Admin" }]
-      : []),
-  ];
+  // Define portal-specific navigation based on user role
+  const getPortalNavigation = () => {
+    switch (userRole) {
+      case "PROVIDER":
+        return {
+          portalName: "Provider Portal",
+          homeRoute: "/provider",
+          leftLinks: [
+            { href: "/provider", label: "Dashboard" },
+          ],
+          rightLinks: [
+            { href: "/provider/clients", label: "Clients" },
+            { href: "/provider/analytics", label: "Analytics" },
+            { href: "/provider/revenue", label: "Revenue" },
+            { href: "/provider/settings", label: "Settings" },
+          ]
+        };
+      
+      case "STAFF":
+        return {
+          portalName: "Employee Portal",
+          homeRoute: "/worker/home",
+          leftLinks: [
+            { href: "/worker/home", label: "Home" },
+            { href: "/worker/clock", label: "Time Clock" },
+            { href: "/worker/jobs", label: "My Jobs" },
+          ],
+          rightLinks: [
+            { href: "/worker/training", label: "Training" },
+            { href: "/worker/payroll", label: "Payroll" },
+            { href: "/worker/profile", label: "Profile" },
+          ]
+        };
+        
+      case "ACCOUNTANT":
+        return {
+          portalName: "Accountant Portal",
+          homeRoute: "/accountant/reports",
+          leftLinks: [
+            { href: "/accountant/reports", label: "Reports" },
+            { href: "/accountant/exports", label: "Exports" },
+          ],
+          rightLinks: [
+            { href: "/accountant/invoices", label: "Invoices" },
+            { href: "/accountant/payroll", label: "Payroll" },
+            { href: "/accountant/settings", label: "Settings" },
+          ]
+        };
+        
+      case "OWNER":
+      case "MANAGER":
+      default:
+        return {
+          portalName: "Admin Portal",
+          homeRoute: "/dashboard",
+          leftLinks: [
+            { href: "/dashboard", label: "Dashboard" },
+            { href: "/leads", label: "Leads" },
+            { href: "/jobs", label: "Jobs" },
+            { href: "/schedule", label: "Schedule" },
+            ...(userRole === "OWNER" ? [{ href: "/admin", label: "Admin" }] : []),
+          ],
+          rightLinks: [
+            { href: "/invoices", label: "Invoices" },
+            { href: "/reports", label: "Reports" },
+            { href: "/settings", label: "Settings" },
+          ]
+        };
+    }
+  };
 
-  const rightLinks = isProvider ? [
-    { href: "/provider/clients", label: "Clients" },
-    { href: "/provider/analytics", label: "Analytics" },
-    { href: "/provider/revenue", label: "Revenue" },
-    { href: "/provider/settings", label: "Settings" },
-  ] : [
-    { href: "/reports", label: "Reports" },
-    { href: "/settings", label: "Settings" },
-    { href: "/profile", label: "Profile" },
-  ];
+  const { portalName, homeRoute, leftLinks, rightLinks } = getPortalNavigation();
 
   return (
     <header className="w-full border-b backdrop-blur-xl" style={{ 
@@ -77,14 +126,16 @@ export default function AppNav() {
       borderColor: 'var(--border-primary)' 
     }}>
       <div className="mx-auto flex max-w-[1400px] items-center gap-2 px-4 py-4">
-        {/* Premium Brand - Different home link for Providers */}
-        <Link href={isProvider ? "/provider" : "/dashboard"} className="mr-4 flex items-center gap-3">
+        {/* Premium Brand - Portal-specific home link */}
+        <Link href={homeRoute} className="mr-4 flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
             <span className="text-white font-bold text-sm" style={{ fontFamily: 'serif', fontStyle: 'italic' }}>R</span>
           </div>
-          <span className="text-lg font-bold text-gradient">
-            {isProvider ? "Robinson Solutions Provider" : "Robinson Solutions"}
-          </span>
+          <div className="hidden sm:block">
+            <div className="text-lg font-bold text-gradient">Robinson Solutions</div>
+            <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>{portalName}</div>
+          </div>
+          <div className="sm:hidden text-sm font-bold text-gradient">{portalName}</div>
         </Link>
 
         {/* Premium Left Navigation */}
