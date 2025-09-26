@@ -3,10 +3,12 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/dashboard": "pages/dashboard.js",
-  "/api/leads.list": "pages/api/leads.list.js",
   "/leads": "pages/leads.js",
+  "/admin": "pages/admin.js",
+  "/api/me": "pages/api/me.js",
+  "/api/leads.list": "pages/api/leads.list.js",
+  "/api/dashboard/summary": "pages/api/dashboard/summary.js",
   "/reports": "pages/reports.js",
-  "/": "pages/index.js",
-  "/login": "pages/login.js",
-  "/api/me": "pages/api/me.js"
+  "/settings": "pages/settings.js",
+  "/profile": "pages/profile.js"
 }
