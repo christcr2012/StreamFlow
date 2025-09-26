@@ -1,4 +1,35 @@
 // src/pages/api/integrations/sam/fetch.ts
+// SAM.gov Federal RFP Integration - HOT Lead Generation
+//
+// PURPOSE:
+// Imports active federal government RFPs (Request for Proposals) where agencies
+// are actively seeking cleaning and janitorial services RIGHT NOW. These are
+// HOT LEADS - pre-qualified buyers with defined budgets and timelines.
+//
+// LEAD CLASSIFICATION:
+// - These are HOT leads (actively seeking services)
+// - Get 1.5x scoring boost for maximum priority (scores via config.thresholds: hot≥70)
+// - Require 2-hour response time for competitive advantage
+// - Pre-configured with cleaning-specific NAICS and PSC codes
+//
+// CLEANING FOCUS:
+// - NAICS codes: 561720 (Janitorial), 561740 (Carpet), 561790 (Building Services)
+// - PSC codes: S201 (Custodial), S214 (Housekeeping), S299 (Misc Maintenance)
+// - Server-side defaults ensure all searches target cleaning services
+// - Keyword filtering for janitorial, custodial, housekeeping terms
+//
+// COMPETITIVE ADVANTAGE:
+// - Government contracts have clear budgets and less price shopping
+// - RFP process is structured and professional
+// - Recurring contracts common for janitorial services
+// - Payment terms more reliable than private sector
+//
+// FUTURE ENHANCEMENTS:
+// - Add automated bid response templates
+// - Track RFP response deadlines for time management
+// - Add past performance tracking for better positioning
+// - Implement automated conflict-of-interest screening
+
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma as db } from "@/lib/prisma";
 import { assertPermission, getOrgIdFromReq, PERMS } from "@/lib/rbac";
@@ -8,8 +39,8 @@ import { scoreLeadNormalized } from "@/lib/leadScoringAdapter";
 
 const SAM_BASE = "https://api.sam.gov/opportunities/v2/search";
 
-// All leads are now FREE - no billing charges
-const DEFAULT_UNIT_PRICE_CENTS = 0; // $0.00 - Free lead generation
+// All leads are FREE - core business model
+const DEFAULT_UNIT_PRICE_CENTS = 0; // $0.00 - No per-lead costs
 
 function sha256_24(s: string) {
   return crypto.createHash("sha256").update(s).digest("hex").slice(0, 24);
@@ -114,21 +145,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ ok: false, error: "Missing SAM_API_KEY" });
     }
 
-    // Body can carry search inputs like { q, keywords, naics, psc, postedFrom, postedTo, state, city, limit }
+    // === REQUEST BODY PARSING AND CLEANING DEFAULTS ===
+    // Ensure all searches focus on cleaning services even if UI parameters missing
     const body = (req.body ?? {}) as Record<string, unknown>;
-    const keywords = String(body.keywords ?? "").trim();
-    const q = keywords || String(body.q ?? "janitorial custodial cleaning").trim(); // Use UI keywords or default
+    const keywords = String(body.keywords ?? "").trim(); // From admin UI
+    const q = keywords || String(body.q ?? "janitorial custodial cleaning").trim();
     
-    // Default to cleaning-specific codes if not provided
+    // CLEANING-SPECIFIC DEFAULTS - prevent drift to non-cleaning RFPs
     const cleaningNaics = ["561720", "561740", "561790"]; // Janitorial, Carpet, Building services
     const cleaningPsc = ["S201", "S214", "S299"]; // Custodial, Housekeeping, Misc
     
+    // Use UI-provided codes or default to cleaning-specific codes
     const naics = typeof body.naics === "string" ? body.naics : 
                   Array.isArray(body.naics) ? body.naics.join(",") :
                   cleaningNaics.join(",");
     const psc = typeof body.psc === "string" ? body.psc : 
                 Array.isArray(body.psc) ? body.psc.join(",") :
                 cleaningPsc.join(",");
+    
+    // RATIONALE: Without defaults, generic searches return irrelevant RFPs
+    // Cleaning focus ensures every imported lead is actually actionable
     const postedFrom = String(body.postedFrom ?? "");
     const postedTo = String(body.postedTo ?? "");
     const limit = Math.min(Math.max(parseInt(String(body.limit ?? "50"), 10) || 50, 1), 200);
@@ -210,17 +246,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       let aiScore = 0;
       let scoreFactors: Prisma.InputJsonValue = {};
       try {
+        // === HOT LEAD SCORING - 1.5x Priority Boost ===
+        // Federal RFPs are HOT leads: agencies actively seeking services with budgets
         const { score, details } = await scoreLeadNormalized({
           sourceType: "RFP", 
-          leadType: "hot", // Mark as hot lead for 1.5x scoring boost
+          leadType: "hot",     // CRITICAL: Triggers 1.5x scoring multiplier
           title: r.title ?? "",
           agency: company ?? "",
           naics: firstStr(r.naics) ?? "",
           psc: firstStr(r.psc) ?? "",
           serviceDescription: `Federal RFP: ${r.title ?? 'Cleaning services'}`,
-          city: "", // Federal contracts aren't city-specific
-          state: "US" // Federal level
+          city: "",            // Federal contracts span regions
+          state: "US"          // Federal level (gets no state bonus)
         });
+        
+        // SCORING EXPLANATION:
+        // - HOT leadType gives 1.5x multiplier to total score
+        // - RFP sourceType adds +12 points for government quality
+        // - Service description matching adds keyword points
+        // - No geographic bonus since federal contracts can be anywhere
         aiScore = typeof score === "number" ? score : 0;
         scoreFactors = asJson(details ?? {});
       } catch {
@@ -228,22 +272,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         scoreFactors = asJson({});
       }
 
+      // === ENRICHMENT DATA - Full RFP Context for Sales Team ===
+      // Store all RFP details for informed response preparation
       const enrichment = makeEnrichment(
         {
           source: "sam",
+          leadType: "hot",    // Mark for sales workflow routing
           rfp: {
-            noticeId,
+            noticeId,         // Unique government ID for tracking
             title: r.title ?? null,
-            sol: r.sol ?? null,
-            naics: r.naics ?? null,
-            psc: r.psc ?? null,
-            agency: company,
-            responseDate: r.responseDate ?? null,
-            publishDate: r.publishDate ?? null,
+            sol: r.sol ?? null,        // Solicitation number
+            naics: r.naics ?? null,    // Industry classification
+            psc: r.psc ?? null,        // Product/service code
+            agency: company,           // Contracting agency
+            responseDate: r.responseDate ?? null, // Bid deadline
+            publishDate: r.publishDate ?? null,   // When posted
           },
         },
-        makeBilling(unitPriceCents)
+        makeBilling(unitPriceCents) // Always $0 - free model
       );
+      
+      // USAGE BY SALES TEAM:
+      // - noticeId for SAM.gov lookup and tracking
+      // - responseDate for deadline management
+      // - agency for relationship building and past performance research
+      // - NAICS/PSC for positioning and capability statements
 
       // identityHash is more for person/company leads; here we hash noticeId + title/agency to be stable
       const ih = identityHash({ email: null, phoneE164: null, company, name: r.title ?? null }) || sha256_24(noticeId);

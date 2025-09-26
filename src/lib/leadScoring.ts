@@ -1,4 +1,5 @@
 // src/lib/leadScoring.ts
+// Lead Scoring Engine - Northern Colorado Cleaning Business
 // Lead scoring utilities. Scoring is driven by a configuration file (see
 // src/config/leadScoringConfig.ts). Each lead is assigned a baseline score
 // which is adjusted based on geography, service keywords and the lead’s source
@@ -6,22 +7,33 @@
 
 import config from "@/config/leadScoringConfig";
 
+// Lead data structure for scoring input
+// Flexible interface accepts leads from various sources (SAM.gov, permits, manual entry)
 export type LeadLike = {
-  city?: string | null;
-  state?: string | null;
-  zip?: string | null;
-  serviceCode?: string | null;
-  sourceType?: string | null;
-  sourceDetail?: string | null;
-  leadType?: 'hot' | 'warm' | 'cold' | null;
-  serviceDescription?: string | null;
-  title?: string | null;
-  agency?: string | null;
-  naics?: string | null;
-  psc?: string | null;
+  // GEOGRAPHIC TARGETING (drives proximity scoring)
+  city?: string | null;          // Primary city for service delivery
+  state?: string | null;         // State (Colorado gets +10 bonus)
+  zip?: string | null;           // ZIP code (806xx/807xx get county bonus)
+  
+  // SERVICE CLASSIFICATION (drives service type scoring)
+  serviceCode?: string | null;      // Primary service type code
+  sourceType?: string | null;      // Maps to LeadSource enum (RFP, SYSTEM, etc)
+  sourceDetail?: string | null;    // Additional source context
+  leadType?: 'hot' | 'warm' | 'cold' | null; // Purchase intent level
+  serviceDescription?: string | null; // Full service description
+  title?: string | null;           // Lead title
+  
+  // GOVERNMENT CONTRACT FIELDS (for SAM.gov RFPs)
+  agency?: string | null;          // Government agency name
+  naics?: string | null;           // NAICS industry code
+  psc?: string | null;             // Product Service Code
 };
 
-export type ScoreResult = { score: number; reasons: string[] };
+// Scoring result with detailed reasoning for transparency
+export type ScoreResult = { 
+  score: number;      // Final score (1-99, higher = higher priority)
+  reasons: string[];  // Human-readable explanations for sales team
+};
 
 /**
  * Compute a lead score based on the lead’s attributes and the current scoring
@@ -29,8 +41,8 @@ export type ScoreResult = { score: number; reasons: string[] };
  * which factors contributed to the score.
  */
 export function scoreLead(lead: LeadLike): ScoreResult {
-  let score = 50; // baseline
-  const reasons: string[] = [];
+  let score = 50; // Baseline score - average lead with no special factors
+  const reasons: string[] = []; // Track scoring factors for transparency
 
   const city = (lead.city || "").trim().toLowerCase();
   const state = (lead.state || "").trim().toUpperCase();

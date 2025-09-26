@@ -22,29 +22,62 @@ const PSC = [
 const DEFAULT_KWS =
   "janitorial custodial housekeeping cleaning window disinfecting sanitizing floor maintenance";
 
-// These constants are used as defaults in the SAM.gov server-side integration
+// Pre-configured cleaning-specific codes used as server-side defaults
+// Ensures searches stay focused on relevant cleaning opportunities
+// NAICS: 561720 (Janitorial), 561740 (Carpet), 561790 (Building Services)
+// PSC: S201 (Custodial), S214 (Housekeeping), S299 (Maintenance)
 
+// Lead source configuration with temperature classification
+// Each source has different sales approach and response timing
 const LEAD_SOURCES = [
   { 
     id: "sam", 
     name: "🔥 SAM.gov (Federal)", 
-    type: "hot",
+    type: "hot",                              // ACTIVELY SEEKING services
     description: "HOT LEADS: Active federal RFPs for cleaning and janitorial services",
-    endpoint: "/api/integrations/sam/fetch"
+    endpoint: "/api/integrations/sam/fetch",
+    // SALES STRATEGY: Immediate response, competitive positioning, capability statements
   },
   { 
     id: "permits", 
     name: "🟡 Construction Permits (Northern CO)", 
-    type: "warm",
+    type: "warm",                             // WILL NEED services eventually
     description: "WARM LEADS: New construction projects that will need post-construction cleaning",
-    endpoint: "/api/integrations/permits/fetch"
+    endpoint: "/api/integrations/permits/fetch",
+    // SALES STRATEGY: Relationship building, education about post-construction needs
   },
+  // FUTURE SOURCES:
+  // { id: "bids", name: "🔥 State/Local Bids", type: "hot" },
+  // { id: "new-business", name: "🟡 New Business Licenses", type: "warm" },
 ];
 
 /**
- * Lead generation page for Northern Colorado cleaning business. 
- * Focuses on Sterling (headquarters), Greeley, Fort Collins, and surrounding areas.
- * All sources are completely FREE with geographic targeting.
+ * Lead Generation Admin Interface - Northern Colorado Cleaning Business
+ * 
+ * PURPOSE:
+ * Central dashboard for importing leads from FREE government data sources.
+ * Distinguishes between HOT leads (actively seeking services) and WARM leads
+ * (will need services eventually but not actively looking).
+ * 
+ * HOT vs WARM LEAD STRATEGY:
+ * - HOT: Federal RFPs where agencies actively seek cleaning services
+ *   Action: Respond within 2 hours, immediate sales priority
+ * - WARM: Construction permits showing future cleaning opportunities  
+ *   Action: Relationship building, educational follow-up
+ * 
+ * GEOGRAPHIC FOCUS:
+ * Sterling (HQ) > Greeley > Fort Collins/Loveland > Denver (high-value only)
+ * All sources filtered to Northern Colorado service area only.
+ * 
+ * BUSINESS MODEL:
+ * 100% FREE lead generation - no per-lead costs or subscription fees.
+ * Competitive advantage through speed and government data access.
+ * 
+ * FUTURE ENHANCEMENTS:
+ * - Add lead pipeline view showing hot/warm/cold distribution
+ * - Automated response templates for hot RFPs
+ * - Follow-up scheduling for warm construction leads
+ * - ROI tracking per source and geographic area
  */
 export default function RfpImportPage() {
   const { me, loading } = useMe();
