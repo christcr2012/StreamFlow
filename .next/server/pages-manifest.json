@@ -3,11 +3,10 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/leads": "pages/leads.js",
-  "/settings": "pages/settings.js",
   "/api/leads.list": "pages/api/leads.list.js",
   "/admin": "pages/admin.js",
   "/api/me": "pages/api/me.js",
-  "/reports": "pages/reports.js",
-  "/api/dashboard/summary": "pages/api/dashboard/summary.js",
-  "/profile": "pages/profile.js"
+  "/dashboard": "pages/dashboard.js",
+  "/profile": "pages/profile.js",
+  "/api/dashboard/summary": "pages/api/dashboard/summary.js"
 }

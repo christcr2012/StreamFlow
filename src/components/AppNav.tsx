@@ -26,7 +26,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
       className={cx(
         "rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200",
         isActive
-          ? "bg-gradient-to-r from-slate-600 to-slate-700 text-white shadow-glow"
+          ? "bg-gradient-to-r from-[#4a6fb5] to-[#2c4a7a] text-white shadow-glow"
           : "text-slate-300 hover:text-white hover:bg-white/10"
       )}
     >
