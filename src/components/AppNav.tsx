@@ -80,10 +80,10 @@ export default function AppNav() {
         {/* Premium Brand - Different home link for Providers */}
         <Link href={isProvider ? "/provider" : "/dashboard"} className="mr-4 flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-            <span className="text-white font-bold text-sm">MV</span>
+            <span className="text-white font-bold text-sm" style={{ fontFamily: 'serif', fontStyle: 'italic' }}>R</span>
           </div>
           <span className="text-lg font-bold text-gradient">
-            {isProvider ? "Mountain Vista Provider" : "Mountain Vista"}
+            {isProvider ? "Robinson Solutions Provider" : "Robinson Solutions"}
           </span>
         </Link>
 
