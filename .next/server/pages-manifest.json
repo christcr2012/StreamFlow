@@ -4,9 +4,11 @@
   "/_error": "pages/_error.js",
   "/worker/home": "pages/worker/home.js",
   "/dashboard": "pages/dashboard.js",
-  "/jobs": "pages/jobs.js",
-  "/": "pages/index.js",
   "/api/me": "pages/api/me.js",
   "/api/leads.list": "pages/api/leads.list.js",
-  "/api/dashboard/summary": "pages/api/dashboard/summary.js"
+  "/api/dashboard/summary": "pages/api/dashboard/summary.js",
+  "/api/auth/logout": "pages/api/auth/logout.js",
+  "/login": "pages/login.js",
+  "/schedule": "pages/schedule.js",
+  "/": "pages/index.js"
 }

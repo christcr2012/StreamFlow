@@ -33,10 +33,15 @@
       "static/chunks/main.js",
       "static/chunks/pages/dashboard.js"
     ],
-    "/jobs": [
+    "/login": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/jobs.js"
+      "static/chunks/pages/login.js"
+    ],
+    "/schedule": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/schedule.js"
     ],
     "/worker/home": [
       "static/chunks/webpack.js",
