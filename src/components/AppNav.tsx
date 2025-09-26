@@ -87,13 +87,18 @@ export default function AppNav() {
         return {
           portalName: "Employee Portal",
           homeRoute: "/worker/home",
+          // Daily Work Functions
           leftLinks: [
             { href: "/worker/home", label: "Home" },
             { href: "/worker/clock", label: "Time Clock" },
             { href: "/worker/jobs", label: "My Jobs" },
+            { href: "/worker/schedule", label: "My Schedule" },
+            { href: "/worker/team", label: "Team" },
           ],
+          // Personal & Development
           rightLinks: [
             { href: "/worker/training", label: "Training" },
+            { href: "/worker/documents", label: "Documents" },
             { href: "/worker/payroll", label: "Payroll" },
             { href: "/worker/profile", label: "Profile" },
           ]
@@ -103,13 +108,19 @@ export default function AppNav() {
         return {
           portalName: "Accountant Portal",
           homeRoute: "/accountant/reports",
+          // Financial Management
           leftLinks: [
-            { href: "/accountant/reports", label: "Reports" },
-            { href: "/accountant/exports", label: "Exports" },
+            { href: "/accountant/dashboard", label: "Financial Dashboard" },
+            { href: "/accountant/invoices", label: "Invoices & Billing" },
+            { href: "/accountant/payroll", label: "Payroll Management" },
+            { href: "/accountant/expenses", label: "Expenses" },
+            { href: "/accountant/taxes", label: "Tax Management" },
           ],
+          // Reports & Administration
           rightLinks: [
-            { href: "/accountant/invoices", label: "Invoices" },
-            { href: "/accountant/payroll", label: "Payroll" },
+            { href: "/accountant/reports", label: "Financial Reports" },
+            { href: "/accountant/analytics", label: "Financial Analytics" },
+            { href: "/accountant/exports", label: "Data Exports" },
             { href: "/accountant/settings", label: "Settings" },
           ]
         };
@@ -131,40 +142,51 @@ export default function AppNav() {
             ]
           };
         }
-        // New Command Center design for OWNER - exceeds industry standards
+        // Redesigned navigation following SaaS best practices
         return {
           portalName: "Business Command Center",
           homeRoute: "/dashboard",
+          // Core Business Functions (Primary Navigation)
           leftLinks: [
-            { href: "/dashboard", label: "🏠 Command Center" },
-            { href: "/leads", label: "👥 Lead Generation" },
-            { href: "/operations", label: "💼 Business Ops" },
-            { href: "/revenue", label: "💰 Revenue Hub" },
-            { href: "/analytics", label: "📊 Analytics" },
-            { href: "/ai-usage", label: "🤖 AI Usage" },
-            { href: "/workforce", label: "👨‍💼 Workforce" },
+            { href: "/dashboard", label: "Dashboard" },
+            { href: "/leads", label: "Lead Management" },
+            { href: "/jobs", label: "Job Management" },
+            { href: "/workforce", label: "Workforce" },
+            { href: "/projects", label: "Projects" },
+            { href: "/revenue", label: "Revenue & Billing" },
+            { href: "/clients", label: "Client Portal" },
           ],
+          // Analytics, Reports & Administration (Secondary Navigation)
           rightLinks: [
-            { href: "/search", label: "🔍" },
-            { href: "/administration", label: "⚙️ Admin" },
-            { href: "/profile", label: "👤" },
+            { href: "/analytics", label: "Analytics" },
+            { href: "/reports", label: "Reports" },
+            { href: "/documents", label: "Documents" },
+            { href: "/ai-usage", label: "AI Usage" },
+            { href: "/administration", label: "Administration" },
+            { href: "/profile", label: "Profile" },
           ]
         };
         
       case "MANAGER":
       default:
         return {
-          portalName: "Admin Portal",
+          portalName: "Manager Portal",
           homeRoute: "/dashboard",
+          // Core Management Functions
           leftLinks: [
             { href: "/dashboard", label: "Dashboard" },
-            { href: "/leads", label: "Leads" },
-            { href: "/jobs", label: "Jobs" },
-            { href: "/schedule", label: "Schedule" },
+            { href: "/leads", label: "Lead Management" },
+            { href: "/jobs", label: "Job Management" },
+            { href: "/schedule", label: "Scheduling" },
+            { href: "/team", label: "Team Management" },
+            { href: "/clients", label: "Client Relations" },
           ],
+          // Reports & Administration
           rightLinks: [
+            { href: "/analytics", label: "Analytics" },
             { href: "/billing/invoices", label: "Invoices" },
             { href: "/reports", label: "Reports" },
+            { href: "/documents", label: "Documents" },
             { href: "/settings", label: "Settings" },
           ]
         };
@@ -283,15 +305,15 @@ export default function AppNav() {
 
             {/* Sidebar Navigation */}
             <div className="py-6 px-4">
-              {/* Main Navigation */}
+              {/* Core Business Functions */}
               <div className="mb-8">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-1 h-4 bg-gradient-to-b from-blue-400 to-blue-600 rounded-full"></div>
                   <h3 className="text-sm font-semibold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
-                    Main Menu
+                    Core Functions
                   </h3>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {leftLinks.map((l) => (
                     <NavLink 
                       key={l.href} 
@@ -307,15 +329,15 @@ export default function AppNav() {
               {/* Divider */}
               <div className="h-px bg-gradient-to-r from-transparent via-gray-300/20 to-transparent mb-8"></div>
 
-              {/* Secondary Navigation */}
+              {/* Analytics & Administration */}
               <div className="mb-6">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-1 h-4 bg-gradient-to-b from-purple-400 to-purple-600 rounded-full"></div>
                   <h3 className="text-sm font-semibold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
-                    Quick Actions
+                    Analytics & Admin
                   </h3>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {rightLinks.map((l) => (
                     <NavLink 
                       key={l.href} 
