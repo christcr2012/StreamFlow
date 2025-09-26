@@ -13,5 +13,6 @@
   "/profile": "pages/profile.js",
   "/": "pages/index.js",
   "/login": "pages/login.js",
-  "/api/auth/logout": "pages/api/auth/logout.js"
+  "/api/auth/logout": "pages/api/auth/logout.js",
+  "/api/auth/login": "pages/api/auth/login.js"
 }
