@@ -76,6 +76,9 @@ model Org {
   roleScopes         RoleScope[]        @relation("OrgRoleScopes")
   roleReviews        RoleReview[]       @relation("OrgRoleReviews")
   provisioningFlows  ProvisioningFlow[] @relation("OrgProvisioningFlows")
+  
+  // Temporary Elevation System
+  temporaryElevations TemporaryElevation[] @relation("OrgTemporaryElevations")
 
   /// brandConfig stores white-label brand settings such as name, colors, and logo URL.
   /// It is JSON to allow arbitrary keys like { name: "Mountain Vista", color: "#123456", logoUrl: "https://..." }
@@ -106,6 +109,9 @@ model User {
   
   // Employee Portal Relations
   employeeProfile EmployeeProfile? @relation("UserEmployeeProfile")
+  
+  // Temporary Elevation Relations
+  temporaryElevations TemporaryElevation[] @relation("UserTemporaryElevations")
   
   @@unique([orgId, id])  // Multi-tenant isolation
 }
@@ -679,6 +685,73 @@ model ProvisioningFlow {
   @@unique([orgId, name])
   @@index([orgId, isActive])
   @@index([trigger])
+}
+
+/// TemporaryElevation provides just-in-time privilege elevation with auto-expiry and audit trails
+model TemporaryElevation {
+  id          String   @id @default(cuid())
+  orgId       String
+  userId      String   // User requesting elevation
+  requestedBy String   // User ID who requested (could be self or manager)
+  approvedBy  String?  // User ID who approved the elevation
+  
+  // Elevation details
+  targetRole       String   // Role to temporarily elevate to
+  currentRole      String   // User's current role
+  reason           String   // Business justification for elevation
+  requestedDuration Int     // Requested duration in minutes
+  actualDuration   Int?     // Actual granted duration in minutes
+  
+  // Status and lifecycle
+  status          ElevationStatus @default(PENDING)
+  requestedAt     DateTime       @default(now())
+  approvedAt      DateTime?      // When elevation was approved
+  activatedAt     DateTime?      // When elevation became active
+  expiresAt       DateTime?      // When elevation expires
+  terminatedAt    DateTime?      // If manually terminated early
+  
+  // Security and audit
+  approvalRequired Boolean @default(true)
+  autoApproved    Boolean @default(false)
+  emergencyAccess Boolean @default(false) // Emergency bypass flag
+  ipAddress       String? // IP where request originated
+  userAgent       String? // Browser/client info
+  
+  // Permissions snapshot
+  grantedPermissions Json @default("{}") // Permissions granted during elevation
+  previousPermissions Json @default("{}") // User's permissions before elevation
+  
+  // Monitoring and alerts
+  usageTracked    Boolean @default(true)
+  alertsSent      String[] @default([]) // Alert types sent
+  reviewRequired  Boolean @default(false) // Post-elevation review needed
+  
+  // Termination details
+  terminationReason String? // Why elevation was terminated
+  terminatedBy     String? // Who terminated the elevation
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  org  Org  @relation("OrgTemporaryElevations", fields: [orgId], references: [id])
+  user User @relation("UserTemporaryElevations", fields: [userId], references: [id])
+  
+  @@index([orgId, userId])
+  @@index([status])
+  @@index([expiresAt])
+  @@index([requestedAt])
+}
+
+/// ElevationStatus tracks the lifecycle of temporary privilege elevation requests
+enum ElevationStatus {
+  PENDING     // Awaiting approval
+  APPROVED    // Approved but not yet active
+  ACTIVE      // Currently elevated
+  EXPIRED     // Elevation period ended
+  TERMINATED  // Manually terminated before expiry
+  REJECTED    // Request was denied
+  CANCELLED   // Cancelled by requester
 }
 
 /// ProviderConfig holds provider-level secrets and configuration separate from any organization.
