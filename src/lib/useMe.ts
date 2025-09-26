@@ -63,7 +63,13 @@ export function useMe() {
 
   useEffect(() => {
     fetchMe();
-    return () => abortRef.current?.abort();
+    return () => {
+      try {
+        abortRef.current?.abort();
+      } catch (e) {
+        // Ignore AbortError during cleanup - this is expected in React Strict Mode
+      }
+    };
   }, [fetchMe]);
 
   const refresh = useCallback(() => fetchMe(), [fetchMe]);
