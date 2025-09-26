@@ -25,16 +25,6 @@ globalThis.__BUILD_MANIFEST = {
       "static/chunks/main.js",
       "static/chunks/pages/administration.js"
     ],
-    "/ai-usage": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/ai-usage.js"
-    ],
-    "/login": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/login.js"
-    ],
     "/worker/home": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",

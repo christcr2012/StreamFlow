@@ -3,17 +3,31 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useMe } from "@/lib/useMe";
 import { useRouter } from "next/router";
+import useSWR from "swr";
 
 /**
  * AI Usage Analytics Dashboard - Similar to Replit's AI cost tracking
  * Shows detailed AI usage, costs, credits, and budget monitoring
  */
+const fetcher = (url: string) => fetch(url).then(res => res.json());
+
 export default function AiUsageDashboard() {
   const { me, loading } = useMe();
   const router = useRouter();
-  const [timeframe, setTimeframe] = useState("current-month");
-  const [usageData, setUsageData] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  
+  // Real-time usage data with 30-second refresh (Replit-style)
+  const { data: response, error, mutate } = useSWR(
+    me?.role === "OWNER" ? "/api/ai/usage" : null,
+    fetcher,
+    { 
+      refreshInterval: 30000, // 30-second refresh like Replit
+      revalidateOnFocus: true,
+      revalidateOnReconnect: true 
+    }
+  );
+  
+  const usageData = response?.success ? response.usage : null;
+  const isLoading = !usageData && !error;
 
   // Redirect non-owner users
   useEffect(() => {
@@ -22,28 +36,10 @@ export default function AiUsageDashboard() {
     }
   }, [loading, me?.role, router]);
 
-  // Fetch usage data
-  useEffect(() => {
-    const fetchUsageData = async () => {
-      try {
-        const response = await fetch(`/api/ai/usage`);
-        const data = await response.json();
-        if (data.success) {
-          setUsageData(data.usage);
-        } else {
-          console.error("Failed to fetch usage data:", data.error);
-        }
-      } catch (error) {
-        console.error("Failed to fetch usage data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (me?.role === "OWNER") {
-      fetchUsageData();
-    }
-  }, [me?.role]);
+  // Show error state if API fails
+  if (error) {
+    console.error("Failed to fetch usage data:", error);
+  }
 
   if (loading || me?.role !== "OWNER") {
     return (
@@ -58,10 +54,37 @@ export default function AiUsageDashboard() {
   const creditsUsed = usageData?.creditsUsedThisMonth || 0;
   const usagePercentage = usageData?.percentUsed || 0;
 
+  // Enhanced budget alert system using real data
   const getUsageColor = () => {
-    if (usagePercentage < 50) return "var(--accent-success)";
-    if (usagePercentage < 80) return "var(--accent-warning)";
-    return "var(--accent-danger)";
+    if (usageData?.alerts?.exhausted) return "var(--accent-error)";
+    if (usageData?.alerts?.critical) return "var(--accent-error)";
+    if (usageData?.alerts?.warning) return "var(--accent-warning)";
+    return "var(--accent-success)";
+  };
+
+  const getBudgetAlert = () => {
+    if (usageData?.alerts?.exhausted) {
+      return { 
+        level: "error", 
+        message: "Monthly budget exhausted! Upgrade or wait for reset.",
+        action: "Upgrade Now"
+      };
+    }
+    if (usageData?.alerts?.critical) {
+      return { 
+        level: "warning", 
+        message: "90% of monthly budget used. Approaching limit.",
+        action: "Monitor Usage"
+      };
+    }
+    if (usageData?.alerts?.warning) {
+      return { 
+        level: "info", 
+        message: "75% of monthly budget used. Consider upgrading soon.",
+        action: "Plan Upgrade"
+      };
+    }
+    return null;
   };
 
   return (
@@ -93,6 +116,36 @@ export default function AiUsageDashboard() {
             </div>
           </div>
         </div>
+
+        {/* Budget Alert Banner */}
+        {getBudgetAlert() && (
+          <div className={`mb-6 p-4 rounded-lg border-l-4 ${
+            getBudgetAlert()?.level === 'error' ? 'bg-red-50 border-red-500 text-red-800' :
+            getBudgetAlert()?.level === 'warning' ? 'bg-yellow-50 border-yellow-500 text-yellow-800' :
+            'bg-blue-50 border-blue-500 text-blue-800'
+          }`}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="text-xl">
+                  {getBudgetAlert()?.level === 'error' ? '🚨' : 
+                   getBudgetAlert()?.level === 'warning' ? '⚠️' : 'ℹ️'}
+                </span>
+                <div>
+                  <p className="font-medium">{getBudgetAlert()?.message}</p>
+                  <p className="text-sm opacity-75">
+                    Real-time budget monitoring - updates every 30 seconds
+                  </p>
+                </div>
+              </div>
+              <Link
+                href="/settings"
+                className="px-3 py-1 rounded bg-white border border-current hover:bg-gray-50 transition-all text-sm"
+              >
+                {getBudgetAlert()?.action}
+              </Link>
+            </div>
+          </div>
+        )}
 
         {/* Usage Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -152,12 +205,12 @@ export default function AiUsageDashboard() {
               <div className="text-right">
                 <div className="text-sm" style={{ color: 'var(--text-tertiary)' }}>AI Requests</div>
                 <div className="text-2xl font-bold text-gradient">
-                  {creditsUsed > 0 ? Math.ceil(creditsUsed / 10) : 0}
+                  {usageData?.monthlyRequestCount || 0}
                 </div>
               </div>
             </div>
             <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-              Est. {Math.ceil((creditsUsed > 0 ? creditsUsed / 10 : 0) / Math.max(1, new Date().getDate()))} per day
+              Avg. {Math.ceil((usageData?.monthlyRequestCount || 0) / Math.max(1, new Date().getDate()))} per day
             </div>
           </div>
 
@@ -186,29 +239,24 @@ export default function AiUsageDashboard() {
           <div className="premium-card">
             <h2 className="text-xl font-semibold text-gradient mb-6">Usage by Feature</h2>
             <div className="space-y-4">
-              {[
-                { feature: "Lead AI Scoring", enabled: usageData?.features?.leadAnalysis, requests: Math.ceil(creditsUsed * 0.4), percentage: 40 },
-                { feature: "RFP Analysis", enabled: usageData?.features?.rfpStrategy, requests: Math.ceil(creditsUsed * 0.3), percentage: 30 },
-                { feature: "Pricing Intelligence", enabled: usageData?.features?.pricingIntelligence, requests: Math.ceil(creditsUsed * 0.2), percentage: 20 },
-                { feature: "Response Generation", enabled: usageData?.features?.responseGeneration, requests: Math.ceil(creditsUsed * 0.1), percentage: 10 }
-              ].filter(item => item.enabled).map((item, index) => (
+              {(usageData?.featureBreakdown || []).map((item, index) => (
                 <div key={index} className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-1">
                       <span style={{ color: 'var(--text-primary)' }}>{item.feature}</span>
                       <span className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
-                        {item.requests} requests
+                        {item.requests} requests · {item.creditsUsed} credits
                       </span>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="flex-1 bg-surface-2 rounded-full h-2">
                         <div 
                           className="h-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-600"
-                          style={{ width: `${item.percentage}%` }}
+                          style={{ width: `${Math.min(100, (item.creditsUsed / Math.max(1, creditsUsed)) * 100)}%` }}
                         />
                       </div>
                       <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
-                        {item.requests} calls
+                        {item.creditsUsed} credits
                       </span>
                     </div>
                   </div>
@@ -221,14 +269,15 @@ export default function AiUsageDashboard() {
           <div className="premium-card">
             <h2 className="text-xl font-semibold text-gradient mb-6">Daily Usage Trend</h2>
             <div className="h-64 flex items-end justify-between space-x-1">
-              {Array.from({ length: 30 }, (_, i) => {
-                const height = Math.random() * 80 + 20;
+              {(usageData?.dailyUsage || []).map((day, i) => {
+                const maxCredits = Math.max(...(usageData?.dailyUsage || []).map(d => d.credits || 0), 1);
+                const height = Math.max(5, (day.credits / maxCredits) * 80);
                 return (
                   <div key={i} className="flex-1 group relative">
                     <div 
                       className="bg-gradient-to-t from-blue-500 to-cyan-600 rounded-t hover:opacity-80 transition-all cursor-pointer"
                       style={{ height: `${height}%` }}
-                      title={`Day ${i + 1}: $${(Math.random() * 5).toFixed(2)}`}
+                      title={`${day.date}: ${day.credits} credits, ${day.requests} requests`}
                     />
                   </div>
                 );
@@ -272,15 +321,9 @@ export default function AiUsageDashboard() {
                     </td>
                   </tr>
                 ) : (
-                  (creditsUsed > 0 ? [
-                    { time: "2 min ago", feature: "Lead Scoring", model: "gpt-4o-mini", tokens: "1,240", credits: "5" },
-                    { time: "8 min ago", feature: "RFP Analysis", model: "gpt-4o", tokens: "3,850", credits: "12" },
-                    { time: "15 min ago", feature: "Response Generation", model: "gpt-4o-mini", tokens: "890", credits: "3" },
-                    { time: "23 min ago", feature: "Pricing Intelligence", model: "gpt-4o", tokens: "2,640", credits: "8" },
-                    { time: "31 min ago", feature: "Lead Scoring", model: "gpt-4o-mini", tokens: "1,120", credits: "4" }
-                  ] : []).map((request, index) => (
+                  (usageData?.recentEvents || []).map((request, index) => (
                     <tr key={index} className="border-b hover:bg-surface-hover transition-colors" style={{ borderColor: 'var(--border-primary)' }}>
-                      <td className="py-3 px-4" style={{ color: 'var(--text-secondary)' }}>{request.time}</td>
+                      <td className="py-3 px-4" style={{ color: 'var(--text-secondary)' }}>{request.timeAgo}</td>
                       <td className="py-3 px-4" style={{ color: 'var(--text-primary)' }}>{request.feature}</td>
                       <td className="py-3 px-4">
                         <span className="px-2 py-1 rounded text-xs" style={{ 
@@ -290,8 +333,8 @@ export default function AiUsageDashboard() {
                           {request.model}
                         </span>
                       </td>
-                      <td className="py-3 px-4" style={{ color: 'var(--text-secondary)' }}>{request.tokens}</td>
-                      <td className="py-3 px-4 font-bold" style={{ color: 'var(--accent-warning)' }}>{request.credits}</td>
+                      <td className="py-3 px-4" style={{ color: 'var(--text-secondary)' }}>{(request.tokensIn + request.tokensOut).toLocaleString()}</td>
+                      <td className="py-3 px-4 font-bold" style={{ color: 'var(--accent-warning)' }}>{request.creditsUsed}</td>
                     </tr>
                   ))
                 )}
