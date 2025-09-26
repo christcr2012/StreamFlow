@@ -4,5 +4,7 @@
   "/_document": "pages/_document.js",
   "/dashboard": "pages/dashboard.js",
   "/provider": "pages/provider.js",
-  "/provider/analytics": "pages/provider/analytics.js"
+  "/provider/analytics": "pages/provider/analytics.js",
+  "/api/me": "pages/api/me.js",
+  "/api/provider/analytics": "pages/api/provider/analytics.js"
 }
