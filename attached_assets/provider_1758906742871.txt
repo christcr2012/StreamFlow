@@ -1,0 +1,47 @@
+{
+  "action": "create_or_modify_role",
+  "role_name": "Provider",
+  "goal": "Allow the system/service provider to configure and manage features, services, and compliance for businesses (tenants) without accessing tenant business operations or sensitive customer data.",
+  "scope": "Cross-tenant (system-wide) visibility, limited strictly to provider functions and service delivery.",
+  "capabilities": {
+    "service_management": [
+      "Enable/disable product modules and feature flags available to tenants",
+      "Configure industry-specific templates (e.g., cleaning, healthcare, retail) and roll them out per tenant",
+      "Manage AI/automation features exposed to tenants, including usage policies and limits"
+    ],
+    "system_monitoring": [
+      "View tenant-level usage analytics and adoption metrics (aggregated, anonymized when possible)",
+      "Track resource consumption (compute, storage, AI tokens, billing metrics)",
+      "Identify performance issues, errors, and compliance risks across tenants"
+    ],
+    "support_tools": [
+      "Impersonate tenant users for troubleshooting (with Owner consent and full audit logging)",
+      "Trigger diagnostic reports, health checks, and secure support sessions"
+    ],
+    "compliance_and_security": [
+      "Enforce baseline security policies (MFA required, password strength, encryption at rest/in-transit)",
+      "Manage audit log retention, data residency, and regulatory compliance controls",
+      "Push security patches, hotfixes, and forced updates across all tenants"
+    ],
+    "integration_controls": [
+      "Curate and maintain supported integrations (accounting, CRMs, communications, payment processors)",
+      "Ensure connectors comply with provider’s SLAs and compliance standards"
+    ]
+  },
+  "constraints_and_safeguards": [
+    "Provider role cannot access tenant business records (customers, staff, operations, or finances)",
+    "All Provider actions logged with immutable audit trail and visible to affected tenants (e.g., banner: 'Provider made a change')",
+    "Provider impersonation requires explicit tenant Owner approval and terminates automatically after use"
+  },
+  "audit_and_compliance": {
+    "system_wide_logging": "Centralized logging of Provider actions, exportable for audits",
+    "compliance": "Align with SOC 2, ISO 27001, GDPR; respect tenant-level data residency requirements",
+    "notification": "Tenants notified of feature changes, policy updates, or forced upgrades"
+  },
+  "provisioning_flows": {
+    "role_assignment": "Reserved for system/service provider admins only, not tenant users",
+    "onboarding": "Includes secure setup of SSO, MFA, and access to provider portal",
+    "offboarding": "Revocation immediately severs access to all tenants; logs retained"
+  },
+  "notes": "Provider has meta-level control to adapt the platform for different industries and tenants, while preserving strict tenant data isolation. Focused on service delivery, compliance, and support, not business management."
+}
