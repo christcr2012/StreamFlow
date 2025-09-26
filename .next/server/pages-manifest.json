@@ -2,8 +2,13 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/provider/revenue": "pages/provider/revenue.js",
   "/provider/settings": "pages/provider/settings.js",
+  "/api/auth/logout": "pages/api/auth/logout.js",
+  "/login": "pages/login.js",
   "/api/me": "pages/api/me.js",
-  "/api/provider/settings": "pages/api/provider/settings.js"
+  "/api/auth/login": "pages/api/auth/login.js",
+  "/dashboard": "pages/dashboard.js",
+  "/api/dashboard/summary": "pages/api/dashboard/summary.js",
+  "/api/leads.list": "pages/api/leads.list.js",
+  "/profile": "pages/profile.js"
 }
