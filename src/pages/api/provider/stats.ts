@@ -58,10 +58,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Calculate conversion revenue (all-time)
     const conversionRevenueResult = await prisma.leadInvoice.aggregate({
       _sum: {
-        amountCents: true
+        totalCents: true
       }
     });
-    const conversionRevenue = (conversionRevenueResult._sum.amountCents || 0) / 100;
+    const conversionRevenue = (conversionRevenueResult._sum.totalCents || 0) / 100;
 
     // Calculate Provider costs (current month AI usage)
     const providerCostsResult = await prisma.aiMonthlySummary.aggregate({
