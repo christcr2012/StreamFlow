@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Head from "next/head";
 import { useMe } from "@/lib/useMe";
+import DashboardModules from "@/components/DashboardModules";
 
 type LeadRow = {
   id: string;
@@ -125,12 +126,54 @@ export default function Dashboard() {
   const periodStartLabel = kpis?.periodStartISO ? new Date(kpis.periodStartISO).toLocaleDateString() : undefined;
   const periodEndLabel = kpis?.periodEndISO ? new Date(kpis.periodEndISO).toLocaleDateString() : undefined;
 
+  // Get role-specific welcome message
+  const getWelcomeMessage = () => {
+    switch (me?.role) {
+      case "OWNER":
+        return {
+          title: "Business Command Center",
+          subtitle: "Complete overview of your business operations"
+        };
+      case "MANAGER":
+        return {
+          title: "Manager Dashboard",
+          subtitle: "Manage your team and operations efficiently"
+        };
+      case "STAFF":
+        return {
+          title: "Employee Dashboard",
+          subtitle: "Your personalized work center"
+        };
+      case "ACCOUNTANT":
+        return {
+          title: "Financial Dashboard",
+          subtitle: "Complete financial management and reporting"
+        };
+      case "PROVIDER":
+        return {
+          title: "Provider Portal",
+          subtitle: "Monitor client success and revenue streams"
+        };
+      default:
+        return {
+          title: "Dashboard",
+          subtitle: "Welcome to your personalized workspace"
+        };
+    }
+  };
+
+  const { title, subtitle } = getWelcomeMessage();
+
   return (
     <>
-      <Head><title>Dashboard</title></Head>
+      <Head><title>{title}</title></Head>
       <div className="responsive-container space-y-6 sm:space-y-8 lg:space-y-12">
+        {/* Premium Dashboard Header */}
         <div className="responsive-flex-col-row-lg items-start lg:items-center justify-between responsive-gap">
-          <h1 className="responsive-heading-1 text-gradient responsive-text-center-left-lg">Dashboard</h1>
+          <div>
+            <h1 className="responsive-heading-1 text-gradient responsive-text-center-left-lg">{title}</h1>
+            <p className="text-sm mt-2" style={{ color: 'var(--text-tertiary)' }}>{subtitle}</p>
+          </div>
           <div className="responsive-flex-col-row responsive-gap-sm w-full lg:w-auto">
             <button className="touch-button border border-current text-center">
               <span>Export Data</span>
@@ -140,6 +183,9 @@ export default function Dashboard() {
             </button>
           </div>
         </div>
+
+        {/* Personalized Dashboard Modules */}
+        <DashboardModules />
 
         {/* Premium Billing Summary */}
         <div className="responsive-card">
