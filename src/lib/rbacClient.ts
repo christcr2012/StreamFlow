@@ -115,6 +115,90 @@ export const PERMS = {
   MEDIA_READ: "media:read",
   MEDIA_UPLOAD: "media:upload",
   MEDIA_DELETE: "media:delete",
+
+  // ENTERPRISE OWNER CAPABILITIES
+  
+  // Custom Role Builder & Permission Management
+  ROLE_CREATE: "role:create",
+  ROLE_CLONE: "role:clone",
+  ROLE_RENAME: "role:rename", 
+  PERMISSION_GRANT: "permission:grant",
+  PERMISSION_REVOKE: "permission:revoke",
+  PERMISSION_PRESET_MANAGE: "permission:preset:manage",
+  DEPARTMENT_SCOPE: "department:scope",
+  APPROVAL_WORKFLOW_MANAGE: "approval:workflow:manage",
+  
+  // Provider Feature Controls & Cost Management
+  FEATURE_TOGGLE: "feature:toggle",
+  MODULE_ENABLE: "module:enable",
+  MODULE_DISABLE: "module:disable",
+  AI_FEATURE_CONTROL: "ai:feature:control",
+  USAGE_DASHBOARD: "usage:dashboard",
+  COST_DASHBOARD: "cost:dashboard",
+  BUDGET_MANAGE: "budget:manage",
+  GUARDRAIL_SET: "guardrail:set",
+  
+  // Advanced Integrations Management
+  INTEGRATION_CONFIGURE: "integration:configure",
+  SSO_MANAGE: "sso:manage",
+  SAML_CONFIGURE: "saml:configure",
+  OIDC_CONFIGURE: "oidc:configure",
+  SCIM_MANAGE: "scim:manage",
+  WEBHOOK_MANAGE: "webhook:manage",
+  OAUTH_APP_MANAGE: "oauth:app:manage",
+  API_KEY_MANAGE: "api:key:manage",
+  
+  // Governance & Security Policies
+  AUDIT_EXPORT: "audit:export",
+  POLICY_MANAGE: "policy:manage",
+  PASSWORD_POLICY: "password:policy",
+  MFA_POLICY: "mfa:policy", 
+  SESSION_POLICY: "session:policy",
+  DATA_RETENTION_POLICY: "data:retention:policy",
+  IP_ALLOWLIST_MANAGE: "ip:allowlist:manage",
+  IP_DENYLIST_MANAGE: "ip:denylist:manage",
+  
+  // Break-glass & Elevation
+  BREAKGLASS_ACCESS: "breakglass:access",
+  JIT_ELEVATION: "jit:elevation",
+  ADMIN_OVERRIDE: "admin:override",
+  
+  // Support & Impersonation
+  SUPPORT_SESSION_INITIATE: "support:session:initiate",
+  USER_IMPERSONATE_SECURE: "user:impersonate:secure",
+  SUPPORT_CONSENT_MANAGE: "support:consent:manage",
+  
+  // Advanced User Lifecycle
+  USER_INVITE_MAGIC: "user:invite:magic",
+  SCIM_PROVISION: "scim:provision",
+  JIT_PROVISION: "jit:provision",
+  USER_OFFBOARD_SECURE: "user:offboard:secure",
+  SESSION_KILL: "session:kill",
+  DATA_REASSIGN: "data:reassign",
+  
+  // Workflow & Template Management
+  WORKFLOW_CONFIGURE: "workflow:configure",
+  INDUSTRY_TEMPLATE_MANAGE: "industry:template:manage",
+  WORKFLOW_TEMPLATE_CREATE: "workflow:template:create",
+  BUSINESS_PROCESS_DESIGN: "business:process:design",
+  
+  // Compliance & SOC 2
+  SOC2_CONTROLS: "soc2:controls",
+  COMPLIANCE_AUDIT: "compliance:audit",
+  DATA_RESIDENCY_CONFIGURE: "data:residency:configure",
+  RETENTION_ENFORCE: "retention:enforce",
+  
+  // Tenant Configuration
+  TENANT_CONFIGURE: "tenant:configure",
+  TENANT_BRANDING: "tenant:branding",
+  TENANT_DOMAINS: "tenant:domains",
+  TENANT_LIMITS: "tenant:limits",
+  
+  // Advanced Analytics & Monitoring
+  SECURITY_MONITORING: "security:monitoring",
+  USER_BEHAVIOR_ANALYTICS: "user:behavior:analytics",
+  THREAT_DETECTION: "threat:detection",
+  ANOMALY_DETECTION: "anomaly:detection",
 } as const;
 export type PermName = typeof PERMS[keyof typeof PERMS];
 
@@ -148,7 +232,45 @@ const ROLE_TO_PERMS: Record<string, PermName[]> = {
     // Provider Portal
     PERMS.PROVIDER_DASHBOARD, PERMS.PROVIDER_BILLING, PERMS.PROVIDER_ANALYTICS, PERMS.PROVIDER_SETTINGS, PERMS.PROVIDER_CLIENTS,
     // Document & Media
-    PERMS.DOCUMENT_READ, PERMS.DOCUMENT_CREATE, PERMS.DOCUMENT_UPDATE, PERMS.DOCUMENT_DELETE, PERMS.MEDIA_READ, PERMS.MEDIA_UPLOAD, PERMS.MEDIA_DELETE
+    PERMS.DOCUMENT_READ, PERMS.DOCUMENT_CREATE, PERMS.DOCUMENT_UPDATE, PERMS.DOCUMENT_DELETE, PERMS.MEDIA_READ, PERMS.MEDIA_UPLOAD, PERMS.MEDIA_DELETE,
+    
+    // ENTERPRISE OWNER CAPABILITIES
+    // Custom Role Builder & Permission Management
+    PERMS.ROLE_CREATE, PERMS.ROLE_CLONE, PERMS.ROLE_RENAME, PERMS.PERMISSION_GRANT, PERMS.PERMISSION_REVOKE, PERMS.PERMISSION_PRESET_MANAGE,
+    PERMS.DEPARTMENT_SCOPE, PERMS.APPROVAL_WORKFLOW_MANAGE,
+    
+    // Provider Feature Controls & Cost Management
+    PERMS.FEATURE_TOGGLE, PERMS.MODULE_ENABLE, PERMS.MODULE_DISABLE, PERMS.AI_FEATURE_CONTROL, PERMS.USAGE_DASHBOARD, PERMS.COST_DASHBOARD,
+    PERMS.BUDGET_MANAGE, PERMS.GUARDRAIL_SET,
+    
+    // Advanced Integrations Management
+    PERMS.INTEGRATION_CONFIGURE, PERMS.SSO_MANAGE, PERMS.SAML_CONFIGURE, PERMS.OIDC_CONFIGURE, PERMS.SCIM_MANAGE, PERMS.WEBHOOK_MANAGE,
+    PERMS.OAUTH_APP_MANAGE, PERMS.API_KEY_MANAGE,
+    
+    // Governance & Security Policies
+    PERMS.AUDIT_EXPORT, PERMS.POLICY_MANAGE, PERMS.PASSWORD_POLICY, PERMS.MFA_POLICY, PERMS.SESSION_POLICY, PERMS.DATA_RETENTION_POLICY,
+    PERMS.IP_ALLOWLIST_MANAGE, PERMS.IP_DENYLIST_MANAGE,
+    
+    // Break-glass & Elevation
+    PERMS.BREAKGLASS_ACCESS, PERMS.JIT_ELEVATION, PERMS.ADMIN_OVERRIDE,
+    
+    // Support & Impersonation
+    PERMS.SUPPORT_SESSION_INITIATE, PERMS.USER_IMPERSONATE_SECURE, PERMS.SUPPORT_CONSENT_MANAGE,
+    
+    // Advanced User Lifecycle
+    PERMS.USER_INVITE_MAGIC, PERMS.SCIM_PROVISION, PERMS.JIT_PROVISION, PERMS.USER_OFFBOARD_SECURE, PERMS.SESSION_KILL, PERMS.DATA_REASSIGN,
+    
+    // Workflow & Template Management
+    PERMS.WORKFLOW_CONFIGURE, PERMS.INDUSTRY_TEMPLATE_MANAGE, PERMS.WORKFLOW_TEMPLATE_CREATE, PERMS.BUSINESS_PROCESS_DESIGN,
+    
+    // Compliance & SOC 2
+    PERMS.SOC2_CONTROLS, PERMS.COMPLIANCE_AUDIT, PERMS.DATA_RESIDENCY_CONFIGURE, PERMS.RETENTION_ENFORCE,
+    
+    // Tenant Configuration
+    PERMS.TENANT_CONFIGURE, PERMS.TENANT_BRANDING, PERMS.TENANT_DOMAINS, PERMS.TENANT_LIMITS,
+    
+    // Advanced Analytics & Monitoring
+    PERMS.SECURITY_MONITORING, PERMS.USER_BEHAVIOR_ANALYTICS, PERMS.THREAT_DETECTION, PERMS.ANOMALY_DETECTION
   ],
   MANAGER: [
     // Dashboard & Analytics
