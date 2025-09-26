@@ -42,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Get conversion count and revenue
         leadInvoices: {
           select: {
-            amountCents: true
+            totalCents: true
           }
         },
         // Get monthly AI usage
@@ -61,7 +61,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const clients = orgs.map(org => {
       const primaryUser = org.users[0];
-      const totalRevenue = org.leadInvoices.reduce((sum, invoice) => sum + invoice.amountCents, 0) / 100;
+      const totalRevenue = org.leadInvoices.reduce((sum, invoice) => sum + invoice.totalCents, 0) / 100;
       const conversionCount = org.leadInvoices.length;
       const currentMonthUsage = org.aiMonthlySummaries[0]?.creditsUsed || 0;
 
