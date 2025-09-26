@@ -76,7 +76,7 @@ export default function ProfilePage() {
         {/* Profile Information */}
         <div className="premium-card">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-2 h-8 bg-gradient-to-b from-blue-400 to-blue-600 rounded-full"></div>
+            <div className="w-2 h-8 rounded-full" style={{ background: 'var(--brand-gradient)' }}></div>
             <div>
               <h2 className="text-xl font-semibold text-gradient">Account Information</h2>
               <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
@@ -134,7 +134,7 @@ export default function ProfilePage() {
         {/* Security Settings */}
         <div className="premium-card">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-2 h-8 bg-gradient-to-b from-red-400 to-red-600 rounded-full"></div>
+            <div className="w-2 h-8 rounded-full" style={{ background: 'var(--brand-gradient)' }}></div>
             <div>
               <h2 className="text-xl font-semibold text-gradient">Security Settings</h2>
               <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
@@ -189,11 +189,13 @@ export default function ProfilePage() {
               </div>
 
               {msg && (
-                <div className={`px-3 py-2 rounded-lg text-sm ${
-                  msg.includes('successfully') || msg.includes('updated') 
-                    ? 'bg-emerald-500/20 text-emerald-400' 
-                    : 'bg-red-500/20 text-red-400'
-                }`}>
+                <div 
+                  className="px-3 py-2 rounded-lg text-sm"
+                  style={msg.includes('successfully') || msg.includes('updated') 
+                    ? { background: 'rgba(34, 197, 94, 0.2)', color: 'rgb(34, 197, 94)' }
+                    : { background: 'rgba(239, 68, 68, 0.2)', color: 'rgb(239, 68, 68)' }
+                  }
+                >
                   {msg}
                 </div>
               )}
@@ -204,7 +206,7 @@ export default function ProfilePage() {
         {/* Activity & Sessions */}
         <div className="premium-card">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-2 h-8 bg-gradient-to-b from-green-400 to-green-600 rounded-full"></div>
+            <div className="w-2 h-8 rounded-full" style={{ background: 'var(--brand-gradient)' }}></div>
             <div>
               <h2 className="text-xl font-semibold text-gradient">Activity & Sessions</h2>
               <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
@@ -217,7 +219,7 @@ export default function ProfilePage() {
             <div className="flex items-center justify-between p-4 rounded-xl" 
                  style={{ background: 'var(--surface-2)', border: '1px solid var(--border-primary)' }}>
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
+                <div className="w-2 h-2 rounded-full" style={{ background: 'var(--accent-success)' }}></div>
                 <div>
                   <div className="font-medium">Current Session</div>
                   <div className="text-sm" style={{ color: 'var(--text-tertiary)' }}>

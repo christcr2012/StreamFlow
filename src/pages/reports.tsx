@@ -103,11 +103,11 @@ export default function ReportsPage() {
                 <div className="kpi-card-content">
                   <div className="flex items-center justify-between mb-2">
                     <span className="kpi-label">{c.title}</span>
-                    <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
+                    <div className="w-2 h-2 rounded-full" style={{ background: 'var(--accent-success)' }}></div>
                   </div>
                   <div className="kpi-value">{c.value.toLocaleString()}</div>
                   <div className="kpi-change">
-                    <span className="text-emerald-400">↗ Active</span>
+                    <span style={{ color: 'var(--accent-success)' }}>↗ Active</span>
                   </div>
                 </div>
               </div>
