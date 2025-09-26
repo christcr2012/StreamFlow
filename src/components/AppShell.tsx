@@ -33,6 +33,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <NavLink href="/leads"     active={active("/leads")}>Leads</NavLink>
           <NavLink href="/intake"    active={active("/intake")}>Intake</NavLink>
           <NavLink href="/admin"     active={active("/admin")}>Admin</NavLink>
+          <NavLink href="/dashboard/provider" active={active("/dashboard/provider")}>Provider Portal</NavLink>
           <NavLink href="/reports"   active={active("/reports")}>Reports</NavLink>
           <NavLink href="/settings"  active={active("/settings")}>Settings</NavLink>
         </nav>

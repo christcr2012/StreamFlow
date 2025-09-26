@@ -20,6 +20,13 @@ model Org {
   aiPlan              AiPlan   @default(BASE)   // Client subscription tier
   aiAlerts            Json     @default("{}")   // Usage alert thresholds
 
+  // Stripe Subscription Management
+  stripeCustomerId      String?   // Stripe customer ID for billing
+  stripeSubscriptionId  String?   // Current active subscription ID
+  subscriptionStatus    String?   // active, past_due, canceled, etc
+  subscriptionStartDate DateTime? // When subscription started
+  subscriptionEndDate   DateTime? // When subscription ends/ended
+
   // Back-relations
   auditLogs     AuditLog[]
   ledger        BillingLedger[]
@@ -438,11 +445,11 @@ enum LeadStatus {
   CONVERTED
 }
 
-// AI Plan Tiers for Monetization
+// AI Plan Tiers for Monetization - CLIENT SUBSCRIPTION TIERS
 enum AiPlan {
-  BASE    // Free tier with basic credits
-  PRO     // Mid-tier with enhanced features  
-  ELITE   // Premium tier with full capabilities
+  BASE    // MVP: Free lead generation, $100/conversion only
+  PRO     // $97/month: Advanced AI, unlimited leads, priority support  
+  ELITE   // $297/month: White-label, API access, custom integrations
 }
 
 // Individual AI API call tracking for cost monitoring and analytics
