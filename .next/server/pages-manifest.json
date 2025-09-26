@@ -4,5 +4,10 @@
   "/_document": "pages/_document.js",
   "/leads": "pages/leads.js",
   "/reports": "pages/reports.js",
-  "/settings": "pages/settings.js"
+  "/settings": "pages/settings.js",
+  "/": "pages/index.js",
+  "/dashboard": "pages/dashboard.js",
+  "/api/me": "pages/api/me.js",
+  "/api/leads.list": "pages/api/leads.list.js",
+  "/api/dashboard/summary": "pages/api/dashboard/summary.js"
 }
