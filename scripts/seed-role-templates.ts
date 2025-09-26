@@ -451,6 +451,96 @@ const industryTemplates: RoleTemplateData[] = [
     },
     isSystemTemplate: true,
     isPublic: true
+  },
+
+  // === PLATFORM PROVIDER ===
+  {
+    name: "Provider",
+    description: "System/service provider role for cross-tenant platform management, service delivery, and compliance enforcement without access to tenant business operations.",
+    industry: "Platform Administration",
+    category: "System Provider",
+    complexity: "ADVANCED",
+    permissions: [
+      // Service Management
+      "system:enable_feature_flags", "system:disable_feature_flags", "system:configure_industry_templates",
+      "system:deploy_tenant_templates", "system:manage_ai_automation_limits", "system:configure_module_availability",
+      "system:update_service_catalog",
+      
+      // System Monitoring  
+      "analytics:view_tenant_aggregated", "analytics:resource_consumption_all", "analytics:performance_metrics_system",
+      "analytics:compliance_risk_assessment", "analytics:usage_patterns_anonymized", "monitoring:system_health_dashboard",
+      "monitoring:error_tracking_cross_tenant",
+      
+      // Support Tools
+      "support:initiate_impersonation", "support:generate_diagnostic_reports", "support:create_secure_support_session",
+      "support:access_system_logs", "support:trigger_health_checks", "support:emergency_system_access",
+      
+      // Compliance & Security
+      "security:enforce_baseline_policies", "security:manage_mfa_requirements", "security:configure_encryption_standards",
+      "compliance:manage_audit_retention", "compliance:configure_data_residency", "compliance:push_security_patches",
+      "compliance:force_system_updates", "compliance:generate_compliance_reports",
+      
+      // Integration Controls
+      "integrations:curate_available_connectors", "integrations:enforce_sla_compliance", 
+      "integrations:security_review_integrations", "integrations:manage_api_gateway", "integrations:update_connector_catalog",
+      
+      // Platform Administration
+      "platform:configure_system_settings", "platform:manage_global_configurations", "platform:deploy_infrastructure_updates",
+      "platform:manage_provider_portal", "platform:configure_tenant_provisioning",
+      
+      // Audit & Transparency
+      "audit:access_immutable_logs", "audit:generate_system_reports", "audit:notify_tenants_of_changes",
+      "audit:manage_transparency_dashboard",
+      
+      "profile:read", "profile:update", "notifications:manage"
+    ],
+    config: {
+      defaultDashboard: "provider_system_overview",
+      allowedModules: ["system_administration", "tenant_analytics", "service_management", "compliance_monitoring", "support_tools", "integration_management", "platform_configuration"],
+      restrictedAreas: ["tenant_business_operations", "tenant_customer_data", "tenant_financial_records", "tenant_staff_management", "tenant_operational_data"],
+      systemLevelAccess: true,
+      crossTenantVisibility: true,
+      immutableAuditLogging: true,
+      tenantNotificationRequired: true,
+      dataIsolationEnforcement: true
+    },
+    scopeConfig: {
+      systemWide: true,
+      crossTenant: true,
+      serviceDeliveryFocused: true,
+      businessDataRestricted: true,
+      impersonationRules: {
+        requiresTenantConsent: true,
+        maxSessionDuration: 120,
+        autoTermination: true,
+        fullAuditLogging: true,
+        ownerApprovalRequired: true
+      },
+      dataSafeguards: {
+        noBusinessRecords: true,
+        noCustomerData: true,
+        noFinancialRecords: true,
+        noOperationalData: true,
+        aggregatedAnalyticsOnly: true,
+        anonymizationRequired: true
+      },
+      complianceRequirements: {
+        soc2Aligned: true,
+        iso27001Aligned: true,
+        gdprCompliant: true,
+        auditRetention: "7_years",
+        dataResidencyRespect: true
+      },
+      transparencyControls: {
+        tenantChangeNotification: true,
+        actionVisibilityToTenants: true,
+        changeLogMaintenance: true,
+        consentAuditTrail: true
+      }
+    },
+    isSystemTemplate: true,
+    isPublic: false,
+    isProviderExclusive: true
   }
 ];
 
