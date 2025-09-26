@@ -1,6 +1,7 @@
 // src/pages/leads.tsx
 import { useEffect, useState } from "react";
 import Head from "next/head";
+import Link from "next/link";
 
 type LeadRow = {
   id: string;
@@ -200,9 +201,13 @@ export default function LeadsPage() {
                 {processed.map((l) => (
                   <tr key={l.id}>
                     <td>
-                      <div className="font-mono text-sm" style={{ color: 'var(--brand-primary)' }}>
+                      <Link 
+                        href={`/leads/${l.publicId || l.id}`}
+                        className="font-mono text-sm hover:underline"
+                        style={{ color: 'var(--brand-primary)' }}
+                      >
                         {l.publicId || "—"}
-                      </div>
+                      </Link>
                     </td>
                     <td>
                       <div className="space-y-1">
