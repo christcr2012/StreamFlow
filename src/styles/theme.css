@@ -18,7 +18,7 @@
   --glass-bg: rgba(20, 25, 35, 0.8);
   --glass-bg-light: rgba(30, 35, 45, 0.6);
   --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-border-accent: rgba(6, 95, 244, 0.3);
+  --glass-border-accent: rgba(74, 111, 181, 0.3);
   
   /* Surface Colors - Premium cards */
   --surface-1: rgba(20, 25, 35, 0.9);
@@ -31,13 +31,13 @@
   --text-secondary: #cbd5e1;
   --text-tertiary: #94a3b8;
   --text-muted: #64748b;
-  --text-accent: #3b82f6;
+  --text-accent: #4a6fb5;
   
-  /* Premium Brand Colors */
-  --brand-primary: #3b82f6;
-  --brand-secondary: #1d4ed8;
-  --brand-tertiary: #60a5fa;
-  --brand-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
+  /* Premium Brand Colors - Medium Metallic Blue */
+  --brand-primary: #4a6fb5;
+  --brand-secondary: #2c4a7a;
+  --brand-tertiary: #6b8dd6;
+  --brand-gradient: linear-gradient(135deg, #4a6fb5 0%, #2c4a7a 50%, #1e2d4f 100%);
   
   /* Accent Colors */
   --accent-success: #10b981;
@@ -49,16 +49,16 @@
   /* Premium Borders */
   --border-primary: rgba(255, 255, 255, 0.08);
   --border-secondary: rgba(255, 255, 255, 0.05);
-  --border-accent: rgba(59, 130, 246, 0.3);
-  --border-glow: rgba(59, 130, 246, 0.5);
+  --border-accent: rgba(74, 111, 181, 0.3);
+  --border-glow: rgba(74, 111, 181, 0.5);
   
   /* Advanced Shadows */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
   --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6), 0 8px 16px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(59, 130, 246, 0.1);
-  --shadow-glow-intense: 0 0 30px rgba(59, 130, 246, 0.5), 0 0 60px rgba(59, 130, 246, 0.2);
+  --shadow-glow: 0 0 20px rgba(74, 111, 181, 0.3), 0 0 40px rgba(74, 111, 181, 0.1);
+  --shadow-glow-intense: 0 0 30px rgba(74, 111, 181, 0.5), 0 0 60px rgba(74, 111, 181, 0.2);
   
   /* Border Radius */
   --radius-sm: 6px;
@@ -276,7 +276,7 @@ html, body {
 .input-field:focus {
   outline: none;
   border-color: var(--border-accent);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), var(--shadow-glow);
+  box-shadow: 0 0 0 3px rgba(74, 111, 181, 0.1), var(--shadow-glow);
   background: var(--surface-2);
 }
 
