@@ -6,6 +6,9 @@
   "/worker/home": "pages/worker/home.js",
   "/dashboard": "pages/dashboard.js",
   "/api/dashboard/summary": "pages/api/dashboard/summary.js",
-  "/login": "pages/login.js",
-  "/api/me": "pages/api/me.js"
+  "/worker/jobs": "pages/worker/jobs.js",
+  "/api/me": "pages/api/me.js",
+  "/worker/clock": "pages/worker/clock.js",
+  "/": "pages/index.js",
+  "/api/leads.list": "pages/api/leads.list.js"
 }
