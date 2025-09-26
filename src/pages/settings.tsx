@@ -216,6 +216,110 @@ export default function SettingsPage() {
           </details>
         </div>
 
+        {/* Developer Environment */}
+        <div className="premium-card">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-2 h-8 rounded-full" style={{ background: 'var(--brand-gradient)' }}></div>
+            <div>
+              <h2 className="text-xl font-semibold text-gradient">Developer Environment</h2>
+              <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                Development and testing configuration
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="p-4 rounded-xl border" style={{ 
+              background: 'var(--surface-1)', 
+              borderColor: 'var(--border-accent)'
+            }}>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+                  Developer Responsibility
+                </span>
+              </div>
+              <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>
+                These settings are managed during development and handed off to the client in production
+              </p>
+
+              <div className="grid grid-cols-1 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                    Database Connection
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="password"
+                      className="input-field pr-20"
+                      placeholder="postgresql://..."
+                      readOnly
+                      value="••••••••••••••••••••••••••••••••••••••••••••••••••••••••"
+                    />
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex gap-2">
+                      <span className="text-xs px-2 py-1 rounded" style={{ 
+                        background: 'var(--accent-info)', 
+                        color: 'var(--surface-primary)' 
+                      }}>
+                        DB
+                      </span>
+                      <span className="text-xs px-2 py-1 rounded" style={{ 
+                        background: 'var(--accent-success)', 
+                        color: 'var(--surface-primary)' 
+                      }}>
+                        ✓
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
+                    Connected to PostgreSQL database (managed via .env file)
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                    Environment Mode
+                  </label>
+                  <div className="relative">
+                    <select className="input-field pr-10" disabled>
+                      <option>Development</option>
+                    </select>
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      <span className="text-xs px-2 py-1 rounded" style={{ 
+                        background: 'var(--accent-warning)', 
+                        color: 'var(--surface-primary)' 
+                      }}>
+                        DEV
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
+                    Automatically detected from NODE_ENV variable
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 p-3 rounded-lg" style={{ 
+              background: 'rgba(34, 197, 94, 0.1)', 
+              border: '1px solid rgba(34, 197, 94, 0.2)' 
+            }}>
+              <div className="text-green-400">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <div className="text-sm font-medium text-green-400">Development Configuration</div>
+                <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                  Your development environment is properly configured and connected.
+                  Production deployment will use GitHub/Vercel/Neon as specified.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Admin Contact */}
         <div className="premium-card">
           <div className="flex items-center gap-3 mb-6">

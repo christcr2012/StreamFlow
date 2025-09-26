@@ -25,6 +25,10 @@ type ProviderSettings = {
     lateFeePercentage: number;
     autoCollections: boolean;
   };
+  environmentVars: {
+    openaiApiKey: string;
+    sessionSecret: string;
+  };
 };
 
 export default function ProviderSettingsPage() {
@@ -110,6 +114,15 @@ export default function ProviderSettingsPage() {
       setSettings({
         ...settings,
         billingSettings: { ...settings.billingSettings, ...updates }
+      });
+    }
+  };
+
+  const updateEnvironmentVars = (updates: Partial<ProviderSettings['environmentVars']>) => {
+    if (settings) {
+      setSettings({
+        ...settings,
+        environmentVars: { ...settings.environmentVars, ...updates }
       });
     }
   };
@@ -495,6 +508,108 @@ export default function ProviderSettingsPage() {
                   Automatically attempt payment collection
                 </span>
               </label>
+            </div>
+          </div>
+        </div>
+
+        {/* Provider Environment Variables */}
+        <div className="premium-card">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-2 h-8 rounded-full" style={{ background: 'var(--brand-gradient)' }}></div>
+            <div>
+              <h2 className="text-xl font-semibold text-gradient">Platform Environment Variables</h2>
+              <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                Provider-managed API keys and platform secrets
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="p-4 rounded-xl border" style={{ 
+              background: 'var(--surface-1)', 
+              borderColor: 'var(--border-accent)'
+            }}>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+                  Provider Responsibility
+                </span>
+              </div>
+              <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>
+                These keys are managed at the platform level and affect all clients
+              </p>
+
+              <div className="grid grid-cols-1 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                    OpenAI API Key
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="password"
+                      value={settings?.environmentVars?.openaiApiKey || ''}
+                      onChange={(e) => updateEnvironmentVars({ openaiApiKey: e.target.value })}
+                      className="input-field pr-10"
+                      placeholder="sk-..."
+                    />
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      <span className="text-xs px-2 py-1 rounded" style={{ 
+                        background: 'var(--accent-success)', 
+                        color: 'var(--surface-primary)' 
+                      }}>
+                        AI
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
+                    Used for AI lead scoring and processing across all clients
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                    Session Secret
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="password"
+                      value={settings?.environmentVars?.sessionSecret || ''}
+                      onChange={(e) => updateEnvironmentVars({ sessionSecret: e.target.value })}
+                      className="input-field pr-10"
+                      placeholder="Platform security secret"
+                    />
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      <span className="text-xs px-2 py-1 rounded" style={{ 
+                        background: 'var(--accent-warning)', 
+                        color: 'var(--surface-primary)' 
+                      }}>
+                        SEC
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
+                    Platform security secret for session management
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 p-3 rounded-lg" style={{ 
+              background: 'rgba(59, 130, 246, 0.1)', 
+              border: '1px solid rgba(59, 130, 246, 0.2)' 
+            }}>
+              <div className="text-blue-400">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <div className="text-sm font-medium text-blue-400">Provider-Level Configuration</div>
+                <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                  These environment variables are managed by the Provider and affect the entire platform. 
+                  Client-specific keys (Stripe, Twilio, etc.) are managed in their Organization Settings.
+                </div>
+              </div>
             </div>
           </div>
         </div>
