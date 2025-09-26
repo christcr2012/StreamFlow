@@ -32,7 +32,7 @@ function NavLink({ href, label, mobile = false, onClick }: {
       className={cx(
         "rounded-lg font-medium transition-all duration-200",
         mobile
-          ? "w-full px-4 py-3 text-left" // Touch-friendly mobile sizing
+          ? "w-full px-4 py-3.5 text-left border border-transparent hover:border-white/10" // Touch-friendly mobile sizing with subtle border
           : "px-3 py-2 text-sm", // Desktop sizing
         isActive
           ? "bg-gradient-to-r from-[#4a6fb5] to-[#2c4a7a] text-white shadow-glow"
@@ -282,13 +282,16 @@ export default function AppNav() {
             </div>
 
             {/* Sidebar Navigation */}
-            <div className="p-4 space-y-2">
+            <div className="py-6 px-4">
               {/* Main Navigation */}
-              <div className="mb-6">
-                <h3 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-tertiary)' }}>
-                  Main Menu
-                </h3>
-                <div className="space-y-1">
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-1 h-4 bg-gradient-to-b from-blue-400 to-blue-600 rounded-full"></div>
+                  <h3 className="text-sm font-semibold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
+                    Main Menu
+                  </h3>
+                </div>
+                <div className="space-y-2">
                   {leftLinks.map((l) => (
                     <NavLink 
                       key={l.href} 
@@ -301,12 +304,18 @@ export default function AppNav() {
                 </div>
               </div>
 
+              {/* Divider */}
+              <div className="h-px bg-gradient-to-r from-transparent via-gray-300/20 to-transparent mb-8"></div>
+
               {/* Secondary Navigation */}
-              <div>
-                <h3 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-tertiary)' }}>
-                  Quick Actions
-                </h3>
-                <div className="space-y-1">
+              <div className="mb-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-1 h-4 bg-gradient-to-b from-purple-400 to-purple-600 rounded-full"></div>
+                  <h3 className="text-sm font-semibold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
+                    Quick Actions
+                  </h3>
+                </div>
+                <div className="space-y-2">
                   {rightLinks.map((l) => (
                     <NavLink 
                       key={l.href} 
@@ -321,19 +330,24 @@ export default function AppNav() {
             </div>
 
             {/* Sidebar Footer */}
-            <div className="absolute bottom-0 left-0 right-0 p-4 border-t" style={{ borderColor: 'var(--border-primary)' }}>
+            <div className="absolute bottom-0 left-0 right-0 p-4 border-t" style={{ borderColor: 'var(--border-primary)', background: 'var(--glass-bg)' }}>
               <button
                 type="button"
                 onClick={() => {
                   logoutAndRedirect();
                   setIsMobileMenuOpen(false);
                 }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
+                className="w-full flex items-center gap-3 px-4 py-4 rounded-lg text-left text-slate-300 hover:text-white hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all duration-200"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-                Sign Out
+                <div className="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                </div>
+                <div>
+                  <div className="font-medium">Sign Out</div>
+                  <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>End your session</div>
+                </div>
               </button>
             </div>
           </div>
