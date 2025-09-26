@@ -74,12 +74,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
     const monthlyRevenue = monthlyConversions * 100;
 
-    // Mock AI cost calculation (would integrate with actual AI usage tracking)
-    // For now, estimate based on lead volume and processing
-    const aiCostThisMonth = Math.min(
-      totalLeads * 0.02 + (monthlyConversions * 0.1), // Rough estimate: $0.02 per lead + $0.10 per conversion
-      50 // Hard limit of $50/month
-    );
+    // AI cost calculation with configurable limit
+    // TODO: Replace with actual AI usage tracking from aiMeter system
+    const estimatedAiCost = totalLeads * 0.02 + (monthlyConversions * 0.1); // Rough estimate: $0.02 per lead + $0.10 per conversion
+    const maxAiCostPerMonth = 50; // Default limit - should come from provider settings
+    const aiCostThisMonth = Math.min(estimatedAiCost, maxAiCostPerMonth);
 
     // Calculate profit margin
     const profitMargin = monthlyRevenue > 0 ? (monthlyRevenue - aiCostThisMonth) / monthlyRevenue : 0;
