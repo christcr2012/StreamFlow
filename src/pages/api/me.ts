@@ -2,7 +2,45 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma as db } from "@/lib/prisma";
 import { PERMS as SERVER_PERMS, getEmailFromReq } from "@/lib/rbac";
-import type { MeResponse, OrgShape } from "@/lib/types/me";
+import type { MeResponse, OrgShape, BrandConfig } from "@/lib/types/me";
+
+/**
+ * Validate and sanitize brandConfig from database to ensure type safety
+ */
+function validateBrandConfig(rawBrandConfig: unknown): BrandConfig {
+  if (!rawBrandConfig || typeof rawBrandConfig !== 'object') {
+    return {};
+  }
+  
+  const config = rawBrandConfig as Record<string, unknown>;
+  const result: BrandConfig = {};
+  
+  // Validate name (string)
+  if (typeof config.name === 'string' && config.name.trim()) {
+    result.name = config.name.trim();
+  }
+  
+  // Validate logoUrl (string, basic URL format)
+  if (typeof config.logoUrl === 'string' && config.logoUrl.trim()) {
+    const url = config.logoUrl.trim();
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/')) {
+      result.logoUrl = url;
+    }
+  }
+  
+  // Validate color (hex or named color)
+  if (typeof config.color === 'string' && config.color.trim()) {
+    const color = config.color.trim();
+    const hexPattern = /^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$/;
+    const namedColors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'gray', 'black', 'white'];
+    
+    if (hexPattern.test(color) || namedColors.includes(color.toLowerCase())) {
+      result.color = color;
+    }
+  }
+  
+  return result;
+}
 
 /**
  * Compute effective permission codes for a user:
@@ -88,7 +126,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     if (user.orgId) {
       const org = await db.org.findUnique({
         where: { id: user.orgId },
-        select: { id: true, name: true, featureFlags: true },
+        select: { id: true, name: true, featureFlags: true, brandConfig: true },
       });
       if (org) {
         orgPayload = {
@@ -101,6 +139,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
            *   to avoid assuming a premature shape while the system is evolving.
            */
           featureFlags: org.featureFlags as unknown,
+          brandConfig: validateBrandConfig(org.brandConfig), // White-label branding configuration
         };
       }
     }
