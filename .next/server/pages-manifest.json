@@ -3,8 +3,10 @@
   "/_document": "pages/_document.js",
   "/_error": "pages/_error.js",
   "/worker/home": "pages/worker/home.js",
-  "/api/dashboard/summary": "pages/api/dashboard/summary.js",
   "/dashboard": "pages/dashboard.js",
   "/jobs": "pages/jobs.js",
-  "/api/me": "pages/api/me.js"
+  "/": "pages/index.js",
+  "/api/me": "pages/api/me.js",
+  "/api/leads.list": "pages/api/leads.list.js",
+  "/api/dashboard/summary": "pages/api/dashboard/summary.js"
 }

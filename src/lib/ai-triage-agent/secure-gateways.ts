@@ -644,10 +644,4 @@ export function createSecureEscalationGateway(
   return new SecureEscalationGateway(tenantId, redactionConfig);
 }
 
-export type {
-  SecureLLMConfig,
-  SecureLLMRequest,
-  SecureLLMResponse,
-  SecureEscalationRequest,
-  SecureEscalationResponse
-};
+// Types exported above with interfaces

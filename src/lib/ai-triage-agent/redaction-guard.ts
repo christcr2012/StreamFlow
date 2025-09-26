@@ -301,7 +301,7 @@ export class RedactionGuard {
       matches: matchCount,
       severity: rule.severity,
       originalLength: content.length,
-      hashedValue: this.hashContent(matches[0] || '')
+      hashedValue: this.hashContent((matches && matches[0]) ? matches[0] : '')
     };
     
     return {
@@ -598,8 +598,4 @@ export const DEFAULT_REDACTION_CONFIG: RedactionConfig = {
   }
 };
 
-export type {
-  RedactionRule,
-  RedactionConfig,
-  RedactionResult
-};
+// Types are exported above with the classes
