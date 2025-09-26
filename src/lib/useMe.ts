@@ -23,16 +23,15 @@ type MeState =
 
 export function useMe() {
   const [state, setState] = useState<MeState>({ me: null, org: null, loading: true, error: null });
-  const abortRef = useRef<AbortController | null>(null);
+  const mountedRef = useRef(true);
 
   const fetchMe = useCallback(async () => {
-    abortRef.current?.abort();
-    const ac = new AbortController();
-    abortRef.current = ac;
-
     try {
-      const r = await fetch("/api/me", { signal: ac.signal });
+      const r = await fetch("/api/me");
       const j: MeResponse = await r.json();
+
+      // Only update state if component is still mounted
+      if (!mountedRef.current) return;
 
       if (!r.ok || (j as any)?.ok === false) {
         const msg = (j as any)?.error || `HTTP ${r.status}`;
@@ -55,20 +54,18 @@ export function useMe() {
 
       setState({ me, org, loading: false, error: null });
     } catch (e: unknown) {
-      if ((e as any)?.name === "AbortError") return;
+      // Only update state if component is still mounted
+      if (!mountedRef.current) return;
       const msg = (e as { message?: string } | null)?.message || "Failed to load /api/me";
       setState({ me: null, org: null, loading: false, error: msg });
     }
   }, []);
 
   useEffect(() => {
+    mountedRef.current = true;
     fetchMe();
     return () => {
-      try {
-        abortRef.current?.abort();
-      } catch (e) {
-        // Ignore AbortError during cleanup - this is expected in React Strict Mode
-      }
+      mountedRef.current = false;
     };
   }, [fetchMe]);
 
