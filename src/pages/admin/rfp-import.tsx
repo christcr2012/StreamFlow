@@ -20,19 +20,23 @@ const PSC = [
 ];
 
 const DEFAULT_KWS =
-  "janitorial custodial housekeeping cleaning window disinfecting sanitizing floor";
+  "janitorial custodial housekeeping cleaning window disinfecting sanitizing floor maintenance";
+
+// These constants are used as defaults in the SAM.gov server-side integration
 
 const LEAD_SOURCES = [
   { 
     id: "sam", 
-    name: "SAM.gov (Federal)", 
-    description: "Free federal government contracts via SAM.gov",
+    name: "🔥 SAM.gov (Federal)", 
+    type: "hot",
+    description: "HOT LEADS: Active federal RFPs for cleaning and janitorial services",
     endpoint: "/api/integrations/sam/fetch"
   },
   { 
     id: "permits", 
-    name: "Construction Permits (Northern CO)", 
-    description: "Free hot leads from Northern Colorado construction projects",
+    name: "🟡 Construction Permits (Northern CO)", 
+    type: "warm",
+    description: "WARM LEADS: New construction projects that will need post-construction cleaning",
     endpoint: "/api/integrations/permits/fetch"
   },
 ];
@@ -295,9 +299,20 @@ export default function RfpImportPage() {
           </label>
 
           {/* Source-specific help text */}
-          <div className="text-xs text-gray-600 bg-gray-50 p-3 rounded">
-            {selectedSource === "sam" && "SAM.gov searches federal contracts. Use NAICS/PSC codes for precise targeting of cleaning and janitorial opportunities."}
-            {selectedSource === "permits" && "Northern Colorado construction permits provide HOT LEADS for post-construction cleaning. Sterling (headquarters) and Greeley get highest priority. Denver requires 3x higher project value ($75k+ default)."}
+          <div className={`text-xs p-3 rounded ${
+            selectedSource === "sam" ? "text-red-800 bg-red-50 border border-red-200" : 
+            "text-yellow-800 bg-yellow-50 border border-yellow-200"
+          }`}>
+            {selectedSource === "sam" && (
+              <div>
+                <strong>🔥 HOT LEADS:</strong> SAM.gov finds active federal RFPs where agencies are actively seeking cleaning services RIGHT NOW. Pre-configured with janitorial NAICS codes (561720, 561740, 561790) and PSC codes (S201, S214, S299) for maximum relevance.
+              </div>
+            )}
+            {selectedSource === "permits" && (
+              <div>
+                <strong>🟡 WARM LEADS:</strong> Construction permits show new buildings that will need post-construction cleaning, but they're not actively seeking cleaning services yet. You'll need to educate them about the need and build relationships.
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-3">

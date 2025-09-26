@@ -114,11 +114,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ ok: false, error: "Missing SAM_API_KEY" });
     }
 
-    // Body can carry search inputs like { q, naics, psc, postedFrom, postedTo, state, city, limit }
+    // Body can carry search inputs like { q, keywords, naics, psc, postedFrom, postedTo, state, city, limit }
     const body = (req.body ?? {}) as Record<string, unknown>;
-    const q = String(body.q ?? "").trim();
-    const naics = typeof body.naics === "string" ? body.naics : undefined;
-    const psc = typeof body.psc === "string" ? body.psc : undefined;
+    const keywords = String(body.keywords ?? "").trim();
+    const q = keywords || String(body.q ?? "janitorial custodial cleaning").trim(); // Use UI keywords or default
+    
+    // Default to cleaning-specific codes if not provided
+    const cleaningNaics = ["561720", "561740", "561790"]; // Janitorial, Carpet, Building services
+    const cleaningPsc = ["S201", "S214", "S299"]; // Custodial, Housekeeping, Misc
+    
+    const naics = typeof body.naics === "string" ? body.naics : 
+                  Array.isArray(body.naics) ? body.naics.join(",") :
+                  cleaningNaics.join(",");
+    const psc = typeof body.psc === "string" ? body.psc : 
+                Array.isArray(body.psc) ? body.psc.join(",") :
+                cleaningPsc.join(",");
     const postedFrom = String(body.postedFrom ?? "");
     const postedTo = String(body.postedTo ?? "");
     const limit = Math.min(Math.max(parseInt(String(body.limit ?? "50"), 10) || 50, 1), 200);
@@ -196,16 +206,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         continue;
       }
 
-      // Compute AI score + details via adapter (no assumptions about scoreLead types)
+      // Compute AI score + details via adapter (HOT leads get priority boost)
       let aiScore = 0;
       let scoreFactors: Prisma.InputJsonValue = {};
       try {
         const { score, details } = await scoreLeadNormalized({
-          // safely supply what your scorer needs; adapter shields type differences
+          sourceType: "RFP", 
+          leadType: "hot", // Mark as hot lead for 1.5x scoring boost
           title: r.title ?? "",
           agency: company ?? "",
           naics: firstStr(r.naics) ?? "",
           psc: firstStr(r.psc) ?? "",
+          serviceDescription: `Federal RFP: ${r.title ?? 'Cleaning services'}`,
+          city: "", // Federal contracts aren't city-specific
+          state: "US" // Federal level
         });
         aiScore = typeof score === "number" ? score : 0;
         scoreFactors = asJson(details ?? {});

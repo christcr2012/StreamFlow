@@ -25,6 +25,24 @@ export interface LeadScoringConfig {
    * referrals are intentionally non-billable and therefore receive no boost.
    */
   sourceWeights: Record<string, number>;
+
+  /**
+   * Lead type scoring modifiers. These multiply the base score to prioritize
+   * leads who are actively seeking services vs. those who may need them eventually.
+   */
+  leadTypeModifiers: {
+    hot: number;    // Actively seeking cleaning services (RFPs, solicitations)
+    warm: number;   // May need services but not actively seeking (permits, new buildings)
+    cold: number;   // General prospects
+  };
+
+  /**
+   * Scoring thresholds for lead classification
+   */
+  thresholds: {
+    hot: number;    // Score >= 70 = HOT lead (actively seeking)
+    warm: number;   // Score >= 40 = WARM lead (below 40 = COLD)
+  };
 }
 
 const config: LeadScoringConfig = {
@@ -63,6 +81,15 @@ const config: LeadScoringConfig = {
     EMPLOYEE_REFERRAL: 0,
     MANUAL: 5,
     LSA: 15,
+  },
+  leadTypeModifiers: {
+    hot: 1.5,   // 50% boost for actively seeking leads
+    warm: 1.0,  // No modifier for warm leads
+    cold: 0.7,  // 30% reduction for cold prospects
+  },
+  thresholds: {
+    hot: 70,    // Score >= 70 = HOT lead (actively seeking)
+    warm: 40,   // Score >= 40 = WARM lead (below 40 = COLD)
   },
 };
 

@@ -362,11 +362,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         ? `Post-Construction Cleaning - ${permit.projectDescription}`
         : `Construction Cleaning Opportunity - ${permit.constructionType || 'Building Project'}`;
 
-      // Score the lead (construction permits are hot leads)
+      // Score the lead (construction permits are warm leads - they'll need cleaning but aren't actively seeking it)
       const score = await scoreLeadNormalized({
-        sourceType: "CONSTRUCTION_PERMIT",
-        name: title,
-        company,
+        sourceType: "SYSTEM",
+        leadType: "warm", // Warm leads get 1.0x modifier (no boost)
+        title: title,
         serviceDescription: `Post-construction cleaning for ${permit.constructionType || 'construction project'}`,
         city: permit.city || "",
         state: permit.state || state
@@ -387,7 +387,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           zip: permit.zip || "",
           address: permit.propertyAddress || "",
           aiScore: score.score,
-          sourceType: LeadSource.RFP,
+          sourceType: LeadSource.SYSTEM,
           status: LeadStatus.NEW,
           enrichmentJson: enrichment,
         }
@@ -412,7 +412,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       totalDollars: (totalCents / 100).toFixed(2),
       items,
       source,
-      message: `Imported ${items.filter(it => it.created).length} hot construction leads from ${source}`
+      message: `Imported ${items.filter(it => it.created).length} warm construction leads from ${source}`
     });
 
   } catch (error) {
