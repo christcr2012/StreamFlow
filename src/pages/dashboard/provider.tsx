@@ -292,11 +292,13 @@ export default function ProviderPortal() {
               <div className="text-2xl font-bold text-purple-900 mb-1">$297/month</div>
               <div className="text-sm text-purple-600 mb-4">+ $100 per conversion</div>
               <ul className="text-sm text-purple-700 space-y-2 text-left">
-                <li>• White-label branding</li>
-                <li>• API access</li>
-                <li>• Custom integrations</li>
+                <li>• Market intelligence & competitor tracking</li>
+                <li>• Priority access to high-value RFPs</li>
+                <li>• Advanced territory analysis</li>
                 <li>• 20,000 credits/month</li>
-                <li>• Dedicated support</li>
+                <li>• Dedicated account manager</li>
+                <li>• Custom CRM integrations</li>
+                <li>• Direct phone support</li>
               </ul>
             </div>
           </div>
