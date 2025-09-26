@@ -142,19 +142,18 @@ export default function WorkerPayroll() {
     );
   }
 
-  // Role check temporarily disabled for testing
-  // if (error || !me || me.role !== "STAFF") {
-  //   return (
-  //     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-  //       <div className="text-center">
-  //         <p className="text-red-500 mb-4">Employee access required</p>
-  //         <Link href="/login" className="btn-primary">
-  //           Sign In
-  //         </Link>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  if (error || !me || me.role !== "STAFF") {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="text-center">
+          <p className="text-red-500 mb-4">Employee access required</p>
+          <Link href="/login" className="btn-primary">
+            Sign In
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">

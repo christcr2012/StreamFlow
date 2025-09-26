@@ -33,20 +33,15 @@
       "static/chunks/main.js",
       "static/chunks/pages/dashboard.js"
     ],
-    "/leads": [
+    "/reports": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/leads.js"
+      "static/chunks/pages/reports.js"
     ],
-    "/login": [
+    "/settings": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/login.js"
-    ],
-    "/worker/home": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/worker/home.js"
+      "static/chunks/pages/settings.js"
     ]
   },
   "ampFirstPages": []
