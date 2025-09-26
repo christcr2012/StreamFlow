@@ -33,25 +33,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/dashboard.js"
     ],
-    "/worker/clock": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/worker/clock.js"
-    ],
     "/worker/home": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/worker/home.js"
-    ],
-    "/worker/jobs": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/worker/jobs.js"
-    ],
-    "/worker/training": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/worker/training.js"
     ]
   },
   "ampFirstPages": []
