@@ -1,51 +1,205 @@
 // src/components/DashboardModules.tsx
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useMe } from "@/lib/useMe";
+import { hasPerm, PERMS } from "@/lib/rbacClient";
 
-// Quick Access Module - Shows primary actions based on role
-function QuickActionsModule({ userRole }: { userRole: string | undefined }) {
+// Enhanced Quick Access Module with Permission-Based Actions
+function QuickActionsModule({ userRole, me }: { userRole: string | undefined; me: any }) {
+  const [actionInProgress, setActionInProgress] = useState<string | null>(null);
+
+  // Get permission-based quick actions
   const getQuickActions = () => {
-    switch (userRole) {
-      case "OWNER":
-        return [
-          { href: "/leads", label: "Manage Leads", icon: "➕", color: "bg-blue-500" },
-          { href: "/jobs", label: "Manage Jobs", icon: "📋", color: "bg-green-500" },
-          { href: "/analytics", label: "View Analytics", icon: "📊", color: "bg-purple-500" },
-          { href: "/revenue", label: "Revenue Report", icon: "💰", color: "bg-yellow-500" },
-        ];
-      case "MANAGER":
-        return [
-          { href: "/leads", label: "Add Lead", icon: "👥", color: "bg-blue-500" },
-          { href: "/schedule", label: "Schedule Job", icon: "📅", color: "bg-green-500" },
-          { href: "/workforce", label: "Team Status", icon: "👨‍💼", color: "bg-purple-500" },
-          { href: "/reports", label: "Reports", icon: "📈", color: "bg-orange-500" },
-        ];
-      case "STAFF":
-        return [
-          { href: "/worker/clock", label: "Clock In/Out", icon: "⏰", color: "bg-blue-500" },
-          { href: "/worker/jobs", label: "My Jobs", icon: "📋", color: "bg-green-500" },
-          { href: "/schedule", label: "View Schedule", icon: "📅", color: "bg-purple-500" },
-          { href: "/worker/training", label: "Training", icon: "🎓", color: "bg-orange-500" },
-        ];
-      case "ACCOUNTANT":
-        return [
-          { href: "/billing/invoices", label: "Process Invoices", icon: "📄", color: "bg-blue-500" },
-          { href: "/worker/payroll", label: "Payroll", icon: "💰", color: "bg-green-500" },
-          { href: "/reports", label: "Financial Reports", icon: "📊", color: "bg-purple-500" },
-          { href: "/revenue", label: "Track Revenue", icon: "🧾", color: "bg-red-500" },
-        ];
-      default:
-        return [
-          { href: "/leads", label: "Manage Leads", icon: "➕", color: "bg-blue-500" },
-          { href: "/jobs", label: "Manage Jobs", icon: "📋", color: "bg-green-500" },
-          { href: "/reports", label: "View Reports", icon: "📊", color: "bg-purple-500" },
-          { href: "/settings", label: "Settings", icon: "⚙️", color: "bg-gray-500" },
-        ];
+    const actions = [];
+
+    // Lead Management Actions
+    if (hasPerm(me, PERMS.LEAD_READ)) {
+      actions.push({ 
+        href: "/leads", 
+        label: "View Leads", 
+        icon: "👥", 
+        color: "bg-blue-500",
+        permission: "read"
+      });
     }
+    if (hasPerm(me, PERMS.LEAD_CREATE)) {
+      actions.push({ 
+        href: "/leads?action=create", 
+        label: "Create Lead", 
+        icon: "➕", 
+        color: "bg-blue-600",
+        permission: "create",
+        isAction: true
+      });
+    }
+
+    // Job Management Actions
+    if (hasPerm(me, PERMS.JOB_READ)) {
+      actions.push({ 
+        href: "/jobs", 
+        label: "View Jobs", 
+        icon: "📋", 
+        color: "bg-green-500",
+        permission: "read"
+      });
+    }
+    if (hasPerm(me, PERMS.JOB_CREATE)) {
+      actions.push({ 
+        href: "/jobs?action=create", 
+        label: "Create Job", 
+        icon: "📝", 
+        color: "bg-green-600",
+        permission: "create",
+        isAction: true
+      });
+    }
+
+    // Financial Actions
+    if (hasPerm(me, PERMS.INVOICE_CREATE)) {
+      actions.push({ 
+        href: "/billing/invoices?action=create", 
+        label: "Create Invoice", 
+        icon: "📄", 
+        color: "bg-purple-500",
+        permission: "create",
+        isAction: true
+      });
+    }
+    if (hasPerm(me, PERMS.BILLING_READ)) {
+      actions.push({ 
+        href: "/revenue", 
+        label: "Revenue Dashboard", 
+        icon: "💰", 
+        color: "bg-yellow-500",
+        permission: "read"
+      });
+    }
+
+    // Employee Management Actions
+    if (hasPerm(me, PERMS.EMPLOYEE_READ)) {
+      actions.push({ 
+        href: "/workforce", 
+        label: "Team Overview", 
+        icon: "👨‍💼", 
+        color: "bg-indigo-500",
+        permission: "read"
+      });
+    }
+    if (hasPerm(me, PERMS.USER_CREATE)) {
+      actions.push({ 
+        href: "/admin/user-management?action=create", 
+        label: "Add User", 
+        icon: "👤", 
+        color: "bg-indigo-600",
+        permission: "create",
+        isAction: true
+      });
+    }
+
+    // Time & Schedule Actions
+    if (hasPerm(me, PERMS.TIMECLOCK_READ) && userRole === 'STAFF') {
+      actions.push({ 
+        href: "/worker/clock", 
+        label: "Clock In/Out", 
+        icon: "⏰", 
+        color: "bg-blue-500",
+        permission: "update",
+        isAction: true
+      });
+    }
+    if (hasPerm(me, PERMS.SCHEDULE_READ)) {
+      actions.push({ 
+        href: "/schedule", 
+        label: "View Schedule", 
+        icon: "📅", 
+        color: "bg-orange-500",
+        permission: "read"
+      });
+    }
+
+    // Reports & Analytics
+    if (hasPerm(me, PERMS.ANALYTICS_READ)) {
+      actions.push({ 
+        href: "/analytics", 
+        label: "Analytics", 
+        icon: "📊", 
+        color: "bg-purple-500",
+        permission: "read"
+      });
+    }
+    if (hasPerm(me, PERMS.REPORTS_CREATE)) {
+      actions.push({ 
+        href: "/reports?action=generate", 
+        label: "Generate Report", 
+        icon: "📈", 
+        color: "bg-orange-600",
+        permission: "create",
+        isAction: true
+      });
+    }
+
+    // Limit to 8 actions for clean display
+    return actions.slice(0, 8);
   };
 
   const actions = getQuickActions();
+
+  const handleActionClick = async (action: any, e: React.MouseEvent) => {
+    if (!action.isAction) return;
+    
+    e.preventDefault();
+    setActionInProgress(action.label);
+    
+    try {
+      // Map dashboard actions to API calls
+      let apiAction = null;
+      let actionData = {};
+      
+      if (action.label === "Create Lead") {
+        apiAction = "create_lead_stub";
+        actionData = { companyName: "New Lead" };
+      } else if (action.label === "Create Job") {
+        apiAction = "create_job_stub";
+        actionData = { title: "New Job" };
+      } else if (action.label === "Clock In/Out") {
+        apiAction = "clock_in_out";
+      } else if (action.label === "Generate Report") {
+        apiAction = "generate_report";
+        actionData = { type: "summary" };
+      }
+      
+      if (apiAction) {
+        // Call the actual API endpoint
+        const response = await fetch("/api/quick-actions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: apiAction, data: actionData })
+        });
+        
+        const result = await response.json();
+        
+        if (result.ok) {
+          if (result.redirectTo) {
+            window.location.href = result.redirectTo;
+          } else if (result.message) {
+            // Show success message for actions that don't redirect
+            alert(result.message);
+          }
+        } else {
+          console.error('Action failed:', result.error);
+          alert(`Action failed: ${result.error}`);
+        }
+      } else {
+        // For non-action buttons, just navigate
+        window.location.href = action.href;
+      }
+    } catch (error) {
+      console.error('Action failed:', error);
+      alert('Action failed. Please try again.');
+    } finally {
+      setActionInProgress(null);
+    }
+  };
 
   return (
     <div className="responsive-card">
@@ -56,20 +210,42 @@ function QuickActionsModule({ userRole }: { userRole: string | undefined }) {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {actions.map((action) => (
-          <Link
-            key={action.href}
-            href={action.href}
-            className="group flex flex-col items-center p-6 rounded-lg border border-transparent hover:border-white/10 hover:bg-white/5 transition-all duration-300"
-          >
-            <div className={`w-12 h-12 ${action.color} rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
-              <span className="text-xl text-white">{action.icon}</span>
-            </div>
-            <span className="text-sm font-medium text-center group-hover:text-white transition-colors">
-              {action.label}
-            </span>
-          </Link>
+          <div key={action.href} className="relative">
+            <Link
+              href={action.href}
+              onClick={(e) => handleActionClick(action, e)}
+              className={`group flex flex-col items-center p-6 rounded-lg border border-transparent hover:border-white/10 hover:bg-white/5 transition-all duration-300 ${
+                actionInProgress === action.label ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+            >
+              <div className={`w-12 h-12 ${action.color} rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg relative`}>
+                {actionInProgress === action.label ? (
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                ) : (
+                  <span className="text-xl text-white">{action.icon}</span>
+                )}
+              </div>
+              <span className="text-sm font-medium text-center group-hover:text-white transition-colors">
+                {action.label}
+              </span>
+              {action.permission && (
+                <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full ${
+                  action.permission === 'create' ? 'bg-green-400' :
+                  action.permission === 'update' ? 'bg-yellow-400' :
+                  'bg-blue-400'
+                }`} title={`${action.permission} permission`} />
+              )}
+            </Link>
+          </div>
         ))}
       </div>
+      
+      {actions.length === 0 && (
+        <div className="text-center py-8 text-gray-400">
+          <p>No actions available with your current permissions.</p>
+          <p className="text-sm mt-2">Contact your administrator to request access.</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -223,54 +399,137 @@ function PerformanceMetricsModule({ userRole }: { userRole: string | undefined }
   );
 }
 
-// Navigation Shortcuts Module - Shows quick access to all nav items
-function NavigationShortcutsModule({ userRole }: { userRole: string | undefined }) {
+// Enhanced Navigation Shortcuts Module with Permission Checks
+function NavigationShortcutsModule({ userRole, me }: { userRole: string | undefined; me: any }) {
   const getNavShortcuts = () => {
-    switch (userRole) {
-      case "OWNER":
-        return [
-          { href: "/leads", label: "Lead Management", description: "Manage your lead pipeline" },
-          { href: "/jobs", label: "Job Management", description: "Track all active jobs" },
-          { href: "/workforce", label: "Workforce", description: "Manage your team" },
-          { href: "/revenue", label: "Revenue & Billing", description: "Financial overview" },
-          { href: "/analytics", label: "Analytics", description: "Business insights" },
-          { href: "/administration", label: "Administration", description: "System settings" },
-        ];
-      case "MANAGER":
-        return [
-          { href: "/leads", label: "Lead Management", description: "Manage incoming leads" },
-          { href: "/jobs", label: "Job Management", description: "Assign and track jobs" },
-          { href: "/schedule", label: "Scheduling", description: "Manage team schedules" },
-          { href: "/workforce", label: "Team Management", description: "Team performance" },
-          { href: "/reports", label: "Reports", description: "Generate reports" },
-          { href: "/settings", label: "Settings", description: "Manage preferences" },
-        ];
-      case "STAFF":
-        return [
-          { href: "/worker/jobs", label: "My Jobs", description: "View assigned jobs" },
-          { href: "/schedule", label: "Schedule", description: "Check your schedule" },
-          { href: "/worker/training", label: "Training", description: "Complete training modules" },
-          { href: "/worker/payroll", label: "Payroll", description: "View pay information" },
-          { href: "/worker/profile", label: "Profile", description: "Update your profile" },
-          { href: "/reports", label: "Reports", description: "View your reports" },
-        ];
-      case "ACCOUNTANT":
-        return [
-          { href: "/billing/invoices", label: "Invoices & Billing", description: "Process payments" },
-          { href: "/worker/payroll", label: "Payroll Management", description: "Manage payroll" },
-          { href: "/revenue", label: "Revenue Tracking", description: "Track revenue streams" },
-          { href: "/reports", label: "Financial Reports", description: "Generate reports" },
-          { href: "/analytics", label: "Financial Analytics", description: "Financial insights" },
-          { href: "/settings", label: "Settings", description: "Configure settings" },
-        ];
-      default:
-        return [
-          { href: "/leads", label: "Leads", description: "Manage leads" },
-          { href: "/jobs", label: "Jobs", description: "Manage jobs" },
-          { href: "/reports", label: "Reports", description: "View reports" },
-          { href: "/settings", label: "Settings", description: "System settings" },
-        ];
+    const shortcuts = [];
+
+    // Core Business Functions
+    if (hasPerm(me, PERMS.LEAD_READ)) {
+      shortcuts.push({ 
+        href: "/leads", 
+        label: "Lead Management", 
+        description: "Manage your lead pipeline",
+        category: "core"
+      });
     }
+
+    if (hasPerm(me, PERMS.JOB_READ)) {
+      shortcuts.push({ 
+        href: "/jobs", 
+        label: "Job Management", 
+        description: "Track all active jobs",
+        category: "core"
+      });
+    }
+
+    if (hasPerm(me, PERMS.EMPLOYEE_READ)) {
+      shortcuts.push({ 
+        href: "/workforce", 
+        label: "Workforce", 
+        description: "Manage your team",
+        category: "core"
+      });
+    }
+
+    if (hasPerm(me, PERMS.SCHEDULE_READ)) {
+      shortcuts.push({ 
+        href: "/schedule", 
+        label: "Scheduling", 
+        description: "Manage schedules",
+        category: "core"
+      });
+    }
+
+    // Financial Management
+    if (hasPerm(me, PERMS.BILLING_READ)) {
+      shortcuts.push({ 
+        href: "/billing/invoices", 
+        label: "Invoices & Billing", 
+        description: "Process payments",
+        category: "financial"
+      });
+    }
+
+    if (hasPerm(me, PERMS.REVENUE_READ)) {
+      shortcuts.push({ 
+        href: "/revenue", 
+        label: "Revenue & Billing", 
+        description: "Financial overview",
+        category: "financial"
+      });
+    }
+
+    if (hasPerm(me, PERMS.PAYROLL_READ)) {
+      shortcuts.push({ 
+        href: "/worker/payroll", 
+        label: "Payroll Management", 
+        description: "Manage payroll",
+        category: "financial"
+      });
+    }
+
+    // Analytics & Reporting
+    if (hasPerm(me, PERMS.ANALYTICS_READ)) {
+      shortcuts.push({ 
+        href: "/analytics", 
+        label: "Analytics", 
+        description: "Business insights",
+        category: "analytics"
+      });
+    }
+
+    if (hasPerm(me, PERMS.REPORTS_READ)) {
+      shortcuts.push({ 
+        href: "/reports", 
+        label: "Reports", 
+        description: "Generate reports",
+        category: "analytics"
+      });
+    }
+
+    // Administration
+    if (hasPerm(me, PERMS.USER_READ)) {
+      shortcuts.push({ 
+        href: "/admin/user-management", 
+        label: "User Management", 
+        description: "Manage users & permissions",
+        category: "admin"
+      });
+    }
+
+    if (hasPerm(me, PERMS.SYSTEM_SETTINGS)) {
+      shortcuts.push({ 
+        href: "/administration", 
+        label: "Administration", 
+        description: "System settings",
+        category: "admin"
+      });
+    }
+
+    // Employee-specific shortcuts
+    if (userRole === 'STAFF') {
+      if (hasPerm(me, PERMS.TIMECLOCK_READ)) {
+        shortcuts.push({ 
+          href: "/worker/clock", 
+          label: "Time Clock", 
+          description: "Clock in/out",
+          category: "employee"
+        });
+      }
+
+      if (hasPerm(me, PERMS.TRAINING_READ)) {
+        shortcuts.push({ 
+          href: "/worker/training", 
+          label: "Training", 
+          description: "Complete training modules",
+          category: "employee"
+        });
+      }
+    }
+
+    // Limit to 6 shortcuts for clean display
+    return shortcuts.slice(0, 6);
   };
 
   const shortcuts = getNavShortcuts();
@@ -282,22 +541,36 @@ function NavigationShortcutsModule({ userRole }: { userRole: string | undefined 
         <h2 className="responsive-heading-3 text-gradient">Quick Navigation</h2>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-        {shortcuts.map((shortcut) => (
-          <Link
-            key={shortcut.href}
-            href={shortcut.href}
-            className="group p-4 rounded-lg border border-transparent hover:border-white/10 hover:bg-white/5 transition-all duration-200"
-          >
-            <div className="font-medium text-white group-hover:text-blue-400 transition-colors">
-              {shortcut.label}
-            </div>
-            <div className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
-              {shortcut.description}
-            </div>
-          </Link>
-        ))}
-      </div>
+      {shortcuts.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {shortcuts.map((shortcut) => (
+            <Link
+              key={shortcut.href}
+              href={shortcut.href}
+              className="group p-4 rounded-lg border border-transparent hover:border-white/10 hover:bg-white/5 transition-all duration-200 relative"
+            >
+              <div className="font-medium text-white group-hover:text-blue-400 transition-colors">
+                {shortcut.label}
+              </div>
+              <div className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
+                {shortcut.description}
+              </div>
+              <div className={`absolute top-2 right-2 w-2 h-2 rounded-full ${
+                shortcut.category === 'core' ? 'bg-blue-400' :
+                shortcut.category === 'financial' ? 'bg-green-400' :
+                shortcut.category === 'analytics' ? 'bg-purple-400' :
+                shortcut.category === 'admin' ? 'bg-red-400' :
+                'bg-orange-400'
+              }`} title={`${shortcut.category} function`} />
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-8 text-gray-400">
+          <p>No navigation shortcuts available with your current permissions.</p>
+          <p className="text-sm mt-2">Contact your administrator to request access.</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -309,8 +582,8 @@ export default function DashboardModules() {
 
   return (
     <div className="space-y-6">
-      {/* Quick Actions - Most important for immediate productivity */}
-      <QuickActionsModule userRole={userRole} />
+      {/* Enhanced Quick Actions with Permission Checks */}
+      <QuickActionsModule userRole={userRole} me={me} />
       
       {/* Performance Metrics - Role-specific KPIs */}
       <PerformanceMetricsModule userRole={userRole} />
@@ -319,8 +592,8 @@ export default function DashboardModules() {
         {/* Recent Activity */}
         <RecentActivityModule userRole={userRole} />
         
-        {/* Navigation Shortcuts */}
-        <NavigationShortcutsModule userRole={userRole} />
+        {/* Enhanced Navigation Shortcuts with Permissions */}
+        <NavigationShortcutsModule userRole={userRole} me={me} />
       </div>
     </div>
   );
