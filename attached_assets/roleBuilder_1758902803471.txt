@@ -1,0 +1,38 @@
+{
+  "action": "create_or_modify_feature",
+  "feature_name": "Custom Role Builder",
+  "goal": "Allow the Owner to design, configure, and assign fully custom roles with granular permissions to fit any organizational structure or industry.",
+  "scope": "Tenant-specific; Owner controls all custom role creation and assignment within their business.",
+  "capabilities": {
+    "role_creation": [
+      "Create new roles from scratch or clone existing roles (Owner, Staff, Accountant, etc.)",
+      "Define custom role names, descriptions, and organizational tags (e.g. department, location, team)"
+    ],
+    "permission_granularity": [
+      "Toggle individual permissions (CRUD per resource: customers, staff, schedules, finances, integrations)",
+      "Scope permissions by project, team, or geography",
+      "Bundle permissions into reusable sets (e.g., 'Supervisor Pack')"
+    ],
+    "role_management": [
+      "Edit or delete custom roles at any time",
+      "Versioning and rollback: restore prior role configurations if errors are introduced",
+      "Preview role permissions before assignment"
+    ],
+    "provisioning_flows": [
+      "Assign custom roles to new or existing users during account creation",
+      "Send setup invites by email or issue initial credentials",
+      "Support SCIM/SSO auto-provisioning mapped to custom roles"
+    ]
+  },
+  "constraints_and_safeguards": [
+    "Custom roles cannot exceed the Owner’s authority (e.g. cannot create another Owner)",
+    "Owner can enforce MFA, IP restrictions, or time-based access on custom roles",
+    "System enforces least privilege defaults and flags overly broad roles for review"
+  ],
+  "audit_and_compliance": {
+    "logging": "All role creation, edits, and assignments logged immutably",
+    "reviews": "Prompt Owner for periodic reviews of custom roles to prevent role creep",
+    "compliance": "Role system aligned with SOC 2, GDPR, and enterprise RBAC standards"
+  },
+  "notes": "Custom Role Builder ensures flexibility across industries, preventing role explosion while allowing granular control. Owners can tailor permissions as their company grows, ensuring security and compliance while meeting unique business needs."
+}
