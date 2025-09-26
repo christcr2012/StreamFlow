@@ -1199,29 +1199,39 @@ model SupportSession {
 
 /// AuditEvent extends AuditLog with detailed enterprise audit requirements
 model AuditEvent {
-  id          String   @id @default(cuid())
-  orgId       String
-  userId      String?  // User who performed the action
-  sessionId   String?  // Session ID for tracking
-  action      String   // Action performed (login, create, update, delete, etc.)
-  target      String   // What was acted upon (user, lead, policy, etc.)
-  targetId    String?  // ID of the target entity
-  details     Json?    // Detailed event information
-  ipAddress   String?  // Source IP address
-  userAgent   String?  // Browser/client information
-  severity    AuditSeverity @default(INFO)
-  category    AuditCategory @default(GENERAL)
-  success     Boolean  @default(true)
-  errorMessage String? // Error details if action failed
-  createdAt   DateTime @default(now())
+  id              String   @id @default(cuid())
+  orgId           String
+  userId          String?  // User who performed the action
+  sessionId       String?  // Session ID for tracking
+  action          String   // Action performed (login, create, update, delete, etc.)
+  target          String   // What was acted upon (user, lead, policy, etc.)
+  targetId        String?  // ID of the target entity
+  details         Json?    // Detailed event information
+  ipAddress       String?  // Source IP address
+  userAgent       String?  // Browser/client information
+  severity        AuditSeverity @default(INFO)
+  category        AuditCategory @default(GENERAL)
+  success         Boolean  @default(true)
+  errorMessage    String? // Error details if action failed
+  
+  // Enterprise tamper-evidence fields
+  hash            String?  // SHA-256 hash for integrity verification
+  previousEventId String?  // ID of previous audit event for chain verification
+  previousHash    String?  // Hash of previous event for chain integrity
+  immutable       Boolean  @default(true) // Mark as immutable for compliance
+  
+  createdAt       DateTime @default(now())
   
   org Org @relation("OrgAuditEvents", fields: [orgId], references: [id])
+  previousEvent AuditEvent? @relation("AuditChain", fields: [previousEventId], references: [id])
+  nextEvents    AuditEvent[] @relation("AuditChain")
   
   @@index([orgId, createdAt])
   @@index([orgId, action])
   @@index([orgId, userId])
   @@index([createdAt])
   @@index([severity, createdAt])
+  @@index([orgId, hash]) // For integrity verification
 }
 
 // ===== ENUMS FOR ENTERPRISE MODELS =====
