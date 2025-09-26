@@ -7,5 +7,7 @@
   "/api/dashboard/summary": "pages/api/dashboard/summary.js",
   "/api/me": "pages/api/me.js",
   "/api/leads.list": "pages/api/leads.list.js",
-  "/login": "pages/login.js"
+  "/api/auth/logout": "pages/api/auth/logout.js",
+  "/login": "pages/login.js",
+  "/api/auth/login": "pages/api/auth/login.js"
 }
