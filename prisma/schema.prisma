@@ -47,6 +47,18 @@ model Org {
   aiMonthlySummaries AiMonthlySummary[] @relation("OrgAiMonthlySummaries")
   leadActivities LeadActivity[]  @relation("OrgLeadActivities")
   leadTasks     LeadTask[]      @relation("OrgLeadTasks")
+  
+  // Multi-Portal Business OS Relations
+  employeeProfiles EmployeeProfile[] @relation("OrgEmployeeProfiles")
+  workOrders      WorkOrder[]       @relation("OrgWorkOrders")
+  jobSites        JobSite[]         @relation("OrgJobSites")
+  jobAssignments  JobAssignment[]   @relation("OrgJobAssignments")
+  timesheets      TimesheetEntry[]  @relation("OrgTimesheets")
+  jobChecklists   JobChecklistItem[] @relation("OrgJobChecklists")
+  issueReports    IssueReport[]     @relation("OrgIssueReports")
+  mediaAssets     MediaAsset[]      @relation("OrgMediaAssets")
+  trainingModules TrainingModule[]  @relation("OrgTrainingModules")
+  trainingCompletions TrainingCompletion[] @relation("OrgTrainingCompletions")
 
   /// brandConfig stores white-label brand settings such as name, colors, and logo URL.
   /// It is JSON to allow arbitrary keys like { name: "Mountain Vista", color: "#123456", logoUrl: "https://..." }
@@ -74,6 +86,11 @@ model User {
   leadActivities  LeadActivity[] @relation("UserLeadActivities")
   assignedTasks   LeadTask[]     @relation("AssignedLeadTasks")
   createdTasks    LeadTask[]     @relation("CreatedLeadTasks")
+  
+  // Employee Portal Relations
+  employeeProfile EmployeeProfile? @relation("UserEmployeeProfile")
+  
+  @@unique([orgId, id])  // Multi-tenant isolation
 }
 
 model Lead {
@@ -117,6 +134,7 @@ model Lead {
   activities      LeadActivity[]    @relation("LeadActivities")
   tasks           LeadTask[]        @relation("LeadTasks")
   
+  @@unique([orgId, id])  // Multi-tenant isolation
   @@index([orgId, createdAt])
   @@index([orgId, convertedAt])
   @@index([orgId, status])
@@ -139,7 +157,10 @@ model Customer {
   org           Org           @relation(fields: [orgId], references: [id])
   invoices      Invoice[]
   jobs          Job[]
+  workOrders    WorkOrder[]   @relation("CustomerWorkOrders")
   opportunities Opportunity[]
+  
+  @@unique([orgId, id])  // Multi-tenant isolation
 }
 
 model Opportunity {
@@ -155,7 +176,7 @@ model Opportunity {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
-  customer Customer @relation(fields: [customerId], references: [id])
+  customer Customer @relation(fields: [orgId, customerId], references: [orgId, id])
   org      Org      @relation(fields: [orgId], references: [id])
 }
 
@@ -168,9 +189,11 @@ model Invoice {
   issuedAt   DateTime @default(now())
   items      Json     @default("[]")
 
-  customer Customer? @relation(fields: [customerId], references: [id])
+  customer Customer? @relation(fields: [orgId, customerId], references: [orgId, id])
   org      Org       @relation(fields: [orgId], references: [id])
   payments Payment[]
+  
+  @@unique([orgId, id])  // Multi-tenant isolation
 }
 
 model Payment {
@@ -182,8 +205,10 @@ model Payment {
   receivedAt DateTime @default(now())
   reference  String?
 
-  invoice Invoice? @relation(fields: [invoiceId], references: [id])
+  invoice Invoice? @relation(fields: [orgId, invoiceId], references: [orgId, id])
   org     Org      @relation(fields: [orgId], references: [id])
+  
+  @@unique([orgId, id])  // Multi-tenant isolation
 }
 
 model Rfp {
@@ -201,6 +226,8 @@ model Rfp {
 
   jobs Job[]
   org  Org   @relation(fields: [orgId], references: [id])
+  
+  @@unique([orgId, id])  // Multi-tenant isolation
 }
 
 model Job {
@@ -215,9 +242,11 @@ model Job {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  customer Customer? @relation(fields: [customerId], references: [id])
+  customer Customer? @relation(fields: [orgId, customerId], references: [orgId, id])
   org      Org       @relation(fields: [orgId], references: [id])
-  rfp      Rfp?      @relation(fields: [rfpId], references: [id])
+  rfp      Rfp?      @relation(fields: [orgId, rfpId], references: [orgId, id])
+  
+  @@unique([orgId, id])  // Multi-tenant isolation
 }
 
 model Referral {
@@ -253,8 +282,8 @@ model BillingLedger {
 /// includes metadata to support billing and optional Stripe integration.
 model LeadInvoice {
   id              String   @id @default(cuid())
-  orgId           String?
-  org             Org?     @relation("OrgLeadInvoices", fields: [orgId], references: [id])
+  orgId           String   // Made required for multi-tenant isolation
+  org             Org      @relation("OrgLeadInvoices", fields: [orgId], references: [id])
   number          String   @unique
   periodFrom      DateTime
   periodTo        DateTime
@@ -270,18 +299,21 @@ model LeadInvoice {
   leadCount       Int      @default(0)
 
   lines LeadInvoiceLine[]
+  
+  @@unique([orgId, id])  // Multi-tenant isolation
 }
 
 /// LeadInvoiceLine represents an individual line item on a LeadInvoice. Each line is typically
 /// associated with a converted lead, but generic fee/credit lines are also supported.
 model LeadInvoiceLine {
   id        String      @id @default(cuid())
+  orgId     String      // Added for multi-tenant isolation
   invoiceId String
-  invoice   LeadInvoice @relation(fields: [invoiceId], references: [id])
+  invoice   LeadInvoice @relation(fields: [orgId, invoiceId], references: [orgId, id])
 
   // Optional association back to a Lead for traceability.
   leadId String?
-  lead   Lead?   @relation(fields: [leadId], references: [id])
+  lead   Lead?   @relation(fields: [orgId, leadId], references: [orgId, id])
 
   description    String
   quantity       Int      @default(1)
@@ -292,6 +324,8 @@ model LeadInvoiceLine {
 
   @@index([invoiceId])
   @@index([leadId])
+  @@index([orgId, leadId])
+  @@index([orgId, invoiceId])
 }
 
 model AuditLog {
@@ -511,9 +545,9 @@ model LeadActivity {
   updatedAt   DateTime     @updatedAt
   
   // Relations
-  lead        Lead         @relation("LeadActivities", fields: [leadId], references: [id], onDelete: Cascade)
+  lead        Lead         @relation("LeadActivities", fields: [orgId, leadId], references: [orgId, id], onDelete: Cascade)
   org         Org          @relation("OrgLeadActivities", fields: [orgId], references: [id])
-  user        User         @relation("UserLeadActivities", fields: [userId], references: [id])
+  user        User         @relation("UserLeadActivities", fields: [orgId, userId], references: [orgId, id])
   
   @@index([leadId, createdAt])
   @@index([orgId, type])
@@ -545,10 +579,10 @@ model LeadTask {
   updatedAt   DateTime     @updatedAt
   
   // Relations
-  lead        Lead         @relation("LeadTasks", fields: [leadId], references: [id], onDelete: Cascade)
+  lead        Lead         @relation("LeadTasks", fields: [orgId, leadId], references: [orgId, id], onDelete: Cascade)
   org         Org          @relation("OrgLeadTasks", fields: [orgId], references: [id])
-  assignee    User         @relation("AssignedLeadTasks", fields: [assignedTo], references: [id])
-  creator     User         @relation("CreatedLeadTasks", fields: [createdBy], references: [id])
+  assignee    User         @relation("AssignedLeadTasks", fields: [orgId, assignedTo], references: [orgId, id])
+  creator     User         @relation("CreatedLeadTasks", fields: [orgId, createdBy], references: [orgId, id])
   
   @@index([leadId, status])
   @@index([assignedTo, dueDate])
@@ -616,4 +650,418 @@ model AiMonthlySummary {
 
   @@unique([orgId, monthKey])
   @@index([monthKey])
+}
+
+// ===== MULTI-PORTAL BUSINESS OPERATING SYSTEM MODELS =====
+
+/// EmployeeProfile extends User model with employee-specific data and ADP integration
+model EmployeeProfile {
+  id          String   @id @default(cuid())
+  orgId       String
+  userId      String   @unique // One-to-one with User
+  
+  // ADP Integration
+  adpWorkerId String?  // ADP employee ID for payroll integration
+  managerId   String?  // Reports to (User.id)
+  
+  // Mobile & Field Settings
+  mobilePrefs Json     @default("{}")  // Mobile app preferences
+  
+  // Contact & Emergency Info
+  emergencyContact Json? // Emergency contact information
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  org         Org           @relation("OrgEmployeeProfiles", fields: [orgId], references: [id])
+  user        User          @relation("UserEmployeeProfile", fields: [orgId, userId], references: [orgId, id])
+  timesheets  TimesheetEntry[] @relation("EmployeeTimesheets")
+  jobAssignments JobAssignment[] @relation("EmployeeAssignments")
+  issueReports IssueReport[] @relation("EmployeeIssueReports")
+  trainingCompletions TrainingCompletion[] @relation("EmployeeTrainingCompletions")
+  
+  @@unique([orgId, id])  // Multi-tenant isolation
+  @@unique([orgId, userId])  // One-to-one relation constraint
+  @@index([orgId, adpWorkerId])
+  @@index([userId])
+}
+
+/// WorkOrder represents enhanced work orders and customer projects (extended Job functionality)
+model WorkOrder {
+  id          String   @id @default(cuid())
+  orgId       String
+  customerId  String?
+  
+  // Work Order Details
+  title       String
+  description String?
+  status      JobStatus @default(SCHEDULED)
+  priority    JobPriority @default(MEDIUM)
+  
+  // Scheduling
+  scheduledStartAt DateTime?
+  scheduledEndAt   DateTime?
+  actualStartAt    DateTime?
+  actualEndAt      DateTime?
+  
+  // Location & Site Info
+  jobSiteId   String?
+  
+  // Financial
+  estimatedValue Decimal? @db.Decimal(12, 2)
+  actualCost     Decimal? @db.Decimal(12, 2)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  org           Org             @relation("OrgWorkOrders", fields: [orgId], references: [id])
+  customer      Customer?       @relation("CustomerWorkOrders", fields: [orgId, customerId], references: [orgId, id])
+  jobSite       JobSite?        @relation("JobSiteWorkOrders", fields: [orgId, jobSiteId], references: [orgId, id])
+  assignments   JobAssignment[] @relation("WorkOrderAssignments")
+  checklists    JobChecklistItem[] @relation("WorkOrderChecklists")
+  timesheets    TimesheetEntry[] @relation("WorkOrderTimesheets")
+  issueReports  IssueReport[]   @relation("WorkOrderIssueReports")
+  mediaAssets   MediaAsset[]    @relation("WorkOrderMedia")
+  
+  @@unique([orgId, id])  // Multi-tenant isolation
+  @@index([orgId, status])
+  @@index([customerId])
+  @@index([scheduledStartAt])
+}
+
+/// JobSite defines geographic locations for geofenced time tracking
+model JobSite {
+  id          String   @id @default(cuid())
+  orgId       String
+  
+  // Location Info
+  name        String
+  address     String
+  city        String?
+  state       String?
+  zipCode     String?
+  
+  // Geofencing for time tracking
+  latitude    Decimal? @db.Decimal(10, 8)  // GPS coordinates
+  longitude   Decimal? @db.Decimal(11, 8)
+  radiusMeters Int     @default(100)       // Geofence radius
+  
+  // Site Details
+  accessInstructions String?
+  emergencyContacts  Json?    @default("[]")
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  org         Org      @relation("OrgJobSites", fields: [orgId], references: [id])
+  workOrders  WorkOrder[] @relation("JobSiteWorkOrders")
+  timesheets  TimesheetEntry[] @relation("JobSiteTimesheets")
+  
+  @@unique([orgId, id])  // Multi-tenant isolation
+  @@index([orgId])
+  @@index([latitude, longitude])
+}
+
+/// JobAssignment links employees to specific jobs with roles
+model JobAssignment {
+  id          String   @id @default(cuid())
+  orgId       String
+  jobId       String
+  employeeId  String   // EmployeeProfile.id
+  
+  role        String   @default("worker")  // "lead", "worker", "supervisor"
+  assignedAt  DateTime @default(now())
+  unassignedAt DateTime?
+  
+  // Relations
+  org         Org             @relation("OrgJobAssignments", fields: [orgId], references: [id])
+  workOrder   WorkOrder       @relation("WorkOrderAssignments", fields: [orgId, jobId], references: [orgId, id])
+  employee    EmployeeProfile @relation("EmployeeAssignments", fields: [orgId, employeeId], references: [orgId, id])
+  
+  @@unique([jobId, employeeId])
+  @@index([orgId, employeeId])
+  @@index([jobId])
+}
+
+/// TimesheetEntry tracks employee time with geolocation for job costing
+model TimesheetEntry {
+  id          String   @id @default(cuid())
+  orgId       String
+  employeeId  String   // EmployeeProfile.id
+  jobId       String?  // Optional job association
+  jobSiteId   String?  // Optional site association
+  
+  // Time Tracking
+  clockInAt   DateTime
+  clockOutAt  DateTime?
+  breakMinutes Int     @default(0)
+  
+  // Geolocation Data
+  clockInLat  Decimal? @db.Decimal(10, 8)
+  clockInLng  Decimal? @db.Decimal(11, 8)
+  clockOutLat Decimal? @db.Decimal(10, 8)
+  clockOutLng Decimal? @db.Decimal(11, 8)
+  
+  // Device & Verification
+  deviceInfo  Json?    // Device fingerprint for fraud prevention
+  notes       String?
+  status      TimesheetStatus @default(ACTIVE)
+  
+  // Approval Workflow
+  approvedBy  String?  // User.id who approved
+  approvedAt  DateTime?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  org         Org             @relation("OrgTimesheets", fields: [orgId], references: [id])
+  employee    EmployeeProfile @relation("EmployeeTimesheets", fields: [orgId, employeeId], references: [orgId, id])
+  workOrder   WorkOrder?      @relation("WorkOrderTimesheets", fields: [orgId, jobId], references: [orgId, id])
+  jobSite     JobSite?        @relation("JobSiteTimesheets", fields: [orgId, jobSiteId], references: [orgId, id])
+  
+  @@index([orgId, employeeId, clockInAt])
+  @@index([jobId])
+  @@index([clockInAt])
+}
+
+/// JobChecklistItem tracks completion of job tasks with photo documentation
+model JobChecklistItem {
+  id          String   @id @default(cuid())
+  orgId       String
+  jobId       String
+  
+  // Checklist Item
+  title       String
+  description String?
+  required    Boolean  @default(false)
+  sortOrder   Int      @default(0)
+  
+  // Completion Tracking
+  status      ChecklistStatus @default(PENDING)
+  completedBy String?  // EmployeeProfile.id
+  completedAt DateTime?
+  notes       String?
+  photosCount Int      @default(0)  // Number of associated photos
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  org         Org          @relation("OrgJobChecklists", fields: [orgId], references: [id])
+  workOrder   WorkOrder    @relation("WorkOrderChecklists", fields: [orgId, jobId], references: [orgId, id])
+  mediaAssets MediaAsset[] @relation("ChecklistMedia")
+  
+  @@unique([orgId, id])  // Multi-tenant isolation
+  @@index([orgId, jobId])
+  @@index([status])
+}
+
+/// IssueReport tracks field problems and obstacles with photo documentation
+model IssueReport {
+  id          String      @id @default(cuid())
+  orgId       String
+  jobId       String?     // Optional job association
+  reportedBy  String      // EmployeeProfile.id
+  
+  // Issue Details
+  title       String
+  description String
+  severity    IssueSeverity @default(MEDIUM)
+  category    String?     // "equipment", "site_access", "weather", etc.
+  
+  // Resolution Tracking
+  status      IssueStatus @default(OPEN)
+  resolvedBy  String?     // User.id who resolved
+  resolvedAt  DateTime?
+  resolution  String?
+  
+  // Location Context
+  latitude    Decimal?    @db.Decimal(10, 8)
+  longitude   Decimal?    @db.Decimal(11, 8)
+  
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  // Relations
+  org         Org             @relation("OrgIssueReports", fields: [orgId], references: [id])
+  workOrder   WorkOrder?      @relation("WorkOrderIssueReports", fields: [orgId, jobId], references: [orgId, id])
+  reporter    EmployeeProfile @relation("EmployeeIssueReports", fields: [orgId, reportedBy], references: [orgId, id])
+  mediaAssets MediaAsset[]    @relation("IssueMedia")
+  
+  @@unique([orgId, id])  // Multi-tenant isolation
+  @@index([orgId, status])
+  @@index([jobId])
+  @@index([reportedBy])
+}
+
+/// MediaAsset stores photos, videos, and documents with metadata
+model MediaAsset {
+  id          String    @id @default(cuid())
+  orgId       String
+  uploadedBy  String    // User.id
+  
+  // File Information
+  filename    String
+  originalName String
+  contentType String
+  fileSize    Int       // Bytes
+  url         String    // S3/R2 URL
+  thumbnailUrl String?  // Thumbnail URL for images
+  
+  // Asset Context (explicit foreign keys instead of polymorphic)
+  assetType   MediaType
+  workOrderId String?   // Optional WorkOrder reference
+  issueReportId String? // Optional IssueReport reference
+  checklistItemId String? // Optional JobChecklistItem reference
+  trainingModuleId String? // Optional TrainingModule reference
+  
+  // Metadata
+  exifJson    Json?     @default("{}")  // EXIF data for photos
+  description String?
+  tags        String[]  @default([])
+  
+  // Geolocation (if available)
+  latitude    Decimal?  @db.Decimal(10, 8)
+  longitude   Decimal?  @db.Decimal(11, 8)
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations (explicit FKs instead of polymorphic)
+  org         Org                @relation("OrgMediaAssets", fields: [orgId], references: [id])
+  workOrder   WorkOrder?         @relation("WorkOrderMedia", fields: [orgId, workOrderId], references: [orgId, id])
+  issueReport IssueReport?       @relation("IssueMedia", fields: [orgId, issueReportId], references: [orgId, id])
+  checklistItem JobChecklistItem? @relation("ChecklistMedia", fields: [orgId, checklistItemId], references: [orgId, id])
+  trainingModule TrainingModule?  @relation("TrainingMedia", fields: [orgId, trainingModuleId], references: [orgId, id])
+  
+  @@index([orgId, workOrderId])
+  @@index([orgId, issueReportId])
+  @@index([orgId, checklistItemId])
+  @@index([orgId, trainingModuleId])
+  @@index([uploadedBy])
+  @@index([createdAt])
+}
+
+/// TrainingModule defines HR training requirements and content
+model TrainingModule {
+  id            String   @id @default(cuid())
+  orgId         String
+  
+  // Module Information
+  title         String
+  description   String?
+  content       String?  // Training content/instructions
+  
+  // Requirements
+  requiredForRoles String[] @default([])  // Array of Role enum values
+  isActive      Boolean  @default(true)
+  version       String   @default("1.0")
+  
+  // Completion Settings
+  requiresQuiz  Boolean  @default(false)
+  passingScore  Int?     // Minimum score to pass (if quiz required)
+  validityDays  Int?     // Days before retraining required
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  org           Org                @relation("OrgTrainingModules", fields: [orgId], references: [id])
+  completions   TrainingCompletion[] @relation("ModuleCompletions")
+  mediaAssets   MediaAsset[]       @relation("TrainingMedia")
+  
+  @@unique([orgId, id])  // Multi-tenant isolation
+  @@index([orgId, isActive])
+  @@index([requiredForRoles])
+}
+
+/// TrainingCompletion tracks employee training completion and compliance
+model TrainingCompletion {
+  id          String   @id @default(cuid())
+  orgId       String
+  employeeId  String   // EmployeeProfile.id
+  moduleId    String
+  
+  // Completion Data
+  completedAt DateTime @default(now())
+  score       Int?     // Quiz score (if applicable)
+  passed      Boolean  @default(true)
+  
+  // Validity
+  expiresAt   DateTime? // When retraining is required
+  isValid     Boolean  @default(true)
+  
+  // Metadata
+  timeSpentMinutes Int? // Time spent on training
+  notes       String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  org         Org             @relation("OrgTrainingCompletions", fields: [orgId], references: [id])
+  employee    EmployeeProfile @relation("EmployeeTrainingCompletions", fields: [orgId, employeeId], references: [orgId, id])
+  module      TrainingModule  @relation("ModuleCompletions", fields: [orgId, moduleId], references: [orgId, id])
+  
+  @@unique([employeeId, moduleId]) // One completion per employee per module
+  @@index([orgId, isValid])
+  @@index([expiresAt])
+}
+
+// ===== ENUM DEFINITIONS FOR NEW MODELS =====
+
+enum JobStatus {
+  SCHEDULED   // Job scheduled but not started
+  IN_PROGRESS // Job currently being worked
+  ON_HOLD     // Job temporarily paused
+  COMPLETED   // Job finished successfully
+  CANCELLED   // Job cancelled before completion
+}
+
+enum JobPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TimesheetStatus {
+  ACTIVE      // Currently clocked in
+  COMPLETED   // Clocked out
+  PENDING     // Awaiting approval
+  APPROVED    // Approved by manager
+  REJECTED    // Rejected for correction
+}
+
+enum ChecklistStatus {
+  PENDING     // Not yet completed
+  IN_PROGRESS // Partially completed
+  COMPLETED   // Fully completed
+  SKIPPED     // Marked as not applicable
+}
+
+enum IssueSeverity {
+  LOW         // Minor issue, doesn't block work
+  MEDIUM      // Moderate issue, may impact schedule
+  HIGH        // Major issue, blocks current work
+  CRITICAL    // Safety or emergency issue
+}
+
+enum IssueStatus {
+  OPEN        // Issue reported, needs attention
+  IN_PROGRESS // Being worked on
+  RESOLVED    // Issue fixed
+  CLOSED      // Issue closed without resolution
+}
+
+enum MediaType {
+  PHOTO       // Images (JPEG, PNG, etc.)
+  VIDEO       // Video files
+  DOCUMENT    // PDFs, Word docs, etc.
+  AUDIO       // Audio recordings
+  OTHER       // Other file types
 }
