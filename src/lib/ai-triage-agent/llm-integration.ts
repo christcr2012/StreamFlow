@@ -2,8 +2,8 @@
 // AI Triage Agent LLM Integration - Two-Tier Model System
 // Robinson Solutions B2B SaaS Platform
 
-import OpenAI from 'openai';
-import { createCostControlManager, type TokenUsageRecord } from './cost-control';
+import { SecureLLMGateway, type SecureLLMConfig } from './secure-gateways';
+import { createCostControlManager, type TokenUsageRecord, type CostControlConfig } from './cost-control';
 import { createStaffAuditSystem } from "../staff-audit-system";
 import type { ErrorCluster, PerformanceAnomaly } from './core-agent';
 
@@ -134,20 +134,25 @@ export interface TierBDeepDiveResult {
 }
 
 export class LLMManager {
-  private openai: OpenAI;
+  private secureLLMGateway: SecureLLMGateway;
   private costControl: any;
   private auditSystem: any;
   private modelConfig: LLMModelConfig;
   private promptTemplates: Map<string, PromptTemplate> = new Map();
+  private tenantId: string;
 
   constructor(
-    openaiApiKey: string,
+    tenantId: string,
     providerId: string,
-    modelConfig: LLMModelConfig
+    modelConfig: LLMModelConfig,
+    costControlConfig: CostControlConfig,
+    secureLLMConfig: SecureLLMConfig
   ) {
-    this.openai = new OpenAI({ apiKey: openaiApiKey });
-    this.costControl = createCostControlManager(providerId, {} as any);
-    this.auditSystem = createStaffAuditSystem('SYSTEM', providerId, 'llm_session');
+    this.tenantId = tenantId;
+    // CRITICAL: Use SecureLLMGateway instead of direct OpenAI access
+    this.secureLLMGateway = new SecureLLMGateway(secureLLMConfig);
+    this.costControl = createCostControlManager(providerId, costControlConfig);
+    this.auditSystem = createStaffAuditSystem(tenantId, providerId, 'llm_session');
     this.modelConfig = modelConfig;
     this.initializePromptTemplates();
   }
@@ -165,7 +170,13 @@ export class LLMManager {
     escalations: any[];
   }> {
     try {
-      const results = {
+      const results: {
+        tierASummaries: TierASummaryResult[];
+        tierBAnalyses: TierBDeepDiveResult[];
+        totalTokensUsed: number;
+        totalCost: number;
+        escalations: any[];
+      } = {
         tierASummaries: [],
         tierBAnalyses: [],
         totalTokensUsed: 0,
@@ -192,7 +203,7 @@ export class LLMManager {
             batchId
           );
           
-          if (tierBResult.success) {
+          if (tierBResult.success && tierBResult.analysis) {
             results.tierBAnalyses.push(tierBResult.analysis);
             results.totalTokensUsed += tierBResult.tokensUsed;
             results.totalCost += tierBResult.cost;
@@ -422,14 +433,36 @@ export class LLMManager {
       // Truncate context if needed
       const truncatedMessages = this.truncateContext(messages, template.maxContextTokens);
       
-      // Execute OpenAI request
-      const completion = await this.openai.chat.completions.create({
+      // Execute SECURE LLM request (with PII redaction, cost controls, auditing)
+      const secureResponse = await this.secureLLMGateway.secureInvoke({
+        requestId: request.requestId,
+        operation: request.modelTier === 'tier_a_small' ? 'tier_a_summary' : 'tier_b_deep_dive',
+        systemPrompt: truncatedMessages.find(m => m.role === 'system')?.content || '',
+        userPrompt: truncatedMessages.find(m => m.role === 'user')?.content || '',
+        context: request.context,
+        estimatedTokens: request.estimatedTokens,
+        maxTokenBudget: request.maxTokenBudget,
+        modelTier: request.modelTier,
         model: modelConfig.model,
-        messages: truncatedMessages,
-        max_tokens: Math.min(template.expectedOutputTokens, modelConfig.maxTokens),
+        maxTokens: Math.min(template.expectedOutputTokens, modelConfig.maxTokens),
         temperature: modelConfig.temperature,
-        timeout: request.timeoutMs
+        timeoutMs: request.timeoutMs
       });
+
+      // Handle secure response (may contain security/budget violations)
+      if (!secureResponse.success) {
+        throw new Error(secureResponse.errorMessage || 'SecureLLMGateway rejected request');
+      }
+
+      // Transform SecureLLMResponse to completion-like object for compatibility
+      const completion = {
+        choices: [{ message: { content: secureResponse.result || '' } }],
+        usage: {
+          prompt_tokens: secureResponse.tokensUsed.input,
+          completion_tokens: secureResponse.tokensUsed.output,
+          total_tokens: secureResponse.tokensUsed.total
+        }
+      };
 
       // Calculate token usage and cost
       const tokensUsed = {
@@ -803,11 +836,13 @@ Context limit: {contextLimit}`,
 
 // Factory Function
 export function createLLMManager(
-  openaiApiKey: string,
+  tenantId: string,
   providerId: string,
-  modelConfig: LLMModelConfig
+  modelConfig: LLMModelConfig,
+  costControlConfig: CostControlConfig,
+  secureLLMConfig: SecureLLMConfig
 ): LLMManager {
-  return new LLMManager(openaiApiKey, providerId, modelConfig);
+  return new LLMManager(tenantId, providerId, modelConfig, costControlConfig, secureLLMConfig);
 }
 
 // Default Model Configuration
@@ -832,11 +867,4 @@ export const DEFAULT_LLM_MODEL_CONFIG: LLMModelConfig = {
   }
 };
 
-export type {
-  LLMModelConfig,
-  PromptTemplate,
-  LLMRequest,
-  LLMResponse,
-  TierASummaryResult,
-  TierBDeepDiveResult
-};
+// Types exported above with interfaces

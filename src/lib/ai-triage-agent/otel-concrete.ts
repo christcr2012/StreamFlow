@@ -67,10 +67,7 @@ export class ConcreteOTelManager {
             '@opentelemetry/instrumentation-http': {
               enabled: true,
             },
-            // Enable fetch instrumentation for OpenAI API calls
-            '@opentelemetry/instrumentation-fetch': {
-              enabled: true,
-            },
+            // Note: fetch instrumentation not available in auto-instrumentations
           }),
         ],
       });
@@ -103,7 +100,7 @@ export class ConcreteOTelManager {
   createSpan(
     name: string,
     attributes: Record<string, any> = {},
-    parentSpan?: opentelemetry.Span
+    parentContext?: opentelemetry.Context
   ): opentelemetry.Span | null {
     if (!this.tracer) {
       return null;
@@ -115,8 +112,7 @@ export class ConcreteOTelManager {
         'triage.tenant_id': attributes.tenantId || 'unknown',
         ...attributes,
       },
-      parent: parentSpan,
-    });
+    }, parentContext);
 
     return span;
   }
@@ -462,11 +458,15 @@ export class ConcreteOTelManager {
       return null;
     }
 
-    const parentSpan = opentelemetry.trace.wrapSpanContext(parentContext);
+    // Create a context with the parent span properly set
+    const context = opentelemetry.trace.setSpanContext(
+      opentelemetry.context.active(), 
+      parentContext
+    );
+    
     return this.tracer.startSpan(name, {
       attributes,
-      parent: parentSpan,
-    });
+    }, context);
   }
 
   // Shutdown OpenTelemetry gracefully
@@ -541,4 +541,4 @@ export function instrumentAsyncFunction<T extends (...args: any[]) => Promise<an
   }) as T;
 }
 
-export type { ConcreteOTelManager };
+// ConcreteOTelManager class is exported above
