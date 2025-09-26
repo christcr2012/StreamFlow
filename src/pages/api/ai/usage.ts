@@ -4,6 +4,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { assertPermission, getOrgIdFromReq, PERMS } from "@/lib/rbac";
 import { getAiUsage } from "@/lib/aiMeter";
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
@@ -21,7 +24,86 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Get current AI usage for organization
     const usage = await getAiUsage(orgId);
 
-    // Return usage data without exposing actual dollar costs
+    // Get recent AI usage events (last 15 events)
+    const recentEvents = await (prisma as any).aiUsageEvent.findMany({
+      where: { orgId },
+      orderBy: { createdAt: 'desc' },
+      take: 15,
+      select: {
+        id: true,
+        feature: true,
+        model: true,
+        tokensIn: true,
+        tokensOut: true,
+        creditsUsed: true,
+        createdAt: true
+      }
+    });
+
+    // Get feature breakdown for current month
+    const monthKey = usage.monthKey;
+    const featureStats = await (prisma as any).aiUsageEvent.groupBy({
+      by: ['feature'],
+      where: {
+        orgId,
+        createdAt: {
+          gte: new Date(`${monthKey}-01`),
+          lt: new Date(new Date(`${monthKey}-01`).setMonth(new Date(`${monthKey}-01`).getMonth() + 1))
+        }
+      },
+      _count: { id: true },
+      _sum: { 
+        creditsUsed: true,
+        tokensIn: true,
+        tokensOut: true
+      }
+    });
+
+    // Get daily usage for last 30 days (for trend chart)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    const dailyUsage = await (prisma as any).aiUsageEvent.groupBy({
+      by: ['createdAt'],
+      where: {
+        orgId,
+        createdAt: { gte: thirtyDaysAgo }
+      },
+      _count: { id: true },
+      _sum: { creditsUsed: true }
+    });
+
+    // Process daily usage into daily buckets
+    const dailyBuckets = [];
+    for (let i = 29; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      const dayKey = date.toISOString().split('T')[0];
+      
+      // Find usage for this day
+      const dayUsage = dailyUsage.filter(day => 
+        day.createdAt.toISOString().split('T')[0] === dayKey
+      );
+      
+      const dayCredits = dayUsage.reduce((sum, usage) => sum + (usage._sum?.creditsUsed || 0), 0);
+      const dayRequests = dayUsage.reduce((sum, usage) => sum + (usage._count?.id || 0), 0);
+      
+      dailyBuckets.push({
+        date: dayKey,
+        credits: dayCredits,
+        requests: dayRequests
+      });
+    }
+
+    // Get monthly request count from current summary
+    const monthlySummary = await (prisma as any).aiMonthlySummary.findUnique({
+      where: { 
+        orgId_monthKey: { orgId, monthKey }
+      },
+      select: { callCount: true }
+    });
+
+    // Return comprehensive usage data without exposing actual dollar costs
     return res.status(200).json({
       success: true,
       usage: {
@@ -35,7 +117,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Feature limits by plan
         features: getPlanFeatures(usage.plan),
         // Upgrade suggestions
-        upgradeRecommendation: getUpgradeRecommendation(usage)
+        upgradeRecommendation: getUpgradeRecommendation(usage),
+        // Real analytics data
+        monthlyRequestCount: monthlySummary?.callCount || 0,
+        recentEvents: recentEvents.map(event => ({
+          id: event.id,
+          feature: event.feature,
+          model: event.model,
+          tokensIn: event.tokensIn,
+          tokensOut: event.tokensOut,
+          creditsUsed: event.creditsUsed,
+          createdAt: event.createdAt,
+          // Human-friendly relative time
+          timeAgo: getTimeAgo(event.createdAt)
+        })),
+        featureBreakdown: featureStats.map(stat => ({
+          feature: stat.feature,
+          requests: stat._count.id,
+          creditsUsed: stat._sum.creditsUsed || 0,
+          tokensIn: stat._sum.tokensIn || 0,
+          tokensOut: stat._sum.tokensOut || 0
+        })),
+        dailyUsage: dailyBuckets
       }
     });
 
@@ -125,4 +228,22 @@ function getUpgradeRecommendation(usage: any) {
   }
 
   return null;
+}
+
+/**
+ * Get human-friendly time ago string
+ */
+function getTimeAgo(date: Date): string {
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffMinutes < 1) return 'Just now';
+  if (diffMinutes < 60) return `${diffMinutes} min ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+  
+  return date.toLocaleDateString();
 }
