@@ -3,6 +3,7 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/login": "pages/login.js",
-  "/api/integrations/permits/ping": "pages/api/integrations/permits/ping.js",
-  "/api/me": "pages/api/me.js"
+  "/api/me": "pages/api/me.js",
+  "/api/integrations/sam/ping": "pages/api/integrations/sam/ping.js",
+  "/": "pages/index.js"
 }

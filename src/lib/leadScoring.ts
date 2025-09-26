@@ -13,6 +13,12 @@ export type LeadLike = {
   serviceCode?: string | null;
   sourceType?: string | null;
   sourceDetail?: string | null;
+  leadType?: 'hot' | 'warm' | 'cold' | null;
+  serviceDescription?: string | null;
+  title?: string | null;
+  agency?: string | null;
+  naics?: string | null;
+  psc?: string | null;
 };
 
 export type ScoreResult = { score: number; reasons: string[] };
@@ -70,6 +76,26 @@ export function scoreLead(lead: LeadLike): ScoreResult {
   if (detail.includes("sam.gov") || detail.includes("rfp")) {
     score += config.sourceWeights.RFP ?? 12;
     reasons.push("Government RFP (SAM.gov)");
+  }
+
+  // Service description keyword matching
+  const serviceDesc = (lead.serviceDescription || lead.title || "").toLowerCase();
+  for (const key of Object.keys(config.serviceWeights)) {
+    if (serviceDesc.includes(key)) {
+      const pts = Math.floor(config.serviceWeights[key] * 0.5); // Half points for description match
+      score += pts;
+      reasons.push(`Service description match: ${key}`);
+      break;
+    }
+  }
+
+  // Apply lead type modifier (hot/warm/cold)
+  const leadType = lead.leadType?.toLowerCase() as keyof typeof config.leadTypeModifiers;
+  if (leadType && config.leadTypeModifiers[leadType]) {
+    const modifier = config.leadTypeModifiers[leadType];
+    const originalScore = score;
+    score = Math.round(score * modifier);
+    reasons.push(`${leadType.toUpperCase()} lead modifier: ${modifier}x (${originalScore} → ${score})`);
   }
 
   // Clamp between 1 and 99
