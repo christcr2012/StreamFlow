@@ -4,7 +4,7 @@ import { prisma as db } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
 function buildCookie(email: string) {
-  let cookie = `mv_user=${encodeURIComponent(email)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`;
+  let cookie = `ws_user=${encodeURIComponent(email)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`;
   if (process.env.NODE_ENV === "production") cookie += "; Secure";
   return cookie;
 }

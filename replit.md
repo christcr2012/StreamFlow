@@ -1,31 +1,34 @@
-# Mountain Vista - Lead Management & Billing System
+# WorkStream - Business Operating System for Service Companies
 
 ## Overview
 
-Mountain Vista is a comprehensive lead management and billing platform built for service businesses, particularly focusing on janitorial and cleaning companies. The system handles lead generation, scoring, conversion tracking, and automated billing for converted leads. It features integration with external data sources (SAM.gov for RFP imports), Stripe for payment processing, and includes role-based access control (RBAC) for multi-user organizations.
+WorkStream is a comprehensive business operating system built for service businesses, particularly focusing on janitorial, cleaning, HVAC, landscaping, and similar companies. The system handles lead generation, scoring, conversion tracking, and automated billing for converted leads. It features integration with external data sources (SAM.gov for RFP imports), Stripe for payment processing, and includes role-based access control (RBAC) for multi-user organizations.
+
+WorkStream is designed as a multi-tenant SaaS platform where each service business gets their own isolated instance. The system is managed and scaled through StreamCore, the provider federation platform that enables centralized management of multiple WorkStream deployments.
 
 ## Recent Changes
 
-**September 26, 2025 - PROVIDER BUSINESS MODEL & CONFLICT RESOLUTION:**
-- Updated to Provider-Client business model: Provider charges $100 per converted lead
+**September 26, 2025 - WORKSTREAM & STREAMCORE ARCHITECTURE:**
+- Established WorkStream as the client system name and StreamCore as the provider federation platform
+- Updated to Provider-Client business model: StreamCore providers charge $100 per converted lead
 - Provider AI costs hard-limited to $50/month with atomic transaction enforcement  
 - Client-facing credit system: 1 credit = $0.05 (50x markup from provider cost)
 - Two lead types: Relationship-valued ($100/customer, hide future leads) vs Job-valued ($100/contract, show future leads)
-- Premium dashboard experience with "million dollar software" feel at startup costs
+- Premium dashboard experience with enterprise-grade features at startup costs
 
 **EMPLOYEE REFERRAL SYSTEM & CONFLICT RESOLUTION:**
-- Employee referrals: Client pays employee $50 directly (NO Provider billing)
-- Provider billing: Only for system/AI-generated leads ($100/lead)
+- Employee referrals: WorkStream clients pay employees $50 directly (NO StreamCore provider billing)
+- StreamCore provider billing: Only for system/AI-generated leads ($100/lead)
 - CRITICAL: Industry-leading conflict resolution prevents double-payment scenarios
 - Anti-fraud protection with automatic blocking of high-risk conversions
-- Complete exclusion of employee referral data from Provider portal analytics
+- Complete exclusion of employee referral data from StreamCore provider analytics
 
 **Business Model:**
-- Provider charges clients $100 per converted lead
+- StreamCore providers charge WorkStream clients $100 per converted lead
 - Provider costs stay under $50/month (guaranteed by atomic transactions)
-- Client sees value-based credit pricing reflecting lead generation ROI
+- WorkStream clients see value-based credit pricing reflecting lead generation ROI
 - SAM.gov integration provides high-value federal contract leads
-- 20-35x ROI for Provider: $100 revenue per $3-5 AI cost
+- 20-35x ROI for StreamCore providers: $100 revenue per $3-5 AI cost
 
 ## User Preferences
 
@@ -43,7 +46,7 @@ Preferred communication style: Simple, everyday language.
 - **Framework**: Next.js 15 with Pages Router (TypeScript)
 - **Styling**: Tailwind CSS with custom CSS variables for theming
 - **State Management**: SWR for data fetching and client-side state
-- **Authentication**: Cookie-based session management (`mv_user` cookie)
+- **Authentication**: Cookie-based session management (`ws_user` cookie)
 - **UI Components**: Custom components with a dark theme design system
 
 ### Backend Architecture
@@ -68,7 +71,7 @@ Preferred communication style: Simple, everyday language.
 4. **AI-Powered Lead Scoring**: Intelligent scoring system for lead prioritization
 5. **Multi-tenant**: Organization-based data isolation
 6. **Role-based Access**: Granular permissions system
-7. **Provider Federation**: Framework for cross-instance provider portal integration
+7. **StreamCore Federation**: Framework for cross-instance provider portal integration
 
 ### Data Flow Patterns
 - **Lead Ingestion**: External sources → Deduplication → Scoring → Storage
@@ -80,7 +83,7 @@ Preferred communication style: Simple, everyday language.
 - **Session Management**: HttpOnly cookies with configurable security flags
 - **Authorization**: Permission-based access control at API level
 - **Data Isolation**: Organization-scoped queries prevent cross-tenant data access
-- **Federation Security**: HMAC-signed requests for provider portal integration
+- **Federation Security**: HMAC-signed requests for StreamCore provider portal integration
 
 ## External Dependencies
 
