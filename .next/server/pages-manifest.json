@@ -10,5 +10,9 @@
   "/worker/clock": "pages/worker/clock.js",
   "/worker/jobs": "pages/worker/jobs.js",
   "/api/auth/login": "pages/api/auth/login.js",
-  "/settings": "pages/settings.js"
+  "/settings": "pages/settings.js",
+  "/reports": "pages/reports.js",
+  "/api/dashboard/summary": "pages/api/dashboard/summary.js",
+  "/dashboard": "pages/dashboard.js",
+  "/api/leads.list": "pages/api/leads.list.js"
 }
