@@ -1,0 +1,45 @@
+{
+  "action": "create_or_modify_role",
+  "role_name": "Staff",
+  "goal": "Enable regular employees to perform their job functions — no more, no less — with flexibility controlled by the Owner.",
+  "scope": "Scoped within the tenant (company); may be further limited by department, project, or location.",
+  "capabilities": {
+    "core_operations": [
+      "Manage assigned tasks, schedules, jobs, and customer interactions (within boundaries set by Owner)",
+      "Update status, notes, attachments, and relevant data for assigned entities",
+      "View (read-only) limited data beyond assignments if allowed (e.g., shared team dashboards)"
+    ],
+    "customer_interaction": [
+      "Access relevant customer contact info, communications, history (as allowed)",
+      "Submit customer updates, work logs, and follow-ups"
+    ],
+    "limited_settings": [
+      "Update their own profile (password, 2FA, preferences)",
+      "Request role/permission changes (which Owner can approve)"
+    ],
+    "feature_usage": [
+      "Use enabled modules/features (e.g. AI assistants) assigned to their role, but cannot toggle or provision",
+      "View personal usage dashboards (if exposed)"
+    ]
+  },
+  "role_customization": {
+    "adjustability": "Owner can expand, limit, or rename this role; Owner can clone or derive variants (e.g. “Supervisor,” “Technician”).",
+    "temporary_elevation": "Support just-in-time elevation to a higher role (e.g. privileged task), with auto-expiry and audit."
+  },
+  "constraints_and_safeguards": [
+    "By default, no Staff has access to business admin, billing, user management, or provider-level config",
+    "All sensitive actions (e.g. deleting records) must require explicit Owner or higher-level approval",
+    "Limit data visibility by department, territory, or project to enforce least privilege"
+  ],
+  "audit_and_review": {
+    "activity_logging": "Log all Staff actions (CRUD) with timestamp, user, and context",
+    "access_reviews": "Prompt Owner periodically to review and revoke stale or excessive Staff permissions",
+    "error_fallback": "In case of unauthorized access attempt, display safe error and log incident"
+  },
+  "provisioning_flows": {
+    "role_assignment": "Owner assigns Staff role or a derivative during user creation; can refine after onboarding",
+    "onboarding": "Provide orientation/permissions preview so Staff knows what they can do",
+    "offboarding": "Upon role removal or deactivation, terminate sessions and remove access in real-time"
+  },
+  "notes": "Start Staff with minimal baseline privileges; Owner should iteratively expand as real usage reveals needs. Avoid role explosion by reusing and cloning Staff‐variant roles where possible."
+}
