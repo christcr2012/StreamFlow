@@ -31,6 +31,12 @@ Mountain Vista is a comprehensive lead management and billing platform built for
 
 Preferred communication style: Simple, everyday language.
 
+**Environment Variable Management:**
+- Use Replit secrets for convenience while working in Replit
+- Manually maintain .env file for cross-platform compatibility (GitHub/Vercel/Neon workflow)
+- CRITICAL: Never clear, delete, or modify the .env file - user manages this manually
+- Dual approach provides both Replit convenience and external development portability
+
 ## System Architecture
 
 ### Frontend Architecture
