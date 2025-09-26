@@ -7,7 +7,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).end("Method Not Allowed");
   }
 
-  let cookie = "mv_user=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0";
+  let cookie = "ws_user=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0";
   if (process.env.NODE_ENV === "production") cookie += "; Secure";
 
   res.setHeader("Set-Cookie", cookie);

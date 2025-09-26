@@ -22,7 +22,7 @@ export interface AuthenticatedUser {
 export async function getAuthenticatedUser(req: NextApiRequest): Promise<AuthenticatedUser | null> {
   try {
     // Get email from cookie (temporary until proper session system)
-    const email = req.cookies.mv_user;
+    const email = req.cookies.ws_user;
     if (!email) {
       return null;
     }

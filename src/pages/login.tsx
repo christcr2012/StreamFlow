@@ -12,7 +12,7 @@ export default function Login() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gradient mb-2">Welcome Back</h1>
           <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
-            Sign in to your Mountain Vista account
+            Sign in to your WorkStream account
           </p>
         </div>
 
@@ -107,7 +107,7 @@ export default function Login() {
 
 // If already signed in, bounce to dashboard.
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  if (ctx.req.cookies?.mv_user) {
+  if (ctx.req.cookies?.ws_user) {
     return { redirect: { destination: "/dashboard", permanent: false } };
   }
   return { props: {} };

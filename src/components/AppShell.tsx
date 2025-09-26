@@ -12,7 +12,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   
   // Extract brand config safely with proper typing
   const brandConfig: BrandConfig = org?.brandConfig || {};
-  const brandName = brandConfig.name || "Mountain Vista";
+  const brandName = brandConfig.name || "WorkStream";
   const brandLogoUrl = brandConfig.logoUrl;
   const rawBrandColor = brandConfig.color;
   

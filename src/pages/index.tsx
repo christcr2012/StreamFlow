@@ -6,7 +6,7 @@ export default function Home() {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const hasUser = !!ctx.req.cookies?.mv_user;
+  const hasUser = !!ctx.req.cookies?.ws_user;
   return {
     redirect: {
       destination: hasUser ? "/dashboard" : "/login", // FIX: /login (not /auth/login)
