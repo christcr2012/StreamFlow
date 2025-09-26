@@ -2,11 +2,15 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
+  "/login": "pages/login.js",
   "/api/me": "pages/api/me.js",
-  "/api/dashboard/summary": "pages/api/dashboard/summary.js",
+  "/api/auth/login": "pages/api/auth/login.js",
+  "/invoices": "pages/invoices.js",
   "/dashboard": "pages/dashboard.js",
   "/api/leads.list": "pages/api/leads.list.js",
-  "/api/auth/logout": "pages/api/auth/logout.js",
-  "/admin": "pages/admin.js",
-  "/login": "pages/login.js"
+  "/api/dashboard/summary": "pages/api/dashboard/summary.js",
+  "/worker/profile": "pages/worker/profile.js",
+  "/worker/payroll": "pages/worker/payroll.js",
+  "/worker/training": "pages/worker/training.js",
+  "/worker/jobs": "pages/worker/jobs.js"
 }
