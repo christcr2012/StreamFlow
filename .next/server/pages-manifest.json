@@ -2,10 +2,8 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/": "pages/index.js",
-  "/worker/home": "pages/worker/home.js",
   "/api/dashboard/summary": "pages/api/dashboard/summary.js",
+  "/worker/home": "pages/worker/home.js",
   "/dashboard": "pages/dashboard.js",
-  "/api/me": "pages/api/me.js",
-  "/api/leads.list": "pages/api/leads.list.js"
+  "/api/admin/audit-events": "pages/api/admin/audit-events.js"
 }
