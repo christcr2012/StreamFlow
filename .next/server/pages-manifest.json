@@ -5,5 +5,6 @@
   "/": "pages/index.js",
   "/worker/home": "pages/worker/home.js",
   "/login": "pages/login.js",
-  "/api/me": "pages/api/me.js"
+  "/api/me": "pages/api/me.js",
+  "/api/auth/login": "pages/api/auth/login.js"
 }
