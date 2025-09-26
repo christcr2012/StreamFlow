@@ -84,7 +84,7 @@ export default function RFPUpload({ leadId, onParsed }: RFPUploadProps) {
           </label>
           <input
             type="file"
-            accept=".pdf,.docx,.doc"
+            accept=".pdf,.docx"
             onChange={handleFileChange}
             className="input-field"
             disabled={uploading}
@@ -164,7 +164,7 @@ export default function RFPUpload({ leadId, onParsed }: RFPUploadProps) {
             border: '1px solid var(--border-primary)' 
           }}
         >
-          <strong>Supported formats:</strong> PDF, DOCX, DOC (max 10MB)<br />
+          <strong>Supported formats:</strong> PDF, DOCX (max 10MB)<br />
           <strong>What we extract:</strong> Scope, due dates, site visits, insurance/bond requirements, bid checklist
         </div>
       </div>

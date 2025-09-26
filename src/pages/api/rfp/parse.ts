@@ -16,8 +16,8 @@ const upload = multer({
   fileFilter: (req, file, cb) => {
     const allowedTypes = [
       'application/pdf',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'application/msword'
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      // Removed application/msword (.doc) as mammoth only supports .docx
     ];
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
@@ -175,13 +175,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Parse with AI
-    const parsed = await parseRFPWithAI(text, useAI);
+    let parsed: ParsedRFP;
+    try {
+      parsed = await parseRFPWithAI(text, useAI);
+    } catch (aiError: any) {
+      console.error('AI parsing failed:', aiError);
+      return res.status(500).json({ 
+        ok: false, 
+        error: 'AI parsing failed: ' + (aiError.message || 'Unknown error')
+      });
+    }
 
     return res.status(200).json({
       ok: true,
       data: {
+        // Flatten the parsed data to match component expectations
+        ...parsed,
         originalText: text,
-        parsed,
         filename: file.originalname,
         size: file.size,
         processedAt: new Date().toISOString(),
