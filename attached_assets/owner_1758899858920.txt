@@ -1,0 +1,48 @@
+{
+  "action": "create_or_modify_role",
+  "role_name": "Owner",
+  "goal": "Full tenant-level control to run the business and govern users, data, features, and integrations.",
+  "scope": "Per-tenant (organization) admin with global visibility within their own tenant only.",
+  "capabilities": {
+    "business_ops": [
+      "Full CRUD on customers, employees, services, schedules, pricing, and assets",
+      "End-to-end workflow configuration (industry templates; default: cleaning services)"
+    ],
+    "user_and_role_admin": [
+      "Create/disable users; reset credentials; assign/remove roles",
+      "Custom role builder with granular permissions, role rename, and permission presets",
+      "Department/location scoping; approval workflows for elevated access"
+    ],
+    "provider_feature_controls": [
+      "Enable/disable modules, feature flags, and AI features exposed by the provider",
+      "View AI/feature usage, cost dashboards, and limits; set guardrails and budgets"
+    ],
+    "integrations": [
+      "Configure accounting integrations (e.g., QuickBooks, Xero) and webhooks",
+      "SSO (SAML/OIDC), SCIM user provisioning; API keys and OAuth apps management"
+    ],
+    "governance_security": [
+      "Tenant audit log access (admin actions, auth events, data exports) with export",
+      "Policy center: password/MFA policies, session limits, data retention, IP allow/deny",
+      "Break-glass access with just-in-time elevation and auto-expiry"
+    ],
+    "support_and_impersonation": [
+      "Owner-initiated secure support session or provider-impersonation with consent banner and immutable audit trail"
+    ]
+  },
+  "provisioning_flows": {
+    "invites": "Email invite with magic link; optional initial credentials",
+    "auto_provisioning": "SCIM/Just-in-Time on first SSO login",
+    "offboarding": "Immediate revocation, session kill, data reassignment"
+  },
+  "constraints_and_safeguards": [
+    "Least-privilege by default for all non-Owner roles",
+    "No cross-tenant access; enforce strict tenant isolation at data and policy layers",
+    "Sensitive actions require step-up MFA and are always logged"
+  ],
+  "audit_and_compliance": [
+    "Comprehensive audit logs retained per policy and exportable",
+    "Controls aligned to SOC 2 (RBAC, MFA, logging, monitoring); configurable data residency"
+  ],
+  "notes": "Owner can create fully custom roles/permissions to fit any industry; provider supplies industry templates the Owner can adopt or modify."
+}

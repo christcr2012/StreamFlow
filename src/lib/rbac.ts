@@ -108,6 +108,90 @@ export const PERMS = {
   MEDIA_READ: "media:read",
   MEDIA_UPLOAD: "media:upload",
   MEDIA_DELETE: "media:delete",
+
+  // ENTERPRISE OWNER CAPABILITIES
+  
+  // Custom Role Builder & Permission Management
+  ROLE_CREATE: "role:create",
+  ROLE_CLONE: "role:clone",
+  ROLE_RENAME: "role:rename", 
+  PERMISSION_GRANT: "permission:grant",
+  PERMISSION_REVOKE: "permission:revoke",
+  PERMISSION_PRESET_MANAGE: "permission:preset:manage",
+  DEPARTMENT_SCOPE: "department:scope",
+  APPROVAL_WORKFLOW_MANAGE: "approval:workflow:manage",
+  
+  // Provider Feature Controls & Cost Management
+  FEATURE_TOGGLE: "feature:toggle",
+  MODULE_ENABLE: "module:enable",
+  MODULE_DISABLE: "module:disable",
+  AI_FEATURE_CONTROL: "ai:feature:control",
+  USAGE_DASHBOARD: "usage:dashboard",
+  COST_DASHBOARD: "cost:dashboard",
+  BUDGET_MANAGE: "budget:manage",
+  GUARDRAIL_SET: "guardrail:set",
+  
+  // Advanced Integrations Management
+  INTEGRATION_CONFIGURE: "integration:configure",
+  SSO_MANAGE: "sso:manage",
+  SAML_CONFIGURE: "saml:configure",
+  OIDC_CONFIGURE: "oidc:configure",
+  SCIM_MANAGE: "scim:manage",
+  WEBHOOK_MANAGE: "webhook:manage",
+  OAUTH_APP_MANAGE: "oauth:app:manage",
+  API_KEY_MANAGE: "api:key:manage",
+  
+  // Governance & Security Policies
+  AUDIT_EXPORT: "audit:export",
+  POLICY_MANAGE: "policy:manage",
+  PASSWORD_POLICY: "password:policy",
+  MFA_POLICY: "mfa:policy", 
+  SESSION_POLICY: "session:policy",
+  DATA_RETENTION_POLICY: "data:retention:policy",
+  IP_ALLOWLIST_MANAGE: "ip:allowlist:manage",
+  IP_DENYLIST_MANAGE: "ip:denylist:manage",
+  
+  // Break-glass & Elevation
+  BREAKGLASS_ACCESS: "breakglass:access",
+  JIT_ELEVATION: "jit:elevation",
+  ADMIN_OVERRIDE: "admin:override",
+  
+  // Support & Impersonation
+  SUPPORT_SESSION_INITIATE: "support:session:initiate",
+  USER_IMPERSONATE_SECURE: "user:impersonate:secure",
+  SUPPORT_CONSENT_MANAGE: "support:consent:manage",
+  
+  // Advanced User Lifecycle
+  USER_INVITE_MAGIC: "user:invite:magic",
+  SCIM_PROVISION: "scim:provision",
+  JIT_PROVISION: "jit:provision",
+  USER_OFFBOARD_SECURE: "user:offboard:secure",
+  SESSION_KILL: "session:kill",
+  DATA_REASSIGN: "data:reassign",
+  
+  // Workflow & Template Management
+  WORKFLOW_CONFIGURE: "workflow:configure",
+  INDUSTRY_TEMPLATE_MANAGE: "industry:template:manage",
+  WORKFLOW_TEMPLATE_CREATE: "workflow:template:create",
+  BUSINESS_PROCESS_DESIGN: "business:process:design",
+  
+  // Compliance & SOC 2
+  SOC2_CONTROLS: "soc2:controls",
+  COMPLIANCE_AUDIT: "compliance:audit",
+  DATA_RESIDENCY_CONFIGURE: "data:residency:configure",
+  RETENTION_ENFORCE: "retention:enforce",
+  
+  // Tenant Configuration
+  TENANT_CONFIGURE: "tenant:configure",
+  TENANT_BRANDING: "tenant:branding",
+  TENANT_DOMAINS: "tenant:domains",
+  TENANT_LIMITS: "tenant:limits",
+  
+  // Advanced Analytics & Monitoring
+  SECURITY_MONITORING: "security:monitoring",
+  USER_BEHAVIOR_ANALYTICS: "user:behavior:analytics",
+  THREAT_DETECTION: "threat:detection",
+  ANOMALY_DETECTION: "anomaly:detection",
 } as const;
 export type PermCode = (typeof PERMS)[keyof typeof PERMS];
 
