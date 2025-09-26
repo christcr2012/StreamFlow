@@ -2,12 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import Ultra-Premium Design System */
-@import './theme.css';
-
-/* Override Tailwind defaults with premium styling */
-body {
+/* Ensure the theme takes priority over everything */
+html, body, #__next {
+  min-height: 100vh !important;
   background: var(--bg-main) !important;
   color: var(--text-primary) !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+}
+
+/* Override any white backgrounds from Tailwind */
+.bg-white {
+  background: var(--surface-2) !important;
+}
+
+.bg-gray-50 {
+  background: var(--surface-1) !important;
+}
+
+.text-gray-600 {
+  color: var(--text-secondary) !important;
+}
+
+.text-gray-500 {
+  color: var(--text-tertiary) !important;
 }
