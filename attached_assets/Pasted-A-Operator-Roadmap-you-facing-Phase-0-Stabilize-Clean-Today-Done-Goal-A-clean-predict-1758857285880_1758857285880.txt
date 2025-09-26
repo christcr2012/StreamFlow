@@ -1,0 +1,129 @@
+A) Operator Roadmap (you-facing)
+Phase 0 — Stabilize & Clean (Today → Done)
+Goal: A clean, predictable base.
+ Outcomes
+Remove all demo/iron-session remnants; cookie login working on Vercel and local.
+
+
+Single AppNav; no duplicate links; 404s replaced with stubs (Reports, Settings, Profile).
+
+
+RBAC: OWNER full access; your PROVIDER role has superuser controls.
+
+
+Build passes (tsc + Next build); deploy green.
+
+
+Phase 1 — Lead Pipeline + Visibility (Week 1)
+Goal: Get hot leads in; see value in real time.
+ Deliverables
+SAM.gov Intake (CO → 561720): Admin button “Fetch RFPs (CO)” + optional daily cron. Imports as Lead{ sourceType:'RFP', systemGenerated:true }, dedup by solicitation ID.
+
+
+Lead Scoring v1.0: Config-driven scorer (geo priority: Sterling/Greeley/Logan/Weld; service codes; source weight). Score badge + sort/filter on /leads.
+
+
+Dashboard fix: Cards show counts (COLD/HOT/RFP/Converted), trend sparkline, and “billable converted this month”.
+
+
+Owner can manually add Employee Referrals (explicitly non-billable).
+
+
+What you’ll see
+Leads auto-appear from SAM.gov, with score + RFP tag.
+
+
+Dashboard “Projected invoice” number.
+
+
+Phase 2 — Conversion-Based Billing (Week 2)
+Goal: Only pay for converted, system-generated leads; see running total.
+ Deliverables
+Billing model: Flat $100 per converted system lead; referrals always $0.
+
+
+Monthly invoice draft: Auto-creates at period end; viewable any time.
+
+
+Stripe integration: Customer record + hosted invoice; webhook updates status (Paid/Failed).
+
+
+Invoices page: History + “details” showing which leads were billed.
+
+
+What you’ll see
+“This Month: 7 converted (billable)” and an invoice draft with line item “7 × $100”.
+
+
+Phase 3 — RFP Parser + Bid Helper (Week 3)
+Goal: Save hours per bid.
+ Deliverables
+Upload RFP PDF/DOCX → local text extract; detect scope, due date, walkthrough, insurance/bond; create a checklist.
+
+
+Optional “Use AI” (low-cost) for enhanced summary talking points.
+
+
+Attach parsed brief to the Lead (RFP).
+
+
+What you’ll see
+On an RFP lead page: parsed highlights + copy-ready checklist.
+
+
+Phase 4 — Disputes & Anti-Gaming (Week 4)
+Goal: Fairness, trust, and controls.
+ Deliverables
+Audit log of sensitive changes (source reclass, conversion flips, invoice adjustments).
+
+
+OWNER dispute workflow (flag a billed lead; mark “credit pending”).
+
+
+Admin tool for reclassifying with reason + automatic credit on next invoice.
+
+
+What you’ll see
+“Dispute” button on billed leads; clear status and resolution notes.
+
+
+Phase 5 — Polish + White-Label (Week 5)
+Goal: Looks $100k+, ready to clone to other clients.
+ Deliverables
+shadcn/ui makeover (buttons, tables, forms); consistent spacing/typography.
+
+
+Brand config from env (name, colors, logo) for fast rebrand.
+
+
+Settings/Profile pages: basic org profile, payment method link (Stripe portal), user management.
+
+
+Phase 6 — Optional Accelerators (Weeks 6–8, parallelizable)
+Lead Packs (post-MVP): prepaid credit balance; decrement on conversion.
+
+
+Tiered pricing (volume discounts); hybrid base + usage plan.
+
+
+More sources: LSA, state/county portals; normalize to current lead model.
+
+
+
+Success Criteria (MVP = billable)
+Auto-fetched RFP leads appear with scores ✅
+
+
+Owner marks lead Converted → shows as Billable if system-generated ✅
+
+
+End-of-month invoice shows exact billed leads; Stripe invoice sent; payment status reflected in app ✅
+
+
+Employee referrals: always Non-Billable ✅
+
+
+Disputes: credit applied next cycle with audit trail ✅
+
+
+
