@@ -6,6 +6,7 @@
   "/api/dashboard/summary": "pages/api/dashboard/summary.js",
   "/dashboard": "pages/dashboard.js",
   "/api/leads.list": "pages/api/leads.list.js",
+  "/api/auth/logout": "pages/api/auth/logout.js",
   "/admin": "pages/admin.js",
-  "/api/auth/logout": "pages/api/auth/logout.js"
+  "/login": "pages/login.js"
 }
