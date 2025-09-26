@@ -110,7 +110,7 @@ export default function AppNav() {
             ...(userRole === "OWNER" ? [{ href: "/admin", label: "Admin" }] : []),
           ],
           rightLinks: [
-            { href: "/invoices", label: "Invoices" },
+            { href: "/billing/invoices", label: "Invoices" },
             { href: "/reports", label: "Reports" },
             { href: "/settings", label: "Settings" },
           ]
