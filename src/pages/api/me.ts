@@ -91,13 +91,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const DEV_USER_EMAIL = process.env.DEV_USER_EMAIL?.toLowerCase() || null;
     if (DEV_USER_EMAIL && email.toLowerCase() === DEV_USER_EMAIL) {
       const perms = Object.values(SERVER_PERMS);
+      
+      // Dev can access all portals by passing role in query parameter
+      // Default to OWNER, but support ?role=STAFF, ?role=PROVIDER, etc.
+      const roleParam = req.query.role as string;
+      const devRole = (roleParam?.toUpperCase() || "OWNER") as "OWNER" | "MANAGER" | "STAFF" | "PROVIDER" | "ACCOUNTANT" | "VIEWER";
+      
       return res.status(200).json({
         ok: true,
         user: {
           email,
           name: "Dev User",
-          baseRole: "OWNER",
-          rbacRoles: [],
+          baseRole: devRole,
+          rbacRoles: ["owner", "provider", "staff", "manager", "accountant"], // All roles for dev
           isOwner: true,
           isProvider: true,
           perms,
