@@ -7,7 +7,7 @@ export default function Login() {
   const { error, next } = r.query as { error?: string; next?: string };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="h-screen flex items-center justify-center px-4">
       <div className="glass-card max-w-md w-full">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gradient mb-2">Welcome Back</h1>
