@@ -45,6 +45,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
 export default function AppNav() {
   // Pull current user for portal routing
   const { me } = useMe();
+  const { pathname } = useRouter();
   const userRole = me?.role;
 
   // Define portal-specific navigation based on user role
@@ -97,6 +98,41 @@ export default function AppNav() {
         };
         
       case "OWNER":
+        // Check if this is a dev testing scenario - if accessing dev page or has dev intent
+        if (pathname.startsWith('/dev')) {
+          return {
+            portalName: "Dev Center",
+            homeRoute: "/dev",
+            leftLinks: [
+              { href: "/dev", label: "Dev Home" },
+            ],
+            rightLinks: [
+              { href: "/dashboard", label: "→ Admin Portal" },
+              { href: "/worker/home", label: "→ Employee Portal" },
+              { href: "/provider", label: "→ Provider Portal" },
+              { href: "/accountant/reports", label: "→ Accountant Portal" },
+            ]
+          };
+        }
+        // Regular admin portal for OWNER
+        return {
+          portalName: "Admin Portal",
+          homeRoute: "/dashboard",
+          leftLinks: [
+            { href: "/dashboard", label: "Dashboard" },
+            { href: "/leads", label: "Leads" },
+            { href: "/jobs", label: "Jobs" },
+            { href: "/schedule", label: "Schedule" },
+            { href: "/admin", label: "Admin" },
+          ],
+          rightLinks: [
+            { href: "/dev", label: "🛠️ Dev Center" },
+            { href: "/billing/invoices", label: "Invoices" },
+            { href: "/reports", label: "Reports" },
+            { href: "/settings", label: "Settings" },
+          ]
+        };
+        
       case "MANAGER":
       default:
         return {
@@ -107,7 +143,6 @@ export default function AppNav() {
             { href: "/leads", label: "Leads" },
             { href: "/jobs", label: "Jobs" },
             { href: "/schedule", label: "Schedule" },
-            ...(userRole === "OWNER" ? [{ href: "/admin", label: "Admin" }] : []),
           ],
           rightLinks: [
             { href: "/billing/invoices", label: "Invoices" },

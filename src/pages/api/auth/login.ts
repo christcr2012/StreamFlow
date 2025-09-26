@@ -27,7 +27,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const body: Record<string, unknown> = typeof req.body === "string" ? JSON.parse(req.body || "{}") : (req.body || {});
     const emailInput = (body.email || "").toString().trim().toLowerCase();
     const password = (body.password || "").toString();
-    const nextUrl = (body.next || req.query.next || "/dashboard").toString() || "/dashboard";
+    const explicitNext = (body.next || req.query.next)?.toString();
+    // We'll determine the default redirect after we know the user's role
 
     if (!emailInput || !password) {
       if (isFormEncoded(req)) {
@@ -40,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const user = await db.user.findUnique({
       where: { email: emailInput },
-      select: { email: true, passwordHash: true, status: true },
+      select: { email: true, passwordHash: true, status: true, role: true },
     });
 
     if (!user || user.status !== "active" || !user.passwordHash) {
@@ -60,15 +61,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(401).json({ ok: false, error: "Invalid credentials" });
     }
 
-    // Set cookie and redirect (form) or JSON-ok (XHR)
+    // Set cookie and determine redirect based on role
     res.setHeader("Set-Cookie", buildCookie(user.email));
+    
+    // Determine appropriate redirect URL based on user role
+    let redirectUrl: string;
+    if (explicitNext && explicitNext.startsWith("/")) {
+      // If there's an explicit next URL, use it
+      redirectUrl = explicitNext;
+    } else {
+      // Default redirect based on role
+      switch (user.role) {
+        case "STAFF":
+          redirectUrl = "/worker/home";
+          break;
+        default:
+          redirectUrl = "/dashboard";
+          break;
+      }
+    }
 
     if (isFormEncoded(req)) {
-      res.setHeader("Location", nextUrl.startsWith("/") ? nextUrl : "/dashboard");
+      res.setHeader("Location", redirectUrl);
       return res.status(303).end();
     }
 
-    return res.status(200).json({ ok: true, redirect: nextUrl });
+    return res.status(200).json({ ok: true, redirect: redirectUrl });
   } catch (e: unknown) {
     console.error("/api/auth/login error:", e);
     if (isFormEncoded(req)) {
