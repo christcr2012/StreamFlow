@@ -124,6 +124,7 @@ export default function AppNav() {
             { href: "/operations", label: "💼 Business Ops" },
             { href: "/revenue", label: "💰 Revenue Hub" },
             { href: "/analytics", label: "📊 Analytics" },
+            { href: "/ai-usage", label: "🤖 AI Usage" },
             { href: "/workforce", label: "👨‍💼 Workforce" },
           ],
           rightLinks: [
