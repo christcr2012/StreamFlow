@@ -7,45 +7,100 @@ export default function Login() {
   const { error, next } = r.query as { error?: string; next?: string };
 
   return (
-    <div className="mx-auto max-w-md p-8">
-      <h1 className="text-2xl font-semibold mb-4">Sign in</h1>
-
-      {error === "missing" && <p className="mb-3 text-sm text-red-600">Please enter email and password.</p>}
-      {error === "invalid" && <p className="mb-3 text-sm text-red-600">Invalid email or password.</p>}
-      {error === "server" && <p className="mb-3 text-sm text-red-600">Server error. Please try again.</p>}
-
-      <form method="POST" action="/api/auth/login" className="space-y-4">
-        {/* preserve next hop if middleware sent us here */}
-        <input type="hidden" name="next" value={next || "/dashboard"} />
-
-        <div>
-          <label className="block text-sm font-medium mb-1" htmlFor="email">Email</label>
-          <input
-            id="email"
-            name="email"
-            autoComplete="email"
-            required
-            type="email"
-            className="w-full rounded border px-3 py-2"
-          />
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="glass-card max-w-md w-full">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gradient mb-2">Welcome Back</h1>
+          <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+            Sign in to your Mountain Vista account
+          </p>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-1" htmlFor="password">Password</label>
-          <input
-            id="password"
-            name="password"
-            autoComplete="current-password"
-            required
-            type="password"
-            className="w-full rounded border px-3 py-2"
-          />
-        </div>
+        {error === "missing" && (
+          <div className="mb-6 p-4 rounded-lg" style={{ 
+            background: 'rgba(239, 68, 68, 0.1)', 
+            border: '1px solid rgba(239, 68, 68, 0.3)' 
+          }}>
+            <p className="text-sm" style={{ color: 'var(--accent-error)' }}>
+              ⚠️ Please enter email and password.
+            </p>
+          </div>
+        )}
+        
+        {error === "invalid" && (
+          <div className="mb-6 p-4 rounded-lg" style={{ 
+            background: 'rgba(239, 68, 68, 0.1)', 
+            border: '1px solid rgba(239, 68, 68, 0.3)' 
+          }}>
+            <p className="text-sm" style={{ color: 'var(--accent-error)' }}>
+              ❌ Invalid email or password.
+            </p>
+          </div>
+        )}
+        
+        {error === "server" && (
+          <div className="mb-6 p-4 rounded-lg" style={{ 
+            background: 'rgba(239, 68, 68, 0.1)', 
+            border: '1px solid rgba(239, 68, 68, 0.3)' 
+          }}>
+            <p className="text-sm" style={{ color: 'var(--accent-error)' }}>
+              🔧 Server error. Please try again.
+            </p>
+          </div>
+        )}
 
-        <button type="submit" className="rounded bg-black px-4 py-2 text-white">
-          Sign in
-        </button>
-      </form>
+        <form method="POST" action="/api/auth/login" className="space-y-6">
+          <input type="hidden" name="next" value={next || "/dashboard"} />
+
+          <div>
+            <label 
+              className="block text-sm font-medium mb-2" 
+              htmlFor="email"
+              style={{ color: 'var(--text-secondary)' }}
+            >
+              Email Address
+            </label>
+            <input
+              id="email"
+              name="email"
+              autoComplete="email"
+              required
+              type="email"
+              className="input-field"
+              placeholder="Enter your email"
+            />
+          </div>
+
+          <div>
+            <label 
+              className="block text-sm font-medium mb-2" 
+              htmlFor="password"
+              style={{ color: 'var(--text-secondary)' }}
+            >
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              autoComplete="current-password"
+              required
+              type="password"
+              className="input-field"
+              placeholder="Enter your password"
+            />
+          </div>
+
+          <button type="submit" className="btn-primary w-full py-3">
+            <span>Sign In</span>
+          </button>
+        </form>
+        
+        <div className="mt-6 text-center">
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+            Mountain Vista Lead Management System
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

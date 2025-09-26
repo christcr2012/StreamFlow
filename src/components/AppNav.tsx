@@ -24,10 +24,10 @@ function NavLink({ href, label }: { href: string; label: string }) {
     <Link
       href={href}
       className={cx(
-        "rounded px-3 py-2 text-sm transition",
+        "rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200",
         isActive
-          ? "bg-black text-white"
-          : "text-gray-700 hover:bg-gray-100"
+          ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-glow"
+          : "text-slate-300 hover:text-white hover:bg-white/10"
       )}
     >
       {label}
@@ -67,42 +67,46 @@ export default function AppNav() {
   ];
 
   return (
-    <header className="w-full border-b bg-white">
-      <div className="mx-auto flex max-w-[1400px] items-center gap-2 px-4 py-3">
-        {/* Brand / Logo */}
-        <Link href="/dashboard" className="mr-2 flex items-center gap-2">
-          {/* If you have public/logo.png, this keeps it subtle & tidy */}
-          {/* <img src="/logo.png" alt="Logo" className="h-6 w-auto" /> */}
-          <span className="text-base font-semibold tracking-tight">
-            Mountain&nbsp;Vista
+    <header className="w-full border-b backdrop-blur-xl" style={{ 
+      background: 'var(--glass-bg)',
+      borderColor: 'var(--border-primary)' 
+    }}>
+      <div className="mx-auto flex max-w-[1400px] items-center gap-2 px-4 py-4">
+        {/* Premium Brand */}
+        <Link href="/dashboard" className="mr-4 flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+            <span className="text-white font-bold text-sm">MV</span>
+          </div>
+          <span className="text-lg font-bold text-gradient">
+            Mountain Vista
           </span>
         </Link>
 
-        {/* Left nav */}
-        <nav className="flex items-center gap-1">
+        {/* Premium Left Navigation */}
+        <nav className="flex items-center gap-2">
           {leftLinks.map((l) => (
             <NavLink key={l.href} href={l.href} label={l.label} />
           ))}
         </nav>
 
-        {/* Spacer pushes right-side items to the end */}
+        {/* Spacer */}
         <div className="flex-1" />
 
-        {/* Right nav */}
-        <nav className="hidden items-center gap-1 md:flex">
+        {/* Premium Right Navigation */}
+        <nav className="hidden items-center gap-2 md:flex">
           {rightLinks.map((l) => (
             <NavLink key={l.href} href={l.href} label={l.label} />
           ))}
         </nav>
 
-        {/* Logout button */}
+        {/* Premium Logout Button */}
         <button
           type="button"
           onClick={logoutAndRedirect}
-          className="ml-2 rounded border px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+          className="ml-4 btn-secondary"
           title="Sign out"
         >
-          Logout
+          <span>Logout</span>
         </button>
       </div>
     </header>
