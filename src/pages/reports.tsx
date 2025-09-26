@@ -1,5 +1,6 @@
 // src/pages/reports.tsx
 import { useEffect, useMemo, useState } from "react";
+import Head from "next/head";
 
 type Card = { title: string; value: number };
 
@@ -44,7 +45,6 @@ export default function ReportsPage() {
           { title: "RFP/SAM (90d)", value: k.rfp90d ?? 0 },
           { title: "Hot (90d)", value: k.hot90d ?? 0 },
         ];
-        // You can surface more if you like; keep four for the current grid.
         setCards(nextCards);
       } catch (e) {
         const msg = (e as { message?: string } | undefined)?.message ?? "Failed to load summary";
@@ -67,70 +67,141 @@ export default function ReportsPage() {
   const exportJsonHref = exportCsvHref.replace("export.csv", "export.json");
 
   return (
-    <div className="mx-auto max-w-[1100px] px-4 py-6">
-      <h1 className="mb-4 text-2xl font-semibold">Reports</h1>
-
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {cards.map((c) => (
-          <div key={c.title} className="rounded-2xl border bg-card p-4 shadow-sm">
-            <div className="text-sm text-muted-foreground">{c.title}</div>
-            <div className="mt-2 text-3xl font-semibold">{c.value}</div>
+    <>
+      <Head><title>Analytics Hub</title></Head>
+      <div className="max-w-7xl mx-auto space-y-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gradient">Analytics Hub</h1>
+            <p className="text-sm mt-2" style={{ color: 'var(--text-tertiary)' }}>
+              Performance insights and data export center
+            </p>
           </div>
-        ))}
-        {err && <div className="rounded-2xl border bg-red-50 p-4 text-red-700">{err}</div>}
-      </div>
-
-      {/* Export */}
-      <div className="mt-8 rounded-2xl border bg-card p-4 shadow-sm">
-        <div className="mb-3 text-sm font-medium">Export Leads</div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="flex items-center gap-2">
-            <label className="text-sm">Quick range</label>
-            <select
-              className="w-full rounded-md border px-3 py-2"
-              value={range}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                setRange(e.target.value as "d7" | "d30" | "d90" | "all")
-              }
-            >
-              <option value="d7">Last 7 days</option>
-              <option value="d30">Last 30 days</option>
-              <option value="d90">Last 90 days</option>
-              <option value="all">All time</option>
-            </select>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <label className="text-sm">Start</label>
-            <input
-              type="date"
-              className="w-full rounded-md border px-3 py-2"
-              value={start}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setStart(e.target.value)}
-            />
-          </div>
-
-          <div className="flex items-center gap-2">
-            <label className="text-sm">End</label>
-            <input
-              type="date"
-              className="w-full rounded-md border px-3 py-2"
-              value={end}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEnd(e.target.value)}
-            />
+          <div className="flex gap-4">
+            <button className="btn-secondary">
+              <span>📊 Configure</span>
+            </button>
+            <button className="btn-primary">
+              <span>💾 Export All</span>
+            </button>
           </div>
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-2">
-          <a className="rounded-md border px-3 py-2 hover:bg-muted" href={exportCsvHref}>
-            Download CSV
-          </a>
-          <a className="rounded-md border px-3 py-2 hover:bg-muted" href={exportJsonHref}>
-            Download JSON
-          </a>
+        {/* Premium KPI Cards */}
+        <div className="premium-card">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-2 h-8 rounded-full" style={{ background: 'var(--brand-gradient)' }}></div>
+            <div>
+              <h2 className="text-xl font-semibold text-gradient">Performance Metrics</h2>
+              <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>90-day performance overview</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {cards.map((c) => (
+              <div key={c.title} className="kpi-card">
+                <div className="kpi-card-content">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="kpi-label">{c.title}</span>
+                    <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
+                  </div>
+                  <div className="kpi-value">{c.value.toLocaleString()}</div>
+                  <div className="kpi-change">
+                    <span className="text-emerald-400">↗ Active</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {err && (
+            <div className="mt-6 p-4 rounded-xl" style={{ 
+              background: 'rgba(239, 68, 68, 0.1)', 
+              border: '1px solid rgba(239, 68, 68, 0.2)' 
+            }}>
+              <div className="text-red-400 font-medium">Error Loading Data</div>
+              <div className="text-sm mt-1" style={{ color: 'var(--text-tertiary)' }}>{err}</div>
+            </div>
+          )}
+        </div>
+
+        {/* Premium Export Section */}
+        <div className="premium-card">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-2 h-8 rounded-full" style={{ background: 'var(--brand-gradient)' }}></div>
+            <div>
+              <h2 className="text-xl font-semibold text-gradient">Data Export Center</h2>
+              <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                Export leads and analytics data in multiple formats
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div>
+                <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                  Time Range
+                </label>
+                <select
+                  className="input-field"
+                  value={range}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    setRange(e.target.value as "d7" | "d30" | "d90" | "all")
+                  }
+                >
+                  <option value="d7">📅 Last 7 Days</option>
+                  <option value="d30">📅 Last 30 Days</option>
+                  <option value="d90">📅 Last 90 Days</option>
+                  <option value="all">📅 All Time</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                  Start Date
+                </label>
+                <input
+                  type="date"
+                  className="input-field"
+                  value={start}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setStart(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                  End Date
+                </label>
+                <input
+                  type="date"
+                  className="input-field"
+                  value={end}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEnd(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-4">
+              <a 
+                className="btn-secondary flex items-center gap-2" 
+                href={exportCsvHref}
+              >
+                <span>📊 Download CSV</span>
+              </a>
+              <a 
+                className="btn-secondary flex items-center gap-2" 
+                href={exportJsonHref}
+              >
+                <span>📋 Download JSON</span>
+              </a>
+              <button className="btn-outline">
+                <span>📈 Generate Report</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
