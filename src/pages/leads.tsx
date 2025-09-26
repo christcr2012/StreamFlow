@@ -86,95 +86,170 @@ export default function LeadsPage() {
 
   return (
     <>
-      <Head><title>Leads</title></Head>
-      <div className="mx-auto max-w-[1200px] px-4 py-6">
-        <h1 className="text-2xl font-semibold mb-4">Leads</h1>
-
-        {/* Sorting and filtering controls */}
-        <div className="flex flex-wrap items-end gap-4 mb-4">
+      <Head><title>Leads Database</title></Head>
+      <div className="max-w-7xl mx-auto space-y-8">
+        <div className="flex items-center justify-between">
           <div>
-            <label className="block text-sm font-medium mb-1">Sort by</label>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as "scoreDesc" | "scoreAsc" | "date")}
-              className="border rounded px-2 py-1"
-            >
-              <option value="scoreDesc">Score (high→low)</option>
-              <option value="scoreAsc">Score (low→high)</option>
-              <option value="date">Created (newest)</option>
-            </select>
+            <h1 className="text-3xl font-bold text-gradient">Leads Database</h1>
+            <p className="text-sm mt-2" style={{ color: 'var(--text-tertiary)' }}>
+              {processed.length} lead{processed.length !== 1 ? 's' : ''} found
+            </p>
           </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Filter</label>
-            <select
-              value={filterBy}
-              onChange={(e) => setFilterBy(e.target.value as "all" | "hot" | "cold")}
-              className="border rounded px-2 py-1"
-            >
-              <option value="all">All</option>
-              <option value="hot">Hot (score ≥ 70)</option>
-              <option value="cold">Cold (score &lt; 70)</option>
-            </select>
+          <div className="flex gap-4">
+            <button className="btn-secondary">
+              <span>Export</span>
+            </button>
+            <button className="btn-primary">
+              <span>New Lead</span>
+            </button>
           </div>
         </div>
 
-        <div className="overflow-x-auto rounded-2xl border">
-          <table className="min-w-full text-sm">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-3 py-2 text-left">Public ID</th>
-                <th className="px-3 py-2 text-left">Company</th>
-                <th className="px-3 py-2 text-left">Service</th>
-                <th className="px-3 py-2 text-left">Score</th>
-                <th className="px-3 py-2 text-left">Billable</th>
-                <th className="px-3 py-2 text-left">Status</th>
-                <th className="px-3 py-2 text-left">Created</th>
-              </tr>
-            </thead>
-            <tbody>
-              {!loading && processed.length === 0 && (
+        {/* Premium Controls */}
+        <div className="premium-card">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-2 h-8 rounded-full" style={{ background: 'var(--brand-gradient)' }}></div>
+            <div>
+              <h2 className="text-xl font-semibold text-gradient">Filter & Sort</h2>
+              <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Customize your lead view</p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                Sort by
+              </label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as "scoreDesc" | "scoreAsc" | "date")}
+                className="input-field"
+              >
+                <option value="scoreDesc">Score (High → Low)</option>
+                <option value="scoreAsc">Score (Low → High)</option>
+                <option value="date">Created (Newest First)</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                Filter by Quality
+              </label>
+              <select
+                value={filterBy}
+                onChange={(e) => setFilterBy(e.target.value as "all" | "hot" | "cold")}
+                className="input-field"
+              >
+                <option value="all">All Leads</option>
+                <option value="hot">🔥 Hot Leads (Score 70+)</option>
+                <option value="cold">❄️ Cold Leads (Score Under 70)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Premium Data Table */}
+        <div className="premium-card">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-8 rounded-full" style={{ background: 'var(--brand-gradient)' }}></div>
+              <div>
+                <h2 className="text-xl font-semibold text-gradient">Lead Pipeline</h2>
+                <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                  Complete lead management overview
+                </p>
+              </div>
+            </div>
+            
+            {loading && (
+              <div className="flex items-center gap-2">
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-t-transparent" style={{ borderColor: 'var(--brand-primary)', borderTopColor: 'transparent' }}></div>
+                <span className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Loading...</span>
+              </div>
+            )}
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="premium-table">
+              <thead>
                 <tr>
-                  <td className="px-3 py-6 text-center text-gray-500" colSpan={7}>
-                    No leads yet.
-                  </td>
+                  <th>Lead ID</th>
+                  <th>Company</th>
+                  <th>Service</th>
+                  <th>AI Score</th>
+                  <th>Status</th>
+                  <th>Billable</th>
+                  <th>Created</th>
                 </tr>
-              )}
-              {processed.map((l) => (
-                <tr key={l.id} className="border-t">
-                  <td className="px-3 py-2">{l.publicId || "—"}</td>
-                  <td className="px-3 py-2">
-                    <div className="font-medium">{l.company || "—"}</div>
-                    {l.sourceDetail && (
-                      <div className="text-xs text-gray-500">{l.sourceDetail}</div>
-                    )}
-                  </td>
-                  <td className="px-3 py-2">{l.serviceCode || "—"}</td>
-                  <td className="px-3 py-2">
-                    {typeof l.aiScore === "number" ? (
-                      <span className="inline-block rounded-md px-2 py-0.5 bg-gray-900 text-white">
-                        {l.aiScore}
-                      </span>
-                    ) : "—"}
-                  </td>
-                  <td className="px-3 py-2">
-                    {isBillable(l) ? (
-                      <span className="inline-block rounded-full px-2 py-0.5 bg-emerald-100 text-emerald-700">
-                        Yes
-                      </span>
-                    ) : (
-                      <span className="inline-block rounded-full px-2 py-0.5 bg-gray-100 text-gray-600">
-                        No
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-3 py-2">{l.status || "—"}</td>
-                  <td className="px-3 py-2">
-                    {l.createdAt ? new Date(l.createdAt).toLocaleString() : "—"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {!loading && processed.length === 0 && (
+                  <tr>
+                    <td colSpan={7} style={{ textAlign: 'center', padding: '3rem' }}>
+                      <div className="space-y-2">
+                        <div className="text-lg" style={{ color: 'var(--text-tertiary)' }}>
+                          No leads found
+                        </div>
+                        <div className="text-sm" style={{ color: 'var(--text-muted)' }}>
+                          Try adjusting your filters or add new leads
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+                {processed.map((l) => (
+                  <tr key={l.id}>
+                    <td>
+                      <div className="font-mono text-sm" style={{ color: 'var(--brand-primary)' }}>
+                        {l.publicId || "—"}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="space-y-1">
+                        <div className="font-medium">{l.company || "—"}</div>
+                        {l.sourceDetail && (
+                          <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                            {l.sourceDetail}
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td>{l.serviceCode || "—"}</td>
+                    <td>
+                      {typeof l.aiScore === "number" ? (
+                        <div className={`inline-flex px-2 py-1 rounded text-xs font-semibold ${
+                          l.aiScore >= 70 ? 'bg-green-500/20 text-green-400' :
+                          l.aiScore >= 40 ? 'bg-yellow-500/20 text-yellow-400' :
+                          'bg-red-500/20 text-red-400'
+                        }`}>
+                          {l.aiScore}%
+                        </div>
+                      ) : (
+                        <span style={{ color: 'var(--text-tertiary)' }}>—</span>
+                      )}
+                    </td>
+                    <td>{l.status || "—"}</td>
+                    <td>
+                      {isBillable(l) ? (
+                        <div className="inline-flex px-2 py-1 rounded text-xs font-semibold bg-emerald-500/20 text-emerald-400">
+                          ✓ Yes
+                        </div>
+                      ) : (
+                        <div className="inline-flex px-2 py-1 rounded text-xs" style={{ background: 'var(--surface-2)', color: 'var(--text-tertiary)' }}>
+                          No
+                        </div>
+                      )}
+                    </td>
+                    <td>
+                      <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                        {l.createdAt ? new Date(l.createdAt).toLocaleDateString() : "—"}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </>

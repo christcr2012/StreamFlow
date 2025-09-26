@@ -1,5 +1,6 @@
 // src/pages/profile.tsx
 import { useEffect, useState } from "react";
+import Head from "next/head";
 
 type Me =
   | { ok: true; user: { email: string; name: string | null } }
@@ -40,7 +41,7 @@ export default function ProfilePage() {
       });
       const j = (await r.json()) as { ok?: boolean; error?: string };
       if (!r.ok || !j?.ok) throw new Error(j?.error || "Failed to change password");
-      setMsg("Password updated.");
+      setMsg("Password updated successfully.");
       setCurrentPassword("");
       setNewPassword("");
     } catch (err: unknown) {
@@ -52,57 +53,207 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="mx-auto max-w-[800px] px-4 py-6">
-      <h1 className="mb-4 text-2xl font-semibold">Your Profile</h1>
-
-      <section className="rounded-2xl border bg-card p-5 shadow-sm">
-        <div className="grid gap-4 md:grid-cols-2">
+    <>
+      <Head><title>User Profile</title></Head>
+      <div className="max-w-4xl mx-auto space-y-8">
+        <div className="flex items-center justify-between">
           <div>
-            <label className="mb-1 block text-sm">Email</label>
-            <input className="w-full rounded-md border px-3 py-2" value={email} readOnly />
+            <h1 className="text-3xl font-bold text-gradient">User Profile</h1>
+            <p className="text-sm mt-2" style={{ color: 'var(--text-tertiary)' }}>
+              Manage your account information and security settings
+            </p>
           </div>
-          <div>
-            <label className="mb-1 block text-sm">Name</label>
-            <input className="w-full rounded-md border px-3 py-2" value={name} readOnly />
+          <div className="flex gap-4">
+            <button className="btn-secondary">
+              <span>📱 Two-Factor</span>
+            </button>
+            <button className="btn-primary">
+              <span>⚙️ Preferences</span>
+            </button>
           </div>
         </div>
-      </section>
 
-      <section className="mt-6 rounded-2xl border bg-card p-5 shadow-sm">
-        <h2 className="text-lg font-medium">Change Password</h2>
-        <form onSubmit={changePassword} className="mt-3 grid gap-3 md:grid-cols-2">
-          <div>
-            <label className="mb-1 block text-sm">Current Password</label>
-            <input
-              type="password"
-              className="w-full rounded-md border px-3 py-2"
-              value={currentPassword}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCurrentPassword(e.target.value)}
-              required
-            />
+        {/* Profile Information */}
+        <div className="premium-card">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-2 h-8 bg-gradient-to-b from-blue-400 to-blue-600 rounded-full"></div>
+            <div>
+              <h2 className="text-xl font-semibold text-gradient">Account Information</h2>
+              <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                Your basic profile details and contact information
+              </p>
+            </div>
           </div>
-          <div>
-            <label className="mb-1 block text-sm">New Password</label>
-            <input
-              type="password"
-              className="w-full rounded-md border px-3 py-2"
-              value={newPassword}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewPassword(e.target.value)}
-              required
-            />
+
+          <div className="flex items-start gap-6">
+            <div className="w-20 h-20 rounded-xl flex items-center justify-center" 
+                 style={{ background: 'var(--surface-2)', border: '1px solid var(--border-primary)' }}>
+              <span className="text-3xl">👤</span>
+            </div>
+            
+            <div className="flex-1 grid gap-6 md:grid-cols-2">
+              <div>
+                <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                  Email Address
+                </label>
+                <input 
+                  className="input-field" 
+                  value={email} 
+                  readOnly 
+                  placeholder="your@email.com"
+                />
+                <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
+                  Primary email for login and notifications
+                </p>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                  Display Name
+                </label>
+                <input 
+                  className="input-field" 
+                  value={name} 
+                  readOnly 
+                  placeholder="Your Name"
+                />
+                <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
+                  How your name appears to other users
+                </p>
+              </div>
+            </div>
           </div>
-          <div className="md:col-span-2">
-            <button
-              className="rounded-md bg-black px-4 py-2 text-white disabled:opacity-60"
-              disabled={busy}
-              type="submit"
-            >
-              {busy ? "Saving..." : "Save Password"}
+
+          <div className="mt-6">
+            <button className="btn-outline">
+              <span>✏️ Edit Profile</span>
             </button>
-            {msg && <p className="mt-2 text-sm text-muted-foreground">{msg}</p>}
           </div>
-        </form>
-      </section>
-    </div>
+        </div>
+
+        {/* Security Settings */}
+        <div className="premium-card">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-2 h-8 bg-gradient-to-b from-red-400 to-red-600 rounded-full"></div>
+            <div>
+              <h2 className="text-xl font-semibold text-gradient">Security Settings</h2>
+              <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                Update your password and manage account security
+              </p>
+            </div>
+          </div>
+
+          <form onSubmit={changePassword} className="space-y-6">
+            <div className="grid gap-6 md:grid-cols-2">
+              <div>
+                <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                  Current Password
+                </label>
+                <input
+                  type="password"
+                  className="input-field"
+                  value={currentPassword}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCurrentPassword(e.target.value)}
+                  required
+                  placeholder="Enter current password"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                  New Password
+                </label>
+                <input
+                  type="password"
+                  className="input-field"
+                  value={newPassword}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewPassword(e.target.value)}
+                  required
+                  placeholder="Enter new password"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="flex gap-4">
+                <button
+                  className={`btn-primary ${busy ? 'opacity-60 cursor-not-allowed' : ''}`}
+                  disabled={busy}
+                  type="submit"
+                >
+                  <span>{busy ? "🔄 Updating..." : "🔒 Update Password"}</span>
+                </button>
+                <button type="button" className="btn-outline">
+                  <span>🔧 Advanced Security</span>
+                </button>
+              </div>
+
+              {msg && (
+                <div className={`px-3 py-2 rounded-lg text-sm ${
+                  msg.includes('successfully') || msg.includes('updated') 
+                    ? 'bg-emerald-500/20 text-emerald-400' 
+                    : 'bg-red-500/20 text-red-400'
+                }`}>
+                  {msg}
+                </div>
+              )}
+            </div>
+          </form>
+        </div>
+
+        {/* Activity & Sessions */}
+        <div className="premium-card">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-2 h-8 bg-gradient-to-b from-green-400 to-green-600 rounded-full"></div>
+            <div>
+              <h2 className="text-xl font-semibold text-gradient">Activity & Sessions</h2>
+              <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                Monitor your account activity and active sessions
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-4 rounded-xl" 
+                 style={{ background: 'var(--surface-2)', border: '1px solid var(--border-primary)' }}>
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
+                <div>
+                  <div className="font-medium">Current Session</div>
+                  <div className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                    Chrome on Windows • Active now
+                  </div>
+                </div>
+              </div>
+              <div className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                Current
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between p-4 rounded-xl" 
+                 style={{ background: 'var(--surface-2)', border: '1px solid var(--border-primary)' }}>
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-gray-400"></div>
+                <div>
+                  <div className="font-medium">Previous Session</div>
+                  <div className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                    Safari on macOS • 2 hours ago
+                  </div>
+                </div>
+              </div>
+              <button className="text-sm" style={{ color: 'var(--brand-primary)' }}>
+                Revoke
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <button className="btn-outline">
+              <span>🔍 View All Activity</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
