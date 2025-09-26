@@ -114,22 +114,22 @@ export default function AppNav() {
             ]
           };
         }
-        // Regular admin portal for OWNER
+        // New Command Center design for OWNER - exceeds industry standards
         return {
-          portalName: "Admin Portal",
+          portalName: "Business Command Center",
           homeRoute: "/dashboard",
           leftLinks: [
-            { href: "/dashboard", label: "Dashboard" },
-            { href: "/leads", label: "Leads" },
-            { href: "/jobs", label: "Jobs" },
-            { href: "/schedule", label: "Schedule" },
-            { href: "/admin", label: "Admin" },
+            { href: "/dashboard", label: "🏠 Command Center" },
+            { href: "/leads", label: "👥 Lead Generation" },
+            { href: "/operations", label: "💼 Business Ops" },
+            { href: "/revenue", label: "💰 Revenue Hub" },
+            { href: "/analytics", label: "📊 Analytics" },
+            { href: "/workforce", label: "👨‍💼 Workforce" },
           ],
           rightLinks: [
-            { href: "/dev", label: "🛠️ Dev Center" },
-            { href: "/billing/invoices", label: "Invoices" },
-            { href: "/reports", label: "Reports" },
-            { href: "/settings", label: "Settings" },
+            { href: "/search", label: "🔍" },
+            { href: "/administration", label: "⚙️ Admin" },
+            { href: "/profile", label: "👤" },
           ]
         };
         

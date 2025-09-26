@@ -285,12 +285,25 @@ export default function SettingsPage() {
                       <option>Development</option>
                     </select>
                     <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                      <span className="text-xs px-2 py-1 rounded" style={{ 
-                        background: 'var(--accent-warning)', 
-                        color: 'var(--surface-primary)' 
-                      }}>
-                        DEV
-                      </span>
+                      <div className="flex gap-2">
+                        <span className="text-xs px-2 py-1 rounded" style={{ 
+                          background: 'var(--accent-warning)', 
+                          color: 'var(--surface-primary)' 
+                        }}>
+                          DEV
+                        </span>
+                        <a 
+                          href="/dev"
+                          className="text-xs px-2 py-1 rounded hover:opacity-80 transition-opacity" 
+                          style={{ 
+                            background: 'var(--accent-info)', 
+                            color: 'var(--surface-primary)' 
+                          }}
+                          title="Developer Center"
+                        >
+                          🛠️ Dev Center
+                        </a>
+                      </div>
                     </div>
                   </div>
                   <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
