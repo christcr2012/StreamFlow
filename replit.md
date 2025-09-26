@@ -6,18 +6,19 @@ Mountain Vista is a comprehensive lead management and billing platform built for
 
 ## Recent Changes
 
-**January 25, 2025 - FREE Lead Generation System:**
-- Redesigned system to focus exclusively on FREE lead sources
-- Maintained SAM.gov federal contracts integration (100% free)
-- Removed all paid integrations and per-lead billing
-- Updated admin interface to emphasize free sources only
-- Simplified lead scoring system to focus on core source types
+**September 26, 2025 - PROVIDER BUSINESS MODEL:**
+- Updated to Provider-Client business model: Provider charges $100 per converted lead
+- Provider AI costs hard-limited to $50/month with atomic transaction enforcement  
+- Client-facing credit system: 1 credit = $0.05 (50x markup from provider cost)
+- Two lead types: Relationship-valued ($100/customer, hide future leads) vs Job-valued ($100/contract, show future leads)
+- Premium dashboard experience with "million dollar software" feel at startup costs
 
-**Lead Source Strategy:**
-- 100% FREE lead generation - no per-lead costs or subscriptions
-- SAM.gov for federal contracts (completely free)
-- Future: RSS/Atom feeds from government agencies (free)
-- Future: Socrata open data APIs for municipal data (free)
+**Business Model:**
+- Provider charges clients $100 per converted lead
+- Provider costs stay under $50/month (guaranteed by atomic transactions)
+- Client sees value-based credit pricing reflecting lead generation ROI
+- SAM.gov integration provides high-value federal contract leads
+- 20-35x ROI for Provider: $100 revenue per $3-5 AI cost
 
 ## User Preferences
 

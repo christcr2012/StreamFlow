@@ -14,10 +14,10 @@ model Org {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  // AI Cost Control & Monetization
-  aiMonthlyBudgetCents Int      @default(5000)  // $50 default budget
-  aiCreditBalance     Int      @default(50000)  // 50k credits = $50 worth (1 credit = $0.001)
-  aiPlan              AiPlan   @default(BASE)   // Subscription tier
+  // AI Cost Control & Monetization - PROVIDER MODEL
+  aiMonthlyBudgetCents Int      @default(5000)  // $50 provider cost limit  
+  aiCreditBalance     Int      @default(1000)   // 1k credits = $50 worth (1 credit = $0.05 client-facing)
+  aiPlan              AiPlan   @default(BASE)   // Client subscription tier
   aiAlerts            Json     @default("{}")   // Usage alert thresholds
 
   // Back-relations

@@ -128,7 +128,7 @@ export default function AiControlCenter() {
       {/* Usage Progress Bar */}
       <div className="mb-4">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-medium text-gray-700">Monthly Usage</span>
+          <span className="text-sm font-medium text-gray-700">Provider Cost Usage</span>
           <span className="text-sm text-gray-500">
             {usage.creditsUsedThisMonth.toLocaleString()} / {usage.monthlyBudgetCredits.toLocaleString()} credits
           </span>
@@ -157,13 +157,13 @@ export default function AiControlCenter() {
           <div className="text-2xl font-bold text-gray-900">
             {usage.creditsRemaining.toLocaleString()}
           </div>
-          <div className="text-sm text-gray-600">Credits Remaining</div>
+          <div className="text-sm text-gray-600">Client Credits Available</div>
         </div>
         <div className="bg-white/60 rounded-lg p-3 border border-white/80">
           <div className="text-2xl font-bold text-gray-900">
             {Math.max(0, usage.monthlyBudgetCredits - usage.creditsUsedThisMonth).toLocaleString()}
           </div>
-          <div className="text-sm text-gray-600">Monthly Remaining</div>
+          <div className="text-sm text-gray-600">Provider Budget Left</div>
         </div>
       </div>
 
