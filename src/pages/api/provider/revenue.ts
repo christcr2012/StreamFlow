@@ -72,6 +72,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         enrichmentJson: {
           path: ['billing', 'billableEligible'],
           equals: true
+        },
+        // CRITICAL: Exclude employee referrals from Provider revenue
+        NOT: {
+          OR: [
+            { sourceType: 'MANUAL_EMPLOYEE_REFERRAL' },
+            { sourceType: 'EMPLOYEE_REFERRAL' },
+            {
+              enrichmentJson: {
+                path: ['billing', 'employeeRewardEligible'],
+                equals: true
+              }
+            }
+          ]
         }
       }
     });
@@ -85,6 +98,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         enrichmentJson: {
           path: ['billing', 'billableEligible'],
           equals: true
+        },
+        // CRITICAL: Exclude employee referrals from Provider revenue
+        NOT: {
+          OR: [
+            { sourceType: 'MANUAL_EMPLOYEE_REFERRAL' },
+            { sourceType: 'EMPLOYEE_REFERRAL' },
+            {
+              enrichmentJson: {
+                path: ['billing', 'employeeRewardEligible'],
+                equals: true
+              }
+            }
+          ]
         }
       }
     });
@@ -98,6 +124,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         enrichmentJson: {
           path: ['billing', 'billableEligible'],
           equals: true
+        },
+        // CRITICAL: Exclude employee referrals from Provider revenue
+        NOT: {
+          OR: [
+            { sourceType: 'MANUAL_EMPLOYEE_REFERRAL' },
+            { sourceType: 'EMPLOYEE_REFERRAL' },
+            {
+              enrichmentJson: {
+                path: ['billing', 'employeeRewardEligible'],
+                equals: true
+              }
+            }
+          ]
         }
       }
     });
@@ -113,6 +152,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         createdAt: {
           gte: monthStart,
           lte: endDate
+        },
+        // CRITICAL: Exclude employee referrals from Provider AI cost calculations
+        NOT: {
+          OR: [
+            { sourceType: 'MANUAL_EMPLOYEE_REFERRAL' },
+            { sourceType: 'EMPLOYEE_REFERRAL' },
+            {
+              enrichmentJson: {
+                path: ['billing', 'employeeRewardEligible'],
+                equals: true
+              }
+            }
+          ]
         }
       }
     });
@@ -140,6 +192,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           createdAt: {
             gte: monthStart,
             lte: monthEnd
+          },
+          // CRITICAL: Exclude employee referrals from Provider revenue calculations
+          NOT: {
+            OR: [
+              { sourceType: 'MANUAL_EMPLOYEE_REFERRAL' },
+              { sourceType: 'EMPLOYEE_REFERRAL' },
+              {
+                enrichmentJson: {
+                  path: ['billing', 'employeeRewardEligible'],
+                  equals: true
+                }
+              }
+            ]
           }
         }
       });
@@ -153,6 +218,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           enrichmentJson: {
             path: ['billing', 'billableEligible'],
             equals: true
+          },
+          // CRITICAL: Exclude employee referrals from Provider revenue
+          NOT: {
+            OR: [
+              { sourceType: 'MANUAL_EMPLOYEE_REFERRAL' },
+              { sourceType: 'EMPLOYEE_REFERRAL' },
+              {
+                enrichmentJson: {
+                  path: ['billing', 'employeeRewardEligible'],
+                  equals: true
+                }
+              }
+            ]
           }
         }
       });
@@ -197,6 +275,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             enrichmentJson: {
               path: ['billing', 'billableEligible'],
               equals: true
+            },
+            // CRITICAL: Exclude employee referrals from Provider revenue
+            NOT: {
+              OR: [
+                { sourceType: 'MANUAL_EMPLOYEE_REFERRAL' },
+                { sourceType: 'EMPLOYEE_REFERRAL' },
+                {
+                  enrichmentJson: {
+                    path: ['billing', 'employeeRewardEligible'],
+                    equals: true
+                  }
+                }
+              ]
             }
           }
         });
@@ -208,6 +299,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             enrichmentJson: {
               path: ['billing', 'billableEligible'],
               equals: true
+            },
+            // CRITICAL: Exclude employee referrals from Provider revenue
+            NOT: {
+              OR: [
+                { sourceType: 'MANUAL_EMPLOYEE_REFERRAL' },
+                { sourceType: 'EMPLOYEE_REFERRAL' },
+                {
+                  enrichmentJson: {
+                    path: ['billing', 'employeeRewardEligible'],
+                    equals: true
+                  }
+                }
+              ]
             }
           }
         });
