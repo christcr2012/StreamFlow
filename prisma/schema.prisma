@@ -45,6 +45,8 @@ model Org {
   pricingPlan   PricingPlan?    @relation("OrgPricingPlan")
   aiUsageEvents AiUsageEvent[]  @relation("OrgAiUsageEvents")
   aiMonthlySummaries AiMonthlySummary[] @relation("OrgAiMonthlySummaries")
+  leadActivities LeadActivity[]  @relation("OrgLeadActivities")
+  leadTasks     LeadTask[]      @relation("OrgLeadTasks")
 
   /// brandConfig stores white-label brand settings such as name, colors, and logo URL.
   /// It is JSON to allow arbitrary keys like { name: "Mountain Vista", color: "#123456", logoUrl: "https://..." }
@@ -67,8 +69,11 @@ model User {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
-  org           Org            @relation(fields: [orgId], references: [id])
-  rbacUserRoles RbacUserRole[] @relation("UserRbacUserRoles")
+  org             Org            @relation(fields: [orgId], references: [id])
+  rbacUserRoles   RbacUserRole[] @relation("UserRbacUserRoles")
+  leadActivities  LeadActivity[] @relation("UserLeadActivities")
+  assignedTasks   LeadTask[]     @relation("AssignedLeadTasks")
+  createdTasks    LeadTask[]     @relation("CreatedLeadTasks")
 }
 
 model Lead {
@@ -109,6 +114,9 @@ model Lead {
 
   org             Org               @relation(fields: [orgId], references: [id])
   LeadInvoiceLine LeadInvoiceLine[]
+  activities      LeadActivity[]    @relation("LeadActivities")
+  tasks           LeadTask[]        @relation("LeadTasks")
+  
   @@index([orgId, createdAt])
   @@index([orgId, convertedAt])
   @@index([orgId, status])
@@ -438,11 +446,130 @@ enum PricingModel {
   HYBRID
 }
 
-/// LeadStatus defines the possible states of a lead in the pipeline.  The default is
-/// NEW and transitions to CONVERTED when the lead is converted into a paying job.
+/// LeadStatus defines the possible states of a lead in the CRM pipeline.
+/// Tracks the complete journey from initial contact to final outcome.
 enum LeadStatus {
-  NEW
-  CONVERTED
+  NEW                 // Initial lead, no contact made
+  CONTACTED          // Initial contact made (call, email, etc.)
+  QUALIFIED          // Lead shows interest and has budget/authority/need/timeline
+  MEETING_SCHEDULED  // Meeting or call scheduled
+  PROPOSAL_SENT      // Proposal or quote sent to prospect
+  NEGOTIATION        // In negotiations, discussing terms
+  WON                // Lead converted to customer (billable)
+  CONVERTED          // Legacy status - equivalent to WON (backward compatibility)
+  LOST               // Lead didn't convert, deal closed unsuccessfully
+  NURTURING          // Lead not ready now but staying in touch for future
+  FOLLOW_UP          // Requires follow-up action
+  ON_HOLD            // Lead temporarily paused
+  UNRESPONSIVE       // Lead not responding to communications
+}
+
+/// ActivityType defines the different types of interactions and communications
+/// that can be logged for lead management and CRM tracking.
+enum ActivityType {
+  CALL_OUTBOUND      // Outbound phone call
+  CALL_INBOUND       // Inbound phone call received  
+  EMAIL_SENT         // Email sent to lead
+  EMAIL_RECEIVED     // Email received from lead
+  MEETING_SCHEDULED  // Meeting or appointment scheduled
+  MEETING_COMPLETED  // Meeting or appointment completed
+  PROPOSAL_SENT      // Proposal or quote sent
+  CONTRACT_SENT      // Contract sent for signature
+  FOLLOW_UP          // General follow-up activity
+  NOTE               // Internal note or comment
+  TASK_CREATED       // Task created for lead
+  TASK_COMPLETED     // Task completed for lead
+  STATUS_CHANGED     // Lead status changed
+  DOCUMENT_SHARED    // Document or file shared
+  PAYMENT_RECEIVED   // Payment received from customer
+}
+
+/// LeadActivity tracks all interactions, communications, and events
+/// related to a specific lead for complete CRM functionality.
+model LeadActivity {
+  id          String       @id @default(cuid())
+  leadId      String
+  orgId       String
+  userId      String       // User who performed the activity
+  
+  type        ActivityType
+  title       String       // Brief title/summary of activity
+  description String?      // Detailed description or notes
+  
+  // Scheduling fields for meetings and calls
+  scheduledAt DateTime?    // When the activity is scheduled
+  completedAt DateTime?    // When the activity was completed
+  
+  // Contact information for calls/emails
+  contactMethod String?    // Phone, email, in-person, etc.
+  duration      Int?       // Duration in minutes for calls/meetings
+  
+  // File attachments and links
+  attachments   Json?      // Array of file references or URLs
+  
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  
+  // Relations
+  lead        Lead         @relation("LeadActivities", fields: [leadId], references: [id], onDelete: Cascade)
+  org         Org          @relation("OrgLeadActivities", fields: [orgId], references: [id])
+  user        User         @relation("UserLeadActivities", fields: [userId], references: [id])
+  
+  @@index([leadId, createdAt])
+  @@index([orgId, type])
+  @@index([userId, createdAt])
+}
+
+/// LeadTask manages scheduled tasks, reminders, and follow-ups
+/// for lead management and CRM workflow automation.
+model LeadTask {
+  id          String       @id @default(cuid())
+  leadId      String
+  orgId       String
+  assignedTo  String       // User assigned to complete the task
+  createdBy   String       // User who created the task
+  
+  title       String       // Task title
+  description String?      // Task description or notes
+  priority    TaskPriority @default(MEDIUM)
+  status      TaskStatus   @default(PENDING)
+  
+  // Scheduling
+  dueDate     DateTime?    // When task is due
+  completedAt DateTime?    // When task was completed
+  
+  // Reminders
+  reminderAt  DateTime?    // When to send reminder
+  
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  
+  // Relations
+  lead        Lead         @relation("LeadTasks", fields: [leadId], references: [id], onDelete: Cascade)
+  org         Org          @relation("OrgLeadTasks", fields: [orgId], references: [id])
+  assignee    User         @relation("AssignedLeadTasks", fields: [assignedTo], references: [id])
+  creator     User         @relation("CreatedLeadTasks", fields: [createdBy], references: [id])
+  
+  @@index([leadId, status])
+  @@index([assignedTo, dueDate])
+  @@index([orgId, status])
+}
+
+/// TaskPriority defines urgency levels for lead tasks and follow-ups
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+/// TaskStatus tracks the completion state of lead tasks
+enum TaskStatus {
+  PENDING     // Task not yet started
+  IN_PROGRESS // Task currently being worked on
+  COMPLETED   // Task finished successfully
+  CANCELLED   // Task cancelled or no longer needed
+  OVERDUE     // Task past due date
 }
 
 // AI Plan Tiers for Monetization - CLIENT SUBSCRIPTION TIERS

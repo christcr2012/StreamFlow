@@ -174,7 +174,7 @@ export default function LeadsPage() {
             <table className="premium-table">
               <thead>
                 <tr>
-                  <th>Lead ID</th>
+                  <th>Contact</th>
                   <th>Company</th>
                   <th>Service</th>
                   <th>AI Score</th>
@@ -203,10 +203,17 @@ export default function LeadsPage() {
                     <td>
                       <Link 
                         href={`/leads/${l.publicId || l.id}`}
-                        className="font-mono text-sm hover:underline"
+                        className="font-medium hover:underline"
                         style={{ color: 'var(--brand-primary)' }}
                       >
-                        {l.publicId || "—"}
+                        <div className="space-y-1">
+                          <div>{l.contactName || "Unknown Contact"}</div>
+                          {l.email && (
+                            <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                              {l.email}
+                            </div>
+                          )}
+                        </div>
                       </Link>
                     </td>
                     <td>
