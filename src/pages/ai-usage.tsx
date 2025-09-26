@@ -88,58 +88,57 @@ export default function AiUsageDashboard() {
   };
 
   return (
-    <div className="min-h-screen p-6">
-      <div className="mx-auto max-w-6xl">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gradient">AI Usage Analytics</h1>
-              <p style={{ color: 'var(--text-secondary)' }}>
-                Monitor your AI consumption, costs, and budget usage
-              </p>
+    <div className="responsive-container responsive-padding">
+      {/* Header */}
+      <div className="mb-6 sm:mb-8 lg:mb-12">
+        <div className="responsive-flex-col-row-lg items-start lg:items-center justify-between responsive-gap">
+          <div className="responsive-text-center-left-lg">
+            <h1 className="responsive-heading-1 text-gradient">AI Usage Analytics</h1>
+            <p className="responsive-body mt-2" style={{ color: 'var(--text-secondary)' }}>
+              Monitor your AI consumption, costs, and budget usage
+            </p>
+          </div>
+          <div className="responsive-flex-col-row responsive-gap-sm w-full lg:w-auto">
+            <div className="touch-button text-center" style={{ 
+              background: 'var(--surface-1)', 
+              borderColor: 'var(--border-primary)',
+              color: 'var(--text-secondary)'
+            }}>
+              Current Month ({usageData?.monthKey || new Date().toISOString().slice(0, 7)})
             </div>
-            <div className="flex gap-3">
-              <div className="px-4 py-2 rounded-lg border text-sm" style={{ 
-                background: 'var(--surface-1)', 
-                borderColor: 'var(--border-primary)',
-                color: 'var(--text-secondary)'
-              }}>
-                Current Month ({usageData?.monthKey || new Date().toISOString().slice(0, 7)})
-              </div>
-              <Link
-                href="/settings"
-                className="px-4 py-2 rounded-lg border border-accent text-accent hover:bg-accent hover:text-white transition-all"
-              >
-                ⚙️ Budget Settings
-              </Link>
-            </div>
+            <Link
+              href="/settings"
+              className="touch-button border border-accent text-accent hover:bg-accent hover:text-white transition-all text-center"
+            >
+              ⚙️ Budget Settings
+            </Link>
           </div>
         </div>
+      </div>
 
         {/* Budget Alert Banner */}
         {getBudgetAlert() && (
-          <div className={`mb-6 p-4 rounded-lg border-l-4 ${
+          <div className={`mb-6 responsive-padding-sm rounded-lg border-l-4 ${
             getBudgetAlert()?.level === 'error' ? 'bg-red-50 border-red-500 text-red-800' :
             getBudgetAlert()?.level === 'warning' ? 'bg-yellow-50 border-yellow-500 text-yellow-800' :
             'bg-blue-50 border-blue-500 text-blue-800'
           }`}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="text-xl">
+            <div className="responsive-flex-col-row items-start sm:items-center justify-between responsive-gap">
+              <div className="flex items-start sm:items-center responsive-gap-sm">
+                <span className="text-xl mt-1 sm:mt-0 touch-target">
                   {getBudgetAlert()?.level === 'error' ? '🚨' : 
                    getBudgetAlert()?.level === 'warning' ? '⚠️' : 'ℹ️'}
                 </span>
                 <div>
-                  <p className="font-medium">{getBudgetAlert()?.message}</p>
-                  <p className="text-sm opacity-75">
+                  <p className="font-medium responsive-body">{getBudgetAlert()?.message}</p>
+                  <p className="responsive-body-small opacity-75 mt-1">
                     Real-time budget monitoring - updates every 30 seconds
                   </p>
                 </div>
               </div>
               <Link
                 href="/settings"
-                className="px-3 py-1 rounded bg-white border border-current hover:bg-gray-50 transition-all text-sm"
+                className="touch-button bg-white border border-current hover:bg-gray-50 transition-all text-center whitespace-nowrap"
               >
                 {getBudgetAlert()?.action}
               </Link>
@@ -148,16 +147,16 @@ export default function AiUsageDashboard() {
         )}
 
         {/* Usage Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="responsive-grid-1-2-4 mb-6 sm:mb-8 lg:mb-12">
           {/* Credits Remaining */}
-          <div className="premium-card">
+          <div className="responsive-card">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center">
-                <span className="text-white text-xl">🪙</span>
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center touch-target">
+                <span className="text-white text-lg sm:text-xl">🪙</span>
               </div>
               <div className="text-right">
-                <div className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Credits Remaining</div>
-                <div className="text-2xl font-bold" style={{ color: getUsageColor() }}>
+                <div className="responsive-body-small" style={{ color: 'var(--text-tertiary)' }}>Credits Remaining</div>
+                <div className="responsive-heading-3" style={{ color: getUsageColor() }}>
                   {currentCredits.toLocaleString()}
                 </div>
               </div>
@@ -172,72 +171,72 @@ export default function AiUsageDashboard() {
                   }}
                 />
               </div>
-              <span className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+              <span className="responsive-body-small" style={{ color: 'var(--text-tertiary)' }}>
                 {budgetCredits.toLocaleString()} total
               </span>
             </div>
           </div>
 
           {/* Monthly Spend */}
-          <div className="premium-card">
+          <div className="responsive-card">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
-                <span className="text-white text-xl">💰</span>
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center touch-target">
+                <span className="text-white text-lg sm:text-xl">💰</span>
               </div>
               <div className="text-right">
-                <div className="text-sm" style={{ color: 'var(--text-tertiary)' }}>This Month</div>
-                <div className="text-2xl font-bold text-gradient">
+                <div className="responsive-body-small" style={{ color: 'var(--text-tertiary)' }}>This Month</div>
+                <div className="responsive-heading-3 text-gradient">
                   {creditsUsed.toLocaleString()} credits
                 </div>
               </div>
             </div>
-            <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+            <div className="responsive-body-small" style={{ color: 'var(--text-secondary)' }}>
               Plan: {usageData?.plan || 'BASE'} ({usagePercentage.toFixed(1)}% used)
             </div>
           </div>
 
           {/* AI Requests */}
-          <div className="premium-card">
+          <div className="responsive-card">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
-                <span className="text-white text-xl">🤖</span>
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center touch-target">
+                <span className="text-white text-lg sm:text-xl">🤖</span>
               </div>
               <div className="text-right">
-                <div className="text-sm" style={{ color: 'var(--text-tertiary)' }}>AI Requests</div>
-                <div className="text-2xl font-bold text-gradient">
+                <div className="responsive-body-small" style={{ color: 'var(--text-tertiary)' }}>AI Requests</div>
+                <div className="responsive-heading-3 text-gradient">
                   {usageData?.monthlyRequestCount || 0}
                 </div>
               </div>
             </div>
-            <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+            <div className="responsive-body-small" style={{ color: 'var(--text-secondary)' }}>
               Avg. {Math.ceil((usageData?.monthlyRequestCount || 0) / Math.max(1, new Date().getDate()))} per day
             </div>
           </div>
 
           {/* Efficiency Score */}
-          <div className="premium-card">
+          <div className="responsive-card">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center">
-                <span className="text-white text-xl">⚡</span>
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center touch-target">
+                <span className="text-white text-lg sm:text-xl">⚡</span>
               </div>
               <div className="text-right">
-                <div className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Efficiency</div>
-                <div className="text-2xl font-bold text-gradient">
+                <div className="responsive-body-small" style={{ color: 'var(--text-tertiary)' }}>Efficiency</div>
+                <div className="responsive-heading-3 text-gradient">
                   {100 - usagePercentage > 80 ? 'Excellent' : 100 - usagePercentage > 60 ? 'Good' : 'Monitor'}
                 </div>
               </div>
             </div>
-            <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+            <div className="responsive-body-small" style={{ color: 'var(--text-secondary)' }}>
               {usageData?.upgradeRecommendation ? usageData.upgradeRecommendation.urgency : 'Optimal usage'}
             </div>
           </div>
         </div>
 
         {/* Usage by Feature */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div className="responsive-grid-1-3 mb-6 sm:mb-8 lg:mb-12">
           {/* Feature Breakdown */}
-          <div className="premium-card">
-            <h2 className="text-xl font-semibold text-gradient mb-6">Usage by Feature</h2>
+          <div className="responsive-card">
+            <h2 className="responsive-heading-3 text-gradient mb-4 sm:mb-6">Usage by Feature</h2>
             <div className="space-y-4">
               {(usageData?.featureBreakdown || []).map((item, index) => (
                 <div key={index} className="flex items-center justify-between">
@@ -266,8 +265,8 @@ export default function AiUsageDashboard() {
           </div>
 
           {/* Usage Timeline */}
-          <div className="premium-card">
-            <h2 className="text-xl font-semibold text-gradient mb-6">Daily Usage Trend</h2>
+          <div className="responsive-card">
+            <h2 className="responsive-heading-3 text-gradient mb-4 sm:mb-6">Daily Usage Trend</h2>
             <div className="h-64 flex items-end justify-between space-x-1">
               {(usageData?.dailyUsage || []).map((day, i) => {
                 const maxCredits = Math.max(...(usageData?.dailyUsage || []).map(d => d.credits || 0), 1);

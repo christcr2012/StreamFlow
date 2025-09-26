@@ -128,55 +128,55 @@ export default function Dashboard() {
   return (
     <>
       <Head><title>Dashboard</title></Head>
-      <div className="max-w-7xl mx-auto space-y-8">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-gradient">Dashboard</h1>
-          <div className="flex gap-4">
-            <button className="btn-secondary">
+      <div className="responsive-container space-y-6 sm:space-y-8 lg:space-y-12">
+        <div className="responsive-flex-col-row-lg items-start lg:items-center justify-between responsive-gap">
+          <h1 className="responsive-heading-1 text-gradient responsive-text-center-left-lg">Dashboard</h1>
+          <div className="responsive-flex-col-row responsive-gap-sm w-full lg:w-auto">
+            <button className="touch-button border border-current text-center">
               <span>Export Data</span>
             </button>
-            <button className="btn-primary">
+            <button className="touch-button bg-gradient-to-r from-blue-500 to-purple-600 text-white border-transparent text-center">
               <span>New Lead</span>
             </button>
           </div>
         </div>
 
         {/* Premium Billing Summary */}
-        <div className="premium-card">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-2 h-8 bg-gradient-to-b from-blue-400 to-blue-600 rounded-full"></div>
+        <div className="responsive-card">
+          <div className="flex items-center responsive-gap-sm mb-4 sm:mb-6">
+            <div className="w-2 h-6 sm:h-8 bg-gradient-to-b from-blue-400 to-blue-600 rounded-full"></div>
             <div>
-              <h2 className="text-xl font-semibold text-gradient">Conversion-Based Billing</h2>
-              <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Real-time revenue tracking</p>
+              <h2 className="responsive-heading-3 text-gradient">Conversion-Based Billing</h2>
+              <p className="responsive-body-small" style={{ color: 'var(--text-tertiary)' }}>Real-time revenue tracking</p>
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="space-y-2">
-              <div className="text-2xl font-bold" style={{ color: 'var(--accent-success)' }}>
+          <div className="responsive-grid-1-3 responsive-gap">
+            <div className="space-y-2 responsive-text-center-left-lg">
+              <div className="responsive-heading-3" style={{ color: 'var(--accent-success)' }}>
                 {billableCount}
               </div>
-              <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+              <div className="responsive-body-small" style={{ color: 'var(--text-secondary)' }}>
                 Converted (Billable) This Month
               </div>
             </div>
             
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-gradient">
+            <div className="space-y-2 responsive-text-center-left-lg">
+              <div className="responsive-heading-3 text-gradient">
                 ${projectedAmount.toFixed(2)}
               </div>
-              <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+              <div className="responsive-body-small" style={{ color: 'var(--text-secondary)' }}>
                 Invoice Preview ({billableCount} × $100)
               </div>
             </div>
             
-            <div className="space-y-2">
+            <div className="space-y-2 responsive-text-center-left-lg">
               {periodStartLabel && periodEndLabel && (
                 <>
-                  <div className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+                  <div className="responsive-body font-semibold" style={{ color: 'var(--text-primary)' }}>
                     {periodStartLabel} → {periodEndLabel}
                   </div>
-                  <div className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                  <div className="responsive-body-small" style={{ color: 'var(--text-tertiary)' }}>
                     Billing Period
                   </div>
                 </>
@@ -185,11 +185,11 @@ export default function Dashboard() {
           </div>
           
           {!canManageBilling && (
-            <div className="mt-4 p-4 rounded-lg" style={{ 
+            <div className="mt-4 responsive-padding-sm rounded-lg" style={{ 
               background: 'rgba(245, 158, 11, 0.1)', 
               border: '1px solid rgba(245, 158, 11, 0.3)' 
             }}>
-              <div className="text-sm" style={{ color: 'var(--accent-warning)' }}>
+              <div className="responsive-body-small" style={{ color: 'var(--accent-warning)' }}>
                 ⚠️ Limited Access: You don't have billing permissions. Some actions may be hidden.
               </div>
             </div>
@@ -198,18 +198,18 @@ export default function Dashboard() {
 
         {/* Ultra Premium KPI Cards */}
         {summaryError && (
-          <div className="premium-card" style={{ 
+          <div className="responsive-card" style={{ 
             background: 'rgba(239, 68, 68, 0.1)', 
             borderColor: 'rgba(239, 68, 68, 0.3)' 
           }}>
-            <div className="text-sm" style={{ color: 'var(--accent-error)' }}>
+            <div className="responsive-body-small" style={{ color: 'var(--accent-error)' }}>
               ❌ Error loading summary: {summaryError}
             </div>
           </div>
         )}
         
         {kpis && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+          <div className="responsive-grid-1-2-4 responsive-gap sm:grid-cols-2 xl:grid-cols-6 2xl:grid-cols-6 3xl:grid-cols-6">
             <div className="kpi-card">
               <div className="kpi-value">{kpis.totalLeads90d.toLocaleString()}</div>
               <div className="kpi-label">Total Leads (90d)</div>
@@ -279,22 +279,22 @@ export default function Dashboard() {
         )}
 
         {/* Premium Filters Section */}
-        <div className="premium-card">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-2 h-8 bg-gradient-to-b from-purple-400 to-purple-600 rounded-full"></div>
+        <div className="responsive-card">
+          <div className="flex items-center responsive-gap-sm mb-4 sm:mb-6">
+            <div className="w-2 h-6 sm:h-8 bg-gradient-to-b from-purple-400 to-purple-600 rounded-full"></div>
             <div>
-              <h2 className="text-xl font-semibold text-gradient">Advanced Filters</h2>
-              <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Refine your lead search</p>
+              <h2 className="responsive-heading-3 text-gradient">Advanced Filters</h2>
+              <p className="responsive-body-small" style={{ color: 'var(--text-tertiary)' }}>Refine your lead search</p>
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 2xl:grid-cols-8 3xl:grid-cols-10 responsive-gap-sm">
             <div className="lg:col-span-2">
-              <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+              <label className="block responsive-body-small font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
                 Search
               </label>
               <input
-                className="input-field"
+                className="input-field responsive-body touch-target"
                 value={q}
                 onChange={(e) => { setPage(1); setQ(e.target.value); }}
                 placeholder="company, contact, email, phone, service..."
@@ -302,11 +302,11 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+              <label className="block responsive-body-small font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
                 Source Type
               </label>
               <input
-                className="input-field"
+                className="input-field responsive-body touch-target"
                 value={sourceType}
                 onChange={(e) => { setPage(1); setSourceType(e.target.value); }}
                 placeholder="e.g. MANUAL_OTHER"
@@ -374,62 +374,62 @@ export default function Dashboard() {
         </div>
 
         {/* Premium Data Table */}
-        <div className="premium-card">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-8 bg-gradient-to-b from-green-400 to-green-600 rounded-full"></div>
+        <div className="responsive-card">
+          <div className="responsive-flex-col-row items-start sm:items-center justify-between mb-4 sm:mb-6 responsive-gap">
+            <div className="flex items-center responsive-gap-sm">
+              <div className="w-2 h-6 sm:h-8 bg-gradient-to-b from-green-400 to-green-600 rounded-full"></div>
               <div>
-                <h2 className="text-xl font-semibold text-gradient">Lead Database</h2>
-                <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                <h2 className="responsive-heading-3 text-gradient">Lead Database</h2>
+                <p className="responsive-body-small" style={{ color: 'var(--text-tertiary)' }}>
                   {total.toLocaleString()} total leads • Page {page} of {Math.max(1, Math.ceil(total / pageSize))}
                 </p>
               </div>
             </div>
             
             {loading && (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center responsive-gap-sm">
                 <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-500 border-t-transparent"></div>
-                <span className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Loading...</span>
+                <span className="responsive-body-small" style={{ color: 'var(--text-tertiary)' }}>Loading...</span>
               </div>
             )}
           </div>
 
           {error && (
-            <div className="mb-6 p-4 rounded-lg" style={{ 
+            <div className="mb-4 sm:mb-6 responsive-padding-sm rounded-lg" style={{ 
               background: 'rgba(239, 68, 68, 0.1)', 
               border: '1px solid rgba(239, 68, 68, 0.3)' 
             }}>
-              <div className="text-sm" style={{ color: 'var(--accent-error)' }}>
+              <div className="responsive-body-small" style={{ color: 'var(--accent-error)' }}>
                 ❌ Error: {error}
               </div>
             </div>
           )}
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto -mx-4 sm:-mx-6 lg:-mx-8">
             <table className="premium-table">
               <thead>
                 <tr>
-                  <th>Lead ID</th>
-                  <th>Source</th>
-                  <th>Company</th>
-                  <th>Contact</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>Service</th>
-                  <th>Location</th>
-                  <th style={{ textAlign: 'right' }}>AI Score</th>
-                  <th>Created</th>
+                  <th className="responsive-body-small">Lead ID</th>
+                  <th className="responsive-body-small">Source</th>
+                  <th className="responsive-body-small">Company</th>
+                  <th className="responsive-body-small">Contact</th>
+                  <th className="responsive-body-small hidden md:table-cell">Email</th>
+                  <th className="responsive-body-small hidden lg:table-cell">Phone</th>
+                  <th className="responsive-body-small hidden xl:table-cell">Service</th>
+                  <th className="responsive-body-small hidden xl:table-cell">Location</th>
+                  <th className="responsive-body-small" style={{ textAlign: 'right' }}>AI Score</th>
+                  <th className="responsive-body-small hidden sm:table-cell">Created</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.length === 0 ? (
                   <tr>
-                    <td colSpan={10} style={{ textAlign: 'center', padding: '3rem' }}>
+                    <td colSpan={10} style={{ textAlign: 'center' }} className="responsive-padding">
                       <div className="space-y-2">
-                        <div className="text-lg" style={{ color: 'var(--text-tertiary)' }}>
+                        <div className="responsive-body" style={{ color: 'var(--text-tertiary)' }}>
                           No leads found
                         </div>
-                        <div className="text-sm" style={{ color: 'var(--text-muted)' }}>
+                        <div className="responsive-body-small" style={{ color: 'var(--text-muted)' }}>
                           Try adjusting your filters or search terms
                         </div>
                       </div>
@@ -439,12 +439,12 @@ export default function Dashboard() {
                   rows.map((r) => (
                     <tr key={r.id}>
                       <td>
-                        <div className="font-mono text-sm" style={{ color: 'var(--brand-primary)' }}>
+                        <div className="font-mono responsive-body-small" style={{ color: 'var(--brand-primary)' }}>
                           {r.publicId}
                         </div>
                       </td>
                       <td>
-                        <span className={`status-pill ${
+                        <span className={`status-pill responsive-body-small ${
                           r.sourceType === 'SYSTEM' ? 'status-pill--success' :
                           r.sourceType === 'RFP' ? 'status-pill--info' :
                           'status-pill--warning'
@@ -452,19 +452,19 @@ export default function Dashboard() {
                           {r.sourceType}
                         </span>
                       </td>
-                      <td className="font-medium">{r.company || '—'}</td>
-                      <td>{r.contactName || '—'}</td>
-                      <td>
+                      <td className="font-medium responsive-body-small">{r.company || '—'}</td>
+                      <td className="responsive-body-small">{r.contactName || '—'}</td>
+                      <td className="hidden md:table-cell responsive-body-small">
                         {r.email ? (
                           <a 
                             href={`mailto:${r.email}`} 
-                            className="text-blue-400 hover:text-blue-300"
+                            className="text-blue-400 hover:text-blue-300 break-all"
                           >
                             {r.email}
                           </a>
                         ) : '—'}
                       </td>
-                      <td>
+                      <td className="hidden lg:table-cell responsive-body-small">
                         {r.phoneE164 ? (
                           <a 
                             href={`tel:${r.phoneE164}`}
@@ -474,11 +474,11 @@ export default function Dashboard() {
                           </a>
                         ) : '—'}
                       </td>
-                      <td>{r.serviceCode || '—'}</td>
-                      <td>{r.postalCode ?? r.zip ?? '—'}</td>
+                      <td className="hidden xl:table-cell responsive-body-small">{r.serviceCode || '—'}</td>
+                      <td className="hidden xl:table-cell responsive-body-small">{r.postalCode ?? r.zip ?? '—'}</td>
                       <td style={{ textAlign: 'right' }}>
                         {r.aiScore ? (
-                          <div className={`inline-flex px-2 py-1 rounded text-xs font-semibold ${
+                          <div className={`inline-flex px-2 py-1 rounded responsive-body-small font-semibold ${
                             r.aiScore >= 70 ? 'bg-green-500/20 text-green-400' :
                             r.aiScore >= 40 ? 'bg-yellow-500/20 text-yellow-400' :
                             'bg-red-500/20 text-red-400'
@@ -487,8 +487,8 @@ export default function Dashboard() {
                           </div>
                         ) : '—'}
                       </td>
-                      <td>
-                        <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                      <td className="hidden sm:table-cell">
+                        <div className="responsive-body-small" style={{ color: 'var(--text-tertiary)' }}>
                           {r.createdAt ? fmtDate(r.createdAt) : '—'}
                         </div>
                       </td>
@@ -501,21 +501,21 @@ export default function Dashboard() {
 
           {/* Premium Pagination */}
           {rows.length > 0 && (
-            <div className="flex items-center justify-between mt-6 pt-6 border-t" style={{ borderColor: 'var(--border-primary)' }}>
-              <div className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+            <div className="responsive-flex-col-row items-start sm:items-center justify-between mt-4 sm:mt-6 pt-4 sm:pt-6 border-t responsive-gap" style={{ borderColor: 'var(--border-primary)' }}>
+              <div className="responsive-body-small responsive-text-center-left" style={{ color: 'var(--text-tertiary)' }}>
                 Showing {((page - 1) * pageSize) + 1} to {Math.min(page * pageSize, total)} of {total.toLocaleString()} leads
               </div>
               
-              <div className="flex items-center gap-2">
+              <div className="flex items-center responsive-gap-sm w-full sm:w-auto">
                 <button 
-                  className="btn-secondary px-3 py-2 disabled:opacity-50"
+                  className="touch-button border border-current disabled:opacity-50 text-center flex-1 sm:flex-none"
                   disabled={page <= 1 || loading} 
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                 >
                   ← Previous
                 </button>
                 
-                <div className="flex items-center gap-1">
+                <div className="hidden sm:flex items-center gap-1">
                   {[...Array(Math.min(5, totalPages))].map((_, i) => {
                     const pageNum = Math.max(1, page - 2) + i;
                     if (pageNum > totalPages) return null;
@@ -523,7 +523,7 @@ export default function Dashboard() {
                     return (
                       <button
                         key={pageNum}
-                        className={`px-3 py-2 text-sm rounded-md transition-all ${
+                        className={`touch-target responsive-body-small rounded-md transition-all ${
                           pageNum === page 
                             ? 'bg-blue-600 text-white' 
                             : 'hover:bg-gray-700 text-gray-300'
@@ -537,7 +537,7 @@ export default function Dashboard() {
                 </div>
                 
                 <button 
-                  className="btn-secondary px-3 py-2 disabled:opacity-50"
+                  className="touch-button border border-current disabled:opacity-50 text-center flex-1 sm:flex-none"
                   disabled={page >= totalPages || loading} 
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 >

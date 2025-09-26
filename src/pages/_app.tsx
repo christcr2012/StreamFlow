@@ -8,7 +8,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-main)', color: 'var(--text-primary)' }}>
       <AppNav />
-      <main className="mx-auto max-w-[1400px] px-4 py-6">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
         <Component {...pageProps} />
       </main>
     </div>
