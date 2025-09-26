@@ -449,7 +449,7 @@ enum LeadStatus {
 enum AiPlan {
   BASE    // MVP: Free lead generation, $100/conversion only
   PRO     // $97/month: Advanced AI, unlimited leads, priority support  
-  ELITE   // $297/month: White-label, API access, custom integrations
+  ELITE   // $297/month: Market intelligence, priority RFPs, dedicated support
 }
 
 // Individual AI API call tracking for cost monitoring and analytics
