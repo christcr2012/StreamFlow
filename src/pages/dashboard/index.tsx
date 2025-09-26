@@ -209,7 +209,7 @@ export default function Dashboard() {
         )}
         
         {kpis && (
-          <div className="responsive-grid-1-2-4 responsive-gap sm:grid-cols-2 xl:grid-cols-6 2xl:grid-cols-6 3xl:grid-cols-6">
+          <div className="responsive-grid-1-2-4 responsive-gap">
             <div className="kpi-card">
               <div className="kpi-value">{kpis.totalLeads90d.toLocaleString()}</div>
               <div className="kpi-label">Total Leads (90d)</div>
@@ -288,7 +288,7 @@ export default function Dashboard() {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 2xl:grid-cols-8 3xl:grid-cols-10 responsive-gap-sm">
+          <div className="responsive-grid-adaptive responsive-gap-sm">
             <div className="lg:col-span-2">
               <label className="block responsive-body-small font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
                 Search
@@ -405,7 +405,7 @@ export default function Dashboard() {
             </div>
           )}
 
-          <div className="overflow-x-auto -mx-4 sm:-mx-6 lg:-mx-8">
+          <div className="overflow-x-auto -mx-3 xxs:-mx-4 sm:-mx-6 lg:-mx-8 xl:-mx-12 3xl:-mx-16 4xl:-mx-20">
             <table className="premium-table">
               <thead>
                 <tr>

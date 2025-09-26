@@ -29,80 +29,88 @@ html, body, #__next {
 
 /* Responsive design components */
 @layer components {
-  /* Responsive container with consistent padding */
+  /* Responsive container with consistent padding - no max width constraint */
   .responsive-container {
-    @apply container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+    @apply container mx-auto px-4 sm:px-6 lg:px-8;
   }
 
-  /* Responsive padding utilities */
+  /* Responsive padding utilities with ultra-wide support */
   .responsive-padding {
-    @apply px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-12;
+    @apply px-3 xxs:px-4 sm:px-6 lg:px-8 xl:px-12 3xl:px-16 4xl:px-20 py-4 xxs:py-6 sm:py-8 lg:py-12 xl:py-16 3xl:py-20;
   }
 
   .responsive-padding-sm {
-    @apply px-3 py-4 sm:px-4 sm:py-6 lg:px-6 lg:py-8;
+    @apply px-2 xxs:px-3 sm:px-4 lg:px-6 xl:px-8 3xl:px-10 4xl:px-12 py-3 xxs:py-4 sm:py-6 lg:py-8 xl:py-10 3xl:py-12;
   }
 
-  /* Responsive typography */
+  /* Responsive typography with full spectrum support */
   .responsive-heading-1 {
-    @apply text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold;
+    @apply text-xl xxs:text-2xl sm:text-3xl lg:text-4xl xl:text-5xl 3xl:text-6xl 4xl:text-7xl font-bold;
   }
 
   .responsive-heading-2 {
-    @apply text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold;
+    @apply text-lg xxs:text-xl sm:text-2xl lg:text-3xl xl:text-4xl 3xl:text-5xl 4xl:text-6xl font-bold;
   }
 
   .responsive-heading-3 {
-    @apply text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold;
+    @apply text-base xxs:text-lg sm:text-xl lg:text-2xl xl:text-3xl 3xl:text-4xl 4xl:text-5xl font-semibold;
   }
 
   .responsive-body {
-    @apply text-sm sm:text-base lg:text-lg;
+    @apply text-sm xxs:text-sm sm:text-base lg:text-lg xl:text-xl 3xl:text-2xl;
   }
 
   .responsive-body-small {
-    @apply text-xs sm:text-sm lg:text-base;
+    @apply text-xs xxs:text-xs sm:text-sm lg:text-base xl:text-lg 3xl:text-xl;
   }
 
-  /* Responsive card components */
+  /* Responsive card components with ultra-wide support */
   .responsive-card {
-    @apply p-4 sm:p-6 lg:p-8 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow;
+    @apply p-3 xxs:p-4 sm:p-6 lg:p-8 xl:p-10 3xl:p-12 4xl:p-16 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow;
   }
 
   .responsive-card-sm {
-    @apply p-3 sm:p-4 lg:p-6 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow;
+    @apply p-2 xxs:p-3 sm:p-4 lg:p-6 xl:p-8 3xl:p-10 4xl:p-12 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow;
   }
 
-  /* Responsive grid patterns */
+  /* Responsive grid patterns with ultra-wide support */
   .responsive-grid-1-2-3 {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8;
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6;
   }
 
   .responsive-grid-1-2-4 {
-    @apply grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8;
+    @apply grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 3xl:grid-cols-6 4xl:grid-cols-8;
   }
 
   .responsive-grid-1-3 {
-    @apply grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8;
+    @apply grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6;
   }
 
-  /* Touch-friendly interactive elements */
+  .responsive-grid-adaptive {
+    @apply grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 3xl:grid-cols-8 4xl:grid-cols-10 5xl:grid-cols-12;
+  }
+
+  /* Touch-friendly interactive elements with scaling */
   .touch-target {
-    @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+    @apply min-h-[44px] min-w-[44px] lg:min-h-[48px] lg:min-w-[48px] xl:min-h-[52px] xl:min-w-[52px] flex items-center justify-center;
   }
 
   .touch-button {
-    @apply px-4 py-3 sm:px-6 sm:py-2 rounded-lg font-medium transition-all duration-200;
+    @apply px-3 xxs:px-4 sm:px-6 lg:px-8 xl:px-10 py-2 xxs:py-3 sm:py-2 lg:py-3 xl:py-4 rounded-lg font-medium transition-all duration-200;
     touch-action: manipulation;
   }
 
-  /* Responsive gap utilities */
+  /* Responsive gap utilities with ultra-wide support */
   .responsive-gap {
-    @apply gap-4 sm:gap-6 lg:gap-8;
+    @apply gap-3 xxs:gap-4 sm:gap-6 lg:gap-8 xl:gap-10 3xl:gap-12 4xl:gap-16;
   }
 
   .responsive-gap-sm {
-    @apply gap-2 sm:gap-4 lg:gap-6;
+    @apply gap-2 xxs:gap-2 sm:gap-4 lg:gap-6 xl:gap-8 3xl:gap-10 4xl:gap-12;
+  }
+
+  .responsive-gap-xs {
+    @apply gap-1 xxs:gap-2 sm:gap-3 lg:gap-4 xl:gap-5 3xl:gap-6 4xl:gap-8;
   }
 
   /* Mobile-first navigation utilities */
@@ -131,5 +139,23 @@ html, body, #__next {
 
   .responsive-text-center-left-lg {
     @apply text-center lg:text-left;
+  }
+
+  /* Ultra-wide specific utilities */
+  .ultra-wide-spacing {
+    @apply 4xl:px-24 4xl:py-20 5xl:px-32 5xl:py-24;
+  }
+
+  .ultra-wide-text {
+    @apply 4xl:text-8xl 5xl:text-9xl;
+  }
+
+  /* Responsive margin utilities */
+  .responsive-margin {
+    @apply mx-3 xxs:mx-4 sm:mx-6 lg:mx-8 xl:mx-12 3xl:mx-16 4xl:mx-20;
+  }
+
+  .responsive-margin-y {
+    @apply my-3 xxs:my-4 sm:my-6 lg:my-8 xl:my-12 3xl:my-16 4xl:my-20;
   }
 }
