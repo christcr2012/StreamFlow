@@ -14,6 +14,12 @@ model Org {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
+  // AI Cost Control & Monetization
+  aiMonthlyBudgetCents Int      @default(5000)  // $50 default budget
+  aiCreditBalance     Int      @default(50000)  // 50k credits = $50 worth (1 credit = $0.001)
+  aiPlan              AiPlan   @default(BASE)   // Subscription tier
+  aiAlerts            Json     @default("{}")   // Usage alert thresholds
+
   // Back-relations
   auditLogs     AuditLog[]
   ledger        BillingLedger[]
@@ -30,6 +36,8 @@ model Org {
   rbacUserRoles RbacUserRole[]  @relation("OrgRbacUserRoles")
   leadInvoices  LeadInvoice[]   @relation("OrgLeadInvoices")
   pricingPlan   PricingPlan?    @relation("OrgPricingPlan")
+  aiUsageEvents AiUsageEvent[]  @relation("OrgAiUsageEvents")
+  aiMonthlySummaries AiMonthlySummary[] @relation("OrgAiMonthlySummaries")
 
   /// brandConfig stores white-label brand settings such as name, colors, and logo URL.
   /// It is JSON to allow arbitrary keys like { name: "Mountain Vista", color: "#123456", logoUrl: "https://..." }
@@ -428,4 +436,50 @@ enum PricingModel {
 enum LeadStatus {
   NEW
   CONVERTED
+}
+
+// AI Plan Tiers for Monetization
+enum AiPlan {
+  BASE    // Free tier with basic credits
+  PRO     // Mid-tier with enhanced features  
+  ELITE   // Premium tier with full capabilities
+}
+
+// Individual AI API call tracking for cost monitoring and analytics
+model AiUsageEvent {
+  id          String   @id @default(cuid())
+  orgId       String
+  userId      String?  // Optional user who triggered the call
+  feature     String   // 'lead_analysis', 'rfp_strategy', 'pricing', 'response_gen'
+  model       String   // 'gpt-4o-mini', etc
+  tokensIn    Int      // Input tokens consumed
+  tokensOut   Int      // Output tokens generated
+  costUsd     Decimal  @db.Decimal(8, 6)  // Actual cost in USD (precise to $0.000001)
+  creditsUsed Int      // Credits deducted from user's balance
+  requestId   String?  // For request correlation and debugging
+  createdAt   DateTime @default(now())
+
+  org Org @relation("OrgAiUsageEvents", fields: [orgId], references: [id])
+
+  @@index([orgId, createdAt])
+  @@index([orgId, feature])
+}
+
+// Monthly AI usage rollups for dashboard and billing
+model AiMonthlySummary {
+  id          String   @id @default(cuid()) 
+  orgId       String
+  monthKey    String   // Format: "2025-01" for January 2025
+  tokensIn    Int      @default(0)
+  tokensOut   Int      @default(0)
+  costUsd     Decimal  @db.Decimal(8, 2)  @default(0)
+  creditsUsed Int      @default(0)
+  callCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  org Org @relation("OrgAiMonthlySummaries", fields: [orgId], references: [id])
+
+  @@unique([orgId, monthKey])
+  @@index([monthKey])
 }

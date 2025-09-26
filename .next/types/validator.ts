@@ -131,6 +131,15 @@ type ApiRouteConfig = {
   type __Unused = __Check
 }
 
+// Validate ../../src/pages/dashboard/premium.tsx
+{
+  type __IsExpected<Specific extends PagesPageConfig> = Specific
+  const handler = {} as typeof import("../../src/pages/dashboard/premium.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../src/pages/index.tsx
 {
   type __IsExpected<Specific extends PagesPageConfig> = Specific
@@ -297,6 +306,15 @@ type ApiRouteConfig = {
 {
   type __IsExpected<Specific extends ApiRouteConfig> = Specific
   const handler = {} as typeof import("../../src/pages/api/ai/rfp-strategy.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/pages/api/ai/usage.ts
+{
+  type __IsExpected<Specific extends ApiRouteConfig> = Specific
+  const handler = {} as typeof import("../../src/pages/api/ai/usage.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check
