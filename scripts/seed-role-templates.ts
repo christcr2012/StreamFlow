@@ -355,6 +355,102 @@ const industryTemplates: RoleTemplateData[] = [
     },
     isSystemTemplate: true,
     isPublic: true
+  },
+
+  // === MANAGEMENT & SUPERVISION ===
+  {
+    name: "Supervisor",
+    description: "Oversee teams and jobs with limited admin within assigned scope. Team oversight, task assignment, and scoped visibility.",
+    industry: "Management",
+    category: "Team Supervision",
+    complexity: "INTERMEDIATE",
+    permissions: [
+      "team:assign_tasks", "team:reassign_tasks", "team:manage_schedule", "team:modify_schedule",
+      "team:approve_timesheet", "team:approve_worklog", "team:approve_completion",
+      "team:coordinate", "team:adjust_priorities",
+      "dashboard:team_performance", "customer:read_scoped", "job:read_scoped", 
+      "project:monitor_status", "location:access_data", "metrics:team_assigned",
+      "escalation:request_elevation", "escalation:to_management", "escalation:emergency_assign",
+      "communication:team_messaging", "communication:customer_scoped", "communication:status_updates",
+      "quality:review_work", "quality:validate_checklist", "quality:identify_issues",
+      "admin:guide_team", "admin:clarify_procedures", "admin:allocate_resources_scoped",
+      "profile:read", "profile:update", "notifications:manage"
+    ],
+    config: {
+      defaultDashboard: "supervisor",
+      allowedModules: ["team_management", "scheduling", "quality_control", "performance_monitoring"],
+      restrictedAreas: ["tenant_settings", "billing", "role_management", "global_configurations"],
+      scopedAccess: true,
+      auditLogging: true,
+      temporaryElevation: true
+    },
+    scopeConfig: {
+      teamBased: true,
+      locationBased: true,
+      projectBased: true,
+      timeRestricted: true,
+      approvalLimits: {
+        expenses: 500,
+        adjustments: 200
+      },
+      escalationRules: {
+        canRequestElevation: true,
+        maxElevationDuration: 60
+      }
+    },
+    isSystemTemplate: true,
+    isPublic: true
+  },
+
+  {
+    name: "Manager",
+    description: "Run day-to-day operations across departments. Capacity planning, staff management, and operational KPIs with department scoping.",
+    industry: "Management", 
+    category: "Operations Management",
+    complexity: "ADVANCED",
+    permissions: [
+      "operations:plan_capacity", "operations:create_schedule", "operations:optimize_schedule",
+      "operations:manage_inventory", "operations:manage_assets", "operations:handle_escalations",
+      "operations:process_refunds", "operations:issue_credits", "operations:allocate_resources",
+      "people:review_timesheets", "people:approve_timesheets", "people:review_expenses",
+      "people:approve_expenses", "people:monitor_performance", "people:coordinate_staff",
+      "analytics:view_kpis", "analytics:department_metrics", "analytics:financial_performance",
+      "analytics:productivity", "analytics:create_reports", "analytics:export_data",
+      "customer:resolve_escalations", "customer:monitor_service_levels", "customer:review_feedback",
+      "finance:monitor_budget", "finance:oversee_expenses", "finance:manage_cost_center",
+      "quality:oversee_assurance", "quality:monitor_compliance", "quality:improve_processes",
+      "communication:cross_department", "communication:stakeholders", "communication:leadership_reporting",
+      "profile:read", "profile:update", "notifications:manage"
+    ],
+    config: {
+      defaultDashboard: "operations_manager",
+      allowedModules: ["operations", "people_management", "analytics", "customer_service", "financial_oversight", "quality_management"],
+      restrictedAreas: ["user_role_administration", "global_configurations", "provider_portal", "system_admin"],
+      departmentScoped: true,
+      auditLogging: true,
+      budgetManagement: true
+    },
+    scopeConfig: {
+      departmentBased: true,
+      locationBased: true,
+      costCenterBased: true,
+      budgetLimits: {
+        daily: 5000,
+        weekly: 25000,
+        monthly: 100000
+      },
+      approvalLimits: {
+        refunds: 2500,
+        expenses: 5000,
+        purchases: 10000
+      },
+      timeRestrictions: {
+        businessHoursOnly: false,
+        extendedAccess: true
+      }
+    },
+    isSystemTemplate: true,
+    isPublic: true
   }
 ];
 

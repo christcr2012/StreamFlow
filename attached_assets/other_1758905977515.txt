@@ -1,0 +1,46 @@
+{
+  "action": "create_or_modify_role",
+  "role_name": "Supervisor",
+  "goal": "Oversee teams and jobs; limited admin within assigned scope.",
+  "scope": "Tenant; restricted to assigned teams/locations/projects.",
+  "capabilities": {
+    "team_ops": [
+      "Assign/reassign tasks and schedules within scope",
+      "Approve timesheets, work logs, and job completion"
+    ],
+    "visibility": [
+      "View team performance dashboards and customer/job details within scope"
+    ],
+    "escalations": [
+      "Request temporary elevation for urgent actions (auto-expire, audited)"
+    ]
+  },
+  "constraints_and_safeguards": [
+    "No access to tenant-wide settings, billing, or role management",
+    "Sensitive actions require Owner approval if outside scope"
+  ],
+  "audit": { "log_all": true }
+}
+{
+  "action": "create_or_modify_role",
+  "role_name": "Manager",
+  "goal": "Run day-to-day operations across one or more departments.",
+  "scope": "Tenant; department/location scoped, configurable by Owner.",
+  "capabilities": {
+    "operations": [
+      "Plan capacity, create schedules, manage inventory/assets",
+      "Handle escalations, refunds/credits within limits"
+    ],
+    "people": [
+      "Review/approve timesheets and expense submissions for scoped staff"
+    ],
+    "analytics": [
+      "Access operational KPIs, export reports for scoped data"
+    ]
+  },
+  "constraints_and_safeguards": [
+    "No user/role administration beyond scoped approvals",
+    "No provider-portal or global feature toggles"
+  ],
+  "audit": { "log_all": true }
+}
