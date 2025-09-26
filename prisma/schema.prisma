@@ -68,6 +68,14 @@ model Org {
   integrations     Integration[]      @relation("OrgIntegrations")
   supportSessions  SupportSession[]   @relation("OrgSupportSessions")
   auditEvents      AuditEvent[]       @relation("OrgAuditEvents")
+  
+  // Advanced Role Management Relations
+  roleVersions       RoleVersion[]      @relation("OrgRoleVersions")
+  roleTemplates      RoleTemplate[]     @relation("OrgRoleTemplates")
+  permissionBundles  PermissionBundle[] @relation("OrgPermissionBundles")
+  roleScopes         RoleScope[]        @relation("OrgRoleScopes")
+  roleReviews        RoleReview[]       @relation("OrgRoleReviews")
+  provisioningFlows  ProvisioningFlow[] @relation("OrgProvisioningFlows")
 
   /// brandConfig stores white-label brand settings such as name, colors, and logo URL.
   /// It is JSON to allow arbitrary keys like { name: "Mountain Vista", color: "#123456", logoUrl: "https://..." }
@@ -417,6 +425,11 @@ model RbacRole {
 
   rolePerms RbacRolePermission[]
   userRoles RbacUserRole[]
+  
+  // Advanced Role Management Relations
+  versions  RoleVersion[] @relation("RoleVersions")
+  scopes    RoleScope[]   @relation("RoleScopes")
+  reviews   RoleReview[]  @relation("RoleReviews")
 
   @@unique([orgId, slug])
 }
@@ -443,6 +456,229 @@ model RbacUserRole {
   role RbacRole @relation(fields: [roleId], references: [id], onDelete: Cascade)
 
   @@unique([userId, roleId, orgId])
+}
+
+// ===== ADVANCED ENTERPRISE ROLE MANAGEMENT =====
+
+/// RoleVersion provides enterprise-grade role versioning and rollback capabilities
+model RoleVersion {
+  id          String   @id @default(cuid())
+  roleId      String   
+  orgId       String
+  version     Int      // Version number (1, 2, 3, etc.)
+  name        String   // Role name at this version
+  description String?  
+  
+  // Version metadata
+  changeReason String?  // Why this version was created
+  changedBy   String   // User ID who made the change
+  isActive    Boolean  @default(false) // Is this the active version?
+  
+  // Snapshot of permissions at this version
+  permissions Json     // Array of permission codes at time of version
+  config      Json     @default("{}") // Role configuration snapshot
+  
+  // Scoping information snapshot
+  scopeConfig Json     @default("{}") // Scoping rules at time of version
+  
+  createdAt   DateTime @default(now())
+  
+  role RbacRole @relation("RoleVersions", fields: [roleId], references: [id], onDelete: Cascade)
+  org  Org      @relation("OrgRoleVersions", fields: [orgId], references: [id])
+  
+  @@unique([roleId, version])
+  @@index([orgId, roleId])
+  @@index([isActive])
+}
+
+/// RoleTemplate provides industry-standard role templates and cloning capabilities
+model RoleTemplate {
+  id           String   @id @default(cuid())
+  orgId        String?  // NULL for system-wide templates
+  name         String   
+  description  String?
+  industry     String?  // e.g., "healthcare", "finance", "manufacturing"
+  category     String?  // e.g., "management", "operations", "support"
+  
+  // Template configuration
+  isSystemTemplate Boolean @default(false) // System vs custom template
+  isPublic     Boolean  @default(false) // Can other orgs use this template?
+  usageCount   Int      @default(0)     // How many times cloned
+  
+  // Template permissions and configuration
+  permissions  Json     // Array of permission codes
+  config       Json     @default("{}") // Default role configuration
+  scopeConfig  Json     @default("{}") // Default scoping rules
+  
+  // Metadata
+  tags         String[] @default([])    // Searchable tags
+  complexity   String   @default("BASIC") // BASIC, INTERMEDIATE, ADVANCED
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  createdBy    String?  // User ID who created this template
+  
+  org Org? @relation("OrgRoleTemplates", fields: [orgId], references: [id])
+  
+  @@index([orgId, industry])
+  @@index([isSystemTemplate, isPublic])
+  @@index([industry, category])
+}
+
+/// PermissionBundle creates reusable permission sets (e.g., "Supervisor Pack")
+model PermissionBundle {
+  id          String   @id @default(cuid())
+  orgId       String
+  name        String   // e.g., "Supervisor Pack", "Finance Access"
+  description String?
+  
+  // Bundle configuration
+  permissions Json     // Array of permission codes in this bundle
+  category    String?  // e.g., "management", "finance", "operations"
+  isReusable  Boolean  @default(true)
+  
+  // Usage tracking
+  usageCount  Int      @default(0)
+  
+  // Metadata
+  tags        String[] @default([])
+  color       String?  // For UI categorization
+  icon        String?  // Icon identifier
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   String   // User ID who created this bundle
+  
+  org Org @relation("OrgPermissionBundles", fields: [orgId], references: [id])
+  
+  @@unique([orgId, name])
+  @@index([orgId, category])
+  @@index([isReusable])
+}
+
+/// RoleScope provides granular permission scoping by project, team, geography, etc.
+model RoleScope {
+  id        String   @id @default(cuid())
+  roleId    String
+  orgId     String
+  
+  // Scope definition
+  scopeType String   // "project", "team", "geography", "department", "custom"
+  scopeKey  String   // Identifier for the scope (project ID, team ID, etc.)
+  scopeName String   // Human-readable name
+  
+  // Scope configuration
+  permissions Json   // Permissions that apply to this scope
+  restrictions Json  @default("{}") // Additional restrictions
+  
+  // Time-based scoping
+  startDate DateTime?
+  endDate   DateTime?
+  timeZone  String?   // For geographic scoping
+  
+  // Metadata
+  isActive  Boolean  @default(true)
+  priority  Int      @default(0) // For resolving conflicts
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String   // User ID who created this scope
+  
+  role RbacRole @relation("RoleScopes", fields: [roleId], references: [id], onDelete: Cascade)
+  org  Org      @relation("OrgRoleScopes", fields: [orgId], references: [id])
+  
+  @@unique([roleId, scopeType, scopeKey])
+  @@index([orgId, scopeType])
+  @@index([isActive, startDate, endDate])
+}
+
+/// RoleReview manages periodic role review workflows for compliance
+model RoleReview {
+  id           String   @id @default(cuid())
+  orgId        String
+  roleId       String?  // NULL for org-wide reviews
+  
+  // Review details
+  reviewType   String   // "periodic", "access_change", "compliance", "incident"
+  status       String   @default("pending") // pending, in_progress, completed, overdue
+  
+  // Review configuration
+  reviewFrequency String? // "monthly", "quarterly", "annually"
+  nextReviewDate  DateTime?
+  lastReviewDate  DateTime?
+  
+  // Review participants
+  reviewerId   String   // Primary reviewer (User ID)
+  approvers    String[] @default([]) // Additional approvers
+  
+  // Review findings
+  findings     Json     @default("{}") // Review findings and recommendations
+  actions      Json     @default("{}") // Actions taken
+  riskLevel    String   @default("low") // low, medium, high, critical
+  
+  // Compliance tracking
+  complianceFramework String[] @default([]) // SOC2, GDPR, HIPAA, etc.
+  exceptions   Json     @default("{}") // Documented exceptions
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  completedAt  DateTime?
+  
+  org  Org       @relation("OrgRoleReviews", fields: [orgId], references: [id])
+  role RbacRole? @relation("RoleReviews", fields: [roleId], references: [id])
+  
+  @@index([orgId, status])
+  @@index([nextReviewDate])
+  @@index([reviewType, status])
+}
+
+/// ProvisioningFlow manages automated user provisioning with SCIM/SSO integration
+model ProvisioningFlow {
+  id          String   @id @default(cuid())
+  orgId       String
+  name        String   // e.g., "New Employee Onboarding", "Contractor Access"
+  description String?
+  
+  // Flow configuration
+  isActive    Boolean  @default(true)
+  trigger     String   // "scim_create", "sso_login", "manual", "api"
+  
+  // Role assignment rules
+  defaultRoles    String[] @default([]) // Default role IDs to assign
+  conditionalRoles Json    @default("{}") // Conditional role assignment rules
+  
+  // Integration settings
+  scimMapping     Json    @default("{}") // SCIM attribute mapping
+  ssoGroupMapping Json    @default("{}") // SSO group to role mapping
+  
+  // Workflow steps
+  steps           Json    @default("{}") // Provisioning workflow steps
+  approvalRequired Boolean @default(false)
+  approvers       String[] @default([])
+  
+  // Notification settings
+  notifyUsers     Boolean @default(true)
+  notifyManagers  Boolean @default(true)
+  emailTemplate   String?
+  
+  // Security settings
+  requireMFA      Boolean @default(false)
+  ipRestrictions  String[] @default([])
+  sessionDuration Int?    // Session duration in minutes
+  
+  // Usage tracking
+  usageCount      Int     @default(0)
+  successRate     Decimal @default(0) @db.Decimal(5, 2)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  createdBy       String   // User ID who created this flow
+  
+  org Org @relation("OrgProvisioningFlows", fields: [orgId], references: [id])
+  
+  @@unique([orgId, name])
+  @@index([orgId, isActive])
+  @@index([trigger])
 }
 
 /// ProviderConfig holds provider-level secrets and configuration separate from any organization.
