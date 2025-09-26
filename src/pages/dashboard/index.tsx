@@ -128,206 +128,424 @@ export default function Dashboard() {
   return (
     <>
       <Head><title>Dashboard</title></Head>
-      <div style={{ padding: "24px", maxWidth: 1200, margin: "0 auto" }}>
-        <h1 style={{ marginBottom: 12 }}>Dashboard</h1>
+      <div className="max-w-7xl mx-auto space-y-8">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold text-gradient">Dashboard</h1>
+          <div className="flex gap-4">
+            <button className="btn-secondary">
+              <span>Export Data</span>
+            </button>
+            <button className="btn-primary">
+              <span>New Lead</span>
+            </button>
+          </div>
+        </div>
 
-        {/* Billing summary (original, uses KPIs) */}
-        <div style={{ marginBottom: 16, border: "1px solid #eee", borderRadius: 8, padding: 12 }}>
-          <div style={{ fontSize: 12, color: "#666" }}>Conversion-Based Billing</div>
-          <div style={{ fontSize: 16, fontWeight: 600, marginTop: 4 }}>
-            This Month: {billableCount} converted (billable)
-          </div>
-          <div style={{ fontSize: 12, color: "#666", marginTop: 2 }}>
-            Invoice draft preview: {billableCount} × $100 = ${projectedAmount.toFixed(2)}
-          </div>
-          {periodStartLabel && periodEndLabel && (
-            <div style={{ fontSize: 11, color: "#888", marginTop: 2 }}>
-              Period: {periodStartLabel} → {periodEndLabel}
+        {/* Premium Billing Summary */}
+        <div className="premium-card">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-2 h-8 bg-gradient-to-b from-blue-400 to-blue-600 rounded-full"></div>
+            <div>
+              <h2 className="text-xl font-semibold text-gradient">Conversion-Based Billing</h2>
+              <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Real-time revenue tracking</p>
             </div>
-          )}
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="space-y-2">
+              <div className="text-2xl font-bold" style={{ color: 'var(--accent-success)' }}>
+                {billableCount}
+              </div>
+              <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                Converted (Billable) This Month
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <div className="text-2xl font-bold text-gradient">
+                ${projectedAmount.toFixed(2)}
+              </div>
+              <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                Invoice Preview ({billableCount} × $100)
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              {periodStartLabel && periodEndLabel && (
+                <>
+                  <div className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+                    {periodStartLabel} → {periodEndLabel}
+                  </div>
+                  <div className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                    Billing Period
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+          
           {!canManageBilling && (
-            <div style={{ fontSize: 11, color: "#888", marginTop: 6 }}>
-              Note: You don't have billing permissions. Some actions may be hidden.
+            <div className="mt-4 p-4 rounded-lg" style={{ 
+              background: 'rgba(245, 158, 11, 0.1)', 
+              border: '1px solid rgba(245, 158, 11, 0.3)' 
+            }}>
+              <div className="text-sm" style={{ color: 'var(--accent-warning)' }}>
+                ⚠️ Limited Access: You don't have billing permissions. Some actions may be hidden.
+              </div>
             </div>
           )}
         </div>
 
-        {/* KPI cards */}
+        {/* Ultra Premium KPI Cards */}
         {summaryError && (
-          <div style={{ color: "crimson", marginBottom: 16 }}>Error loading summary: {summaryError}</div>
+          <div className="premium-card" style={{ 
+            background: 'rgba(239, 68, 68, 0.1)', 
+            borderColor: 'rgba(239, 68, 68, 0.3)' 
+          }}>
+            <div className="text-sm" style={{ color: 'var(--accent-error)' }}>
+              ❌ Error loading summary: {summaryError}
+            </div>
+          </div>
         )}
+        
         {kpis && (
-          <div style={{ display: "flex", gap: 16, marginBottom: 24, flexWrap: "wrap" }}>
-            <div style={{ flex: 1, minWidth: 160, padding: 16, border: "1px solid #eee", borderRadius: 8 }}>
-              <div style={{ fontSize: 12, color: "#666" }}>Leads (90d)</div>
-              <div style={{ fontSize: 24, fontWeight: 600 }}>{kpis.totalLeads90d}</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+            <div className="kpi-card">
+              <div className="kpi-value">{kpis.totalLeads90d.toLocaleString()}</div>
+              <div className="kpi-label">Total Leads (90d)</div>
+              <div className="mt-2 flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full" style={{ background: 'var(--accent-info)' }}></div>
+                <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Pipeline volume</span>
+              </div>
             </div>
-            <div style={{ flex: 1, minWidth: 160, padding: 16, border: "1px solid #eee", borderRadius: 8 }}>
-              <div style={{ fontSize: 12, color: "#666" }}>Converted (90d)</div>
-              <div style={{ fontSize: 24, fontWeight: 600 }}>{kpis.converted90d}</div>
+            
+            <div className="kpi-card">
+              <div className="kpi-value" style={{ color: 'var(--accent-success)' }}>
+                {kpis.converted90d.toLocaleString()}
+              </div>
+              <div className="kpi-label">Converted (90d)</div>
+              <div className="mt-2 flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full" style={{ background: 'var(--accent-success)' }}></div>
+                <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                  {kpis.totalLeads90d > 0 ? Math.round((kpis.converted90d / kpis.totalLeads90d) * 100) : 0}% rate
+                </span>
+              </div>
             </div>
-            <div style={{ flex: 1, minWidth: 160, padding: 16, border: "1px solid #eee", borderRadius: 8 }}>
-              <div style={{ fontSize: 12, color: "#666" }}>RFP Leads (90d)</div>
-              <div style={{ fontSize: 24, fontWeight: 600 }}>{kpis.rfp90d}</div>
+            
+            <div className="kpi-card">
+              <div className="kpi-value" style={{ color: 'var(--accent-purple)' }}>
+                {kpis.rfp90d.toLocaleString()}
+              </div>
+              <div className="kpi-label">RFP Leads (90d)</div>
+              <div className="mt-2 flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full" style={{ background: 'var(--accent-purple)' }}></div>
+                <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Government contracts</span>
+              </div>
             </div>
-            <div style={{ flex: 1, minWidth: 160, padding: 16, border: "1px solid #eee", borderRadius: 8 }}>
-              <div style={{ fontSize: 12, color: "#666" }}>Hot Leads (90d)</div>
-              <div style={{ fontSize: 24, fontWeight: 600 }}>{kpis.hot90d}</div>
+            
+            <div className="kpi-card">
+              <div className="kpi-value" style={{ color: 'var(--accent-warning)' }}>
+                {kpis.hot90d.toLocaleString()}
+              </div>
+              <div className="kpi-label">Hot Leads (90d)</div>
+              <div className="mt-2 flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full" style={{ background: 'var(--accent-warning)' }}></div>
+                <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>High priority</span>
+              </div>
             </div>
-            <div style={{ flex: 1, minWidth: 160, padding: 16, border: "1px solid #eee", borderRadius: 8 }}>
-              <div style={{ fontSize: 12, color: "#666" }}>Cold Leads (90d)</div>
-              <div style={{ fontSize: 24, fontWeight: 600 }}>{kpis.cold90d}</div>
+            
+            <div className="kpi-card">
+              <div className="kpi-value" style={{ color: 'var(--text-tertiary)' }}>
+                {kpis.cold90d.toLocaleString()}
+              </div>
+              <div className="kpi-label">Cold Leads (90d)</div>
+              <div className="mt-2 flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full" style={{ background: 'var(--text-tertiary)' }}></div>
+                <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Low priority</span>
+              </div>
             </div>
-            <div style={{ flex: 1, minWidth: 160, padding: 16, border: "1px solid #eee", borderRadius: 8 }}>
-              <div style={{ fontSize: 12, color: "#666" }}>Billable Conversions (mo)</div>
-              <div style={{ fontSize: 24, fontWeight: 600 }}>{kpis.monthBillableCount}</div>
-              <div style={{ fontSize: 12, color: "#666" }}>
-                Projected invoice: ${Number(kpis.monthBillableAmountUSD).toFixed(2)}
+            
+            <div className="kpi-card animate-pulse-glow">
+              <div className="kpi-value">{kpis.monthBillableCount.toLocaleString()}</div>
+              <div className="kpi-label">Billable Conversions</div>
+              <div className="mt-2 space-y-1">
+                <div className="text-xs font-semibold text-gradient">
+                  Projected: ${Number(kpis.monthBillableAmountUSD).toFixed(2)}
+                </div>
+                <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Current month</div>
               </div>
             </div>
           </div>
         )}
 
-        {/* Filters */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 180px 160px 160px 160px 120px 120px",
-            gap: 8,
-            alignItems: "end",
-            marginBottom: 16,
-          }}
-        >
-          <div>
-            <label>Search</label>
-            <input
-              value={q}
-              onChange={(e) => { setPage(1); setQ(e.target.value); }}
-              placeholder="company, contact, email, phone, service..."
-              style={{ width: "100%", padding: 8 }}
-            />
+        {/* Premium Filters Section */}
+        <div className="premium-card">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-2 h-8 bg-gradient-to-b from-purple-400 to-purple-600 rounded-full"></div>
+            <div>
+              <h2 className="text-xl font-semibold text-gradient">Advanced Filters</h2>
+              <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Refine your lead search</p>
+            </div>
           </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+            <div className="lg:col-span-2">
+              <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                Search
+              </label>
+              <input
+                className="input-field"
+                value={q}
+                onChange={(e) => { setPage(1); setQ(e.target.value); }}
+                placeholder="company, contact, email, phone, service..."
+              />
+            </div>
 
-          <div>
-            <label>Source Type</label>
-            <input
-              value={sourceType}
-              onChange={(e) => { setPage(1); setSourceType(e.target.value); }}
-              placeholder="e.g. MANUAL_OTHER"
-              style={{ width: "100%", padding: 8 }}
-            />
-          </div>
+            <div>
+              <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                Source Type
+              </label>
+              <input
+                className="input-field"
+                value={sourceType}
+                onChange={(e) => { setPage(1); setSourceType(e.target.value); }}
+                placeholder="e.g. MANUAL_OTHER"
+              />
+            </div>
 
-          <div>
-            <label>Postal/ZIP</label>
-            <input
-              value={postal}
-              onChange={(e) => { setPage(1); setPostal(e.target.value); }}
-              placeholder="e.g. 80631"
-              style={{ width: "100%", padding: 8 }}
-            />
-          </div>
+            <div>
+              <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                Postal/ZIP
+              </label>
+              <input
+                className="input-field"
+                value={postal}
+                onChange={(e) => { setPage(1); setPostal(e.target.value); }}
+                placeholder="e.g. 80631"
+              />
+            </div>
 
-          <div>
-            <label>From (YYYY-MM-DD)</label>
-            <input
-              value={from}
-              onChange={(e) => { setPage(1); setFrom(e.target.value); }}
-              placeholder="2025-01-01"
-              style={{ width: "100%", padding: 8 }}
-            />
-          </div>
+            <div>
+              <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                From Date
+              </label>
+              <input
+                className="input-field"
+                value={from}
+                onChange={(e) => { setPage(1); setFrom(e.target.value); }}
+                placeholder="2025-01-01"
+              />
+            </div>
 
-          <div>
-            <label>To (YYYY-MM-DD)</label>
-            <input
-              value={to}
-              onChange={(e) => { setPage(1); setTo(e.target.value); }}
-              placeholder="2025-12-31"
-              style={{ width: "100%", padding: 8 }}
-            />
-          </div>
+            <div>
+              <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                To Date
+              </label>
+              <input
+                className="input-field"
+                value={to}
+                onChange={(e) => { setPage(1); setTo(e.target.value); }}
+                placeholder="2025-12-31"
+              />
+            </div>
 
-          <div>
-            <label>Page size</label>
-            <input
-              value={pageSize}
-              onChange={(e) => { setPage(1); setPageSize(Number(e.target.value) || 20); }}
-              placeholder="20"
-              style={{ width: "100%", padding: 8 }}
-            />
-          </div>
-
-          <div>
-            <button onClick={() => { setPage(1); load(); }} disabled={loading}>
-              Refresh
-            </button>
+            <div className="flex flex-col">
+              <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                Actions
+              </label>
+              <div className="flex gap-2">
+                <input
+                  className="input-field"
+                  value={pageSize}
+                  onChange={(e) => { setPage(1); setPageSize(Number(e.target.value) || 20); }}
+                  placeholder="Page size"
+                  style={{ width: '80px' }}
+                />
+                <button 
+                  className="btn-secondary px-4"
+                  onClick={() => { setPage(1); load(); }} 
+                  disabled={loading}
+                >
+                  {loading ? '⟳' : '↻'}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Summary */}
-        <div style={{ marginBottom: 12 }}>
-          <b>Total:</b> {total} &nbsp;•&nbsp; <b>Page:</b> {page} / {Math.max(1, Math.ceil(total / pageSize))}
-        </div>
-
-        {error && (
-          <div style={{ color: "crimson", marginBottom: 12 }}>
-            Error: {error}
+        {/* Premium Data Table */}
+        <div className="premium-card">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-8 bg-gradient-to-b from-green-400 to-green-600 rounded-full"></div>
+              <div>
+                <h2 className="text-xl font-semibold text-gradient">Lead Database</h2>
+                <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                  {total.toLocaleString()} total leads • Page {page} of {Math.max(1, Math.ceil(total / pageSize))}
+                </p>
+              </div>
+            </div>
+            
+            {loading && (
+              <div className="flex items-center gap-2">
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-500 border-t-transparent"></div>
+                <span className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Loading...</span>
+              </div>
+            )}
           </div>
-        )}
 
-        {/* Table */}
-        <div style={{ overflowX: "auto", border: "1px solid #eee", borderRadius: 8 }}>
-          <table width="100%" cellPadding={8} style={{ borderCollapse: "collapse" }}>
-            <thead style={{ background: "#fafafa" }}>
-              <tr>
-                <th align="left">Public ID</th>
-                <th align="left">Source</th>
-                <th align="left">Company</th>
-                <th align="left">Contact</th>
-                <th align="left">Email</th>
-                <th align="left">Phone</th>
-                <th align="left">Service</th>
-                <th align="left">Postal/ZIP</th>
-                <th align="right">Score</th>
-                <th align="left">Created</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.length === 0 ? (
+          {error && (
+            <div className="mb-6 p-4 rounded-lg" style={{ 
+              background: 'rgba(239, 68, 68, 0.1)', 
+              border: '1px solid rgba(239, 68, 68, 0.3)' 
+            }}>
+              <div className="text-sm" style={{ color: 'var(--accent-error)' }}>
+                ❌ Error: {error}
+              </div>
+            </div>
+          )}
+
+          <div className="overflow-x-auto">
+            <table className="premium-table">
+              <thead>
                 <tr>
-                  <td colSpan={10} align="center" style={{ padding: 24, color: "#999" }}>
-                    No results for these filters.
-                  </td>
+                  <th>Lead ID</th>
+                  <th>Source</th>
+                  <th>Company</th>
+                  <th>Contact</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Service</th>
+                  <th>Location</th>
+                  <th style={{ textAlign: 'right' }}>AI Score</th>
+                  <th>Created</th>
                 </tr>
-              ) : (
-                rows.map((r) => (
-                  <tr key={r.id} style={{ borderTop: "1px solid #eee" }}>
-                    <td>{r.publicId}</td>
-                    <td>{r.sourceType}</td>
-                    <td>{r.company}</td>
-                    <td>{r.contactName}</td>
-                    <td>{r.email}</td>
-                    <td>{r.phoneE164}</td>
-                    <td>{r.serviceCode}</td>
-                    <td>{r.postalCode ?? r.zip ?? ""}</td>
-                    <td align="right">{r.aiScore ?? ""}</td>
-                    <td>{r.createdAt ? fmtDate(r.createdAt) : ""}</td>
+              </thead>
+              <tbody>
+                {rows.length === 0 ? (
+                  <tr>
+                    <td colSpan={10} style={{ textAlign: 'center', padding: '3rem' }}>
+                      <div className="space-y-2">
+                        <div className="text-lg" style={{ color: 'var(--text-tertiary)' }}>
+                          No leads found
+                        </div>
+                        <div className="text-sm" style={{ color: 'var(--text-muted)' }}>
+                          Try adjusting your filters or search terms
+                        </div>
+                      </div>
+                    </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                ) : (
+                  rows.map((r) => (
+                    <tr key={r.id}>
+                      <td>
+                        <div className="font-mono text-sm" style={{ color: 'var(--brand-primary)' }}>
+                          {r.publicId}
+                        </div>
+                      </td>
+                      <td>
+                        <span className={`status-pill ${
+                          r.sourceType === 'SYSTEM' ? 'status-pill--success' :
+                          r.sourceType === 'RFP' ? 'status-pill--info' :
+                          'status-pill--warning'
+                        }`}>
+                          {r.sourceType}
+                        </span>
+                      </td>
+                      <td className="font-medium">{r.company || '—'}</td>
+                      <td>{r.contactName || '—'}</td>
+                      <td>
+                        {r.email ? (
+                          <a 
+                            href={`mailto:${r.email}`} 
+                            className="text-blue-400 hover:text-blue-300"
+                          >
+                            {r.email}
+                          </a>
+                        ) : '—'}
+                      </td>
+                      <td>
+                        {r.phoneE164 ? (
+                          <a 
+                            href={`tel:${r.phoneE164}`}
+                            className="text-blue-400 hover:text-blue-300"
+                          >
+                            {r.phoneE164}
+                          </a>
+                        ) : '—'}
+                      </td>
+                      <td>{r.serviceCode || '—'}</td>
+                      <td>{r.postalCode ?? r.zip ?? '—'}</td>
+                      <td style={{ textAlign: 'right' }}>
+                        {r.aiScore ? (
+                          <div className={`inline-flex px-2 py-1 rounded text-xs font-semibold ${
+                            r.aiScore >= 70 ? 'bg-green-500/20 text-green-400' :
+                            r.aiScore >= 40 ? 'bg-yellow-500/20 text-yellow-400' :
+                            'bg-red-500/20 text-red-400'
+                          }`}>
+                            {r.aiScore}
+                          </div>
+                        ) : '—'}
+                      </td>
+                      <td>
+                        <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                          {r.createdAt ? fmtDate(r.createdAt) : '—'}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
 
-        {/* Pager */}
-        <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
-          <button disabled={page <= 1 || loading} onClick={() => setPage((p) => Math.max(1, p - 1))}>
-            ◀ Prev
-          </button>
-          <button disabled={page >= totalPages || loading} onClick={() => setPage((p) => Math.min(totalPages, p + 1))}>
-            Next ▶
-          </button>
+          {/* Premium Pagination */}
+          {rows.length > 0 && (
+            <div className="flex items-center justify-between mt-6 pt-6 border-t" style={{ borderColor: 'var(--border-primary)' }}>
+              <div className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                Showing {((page - 1) * pageSize) + 1} to {Math.min(page * pageSize, total)} of {total.toLocaleString()} leads
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <button 
+                  className="btn-secondary px-3 py-2 disabled:opacity-50"
+                  disabled={page <= 1 || loading} 
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                >
+                  ← Previous
+                </button>
+                
+                <div className="flex items-center gap-1">
+                  {[...Array(Math.min(5, totalPages))].map((_, i) => {
+                    const pageNum = Math.max(1, page - 2) + i;
+                    if (pageNum > totalPages) return null;
+                    
+                    return (
+                      <button
+                        key={pageNum}
+                        className={`px-3 py-2 text-sm rounded-md transition-all ${
+                          pageNum === page 
+                            ? 'bg-blue-600 text-white' 
+                            : 'hover:bg-gray-700 text-gray-300'
+                        }`}
+                        onClick={() => setPage(pageNum)}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })}
+                </div>
+                
+                <button 
+                  className="btn-secondary px-3 py-2 disabled:opacity-50"
+                  disabled={page >= totalPages || loading} 
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                >
+                  Next →
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>
