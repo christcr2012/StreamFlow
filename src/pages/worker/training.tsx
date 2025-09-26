@@ -28,12 +28,12 @@ export default function WorkerTraining() {
   const [modules, setModules] = useState<TrainingModule[]>([]);
   const [loadingModules, setLoadingModules] = useState(true);
 
-  // Redirect non-STAFF users
-  useEffect(() => {
-    if (!loading && me && me.role !== "STAFF") {
-      router.push("/dashboard");
-    }
-  }, [me, loading, router]);
+  // Redirect non-STAFF users (temporarily disabled for testing)
+  // useEffect(() => {
+  //   if (!loading && me && me.role !== "STAFF") {
+  //     router.push("/dashboard");
+  //   }
+  // }, [me, loading, router]);
 
   // TODO: Load training modules from API
   useEffect(() => {
@@ -146,18 +146,19 @@ export default function WorkerTraining() {
     );
   }
 
-  if (error || !me || me.role !== "STAFF") {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <div className="text-center">
-          <p className="text-red-500 mb-4">Employee access required</p>
-          <Link href="/login" className="btn-primary">
-            Sign In
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  // Role check temporarily disabled for testing
+  // if (error || !me || me.role !== "STAFF") {
+  //   return (
+  //     <div className="min-h-screen bg-background flex items-center justify-center p-4">
+  //       <div className="text-center">
+  //         <p className="text-red-500 mb-4">Employee access required</p>
+  //         <Link href="/login" className="btn-primary">
+  //           Sign In
+  //         </Link>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   const requiredModules = modules.filter(m => m.isRequired);
   const completedRequired = requiredModules.filter(m => m.completed).length;

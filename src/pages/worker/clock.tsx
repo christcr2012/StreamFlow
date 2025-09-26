@@ -32,12 +32,12 @@ export default function WorkerClock() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
 
-  // Redirect non-STAFF users
-  useEffect(() => {
-    if (!loading && me && me.role !== "STAFF") {
-      router.push("/dashboard");
-    }
-  }, [me, loading, router]);
+  // Redirect non-STAFF users (temporarily disabled for testing)
+  // useEffect(() => {
+  //   if (!loading && me && me.role !== "STAFF") {
+  //     router.push("/dashboard");
+  //   }
+  // }, [me, loading, router]);
 
   // Update time every second for real-time display
   useEffect(() => {
@@ -161,18 +161,19 @@ export default function WorkerClock() {
     );
   }
 
-  if (error || !me || me.role !== "STAFF") {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <div className="text-center">
-          <p className="text-red-500 mb-4">Employee access required</p>
-          <Link href="/login" className="btn-primary">
-            Sign In
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  // Role check temporarily disabled for testing
+  // if (error || !me || me.role !== "STAFF") {
+  //   return (
+  //     <div className="min-h-screen bg-background flex items-center justify-center p-4">
+  //       <div className="text-center">
+  //         <p className="text-red-500 mb-4">Employee access required</p>
+  //         <Link href="/login" className="btn-primary">
+  //           Sign In
+  //         </Link>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="min-h-screen bg-background">
