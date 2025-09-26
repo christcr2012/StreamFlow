@@ -17,9 +17,10 @@ import { prisma as db } from "@/lib/prisma";
 import { assertPermission, PERMS } from "@/lib/rbac";
 import { LeadStatus, LeadSource } from "@prisma/client";
 import { UNIT_PRICE_CENTS, isReferralSource, isBillableSource, asLeadSource } from "@/lib/billing";
+import { applyConflictResolution } from "@/lib/leadConflictResolution";
 
 type Ok = { ok: true; leadId: string };
-type Err = { ok: false; error: string };
+type Err = { ok: false; error: string; conflicts?: string[] };
 type Resp = Ok | Err;
 
 // Narrow type for enrichmentJson.billing we care about
@@ -28,6 +29,9 @@ type BillingInfo = {
   billableEligible?: boolean;
   billedAt?: string | null;
   reason?: string;
+  employeeRewardEligible?: boolean;
+  conflictChecked?: boolean;
+  conflictWarnings?: string[];
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Resp>) {
@@ -38,11 +42,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const id = (req.method === "POST" ? req.body?.id : req.query?.id) as string | undefined;
     if (!id) return res.status(400).json({ ok: false, error: "Missing lead id" });
 
-    // Load the lead (select only what we need)
+    // Load the lead (include orgId for conflict resolution)
     const lead = await db.lead.findUnique({
       where: { id },
       select: {
         id: true,
+        orgId: true,
         status: true,
         convertedAt: true,
         sourceType: true,
@@ -54,22 +59,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     if (!lead) return res.status(404).json({ ok: false, error: "Lead not found" });
 
+    // CRITICAL: Apply conflict resolution and anti-fraud logic
+    const conflictResult = await applyConflictResolution(lead.id, lead.orgId);
+    
+    if (!conflictResult.success) {
+      return res.status(400).json({ 
+        ok: false, 
+        error: conflictResult.billing.reason,
+        conflicts: conflictResult.conflicts 
+      });
+    }
+
     // If already converted, we still refresh billing flags to ensure policy consistency (idempotent).
     const now = new Date();
 
-    // Normalize source to Prisma enum when possible
-    const srcEnum: LeadSource | null = lead.sourceType ? (lead.sourceType as LeadSource) : null;
-    const srcStr = lead.sourceType?.toString() ?? "";
-    const src = srcEnum ?? asLeadSource(srcStr) ?? null;
-
-    // Determine referral/system flags
-    const referral = isReferralSource(src ?? srcStr);
-    const systemish = lead.systemGenerated === true || (src === LeadSource.SYSTEM);
-
-    // Billing eligibility per policy
-    const billableEligible = systemish && !referral;
+    // Use conflict resolution results for billing
+    const billableEligible = conflictResult.billing.providerBillable;
+    const employeeRewardEligible = conflictResult.billing.employeeRewardEligible;
     const unitPriceCents = billableEligible ? UNIT_PRICE_CENTS : 0;
-    const reason = billableEligible ? "Converted system lead" : "Non-billable (referral or non-system)";
+    const reason = conflictResult.billing.reason;
 
     // Safely merge enrichmentJson.billing without dropping other fields
     const ej = (lead.enrichmentJson ?? {}) as Record<string, unknown>;
@@ -82,6 +90,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       billableEligible,
       unitPriceCents,
       reason,
+      employeeRewardEligible, // Track employee reward eligibility
+      conflictChecked: true,   // Mark as processed through conflict resolution
+      conflictWarnings: conflictResult.conflicts, // Store any warnings
       // Do not overwrite billedAt if it already exists; preserve billing history
       billedAt: prevBilling.billedAt ?? null,
     };

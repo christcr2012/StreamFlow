@@ -2,15 +2,7 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/login": "pages/login.js",
-  "/api/auth/login": "pages/api/auth/login.js",
   "/dashboard": "pages/dashboard.js",
-  "/api/me": "pages/api/me.js",
-  "/api/dashboard/summary": "pages/api/dashboard/summary.js",
-  "/api/leads.list": "pages/api/leads.list.js",
-  "/profile": "pages/profile.js",
-  "/api/auth/logout": "pages/api/auth/logout.js",
   "/provider": "pages/provider.js",
-  "/api/provider/metrics": "pages/api/provider/metrics.js",
-  "/api/provider/clients/summary": "pages/api/provider/clients/summary.js"
+  "/provider/analytics": "pages/provider/analytics.js"
 }

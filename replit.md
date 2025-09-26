@@ -6,12 +6,19 @@ Mountain Vista is a comprehensive lead management and billing platform built for
 
 ## Recent Changes
 
-**September 26, 2025 - PROVIDER BUSINESS MODEL:**
+**September 26, 2025 - PROVIDER BUSINESS MODEL & CONFLICT RESOLUTION:**
 - Updated to Provider-Client business model: Provider charges $100 per converted lead
 - Provider AI costs hard-limited to $50/month with atomic transaction enforcement  
 - Client-facing credit system: 1 credit = $0.05 (50x markup from provider cost)
 - Two lead types: Relationship-valued ($100/customer, hide future leads) vs Job-valued ($100/contract, show future leads)
 - Premium dashboard experience with "million dollar software" feel at startup costs
+
+**EMPLOYEE REFERRAL SYSTEM & CONFLICT RESOLUTION:**
+- Employee referrals: Client pays employee $50 directly (NO Provider billing)
+- Provider billing: Only for system/AI-generated leads ($100/lead)
+- CRITICAL: Industry-leading conflict resolution prevents double-payment scenarios
+- Anti-fraud protection with automatic blocking of high-risk conversions
+- Complete exclusion of employee referral data from Provider portal analytics
 
 **Business Model:**
 - Provider charges clients $100 per converted lead
