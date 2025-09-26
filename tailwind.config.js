@@ -15,6 +15,8 @@ module.exports = {
         xl: '3rem',
         '2xl': '4rem',
         '3xl': '5rem',
+        '4xl': '6rem',
+        '5xl': '8rem',
       },
       screens: {
         sm: '640px',
@@ -23,11 +25,14 @@ module.exports = {
         xl: '1280px',
         '2xl': '1536px',
         '3xl': '1920px',
+        '4xl': '2560px',
+        '5xl': '3440px',
       },
     },
     extend: {
-      // Enhanced responsive breakpoints
+      // Enhanced responsive breakpoints for complete coverage
       screens: {
+        'xxs': '320px',  // Very small mobile devices
         'xs': '475px',   // Extra small devices
         'sm': '640px',   // Small devices (tablets)
         'md': '768px',   // Medium devices (small desktops)
@@ -35,6 +40,8 @@ module.exports = {
         'xl': '1280px',  // Extra large devices
         '2xl': '1536px', // Ultra large devices
         '3xl': '1920px', // Ultra wide devices
+        '4xl': '2560px', // 4K and ultra-wide monitors
+        '5xl': '3440px', // Ultra-wide 21:9 monitors
       },
       // Responsive spacing scale
       spacing: {
