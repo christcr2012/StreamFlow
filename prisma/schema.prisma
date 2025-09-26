@@ -59,6 +59,15 @@ model Org {
   mediaAssets     MediaAsset[]      @relation("OrgMediaAssets")
   trainingModules TrainingModule[]  @relation("OrgTrainingModules")
   trainingCompletions TrainingCompletion[] @relation("OrgTrainingCompletions")
+  
+  // Enterprise Governance & Feature Control Relations
+  securityPolicies SecurityPolicy[]   @relation("OrgSecurityPolicies")
+  featureModules   FeatureModule[]    @relation("OrgFeatureModules")
+  featureUsage     FeatureUsage[]     @relation("OrgFeatureUsage")
+  budget           OrganizationBudget? @relation("OrgBudget")
+  integrations     Integration[]      @relation("OrgIntegrations")
+  supportSessions  SupportSession[]   @relation("OrgSupportSessions")
+  auditEvents      AuditEvent[]       @relation("OrgAuditEvents")
 
   /// brandConfig stores white-label brand settings such as name, colors, and logo URL.
   /// It is JSON to allow arbitrary keys like { name: "Mountain Vista", color: "#123456", logoUrl: "https://..." }
@@ -1064,4 +1073,217 @@ enum MediaType {
   DOCUMENT    // PDFs, Word docs, etc.
   AUDIO       // Audio recordings
   OTHER       // Other file types
+}
+
+// ===== ENTERPRISE GOVERNANCE & POLICY MODELS =====
+
+/// SecurityPolicy stores enterprise governance policies with SOC 2 compliance
+model SecurityPolicy {
+  id          String   @id @default(cuid())
+  orgId       String
+  category    PolicyCategory
+  name        String   // e.g. "Password Policy", "MFA Policy"
+  enabled     Boolean  @default(true)
+  config      Json     // Policy configuration settings
+  version     Int      @default(1)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  lastUpdatedBy String? // User ID who last updated the policy
+  
+  org Org @relation("OrgSecurityPolicies", fields: [orgId], references: [id])
+  
+  @@unique([orgId, category, name])
+  @@index([orgId, enabled])
+}
+
+/// FeatureModule tracks enabled platform features with usage and cost monitoring
+model FeatureModule {
+  id              String   @id @default(cuid())
+  orgId           String
+  moduleKey       String   // Unique identifier like 'ai_lead_scoring', 'sms_notifications'
+  name            String   // Display name
+  description     String?
+  category        FeatureCategory
+  enabled         Boolean  @default(false)
+  usageLimit      Int?     // Usage limit (API calls, messages, etc.)
+  costPerUnit     Decimal? @db.Decimal(8, 4) // Cost per usage unit in USD
+  monthlyBudget   Int?     // Monthly budget limit in cents
+  config          Json     @default("{}")  // Module-specific configuration
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  org         Org            @relation("OrgFeatureModules", fields: [orgId], references: [id])
+  usageEvents FeatureUsage[] @relation("ModuleUsageEvents")
+  
+  @@unique([orgId, moduleKey])
+  @@index([orgId, enabled])
+  @@index([enabled, category])
+}
+
+/// FeatureUsage tracks individual usage events for billing and monitoring
+model FeatureUsage {
+  id          String   @id @default(cuid())
+  orgId       String
+  moduleId    String
+  userId      String?  // User who triggered the usage
+  amount      Int      // Usage amount (API calls, messages, etc.)
+  costCents   Int      // Cost in cents
+  metadata    Json?    // Additional usage metadata
+  createdAt   DateTime @default(now())
+  
+  org    Org           @relation("OrgFeatureUsage", fields: [orgId], references: [id])
+  module FeatureModule @relation("ModuleUsageEvents", fields: [moduleId], references: [id])
+  
+  @@index([orgId, moduleId, createdAt])
+  @@index([createdAt])
+}
+
+/// OrganizationBudget manages feature usage budgets and alerts
+model OrganizationBudget {
+  id                 String   @id @default(cuid())
+  orgId              String   @unique
+  monthlyLimitCents  Int      @default(50000) // $500 default monthly limit
+  alertThreshold     Int      @default(80)    // Alert at 80% usage
+  autoDisable        Boolean  @default(false) // Auto-disable features when limit reached
+  notifyOwners       Boolean  @default(true)  // Send email notifications
+  currentSpendCents  Int      @default(0)     // Current month spending
+  lastResetAt        DateTime @default(now()) // Last monthly reset
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  
+  org Org @relation("OrgBudget", fields: [orgId], references: [id])
+}
+
+/// Integration manages external service connections (SSO, SCIM, webhooks, etc.)
+model Integration {
+  id            String   @id @default(cuid())
+  orgId         String
+  type          IntegrationType
+  name          String   // Display name
+  enabled       Boolean  @default(false)
+  config        Json     @default("{}")  // Integration-specific config (encrypted secrets)
+  metadata      Json?    // Additional metadata
+  lastSyncAt    DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  org Org @relation("OrgIntegrations", fields: [orgId], references: [id])
+  
+  @@unique([orgId, type, name])
+  @@index([orgId, enabled])
+  @@index([type, enabled])
+}
+
+/// SupportSession manages secure support access and impersonation
+model SupportSession {
+  id            String   @id @default(cuid())
+  orgId         String
+  supportUserId String   // Provider support user ID
+  targetUserId  String?  // User being impersonated (if applicable)
+  sessionType   SupportSessionType
+  reason        String   // Justification for access
+  consentGiven  Boolean  @default(false)
+  consentAt     DateTime?
+  startedAt     DateTime @default(now())
+  expiresAt     DateTime // Auto-expiry time
+  endedAt       DateTime?
+  status        SupportSessionStatus @default(PENDING)
+  metadata      Json?    // Session metadata
+  
+  org Org @relation("OrgSupportSessions", fields: [orgId], references: [id])
+  
+  @@index([orgId, status])
+  @@index([supportUserId, status])
+  @@index([expiresAt])
+}
+
+/// AuditEvent extends AuditLog with detailed enterprise audit requirements
+model AuditEvent {
+  id          String   @id @default(cuid())
+  orgId       String
+  userId      String?  // User who performed the action
+  sessionId   String?  // Session ID for tracking
+  action      String   // Action performed (login, create, update, delete, etc.)
+  target      String   // What was acted upon (user, lead, policy, etc.)
+  targetId    String?  // ID of the target entity
+  details     Json?    // Detailed event information
+  ipAddress   String?  // Source IP address
+  userAgent   String?  // Browser/client information
+  severity    AuditSeverity @default(INFO)
+  category    AuditCategory @default(GENERAL)
+  success     Boolean  @default(true)
+  errorMessage String? // Error details if action failed
+  createdAt   DateTime @default(now())
+  
+  org Org @relation("OrgAuditEvents", fields: [orgId], references: [id])
+  
+  @@index([orgId, createdAt])
+  @@index([orgId, action])
+  @@index([orgId, userId])
+  @@index([createdAt])
+  @@index([severity, createdAt])
+}
+
+// ===== ENUMS FOR ENTERPRISE MODELS =====
+
+enum PolicyCategory {
+  AUTHENTICATION    // Password, MFA policies
+  SECURITY         // Session, IP access control
+  COMPLIANCE       // Data retention, residency
+  NETWORK_SECURITY // IP allowlists, geo-blocking
+  EMERGENCY        // Break-glass access
+}
+
+enum FeatureCategory {
+  AI_ANALYTICS     // AI features and analytics
+  AUTOMATION       // Workflow automation
+  COMMUNICATION    // SMS, email, notifications
+  INTEGRATION      // API access, webhooks
+  MOBILE           // Mobile app features
+  DEVELOPER_TOOLS  // API, SDKs
+  MARKETING        // Email marketing, campaigns
+}
+
+enum IntegrationType {
+  SSO_SAML         // SAML SSO integration
+  SSO_OIDC         // OpenID Connect SSO
+  SCIM             // SCIM user provisioning
+  WEBHOOK          // Webhook endpoints
+  OAUTH_APP        // OAuth application
+  API_INTEGRATION  // Third-party API integration
+  ACCOUNTING       // QuickBooks, Xero, etc.
+  COMMUNICATION    // Slack, Teams, etc.
+}
+
+enum SupportSessionType {
+  READ_ONLY        // View-only access
+  IMPERSONATION    // Full user impersonation
+  BREAK_GLASS      // Emergency access
+  TROUBLESHOOTING  // Technical support
+}
+
+enum SupportSessionStatus {
+  PENDING          // Awaiting consent/approval
+  ACTIVE           // Currently active
+  EXPIRED          // Session expired
+  ENDED            // Manually ended
+  CANCELLED        // Cancelled before start
+}
+
+enum AuditSeverity {
+  INFO             // Informational events
+  WARNING          // Warning events
+  ERROR            // Error events
+  CRITICAL         // Critical security events
+}
+
+enum AuditCategory {
+  GENERAL          // General actions
+  AUTHENTICATION   // Login, logout, password changes
+  AUTHORIZATION    // Permission changes, role assignments
+  DATA_ACCESS      // Data read operations
+  DATA_MODIFICATION // Data create/update/delete
+  POLICY_CHANGE    // Security policy changes
+  ADMIN_ACTION     // Administrative actions
+  SECURITY_EVENT   // Security-related events
 }
