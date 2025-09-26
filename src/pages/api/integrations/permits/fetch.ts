@@ -1,4 +1,36 @@
 // src/pages/api/integrations/permits/fetch.ts
+// Construction Permits Integration - Northern Colorado WARM Lead Generation
+//
+// PURPOSE:
+// Imports construction permits from Northern Colorado municipalities to identify
+// WARM LEADS for post-construction cleaning services. These are properties that
+// will need cleaning after construction completes, but owners aren't actively
+// seeking cleaning services yet.
+//
+// GEOGRAPHIC FOCUS:
+// - Sterling, CO (headquarters) - highest priority
+// - Greeley area (Weld County) - primary market
+// - Fort Collins/Loveland - secondary market  
+// - Denver area - high-value projects only ($75k+ minimum)
+//
+// DATA SOURCES:
+// - Weld County: Accela system (currently mock data, needs API integration)
+// - Fort Collins: Live ArcGIS Open Data API
+// - Denver: Accela system (currently mock data, needs API integration)
+//
+// LEAD CLASSIFICATION:
+// - These are WARM leads (not actively seeking services, scores via config.thresholds: warm 40-69)
+// - Need relationship building and education about post-construction cleaning
+// - Geographic filtering ensures only Northern Colorado projects
+// - Value filtering prevents low-value residential projects
+//
+// FUTURE INTEGRATIONS:
+// - Real Weld County API integration (currently using mock data)
+// - Real Denver API integration (currently using mock data)
+// - Add Logan County permits (Sterling area)
+// - Add permit status tracking (completion dates for follow-up timing)
+// - Add contractor contact enrichment for warm introductions
+
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma as db } from "@/lib/prisma";
 import { assertPermission, getOrgIdFromReq, PERMS } from "@/lib/rbac";
@@ -6,37 +38,43 @@ import { LeadSource, LeadStatus, Prisma } from "@prisma/client";
 import crypto from "node:crypto";
 import { scoreLeadNormalized } from "@/lib/leadScoringAdapter";
 
-// All leads are FREE - no billing charges
-const DEFAULT_UNIT_PRICE_CENTS = 0; // $0.00 - Free hot lead generation
+// All leads are FREE - no billing charges (core business model)
+const DEFAULT_UNIT_PRICE_CENTS = 0; // $0.00 - 100% free lead generation
 
+// Generate short, consistent hash for lead deduplication
 function sha256_24(s: string) {
   return crypto.createHash("sha256").update(s).digest("hex").slice(0, 24);
 }
 
+// Create stable identity hash for lead deduplication across permit imports
+// Uses available contact info to prevent duplicate leads for same project
 function identityHash(input: { email?: string | null; phoneE164?: string | null; company?: string | null; name?: string | null }) {
   const norm = (v?: string | null) => (v ?? "").trim().toLowerCase();
   const key = [norm(input.email), norm(input.phoneE164), norm(input.company), norm(input.name)].filter(Boolean).join("|");
   return sha256_24(key);
 }
 
+// Safe JSON conversion for Prisma enrichment fields
 function asJson(v: unknown): Prisma.InputJsonValue {
   return (v ?? {}) as Prisma.InputJsonValue;
 }
 
+// Normalized permit data structure from various Colorado API sources
+// This standardizes data from different municipal systems for consistent processing
 type PermitItem = {
-  permitNumber?: string;
-  projectDescription?: string;
-  permitType?: string;
-  contractorName?: string;
-  contractorPhone?: string;
-  propertyAddress?: string;
-  city?: string;
-  state?: string;
-  zip?: string;
-  permitValue?: number;
-  issuedDate?: string;
-  constructionType?: string;
-  workDescription?: string;
+  permitNumber?: string;        // Unique permit ID for deduplication
+  projectDescription?: string;  // Project details for lead title generation
+  permitType?: string;         // COMMERCIAL, RESIDENTIAL, etc (filter for commercial)
+  contractorName?: string;     // Primary contact for outreach
+  contractorPhone?: string;    // Phone number for direct contact
+  propertyAddress?: string;    // Project location
+  city?: string;              // For geographic scoring (Sterling > Greeley > etc)
+  state?: string;             // Should be "CO" for all Northern Colorado permits
+  zip?: string;               // Additional geographic context
+  permitValue?: number;       // Project value for filtering (minimum thresholds)
+  issuedDate?: string;        // When permit was issued (for timing follow-up)
+  constructionType?: string;  // New construction, renovation, etc
+  workDescription?: string;   // Additional project details
 };
 
 /** Extract useful info from different Colorado permit API formats */
@@ -148,10 +186,17 @@ function makeEnrichment(item: PermitItem, source: string) {
   };
 }
 
+// WELD COUNTY PERMITS - Greeley, Evans, Sterling area
+// TODO: Integrate with real Weld County Accela API
+// Current status: Using mock data to demonstrate structure
+// API endpoint: https://aca-prod.accela.com/WELD/Default.aspx (needs authentication)
 async function fetchWeldCountyPermits(limit: number): Promise<unknown[]> {
-  // Note: Weld County uses Accela system which may not have direct API access
-  // For now, return mock data structure to demonstrate the pattern
-  // In production, this would integrate with Weld County's permit system
+  // IMPLEMENTATION NOTES:
+  // - Weld County uses Accela Citizen Access system
+  // - May require API key or web scraping approach
+  // - Focus on commercial permits over $25k
+  // - Priority cities: Greeley, Evans, unincorporated Weld County
+  // - Sterling is actually in Logan County (separate system needed)
   
   const mockPermits = [
     {
@@ -187,16 +232,25 @@ async function fetchWeldCountyPermits(limit: number): Promise<unknown[]> {
   return mockPermits.slice(0, limit);
 }
 
+// FORT COLLINS PERMITS - Live ArcGIS Open Data Integration
+// This is the only fully-implemented live API integration
+// Status: PRODUCTION READY - pulls real permit data
 async function fetchFortCollinsPermits(limit: number): Promise<unknown[]> {
-  // Fort Collins ArcGIS Open Data API
+  // Fort Collins GIS Open Data - free, no API key required
   const url = "https://services.arcgis.com/YY1W1B93GvV1YFqy/arcgis/rest/services/Building_Permits/FeatureServer/0/query";
   const params = new URLSearchParams({
     "f": "json", 
-    "where": "1=1",
-    "outFields": "*",
-    "orderByFields": "ISSUED_DATE DESC",
+    "where": "1=1",                    // TODO: Add filter for commercial permits only
+    "outFields": "*",                 // Get all available fields
+    "orderByFields": "ISSUED_DATE DESC", // Newest permits first
     "resultRecordCount": limit.toString()
   });
+  
+  // ENHANCEMENT OPPORTUNITIES:
+  // - Add where clause: "PERMIT_TYPE LIKE '%COMMERCIAL%'"
+  // - Add minimum valuation filter: "VALUATION > 25000"
+  // - Add date range filter for recent permits only
+  // - Add specific construction types that need cleaning
   
   const response = await fetch(`${url}?${params}`);
   if (!response.ok) {
@@ -206,9 +260,22 @@ async function fetchFortCollinsPermits(limit: number): Promise<unknown[]> {
   return data.features.map(f => f.attributes);
 }
 
+// DENVER PERMITS - High-value commercial projects only
+// TODO: Integrate with real Denver Accela API
+// Current status: Using mock data for high-value projects only
+// API endpoint: https://aca-prod.accela.com/DENVER/Default.aspx (needs authentication)
 async function fetchDenverPermits(limit: number): Promise<unknown[]> {
-  // Note: Denver uses Accela system which requires specific integration
-  // For now, return mock data for high-value contracts only
+  // BUSINESS LOGIC:
+  // - Denver is 2+ hours drive from Sterling headquarters
+  // - Only pursue high-value contracts ($75k+ minimum)
+  // - Focus on downtown commercial and major developments
+  // - Very competitive market - need strong value proposition
+  //
+  // IMPLEMENTATION NOTES:
+  // - Denver uses Accela platform like Weld County
+  // - May require different authentication approach
+  // - Should filter for projects >$250k (3x normal minimum)
+  // - Focus on multi-building developments for ongoing relationships
   
   const mockPermits = [
     {
@@ -292,11 +359,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         continue;
       }
 
-      // Filter for valuable projects and Colorado geography
+      // === GEOGRAPHIC FILTERING - Northern Colorado Service Area Only ===
+      // Reject permits outside service area to avoid wasting sales time
       const city = permit.city?.toLowerCase() || "";
-      const isColoradoCity = ["sterling", "greeley", "evans", "fort collins", "loveland", 
-                              "windsor", "denver", "arvada", "westminster", "thornton",
-                              "longmont", "boulder", "lafayette", "brighton", "commerce city"].includes(city);
+      const isColoradoCity = [
+        // TIER 1: Sterling headquarters area
+        "sterling", 
+        // TIER 2: Primary service area (Weld County)
+        "greeley", "evans",
+        // TIER 3: Secondary service area 
+        "fort collins", "loveland", "windsor",
+        // TIER 4: Extended area (selective)
+        "longmont", "boulder", "lafayette", "brighton", "commerce city",
+        // TIER 5: Denver metro (high-value only)
+        "denver", "arvada", "westminster", "thornton"
+      ].includes(city);
       
       if (!isColoradoCity) {
         items.push({
@@ -309,10 +386,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         continue;
       }
 
-      // Apply higher minimum for Denver area (only very high value)
-      const effectiveMinValue = city === "denver" || city === "arvada" || 
-                               city === "westminster" || city === "thornton" ? 
-                               minValue * 3 : minValue; // 3x higher threshold for Denver area
+      // === VALUE-BASED FILTERING - Ensure profitable project sizes ===
+      // Denver area requires 3x higher minimum due to distance and competition
+      const isDenverArea = ["denver", "arvada", "westminster", "thornton"].includes(city);
+      const effectiveMinValue = isDenverArea ? minValue * 3 : minValue;
+      
+      // BUSINESS RATIONALE:
+      // - Sterling area: $25k minimum (short drive, low competition)
+      // - Greeley area: $25k minimum (primary market, established presence)
+      // - Fort Collins: $25k minimum (competitive but manageable)
+      // - Denver area: $75k minimum (long drive, high competition, need strong ROI)
       
       if (permit.permitValue && permit.permitValue < effectiveMinValue) {
         items.push({
@@ -412,7 +495,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       totalDollars: (totalCents / 100).toFixed(2),
       items,
       source,
-      message: `Imported ${items.filter(it => it.created).length} warm construction leads from ${source}`
+      message: `Imported ${items.filter(it => it.created).length} WARM construction leads from ${source} (post-construction cleaning opportunities)`
     });
 
   } catch (error) {
