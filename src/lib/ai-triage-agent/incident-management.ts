@@ -490,7 +490,10 @@ export class IncidentManager {
   ): Promise<EscalationPayload> {
     try {
       // Get snapshot if available
-      let snapshot: MaskedSnapshot | undefined;
+      // ENTERPRISE AUDIT NOTE: Incident snapshot system
+      // Current: Basic masked snapshot retrieval | Industry Standard: Advanced forensic data capture
+      // TODO: Enterprise incident reconstruction: session replays, state snapshots, context preservation
+      let snapshot: MaskedSnapshot | null | undefined;
       if (incident.repro.maskedSnapshotId) {
         snapshot = await this.getMaskedSnapshot(incident.repro.maskedSnapshotId);
       }
@@ -817,9 +820,11 @@ export function createIncidentManager(tenantId: string): IncidentManager {
   return new IncidentManager(tenantId);
 }
 
-export type {
-  IncidentCard,
-  MaskedSnapshot,
-  ReproSandbox,
-  EscalationPayload
-};
+// ENTERPRISE AUDIT NOTE: Incident Management System Analysis
+// Current: Basic incident tracking | Industry Standard: Advanced incident response platform
+// TODO: Enterprise incident management features:
+// - Real-time incident dashboards, automated escalation workflows, SLA tracking
+// - Advanced forensics: session replay, state reconstruction, timeline analysis  
+// - Integration: PagerDuty, Slack, JIRA, ServiceNow for enterprise incident response
+// - Compliance: ITIL framework, post-mortem automation, regulatory reporting
+// Types already exported above as interfaces, no need to re-export
