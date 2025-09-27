@@ -1,6 +1,7 @@
 // src/pages/profile.tsx
 import { useEffect, useState } from "react";
 import Head from "next/head";
+import AdvancedSecurityModal from "@/components/AdvancedSecurityModal";
 
 type Me =
   | { ok: true; user: { email: string; name: string | null } }
@@ -12,6 +13,7 @@ export default function ProfilePage() {
   const [newPassword, setNewPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [showAdvancedSecurity, setShowAdvancedSecurity] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -183,7 +185,11 @@ export default function ProfilePage() {
                 >
                   <span>{busy ? "🔄 Updating..." : "🔒 Update Password"}</span>
                 </button>
-                <button type="button" className="btn-outline">
+                <button 
+                  type="button" 
+                  className="btn-outline"
+                  onClick={() => setShowAdvancedSecurity(true)}
+                >
                   <span>🔧 Advanced Security</span>
                 </button>
               </div>
@@ -256,6 +262,14 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+
+      {/* Advanced Security Modal */}
+      <AdvancedSecurityModal
+        isOpen={showAdvancedSecurity}
+        onClose={() => setShowAdvancedSecurity(false)}
+        currentPassword={currentPassword}
+        newPassword={newPassword}
+      />
     </>
   );
 }
