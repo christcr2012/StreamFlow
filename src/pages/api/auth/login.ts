@@ -218,7 +218,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.setHeader("Location", `/login?error=missing`);
         return res.status(303).end();
       }
-      return res.status(400).json({ ok: false, error: "Email and password required" });
+      res.status(400).json({ ok: false, error: "Email and password required" });
+      return;
     }
 
     const user = await db.user.findUnique({
@@ -231,7 +232,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.setHeader("Location", `/login?error=invalid`);
         return res.status(303).end();
       }
-      return res.status(401).json({ ok: false, error: "Invalid credentials" });
+      res.status(401).json({ ok: false, error: "Invalid credentials" });
+      return;
     }
 
     // ENTERPRISE TODO: Replace console.log with structured audit logging
@@ -250,7 +252,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.setHeader("Location", `/login?error=invalid`);
         return res.status(303).end();
       }
-      return res.status(401).json({ ok: false, error: "Invalid credentials" });
+      res.status(401).json({ ok: false, error: "Invalid credentials" });
+      return;
     }
 
     // Set cookie and determine redirect based on role
@@ -278,7 +281,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(303).end();
     }
 
-    return res.status(200).json({ ok: true, redirect: redirectUrl });
+    res.status(200).json({ ok: true, redirect: redirectUrl });
   } catch (e: unknown) {
     console.error("/api/auth/login error:", e);
     if (isFormEncoded(req)) {
@@ -286,6 +289,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(303).end();
     }
     const message = e instanceof Error ? e.message : "Internal Server Error";
-    return res.status(500).json({ ok: false, error: message });
+    res.status(500).json({ ok: false, error: message });
   }
 }
