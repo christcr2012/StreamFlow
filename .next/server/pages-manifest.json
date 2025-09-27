@@ -5,10 +5,8 @@
   "/dashboard": "pages/dashboard.js",
   "/api/dashboard/summary": "pages/api/dashboard/summary.js",
   "/login": "pages/login.js",
-  "/workforce": "pages/workforce.js",
-  "/": "pages/index.js",
-  "/documents": "pages/documents.js",
+  "/profile": "pages/profile.js",
   "/api/me": "pages/api/me.js",
   "/api/leads.list": "pages/api/leads.list.js",
-  "/jobs": "pages/jobs.js"
+  "/": "pages/index.js"
 }
