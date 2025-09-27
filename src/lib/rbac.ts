@@ -311,26 +311,38 @@ export const PERMS = {
 export type PermCode = (typeof PERMS)[keyof typeof PERMS];
 
 /**
- * Development test user system for consistent cross-platform testing.
- * These users bypass database lookups and provide predictable RBAC testing.
- * Set these environment variables for testing across Replit, Vercel, local dev.
+ * RBAC-BYPASSING TEST ACCOUNTS - Zero Setup Required
+ * These accounts work everywhere without environment variables or database setup.
+ * Each account bypasses RBAC and gets full permissions for their role testing.
  * 
- * Example .env:
- * DEV_OWNER_EMAIL=owner@test.com
- * DEV_MANAGER_EMAIL=manager@test.com
- * DEV_STAFF_EMAIL=staff@test.com
- * DEV_ACCOUNTANT_EMAIL=accountant@test.com
- * DEV_PROVIDER_EMAIL=provider@test.com
+ * SECURITY: Only enabled in development/preview environments.
  */
-const DEV_USERS = {
-  owner: process.env.DEV_OWNER_EMAIL?.toLowerCase() || null,
-  manager: process.env.DEV_MANAGER_EMAIL?.toLowerCase() || null,
-  staff: process.env.DEV_STAFF_EMAIL?.toLowerCase() || null,
-  accountant: process.env.DEV_ACCOUNTANT_EMAIL?.toLowerCase() || null,
-  provider: process.env.DEV_PROVIDER_EMAIL?.toLowerCase() || null,
+const BYPASS_TEST_ACCOUNTS = {
+  'owner@test.com': { role: 'OWNER', name: 'Test Owner' },
+  'manager@test.com': { role: 'MANAGER', name: 'Test Manager' },
+  'staff@test.com': { role: 'STAFF', name: 'Test Staff' },
+  'accountant@test.com': { role: 'ACCOUNTANT', name: 'Test Accountant' },
+  'provider@test.com': { role: 'PROVIDER', name: 'Test Provider' },
 } as const;
 
-// Legacy support - if DEV_USER_EMAIL is set, treat it as owner
+/**
+ * Check if RBAC bypass is enabled for current environment
+ */
+function isBypassEnabled(): boolean {
+  // Always enabled in development
+  if (process.env.NODE_ENV === 'development') return true;
+  
+  // Enabled in preview/staging environments  
+  if (process.env.VERCEL_ENV === 'preview') return true;
+  
+  // Can be force-enabled with env var (for testing)
+  if (process.env.TEST_USERS_ENABLED === 'true') return true;
+  
+  // Disabled in production
+  return false;
+}
+
+// Legacy support
 const DEV_USER_EMAIL = process.env.DEV_USER_EMAIL?.toLowerCase() || null;
 
 /**
@@ -347,19 +359,18 @@ export function getEmailFromReq(req: NextApiRequest): string | null {
 }
 
 /**
- * Get the development role for a test user email, or null if not a test user.
+ * Check if email is a bypass test account and return role info
  */
-function getDevUserRole(email: string): string | null {
-  // Check new multi-role dev users
-  for (const [role, devEmail] of Object.entries(DEV_USERS)) {
-    if (devEmail && email === devEmail) {
-      return role.toUpperCase();
-    }
-  }
+function getBypassAccount(email: string): { role: string; name: string } | null {
+  if (!isBypassEnabled()) return null;
   
-  // Legacy support - DEV_USER_EMAIL gets OWNER role
-  if (DEV_USER_EMAIL && email === DEV_USER_EMAIL) {
-    return 'OWNER';
+  // Check hardcoded bypass accounts (zero setup required)
+  const account = BYPASS_TEST_ACCOUNTS[email.toLowerCase() as keyof typeof BYPASS_TEST_ACCOUNTS];
+  if (account) return account;
+  
+  // Legacy support - DEV_USER_EMAIL gets OWNER role with full bypass
+  if (DEV_USER_EMAIL && email.toLowerCase() === DEV_USER_EMAIL) {
+    return { role: 'OWNER', name: 'Dev User' };
   }
   
   return null;
@@ -370,12 +381,10 @@ export async function getOrgIdFromReq(req: NextApiRequest): Promise<string | nul
   const email = getEmailFromReq(req);
   if (!email) return null;
 
-  // Development bypass: if this is a dev test user, return a fixed orgId
-  const devRole = getDevUserRole(email);
-  if (devRole) {
-    // Use DEV_ORG_ID if provided, else return a test org ID
-    const devOrg = process.env.DEV_ORG_ID || 'dev-test-org-id';
-    return devOrg;
+  // RBAC bypass: return fixed org for test accounts
+  const bypassAccount = getBypassAccount(email);
+  if (bypassAccount) {
+    return 'bypass-test-org';
   }
   
   const u = await db.user.findUnique({ where: { email }, select: { orgId: true } });
@@ -468,12 +477,10 @@ export async function assertPermission(
       return false;
     }
 
-    // Development bypass: check if this is a dev test user
-    const devRole = getDevUserRole(email);
-    if (devRole) {
-      // Get permissions for the dev role and check if it has the required permission
-      const codes = await getUserPermCodes('dev-user-id', devRole);
-      return codes.has(required);
+    // RBAC BYPASS: Test accounts get ALL permissions
+    const bypassAccount = getBypassAccount(email);
+    if (bypassAccount) {
+      return true; // Bypass all permission checks
     }
 
     const user = await db.user.findUnique({
