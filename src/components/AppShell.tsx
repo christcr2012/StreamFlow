@@ -73,6 +73,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       style={{
         gridTemplateColumns:"260px 1fr", 
         gridTemplateRows:"80px 1fr",
+        alignItems: "start",
         ...dynamicStyles
       }}>
       {/* Sidebar */}
@@ -139,7 +140,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       </header>
 
       {/* Content */}
-      <main className="p-6 flex flex-col" style={{ alignItems: "flex-start" }}>
+      <main className="p-6 overflow-auto" style={{ 
+        alignSelf: "start",
+        justifySelf: "start",
+        height: "fit-content",
+        minHeight: 0
+      }}>
         <div className="max-w-6xl mx-auto w-full">
           {children}
         </div>
