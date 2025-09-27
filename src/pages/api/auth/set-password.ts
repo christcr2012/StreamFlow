@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma as db } from "@/lib/prisma";
 import { hashPassword, verifyPassword } from "@/lib/passwords";
 import { getEmailFromReq } from "@/lib/rbac";
+import { validatePasswordPolicy, formatPasswordErrors } from "@/lib/password-policy";
 
 // SECURITY: Password change for authenticated user only
 // - Gets user from session (never trust client email)
@@ -25,6 +26,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const currentPassword = body.currentPassword ? String(body.currentPassword) : null;
 
     if (!newPassword) return res.status(400).json({ ok: false, error: "newPassword required" });
+
+    // GLOBAL SECURITY: Validate password against security policy
+    const policyValidation = validatePasswordPolicy(newPassword);
+    if (!policyValidation.isValid) {
+      return res.status(400).json({ 
+        ok: false, 
+        error: "Password does not meet security requirements: " + formatPasswordErrors(policyValidation),
+        details: {
+          errors: policyValidation.errors,
+          strength: policyValidation.strength,
+          score: policyValidation.score
+        }
+      });
+    }
 
     const user = await db.user.findUnique({ where: { email }, select: { id: true, passwordHash: true } });
     if (!user) return res.status(404).json({ ok: false, error: "User not found" });
