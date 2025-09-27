@@ -1,0 +1,73 @@
+21:14:29.634 Running build in Washington, D.C., USA (East) – iad1
+21:14:29.635 Build machine configuration: 2 cores, 8 GB
+21:14:29.651 Cloning github.com/christcr2012/mountain-vista (Branch: main, Commit: ebb97d5)
+21:14:31.766 Cloning completed: 2.115s
+21:14:32.321 Restored build cache from previous deployment (GbevE3YDQRWMLwoPjf7WuosJ1ojU)
+21:14:32.861 Running "vercel build"
+21:14:33.289 Vercel CLI 48.1.6
+21:14:33.441 Detected OpenTelemetry dependency: @opentelemetry/api@1.9.0, which meets the minimum version requirement of 1.7.0
+21:14:33.730 WARNING: You should not upload the `.next` directory.
+21:14:33.739 Installing dependencies...
+21:14:39.534 
+21:14:39.534 > workstream@0.0.1 postinstall
+21:14:39.535 > prisma generate
+21:14:39.535 
+21:14:40.706 Environment variables loaded from .env
+21:14:40.709 Prisma schema loaded from prisma/schema.prisma
+21:14:41.977 
+21:14:41.977 ✔ Generated Prisma Client (v6.16.2) to ./node_modules/@prisma/client in 599ms
+21:14:41.978 
+21:14:41.978 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+21:14:41.978 
+21:14:41.978 Tip: Interested in query caching in just a few lines of code? Try Accelerate today! https://pris.ly/tip-3-accelerate
+21:14:41.978 
+21:14:42.005 
+21:14:42.005 added 206 packages in 8s
+21:14:42.006 
+21:14:42.006 169 packages are looking for funding
+21:14:42.006   run `npm fund` for details
+21:14:42.039 Detected Next.js version: 15.5.4
+21:14:42.046 Running "npm run build"
+21:14:43.377 
+21:14:43.377 > workstream@0.0.1 build
+21:14:43.377 > prisma migrate deploy && next build
+21:14:43.377 
+21:14:44.479 Environment variables loaded from .env
+21:14:44.517 Prisma schema loaded from prisma/schema.prisma
+21:14:44.535 Datasource "db": PostgreSQL database "neondb", schema "public" at "ep-billowing-truth-afi1gfga-pooler.c-2.us-west-2.aws.neon.tech"
+21:14:46.081 
+21:14:46.082 10 migrations found in prisma/migrations
+21:14:46.082 
+21:14:47.259 Applying migration `20250926012505_add_ai_cost_tracking`
+21:14:47.809 Applying migration `20250926015642_add_ai_fields`
+21:14:48.256 Applying migration `20250926015747_add_subscription_fields`
+21:14:48.577 
+21:14:48.577 The following migration(s) have been applied:
+21:14:48.578 
+21:14:48.578 migrations/
+21:14:48.578   └─ 20250926012505_add_ai_cost_tracking/
+21:14:48.579     └─ migration.sql
+21:14:48.579   └─ 20250926015642_add_ai_fields/
+21:14:48.579     └─ migration.sql
+21:14:48.579   └─ 20250926015747_add_subscription_fields/
+21:14:48.579     └─ migration.sql
+21:14:48.579       
+21:14:48.579 All migrations have been successfully applied.
+21:14:49.370    ▲ Next.js 15.5.4
+21:14:49.371    - Environments: .env
+21:14:49.371 
+21:14:49.456    Linting and checking validity of types ...
+21:15:10.839 Failed to compile.
+21:15:10.839 
+21:15:10.839 ./attached_assets/me_1758869662882.ts:104:57
+21:15:10.839 Type error: Property 'user' does not exist on type 'MeResponse'.
+21:15:10.839 
+21:15:10.840 [0m [90m 102 |[39m         email[33m:[39m user[33m.[39memail[33m,[39m
+21:15:10.840  [90m 103 |[39m         name[33m:[39m user[33m.[39mname[33m,[39m
+21:15:10.840 [31m[1m>[22m[39m[90m 104 |[39m         baseRole[33m:[39m (user[33m.[39mrole [33m||[39m [32m"VIEWER"[39m) [36mas[39m [33mMeResponse[39m[[32m"user"[39m][[32m"baseRole"[39m][33m,[39m
+21:15:10.840  [90m     |[39m                                                         [31m[1m^[22m[39m
+21:15:10.840  [90m 105 |[39m         rbacRoles[33m:[39m rbacSlugs[33m,[39m
+21:15:10.840  [90m 106 |[39m         isOwner[33m,[39m
+21:15:10.840  [90m 107 |[39m         isProvider[33m,[39m[0m
+21:15:10.893 Next.js build worker exited with code: 1 and signal: null
+21:15:10.911 Error: Command "npm run build" exited with 1
