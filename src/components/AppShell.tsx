@@ -139,8 +139,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       </header>
 
       {/* Content */}
-      <main className="p-6">
-        <div className="max-w-6xl mx-auto">
+      <main className="p-6 flex flex-col" style={{ alignItems: "flex-start" }}>
+        <div className="max-w-6xl mx-auto w-full">
           {children}
         </div>
       </main>

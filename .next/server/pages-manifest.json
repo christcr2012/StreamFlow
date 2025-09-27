@@ -4,7 +4,12 @@
   "/_document": "pages/_document.js",
   "/dashboard": "pages/dashboard.js",
   "/api/dashboard/summary": "pages/api/dashboard/summary.js",
-  "/administration": "pages/administration.js",
+  "/login": "pages/login.js",
   "/leads": "pages/leads.js",
-  "/api/leads.list": "pages/api/leads.list.js"
+  "/api/leads.list": "pages/api/leads.list.js",
+  "/administration": "pages/administration.js",
+  "/api/me": "pages/api/me.js",
+  "/settings": "pages/settings.js",
+  "/": "pages/index.js",
+  "/workforce": "pages/workforce.js"
 }
