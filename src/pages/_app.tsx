@@ -14,8 +14,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   if (isLoginPage) {
     // Login page without navigation
     return (
-      <div className="min-h-screen" style={{ background: 'var(--bg-main)', color: 'var(--text-primary)' }}>
-        <Component {...pageProps} />
+      <div className="h-screen flex flex-col" style={{ background: 'var(--bg-main)', color: 'var(--text-primary)' }}>
+        <div className="flex-1 flex items-start justify-center pt-16">
+          <Component {...pageProps} />
+        </div>
       </div>
     );
   }

@@ -3,10 +3,7 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/dashboard": "pages/dashboard.js",
-  "/api/dashboard/summary": "pages/api/dashboard/summary.js",
-  "/login": "pages/login.js",
   "/profile": "pages/profile.js",
-  "/api/me": "pages/api/me.js",
-  "/api/leads.list": "pages/api/leads.list.js",
-  "/": "pages/index.js"
+  "/login": "pages/login.js",
+  "/reports": "pages/reports.js"
 }
