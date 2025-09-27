@@ -140,7 +140,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Content */}
       <main className="p-6">
-        <div className="max-w-6xl mx-auto grid gap-16">
+        <div className="max-w-6xl mx-auto">
           {children}
         </div>
       </main>
