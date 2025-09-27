@@ -52,8 +52,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(401).json({ ok: false, error: "Invalid credentials" });
     }
 
+    console.log("DEBUG: Login attempt for", emailInput);
+    console.log("DEBUG: Entered password:", password);
+    console.log("DEBUG: Stored hash:", user.passwordHash);
+    
     const ok = await bcrypt.compare(password, user.passwordHash);
+    console.log("DEBUG: Password comparison result:", ok);
+    
     if (!ok) {
+      console.log("DEBUG: Password check failed, redirecting to login with error");
       if (isFormEncoded(req)) {
         res.setHeader("Location", `/login?error=invalid`);
         return res.status(303).end();
