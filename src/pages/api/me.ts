@@ -143,60 +143,53 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       return res.status(405).json({ ok: false, error: "Method not allowed" });
     }
 
-    // Development test user system - matches rbac.ts
-    const DEV_USERS = {
-      owner: process.env.DEV_OWNER_EMAIL?.toLowerCase() || null,
-      manager: process.env.DEV_MANAGER_EMAIL?.toLowerCase() || null,
-      staff: process.env.DEV_STAFF_EMAIL?.toLowerCase() || null,
-      accountant: process.env.DEV_ACCOUNTANT_EMAIL?.toLowerCase() || null,
-      provider: process.env.DEV_PROVIDER_EMAIL?.toLowerCase() || null,
+    // RBAC BYPASS: Test accounts get full permissions (zero setup required)
+    const BYPASS_TEST_ACCOUNTS = {
+      'owner@test.com': { role: 'OWNER', name: 'Test Owner' },
+      'manager@test.com': { role: 'MANAGER', name: 'Test Manager' },
+      'staff@test.com': { role: 'STAFF', name: 'Test Staff' },
+      'accountant@test.com': { role: 'ACCOUNTANT', name: 'Test Accountant' },
+      'provider@test.com': { role: 'PROVIDER', name: 'Test Provider' },
     } as const;
-    const DEV_USER_EMAIL = process.env.DEV_USER_EMAIL?.toLowerCase() || null;
-
-    // Check if this is a development test user
-    let devRole: string | null = null;
-    let devUserName = "Dev User";
     
-    // Check new multi-role dev users
-    for (const [role, devEmail] of Object.entries(DEV_USERS)) {
-      if (devEmail && email.toLowerCase() === devEmail) {
-        devRole = role.toUpperCase();
-        devUserName = `Dev ${role.charAt(0).toUpperCase() + role.slice(1)} User`;
-        break;
-      }
-    }
-    
-    // Legacy support - DEV_USER_EMAIL gets OWNER role
-    if (!devRole && DEV_USER_EMAIL && email.toLowerCase() === DEV_USER_EMAIL) {
-      devRole = "OWNER";
-      devUserName = "Dev Owner User";
+    function isBypassEnabled(): boolean {
+      if (process.env.NODE_ENV === 'development') return true;
+      if (process.env.VERCEL_ENV === 'preview') return true;
+      if (process.env.TEST_USERS_ENABLED === 'true') return true;
+      return false;
     }
 
-    if (devRole) {
-      // Get permissions for this specific dev role
-      const codes = await computePermCodes('dev-user-id', devRole);
-      const perms = Array.from(codes).sort();
+    // Check for bypass test accounts
+    if (isBypassEnabled()) {
+      const account = BYPASS_TEST_ACCOUNTS[email.toLowerCase() as keyof typeof BYPASS_TEST_ACCOUNTS];
+      const DEV_USER_EMAIL = process.env.DEV_USER_EMAIL?.toLowerCase() || null;
       
-      return res.status(200).json({
-        ok: true,
-        user: {
-          email,
-          name: devUserName,
-          baseRole: devRole as "OWNER" | "MANAGER" | "STAFF" | "PROVIDER" | "ACCOUNTANT" | "VIEWER",
-          rbacRoles: [devRole.toLowerCase()], // Single role for testing specific functionality
-          isOwner: devRole === "OWNER",
-          isProvider: devRole === "PROVIDER",
-          perms,
-        },
-        ...(process.env.DEV_ORG_ID ? {
+      if (account || (DEV_USER_EMAIL && email.toLowerCase() === DEV_USER_EMAIL)) {
+        const role = account?.role || 'OWNER';
+        const name = account?.name || 'Dev User';
+        
+        // BYPASS: Grant ALL permissions regardless of role
+        const allPerms = Object.values(SERVER_PERMS).sort();
+        
+        return res.status(200).json({
+          ok: true,
+          user: {
+            email: email.toLowerCase(),
+            name,
+            baseRole: role as "OWNER" | "MANAGER" | "STAFF" | "PROVIDER" | "ACCOUNTANT" | "VIEWER",
+            rbacRoles: [role.toLowerCase()],
+            isOwner: true, // Bypass accounts always have owner privileges
+            isProvider: role === "PROVIDER",
+            perms: allPerms, // ALL permissions for testing
+          },
           org: {
-            id: process.env.DEV_ORG_ID,
-            name: "Dev Test Organization",
+            id: 'bypass-test-org',
+            name: 'Test Organization',
             featureFlags: { allFeaturesEnabled: true },
-            brandConfig: { name: "WorkStream Dev" }
+            brandConfig: { name: 'WorkStream Test' }
           }
-        } : {})
-      });
+        });
+      }
     }
 
     const user = await db.user.findFirst({
