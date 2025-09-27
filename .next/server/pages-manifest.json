@@ -5,8 +5,6 @@
   "/dashboard": "pages/dashboard.js",
   "/api/dashboard/summary": "pages/api/dashboard/summary.js",
   "/administration": "pages/administration.js",
-  "/ai-usage": "pages/ai-usage.js",
-  "/api/me": "pages/api/me.js",
-  "/login": "pages/login.js",
+  "/leads": "pages/leads.js",
   "/api/leads.list": "pages/api/leads.list.js"
 }
