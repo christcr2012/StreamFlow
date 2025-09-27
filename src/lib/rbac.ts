@@ -311,12 +311,26 @@ export const PERMS = {
 export type PermCode = (typeof PERMS)[keyof typeof PERMS];
 
 /**
- * Email that should bypass RBAC permission checks entirely.
- * If DEV_USER_EMAIL is set in the environment, any request from that
- * email address will be treated as having all permissions. This is
- * useful for development and automated testing. In production you
- * should leave DEV_USER_EMAIL unset.
+ * Development test user system for consistent cross-platform testing.
+ * These users bypass database lookups and provide predictable RBAC testing.
+ * Set these environment variables for testing across Replit, Vercel, local dev.
+ * 
+ * Example .env:
+ * DEV_OWNER_EMAIL=owner@test.com
+ * DEV_MANAGER_EMAIL=manager@test.com
+ * DEV_STAFF_EMAIL=staff@test.com
+ * DEV_ACCOUNTANT_EMAIL=accountant@test.com
+ * DEV_PROVIDER_EMAIL=provider@test.com
  */
+const DEV_USERS = {
+  owner: process.env.DEV_OWNER_EMAIL?.toLowerCase() || null,
+  manager: process.env.DEV_MANAGER_EMAIL?.toLowerCase() || null,
+  staff: process.env.DEV_STAFF_EMAIL?.toLowerCase() || null,
+  accountant: process.env.DEV_ACCOUNTANT_EMAIL?.toLowerCase() || null,
+  provider: process.env.DEV_PROVIDER_EMAIL?.toLowerCase() || null,
+} as const;
+
+// Legacy support - if DEV_USER_EMAIL is set, treat it as owner
 const DEV_USER_EMAIL = process.env.DEV_USER_EMAIL?.toLowerCase() || null;
 
 /**
@@ -332,25 +346,38 @@ export function getEmailFromReq(req: NextApiRequest): string | null {
   return email || null;
 }
 
+/**
+ * Get the development role for a test user email, or null if not a test user.
+ */
+function getDevUserRole(email: string): string | null {
+  // Check new multi-role dev users
+  for (const [role, devEmail] of Object.entries(DEV_USERS)) {
+    if (devEmail && email === devEmail) {
+      return role.toUpperCase();
+    }
+  }
+  
+  // Legacy support - DEV_USER_EMAIL gets OWNER role
+  if (DEV_USER_EMAIL && email === DEV_USER_EMAIL) {
+    return 'OWNER';
+  }
+  
+  return null;
+}
+
 /** Look up orgId for current user (used to scope queries). */
 export async function getOrgIdFromReq(req: NextApiRequest): Promise<string | null> {
   const email = getEmailFromReq(req);
   if (!email) return null;
 
-  // Development bypass: if this is the dev user, return a fixed orgId
-  // if provided via DEV_ORG_ID, otherwise fall through to DB lookup.
-  if (DEV_USER_EMAIL && email === DEV_USER_EMAIL) {
-    // Use DEV_ORG_ID if provided, else null to indicate no org
-    const devOrg = process.env.DEV_ORG_ID;
-    if (devOrg) return devOrg;
-    // As a fallback, attempt to fetch the first org from the database
-    try {
-      const firstOrg = await db.org.findFirst({ select: { id: true } });
-      return firstOrg?.id ?? null;
-    } catch {
-      return null;
-    }
+  // Development bypass: if this is a dev test user, return a fixed orgId
+  const devRole = getDevUserRole(email);
+  if (devRole) {
+    // Use DEV_ORG_ID if provided, else return a test org ID
+    const devOrg = process.env.DEV_ORG_ID || 'dev-test-org-id';
+    return devOrg;
   }
+  
   const u = await db.user.findUnique({ where: { email }, select: { orgId: true } });
   return u?.orgId ?? null;
 }
@@ -441,13 +468,12 @@ export async function assertPermission(
       return false;
     }
 
-    // Development bypass: if the incoming email matches the DEV_USER_EMAIL
-    // then skip any database lookups and allow the request. This permits
-    // automated tests and development sessions to exercise any API
-    // regardless of the user's persisted role or permissions. If no
-    // DEV_USER_EMAIL is configured, this block has no effect.
-    if (DEV_USER_EMAIL && email === DEV_USER_EMAIL) {
-      return true;
+    // Development bypass: check if this is a dev test user
+    const devRole = getDevUserRole(email);
+    if (devRole) {
+      // Get permissions for the dev role and check if it has the required permission
+      const codes = await getUserPermCodes('dev-user-id', devRole);
+      return codes.has(required);
     }
 
     const user = await db.user.findUnique({

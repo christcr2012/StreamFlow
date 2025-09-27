@@ -143,27 +143,59 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       return res.status(405).json({ ok: false, error: "Method not allowed" });
     }
 
-    // Dev bypass: grant all perms if DEV_USER_EMAIL matches
+    // Development test user system - matches rbac.ts
+    const DEV_USERS = {
+      owner: process.env.DEV_OWNER_EMAIL?.toLowerCase() || null,
+      manager: process.env.DEV_MANAGER_EMAIL?.toLowerCase() || null,
+      staff: process.env.DEV_STAFF_EMAIL?.toLowerCase() || null,
+      accountant: process.env.DEV_ACCOUNTANT_EMAIL?.toLowerCase() || null,
+      provider: process.env.DEV_PROVIDER_EMAIL?.toLowerCase() || null,
+    } as const;
     const DEV_USER_EMAIL = process.env.DEV_USER_EMAIL?.toLowerCase() || null;
-    if (DEV_USER_EMAIL && email.toLowerCase() === DEV_USER_EMAIL) {
-      const perms = Object.values(SERVER_PERMS);
-      
-      // Dev can access all portals by passing role in query parameter
-      // Default to OWNER, but support ?role=STAFF, ?role=PROVIDER, etc.
-      const roleParam = req.query.role as string;
-      const devRole = (roleParam?.toUpperCase() || "OWNER") as "OWNER" | "MANAGER" | "STAFF" | "PROVIDER" | "ACCOUNTANT" | "VIEWER";
+
+    // Check if this is a development test user
+    let devRole: string | null = null;
+    let devUserName = "Dev User";
+    
+    // Check new multi-role dev users
+    for (const [role, devEmail] of Object.entries(DEV_USERS)) {
+      if (devEmail && email.toLowerCase() === devEmail) {
+        devRole = role.toUpperCase();
+        devUserName = `Dev ${role.charAt(0).toUpperCase() + role.slice(1)} User`;
+        break;
+      }
+    }
+    
+    // Legacy support - DEV_USER_EMAIL gets OWNER role
+    if (!devRole && DEV_USER_EMAIL && email.toLowerCase() === DEV_USER_EMAIL) {
+      devRole = "OWNER";
+      devUserName = "Dev Owner User";
+    }
+
+    if (devRole) {
+      // Get permissions for this specific dev role
+      const codes = await computePermCodes('dev-user-id', devRole);
+      const perms = Array.from(codes).sort();
       
       return res.status(200).json({
         ok: true,
         user: {
           email,
-          name: "Dev User",
-          baseRole: devRole,
-          rbacRoles: ["owner", "provider", "staff", "manager", "accountant"], // All roles for dev
-          isOwner: true,
-          isProvider: true,
+          name: devUserName,
+          baseRole: devRole as "OWNER" | "MANAGER" | "STAFF" | "PROVIDER" | "ACCOUNTANT" | "VIEWER",
+          rbacRoles: [devRole.toLowerCase()], // Single role for testing specific functionality
+          isOwner: devRole === "OWNER",
+          isProvider: devRole === "PROVIDER",
           perms,
         },
+        ...(process.env.DEV_ORG_ID ? {
+          org: {
+            id: process.env.DEV_ORG_ID,
+            name: "Dev Test Organization",
+            featureFlags: { allFeaturesEnabled: true },
+            brandConfig: { name: "WorkStream Dev" }
+          }
+        } : {})
       });
     }
 

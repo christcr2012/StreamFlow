@@ -125,6 +125,50 @@ export interface AuthenticatedUser {
 }
 
 /**
+ * Development test user system matching rbac.ts
+ */
+const DEV_USERS = {
+  owner: process.env.DEV_OWNER_EMAIL?.toLowerCase() || null,
+  manager: process.env.DEV_MANAGER_EMAIL?.toLowerCase() || null,
+  staff: process.env.DEV_STAFF_EMAIL?.toLowerCase() || null,
+  accountant: process.env.DEV_ACCOUNTANT_EMAIL?.toLowerCase() || null,
+  provider: process.env.DEV_PROVIDER_EMAIL?.toLowerCase() || null,
+} as const;
+
+const DEV_USER_EMAIL = process.env.DEV_USER_EMAIL?.toLowerCase() || null;
+
+/**
+ * Get development user data for test emails
+ */
+function getDevUser(email: string): AuthenticatedUser | null {
+  // Check new multi-role dev users
+  for (const [role, devEmail] of Object.entries(DEV_USERS)) {
+    if (devEmail && email === devEmail) {
+      return {
+        id: `dev-${role}-id`,
+        email: devEmail,
+        name: `Dev ${role.charAt(0).toUpperCase() + role.slice(1)} User`,
+        role: role.toUpperCase(),
+        orgId: process.env.DEV_ORG_ID || 'dev-test-org-id'
+      };
+    }
+  }
+  
+  // Legacy support - DEV_USER_EMAIL gets OWNER role
+  if (DEV_USER_EMAIL && email === DEV_USER_EMAIL) {
+    return {
+      id: 'dev-owner-id',
+      email: DEV_USER_EMAIL,
+      name: 'Dev Owner User',
+      role: 'OWNER',
+      orgId: process.env.DEV_ORG_ID || 'dev-test-org-id'
+    };
+  }
+  
+  return null;
+}
+
+/**
  * Get authenticated user from request
  * Validates session cookie and returns user data or null
  */
@@ -134,6 +178,12 @@ export async function getAuthenticatedUser(req: NextApiRequest): Promise<Authent
     const email = req.cookies.ws_user;
     if (!email) {
       return null;
+    }
+
+    // Check if this is a development test user first
+    const devUser = getDevUser(email);
+    if (devUser) {
+      return devUser;
     }
 
     // Validate user exists and is active
