@@ -320,7 +320,7 @@ export default function AiUsageDashboard() {
                     </td>
                   </tr>
                 ) : (
-                  (usageData?.recentEvents || []).map((request, index) => (
+                  (usageData?.recentEvents || []).map((request: any, index: number) => (
                     <tr key={index} className="border-b hover:bg-surface-hover transition-colors" style={{ borderColor: 'var(--border-primary)' }}>
                       <td className="py-3 px-4" style={{ color: 'var(--text-secondary)' }}>{request.timeAgo}</td>
                       <td className="py-3 px-4" style={{ color: 'var(--text-primary)' }}>{request.feature}</td>
