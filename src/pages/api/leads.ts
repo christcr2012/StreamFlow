@@ -1,4 +1,112 @@
 // src/pages/api/leads.ts
+
+/*
+=== ENTERPRISE ROADMAP: LEAD MANAGEMENT API ===
+
+CURRENT STATE vs ENTERPRISE STANDARDS:
+- Basic CRUD operations for leads
+- Simple identity hashing for deduplication
+- Manual lead creation and update
+- Limited validation and enrichment
+
+ENTERPRISE CRM COMPARISON (Salesforce, HubSpot, Pipedrive APIs):
+1. Advanced Lead Operations:
+   - Bulk import/export with transformation
+   - Automated lead assignment and routing
+   - Lead lifecycle automation with workflows
+   - Real-time lead synchronization across systems
+
+2. Data Enrichment Integration:
+   - Automatic company and contact enrichment
+   - Social media profile matching
+   - Email and phone validation services
+   - Intent data integration from multiple sources
+
+3. Advanced API Features:
+   - GraphQL endpoints for complex queries
+   - Webhook subscriptions for real-time updates
+   - Rate limiting and API key management
+   - Comprehensive audit logging and analytics
+
+IMPLEMENTATION ROADMAP:
+
+Phase 1: Enhanced API Capabilities (2-3 weeks)
+- Add bulk operations (create, update, delete multiple leads)
+- Implement field-level validation with custom rules
+- Add lead assignment automation based on territories/skills
+- Create comprehensive lead search with filters and sorting
+
+Phase 2: Data Enrichment Platform (1-2 months)
+- Integrate lead enrichment services (Clearbit, ZoomInfo)
+- Add email verification and phone validation
+- Implement company data matching and normalization
+- Create automated data quality scoring and reporting
+
+Phase 3: Workflow Automation (2-3 months)
+- Build lead routing engine with configurable rules
+- Add lead lifecycle automation (nurturing, scoring updates)
+- Implement trigger-based actions and notifications
+- Create custom workflow builder with visual interface
+
+Phase 4: Advanced Integration (1-2 months)
+- Add GraphQL API for complex data relationships
+- Implement real-time webhooks for external systems
+- Create API rate limiting and usage analytics
+- Add comprehensive API documentation and SDKs
+
+ENTERPRISE FEATURES TO IMPLEMENT:
+*/
+
+// ENTERPRISE FEATURE: Bulk lead operations
+export type BulkLeadOperation = {
+  operation: 'create' | 'update' | 'delete' | 'merge';
+  leads: Array<{
+    id?: string;
+    data: Record<string, unknown>;
+    enrichment?: boolean;
+    validation?: boolean;
+  }>;
+  options: {
+    skipDuplicates?: boolean;
+    autoAssign?: boolean;
+    sendNotifications?: boolean;
+    batchSize?: number;
+  };
+};
+
+// ENTERPRISE FEATURE: Lead enrichment request
+export type LeadEnrichmentRequest = {
+  leadId: string;
+  services: Array<'company' | 'contact' | 'social' | 'intent' | 'validation'>;
+  options: {
+    priority: 'high' | 'normal' | 'low';
+    webhook?: string;
+    skipExisting?: boolean;
+  };
+};
+
+// ENTERPRISE FEATURE: Advanced lead search
+export type AdvancedLeadSearch = {
+  filters: {
+    scoreRange?: { min: number; max: number };
+    sources?: string[];
+    territories?: string[];
+    tags?: string[];
+    customFields?: Record<string, unknown>;
+    dateRanges?: Record<string, { from: Date; to: Date }>;
+  };
+  sorting: Array<{
+    field: string;
+    direction: 'asc' | 'desc';
+    priority: number;
+  }>;
+  aggregations?: Array<{
+    field: string;
+    type: 'count' | 'sum' | 'avg' | 'min' | 'max';
+    groupBy?: string;
+  }>;
+};
+
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma as db } from "@/lib/prisma";
 import { assertPermission, getOrgIdFromReq, PERMS } from "@/lib/rbac";
