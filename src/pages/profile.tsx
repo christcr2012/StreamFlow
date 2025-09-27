@@ -4,6 +4,7 @@ import Head from "next/head";
 import AdvancedSecurityModal from "@/components/AdvancedSecurityModal";
 import EditProfileModal from "@/components/EditProfileModal";
 import TwoFactorModal from "@/components/TwoFactorModal";
+import FeaturePlaceholderModal from "@/components/FeaturePlaceholderModal";
 
 type Me =
   | { ok: true; user: { email: string; name: string | null } }
@@ -18,6 +19,8 @@ export default function ProfilePage() {
   const [showAdvancedSecurity, setShowAdvancedSecurity] = useState(false);
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [showTwoFactor, setShowTwoFactor] = useState(false);
+  const [showPreferences, setShowPreferences] = useState(false);
+  const [showViewAllActivity, setShowViewAllActivity] = useState(false);
   const [sessions, setSessions] = useState<any[]>([]);
   const [loadingSessions, setLoadingSessions] = useState(true);
   const [sessionError, setSessionError] = useState<string | null>(null);
@@ -117,6 +120,37 @@ export default function ProfilePage() {
     console.log('Two-factor authentication status updated');
   };
 
+  // Feature data for placeholder modals
+  const preferencesFeature = {
+    name: "Preferences",
+    icon: "⚙️",
+    description: "Customize your WorkStream experience with personalized settings, themes, notifications, and workflow preferences.",
+    capabilities: [
+      "Dark/Light theme customization",
+      "Email notification preferences",
+      "Dashboard layout configuration",
+      "Default view settings",
+      "Language and timezone options",
+      "Privacy and data sharing controls"
+    ],
+    timeline: "Expected in Q1 2025 as part of the personalization update"
+  };
+
+  const viewAllActivityFeature = {
+    name: "Activity History",
+    icon: "🔍",
+    description: "View comprehensive audit logs and activity history across your WorkStream account with advanced filtering and export capabilities.",
+    capabilities: [
+      "Complete login and session history",
+      "Account changes and modifications",
+      "Lead and customer interactions",
+      "Advanced filtering and search",
+      "Export to CSV/PDF formats",
+      "Real-time activity monitoring"
+    ],
+    timeline: "Expected in Q1 2025 alongside enhanced security features"
+  };
+
   async function changePassword(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setBusy(true);
@@ -158,7 +192,10 @@ export default function ProfilePage() {
             >
               <span>📱 Two-Factor</span>
             </button>
-            <button className="btn-primary">
+            <button 
+              className="btn-primary"
+              onClick={() => setShowPreferences(true)}
+            >
               <span>⚙️ Preferences</span>
             </button>
           </div>
@@ -368,7 +405,10 @@ export default function ProfilePage() {
           </div>
 
           <div className="mt-6">
-            <button className="btn-outline">
+            <button 
+              className="btn-outline"
+              onClick={() => setShowViewAllActivity(true)}
+            >
               <span>🔍 View All Activity</span>
             </button>
           </div>
@@ -396,6 +436,20 @@ export default function ProfilePage() {
         isOpen={showTwoFactor}
         onClose={() => setShowTwoFactor(false)}
         onTwoFactorUpdated={handleTwoFactorUpdated}
+      />
+
+      {/* Preferences Feature Modal */}
+      <FeaturePlaceholderModal
+        isOpen={showPreferences}
+        onClose={() => setShowPreferences(false)}
+        feature={preferencesFeature}
+      />
+
+      {/* View All Activity Feature Modal */}
+      <FeaturePlaceholderModal
+        isOpen={showViewAllActivity}
+        onClose={() => setShowViewAllActivity(false)}
+        feature={viewAllActivityFeature}
       />
     </>
   );
