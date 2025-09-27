@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Head from "next/head";
 import AdvancedSecurityModal from "@/components/AdvancedSecurityModal";
 import EditProfileModal from "@/components/EditProfileModal";
+import TwoFactorModal from "@/components/TwoFactorModal";
 
 type Me =
   | { ok: true; user: { email: string; name: string | null } }
@@ -16,6 +17,7 @@ export default function ProfilePage() {
   const [msg, setMsg] = useState<string | null>(null);
   const [showAdvancedSecurity, setShowAdvancedSecurity] = useState(false);
   const [showEditProfile, setShowEditProfile] = useState(false);
+  const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [sessions, setSessions] = useState<any[]>([]);
   const [loadingSessions, setLoadingSessions] = useState(true);
   const [sessionError, setSessionError] = useState<string | null>(null);
@@ -109,6 +111,12 @@ export default function ProfilePage() {
     }
   };
 
+  // Handle two-factor authentication updates
+  const handleTwoFactorUpdated = () => {
+    // Refresh any 2FA-related state if needed
+    console.log('Two-factor authentication status updated');
+  };
+
   async function changePassword(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setBusy(true);
@@ -144,7 +152,10 @@ export default function ProfilePage() {
             </p>
           </div>
           <div className="flex gap-4">
-            <button className="btn-secondary">
+            <button 
+              className="btn-secondary"
+              onClick={() => setShowTwoFactor(true)}
+            >
               <span>📱 Two-Factor</span>
             </button>
             <button className="btn-primary">
@@ -378,6 +389,13 @@ export default function ProfilePage() {
         onClose={() => setShowEditProfile(false)}
         currentName={name}
         onProfileUpdated={handleProfileUpdated}
+      />
+
+      {/* Two-Factor Authentication Modal */}
+      <TwoFactorModal
+        isOpen={showTwoFactor}
+        onClose={() => setShowTwoFactor(false)}
+        onTwoFactorUpdated={handleTwoFactorUpdated}
       />
     </>
   );
