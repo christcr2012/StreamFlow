@@ -125,54 +125,52 @@ export interface AuthenticatedUser {
 }
 
 /**
- * RBAC-BYPASSING TEST ACCOUNTS - matches rbac.ts
+ * 🚨 TEMPORARY DEVELOPMENT USER SYSTEM - DELETE BEFORE PRODUCTION 🚨
+ * 
+ * Development test user system matching rbac.ts for cross-platform testing.
+ * These accounts use proper RBAC permissions, not bypasses.
+ * 
+ * ⚠️  IMPORTANT: Remove this entire section before going live with clients!
  */
-const BYPASS_TEST_ACCOUNTS = {
-  'owner@test.com': { role: 'OWNER', name: 'Test Owner' },
-  'manager@test.com': { role: 'MANAGER', name: 'Test Manager' },
-  'staff@test.com': { role: 'STAFF', name: 'Test Staff' },
-  'accountant@test.com': { role: 'ACCOUNTANT', name: 'Test Accountant' },
-  'provider@test.com': { role: 'PROVIDER', name: 'Test Provider' },
+const DEV_USERS = {
+  owner: process.env.DEV_OWNER_EMAIL?.toLowerCase() || 'owner@test.com',
+  manager: process.env.DEV_MANAGER_EMAIL?.toLowerCase() || 'manager@test.com',
+  staff: process.env.DEV_STAFF_EMAIL?.toLowerCase() || 'staff@test.com',
+  accountant: process.env.DEV_ACCOUNTANT_EMAIL?.toLowerCase() || 'accountant@test.com',
+  provider: process.env.DEV_PROVIDER_EMAIL?.toLowerCase() || 'provider@test.com',
 } as const;
 
 const DEV_USER_EMAIL = process.env.DEV_USER_EMAIL?.toLowerCase() || null;
 
 /**
- * Check if RBAC bypass is enabled
+ * Get development user data for test emails
+ * 🚨 DELETE THIS FUNCTION BEFORE PRODUCTION 🚨
  */
-function isBypassEnabled(): boolean {
-  if (process.env.NODE_ENV === 'development') return true;
-  if (process.env.VERCEL_ENV === 'preview') return true;
-  if (process.env.TEST_USERS_ENABLED === 'true') return true;
-  return false;
-}
-
-/**
- * Get bypass test account data
- */
-function getBypassUser(email: string): AuthenticatedUser | null {
-  if (!isBypassEnabled()) return null;
+function getDevUser(email: string): AuthenticatedUser | null {
+  // Only enabled in development environments
+  if (process.env.NODE_ENV === 'production') return null;
   
-  // Check hardcoded bypass accounts
-  const account = BYPASS_TEST_ACCOUNTS[email.toLowerCase() as keyof typeof BYPASS_TEST_ACCOUNTS];
-  if (account) {
-    return {
-      id: `bypass-${account.role.toLowerCase()}-id`,
-      email: email.toLowerCase(),
-      name: account.name,
-      role: account.role,
-      orgId: 'bypass-test-org'
-    };
+  // Check configured dev users (with defaults)
+  for (const [role, devEmail] of Object.entries(DEV_USERS)) {
+    if (devEmail && email.toLowerCase() === devEmail) {
+      return {
+        id: `dev-${role}-id`,
+        email: devEmail,
+        name: `Dev ${role.charAt(0).toUpperCase() + role.slice(1)} User`,
+        role: role.toUpperCase(),
+        orgId: process.env.DEV_ORG_ID || 'dev-test-org-id'
+      };
+    }
   }
   
-  // Legacy support
+  // Legacy support - DEV_USER_EMAIL gets OWNER role
   if (DEV_USER_EMAIL && email.toLowerCase() === DEV_USER_EMAIL) {
     return {
-      id: 'bypass-owner-id',
+      id: 'dev-owner-id',
       email: DEV_USER_EMAIL,
       name: 'Dev Owner User',
       role: 'OWNER',
-      orgId: 'bypass-test-org'
+      orgId: process.env.DEV_ORG_ID || 'dev-test-org-id'
     };
   }
   
@@ -191,10 +189,11 @@ export async function getAuthenticatedUser(req: NextApiRequest): Promise<Authent
       return null;
     }
 
-    // RBAC BYPASS: Check test accounts first (zero database dependency)
-    const bypassUser = getBypassUser(email);
-    if (bypassUser) {
-      return bypassUser;
+    // 🚨 TEMP DEV CODE - DELETE BEFORE PRODUCTION 🚨
+    // Check if this is a development test user first
+    const devUser = getDevUser(email);
+    if (devUser) {
+      return devUser;
     }
 
     // Validate user exists and is active

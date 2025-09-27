@@ -143,51 +143,61 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       return res.status(405).json({ ok: false, error: "Method not allowed" });
     }
 
-    // RBAC BYPASS: Test accounts get full permissions (zero setup required)
-    const BYPASS_TEST_ACCOUNTS = {
-      'owner@test.com': { role: 'OWNER', name: 'Test Owner' },
-      'manager@test.com': { role: 'MANAGER', name: 'Test Manager' },
-      'staff@test.com': { role: 'STAFF', name: 'Test Staff' },
-      'accountant@test.com': { role: 'ACCOUNTANT', name: 'Test Accountant' },
-      'provider@test.com': { role: 'PROVIDER', name: 'Test Provider' },
+    // 🚨 TEMP DEV CODE - DELETE BEFORE PRODUCTION 🚨
+    // Development test user system - matches rbac.ts and auth-helpers.ts
+    const DEV_USERS = {
+      owner: process.env.DEV_OWNER_EMAIL?.toLowerCase() || 'owner@test.com',
+      manager: process.env.DEV_MANAGER_EMAIL?.toLowerCase() || 'manager@test.com',
+      staff: process.env.DEV_STAFF_EMAIL?.toLowerCase() || 'staff@test.com',
+      accountant: process.env.DEV_ACCOUNTANT_EMAIL?.toLowerCase() || 'accountant@test.com',
+      provider: process.env.DEV_PROVIDER_EMAIL?.toLowerCase() || 'provider@test.com',
     } as const;
-    
-    function isBypassEnabled(): boolean {
-      if (process.env.NODE_ENV === 'development') return true;
-      if (process.env.VERCEL_ENV === 'preview') return true;
-      if (process.env.TEST_USERS_ENABLED === 'true') return true;
-      return false;
-    }
+    const DEV_USER_EMAIL = process.env.DEV_USER_EMAIL?.toLowerCase() || null;
 
-    // Check for bypass test accounts
-    if (isBypassEnabled()) {
-      const account = BYPASS_TEST_ACCOUNTS[email.toLowerCase() as keyof typeof BYPASS_TEST_ACCOUNTS];
-      const DEV_USER_EMAIL = process.env.DEV_USER_EMAIL?.toLowerCase() || null;
+    // Check if this is a development test user (only in non-production)
+    if (process.env.NODE_ENV !== 'production') {
+      let devRole: string | null = null;
+      let devUserName = "Dev User";
       
-      if (account || (DEV_USER_EMAIL && email.toLowerCase() === DEV_USER_EMAIL)) {
-        const role = account?.role || 'OWNER';
-        const name = account?.name || 'Dev User';
-        
-        // BYPASS: Grant ALL permissions regardless of role
-        const allPerms = Object.values(SERVER_PERMS).sort();
+      // Check configured dev users
+      for (const [role, devEmail] of Object.entries(DEV_USERS)) {
+        if (devEmail && email.toLowerCase() === devEmail) {
+          devRole = role.toUpperCase();
+          devUserName = `Dev ${role.charAt(0).toUpperCase() + role.slice(1)} User`;
+          break;
+        }
+      }
+      
+      // Legacy support - DEV_USER_EMAIL gets OWNER role
+      if (!devRole && DEV_USER_EMAIL && email.toLowerCase() === DEV_USER_EMAIL) {
+        devRole = "OWNER";
+        devUserName = "Dev Owner User";
+      }
+
+      if (devRole) {
+        // Get proper RBAC permissions for this specific dev role (not bypass)
+        const codes = await computePermCodes('dev-user-id', devRole);
+        const perms = Array.from(codes).sort();
         
         return res.status(200).json({
           ok: true,
           user: {
             email: email.toLowerCase(),
-            name,
-            baseRole: role as "OWNER" | "MANAGER" | "STAFF" | "PROVIDER" | "ACCOUNTANT" | "VIEWER",
-            rbacRoles: [role.toLowerCase()],
-            isOwner: true, // Bypass accounts always have owner privileges
-            isProvider: role === "PROVIDER",
-            perms: allPerms, // ALL permissions for testing
+            name: devUserName,
+            baseRole: devRole as "OWNER" | "MANAGER" | "STAFF" | "PROVIDER" | "ACCOUNTANT" | "VIEWER",
+            rbacRoles: [devRole.toLowerCase()], // Single role for testing specific functionality
+            isOwner: devRole === "OWNER",
+            isProvider: devRole === "PROVIDER",
+            perms, // Proper role-based permissions
           },
-          org: {
-            id: 'bypass-test-org',
-            name: 'Test Organization',
-            featureFlags: { allFeaturesEnabled: true },
-            brandConfig: { name: 'WorkStream Test' }
-          }
+          ...(process.env.DEV_ORG_ID ? {
+            org: {
+              id: process.env.DEV_ORG_ID,
+              name: "Dev Test Organization",
+              featureFlags: { allFeaturesEnabled: true },
+              brandConfig: { name: "WorkStream Dev" }
+            }
+          } : {})
         });
       }
     }
