@@ -110,7 +110,7 @@ function getDateRange(range: string) {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     if (req.method !== 'GET') {
-      res.setHeader('Allow', 'GET');
+      (res as any).setHeader('Allow', 'GET');
       return res.status(405).json({ ok: false, error: 'Method not allowed' });
     }
 

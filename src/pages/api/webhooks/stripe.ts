@@ -154,13 +154,13 @@ function readRawBody(req: NextApiRequest): Promise<Buffer> {
   // Use standard Node stream events to accumulate the raw body.
   return new Promise((resolve, reject) => {
     const chunks: Buffer[] = [];
-    req.on("data", (chunk) => {
+    (req as any).on("data", (chunk: any) => {
       chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
     });
-    req.on("end", () => {
+    (req as any).on("end", () => {
       resolve(Buffer.concat(chunks));
     });
-    req.on("error", (err) => {
+    (req as any).on("error", (err: any) => {
       reject(err);
     });
   });
@@ -175,7 +175,7 @@ function readRawBody(req: NextApiRequest): Promise<Buffer> {
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
-    res.setHeader("Allow", "POST");
+    (res as any).setHeader("Allow", "POST");
     return res.status(405).json({ ok: false, error: "Method not allowed" });
   }
 

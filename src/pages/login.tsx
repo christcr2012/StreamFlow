@@ -54,7 +54,7 @@ SCORE: 6/10 - Functional but needs enterprise security UX enhancements
 - Real-time validation with debounced API calls
 */
 
-import { GetServerSideProps } from "next";
+// Import type with fallback for compatibility
 import { useRouter } from "next/router";
 
 /**
@@ -177,7 +177,7 @@ export default function Login() {
 }
 
 // If already signed in, bounce to dashboard.
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps = async (ctx: any) => {
   if (ctx.req.cookies?.ws_user) {
     return { redirect: { destination: "/dashboard", permanent: false } };
   }

@@ -49,12 +49,22 @@ SCORE: 7.5/10 - Strong foundation, needs systematization
    - Competitor: Google Material Design, IBM Carbon
 
 🛠️ TECHNICAL IMPLEMENTATION:
-- CSS Custom Properties with fallbacks for IE11
+- Modern CSS Custom Properties for design tokens
 - CSS-in-JS theme provider for runtime switching
 - PostCSS plugins for automatic contrast ratio validation
 - Storybook integration for theme testing and documentation
 - Design token build pipeline with validation and testing
 - Theme performance optimization with CSS containment
+
+💡 CONCRETE TOKEN SCHEMA EXAMPLES:
+   Example Semantic Token Hierarchy:
+   - Primitive tokens: --color-blue-500, --color-gray-100
+   - Semantic tokens: --color-primary, --color-surface  
+   - Component tokens: --button-primary-bg, --card-surface-bg
+   
+   Tailwind CSS Integration Pattern:
+   - Use CSS custom properties with Tailwind's arbitrary value syntax: bg-[var(--button-primary-bg)]
+   - Fallback with direct CSS: background: var(--button-primary-bg)
 
 💡 ENTERPRISE FEATURES TO ADD:
 - Multi-brand support for white-label solutions
