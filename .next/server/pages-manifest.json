@@ -4,6 +4,5 @@
   "/_document": "pages/_document.js",
   "/profile": "pages/profile.js",
   "/login": "pages/login.js",
-  "/api/me": "pages/api/me.js",
-  "/api/security/sessions": "pages/api/security/sessions.js"
+  "/api/auth/password-requirements": "pages/api/auth/password-requirements.js"
 }
