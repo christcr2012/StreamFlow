@@ -319,7 +319,10 @@ export class AITriageAgent {
     
     // Calculate cluster metadata
     const uniqueUsers = new Set(events.map(e => e.userId).filter(Boolean)).size;
-    const impactedRoles = [...new Set(events.map(e => e.userRole).filter(Boolean))];
+    // ENTERPRISE AUDIT NOTE: Improve role impact tracking
+    // TODO: Add role hierarchy analysis, permission-based impact scoring
+    // Current: Basic role filtering | Industry Standard: Role dependency mapping
+    const impactedRoles = [...new Set(events.map(e => e.userRole).filter((role): role is string => Boolean(role)))];  // Type-safe filtering
     const endpoints = [...new Set(events.map(e => `${e.httpMethod} ${e.route}`))];
     
     // Determine initial severity
@@ -644,10 +647,10 @@ export const DEFAULT_TRIAGE_THRESHOLDS: TriageThresholds = {
   escalationConfidenceThreshold: 0.6
 };
 
-export type {
-  ErrorEvent,
-  PerformanceAnomaly,
-  ErrorCluster,
-  TriageThresholds,
-  TriageConfig
-};
+// ENTERPRISE AUDIT NOTE: AI Triage System Export Analysis
+// Current: Basic type exports | Industry Standard: Comprehensive monitoring SDK
+// TODO: Create enterprise-grade monitoring SDK with:
+// - Real-time dashboards, alerting integrations, SLA tracking
+// - ML-powered anomaly detection, root cause analysis
+// - Enterprise compliance: SOC2, GDPR data handling
+// Types already exported above as interfaces, no need to re-export

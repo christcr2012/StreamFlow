@@ -689,9 +689,11 @@ export const DEFAULT_COST_CONTROL_CONFIG: CostControlConfig = {
   }
 };
 
-export type {
-  TokenUsageRecord,
-  ProviderBudget,
-  TenantCostProfile,
-  CostControlConfig
-};
+// ENTERPRISE AUDIT NOTE: AI Cost Control System Analysis  
+// Current: Basic token usage tracking | Industry Standard: Comprehensive cost management platform
+// TODO: Enterprise-grade cost control features:
+// - Multi-tier pricing, usage-based billing integration with Stripe
+// - Real-time cost dashboards, budget alerts, cost optimization recommendations  
+// - Enterprise reporting: ROI analysis, department allocation, usage analytics
+// - Advanced controls: role-based spending limits, approval workflows
+// Types already exported above as interfaces, no need to re-export
