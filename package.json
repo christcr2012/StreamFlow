@@ -27,6 +27,7 @@
     "@sendgrid/mail": "8.1.0",
     "@stripe/react-stripe-js": "^4.0.2",
     "@stripe/stripe-js": "^7.9.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.0.0",
     "@types/pdf-parse": "^1.1.5",
     "bcryptjs": "^3.0.2",
