@@ -37,7 +37,7 @@ export default function ProfilePage() {
       const r = await fetch("/api/auth/set-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, currentPassword, newPassword }),
+        body: JSON.stringify({ currentPassword, newPassword }),
       });
       const j = (await r.json()) as { ok?: boolean; error?: string };
       if (!r.ok || !j?.ok) throw new Error(j?.error || "Failed to change password");

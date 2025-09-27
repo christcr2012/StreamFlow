@@ -2,8 +2,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma as db } from "@/lib/prisma";
 import { hashPassword, verifyPassword } from "@/lib/passwords";
+import { getEmailFromReq } from "@/lib/rbac";
 
-// Allows:
+// SECURITY: Password change for authenticated user only
+// - Gets user from session (never trust client email)
 // - First-time set (when no passwordHash exists)
 // - Change password (requires currentPassword)
 
@@ -14,12 +16,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(405).json({ ok: false, error: "Method Not Allowed" });
     }
 
+    // SECURITY: Get authenticated user from session, not client input
+    const email = getEmailFromReq(req);
+    if (!email) return res.status(401).json({ ok: false, error: "Not authenticated" });
+
     const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : (req.body || {});
-    const email = (body.email || "").toString().trim().toLowerCase();
     const newPassword = (body.newPassword || "").toString();
     const currentPassword = body.currentPassword ? String(body.currentPassword) : null;
 
-    if (!email || !newPassword) return res.status(400).json({ ok: false, error: "Email and newPassword required" });
+    if (!newPassword) return res.status(400).json({ ok: false, error: "newPassword required" });
 
     const user = await db.user.findUnique({ where: { email }, select: { id: true, passwordHash: true } });
     if (!user) return res.status(404).json({ ok: false, error: "User not found" });
