@@ -439,6 +439,12 @@ model Org {
   // Temporary Elevation System
   temporaryElevations TemporaryElevation[] @relation("OrgTemporaryElevations")
 
+  // AI-Powered Feature Management Relations
+  appEvents       AppEvent[]        @relation("OrgAppEvents")
+  featureStates   OrgFeatureState[] @relation("OrgFeatureStates")
+  delegationGrants DelegationGrant[] @relation("OrgDelegationGrants")
+  aiActionLogs    AiActionLog[]     @relation("OrgAiActionLogs")
+
   /// brandConfig stores white-label brand settings such as name, colors, and logo URL.
   /// It is JSON to allow arbitrary keys like { name: "Mountain Vista", color: "#123456", logoUrl: "https://..." }
   brandConfig Json? @default("{}")
@@ -585,6 +591,14 @@ model User {
   
   // Two-Factor Authentication Relations
   twoFactor UserTwoFactor[] @relation("UserTwoFactor")
+  
+  // AI-Powered Feature Management Relations
+  appEvents           AppEvent[]        @relation("UserAppEvents")
+  enabledFeatures     OrgFeatureState[] @relation("UserEnabledFeatures")
+  delegationGrants    DelegationGrant[] @relation("UserDelegationGrants")
+  grantedDelegations  DelegationGrant[] @relation("UserGrantedDelegations")
+  aiActionRequests    AiActionLog[]     @relation("UserAiActionRequests")
+  aiActionApprovals   AiActionLog[]     @relation("UserAiActionApprovals")
   
   @@unique([orgId, id])  // Multi-tenant isolation
 }
@@ -2213,6 +2227,230 @@ model AuditEvent {
   @@index([createdAt])
   @@index([severity, createdAt])
   @@index([orgId, hash]) // For integrity verification
+}
+
+// ===== AI-POWERED FEATURE MANAGEMENT MODELS =====
+
+/// AppEvent tracks user interactions for AI-powered feature recommendations
+model AppEvent {
+  id          String   @id @default(cuid())
+  orgId       String
+  userId      String?  // User who performed the action
+  sessionId   String?  // Browser session ID
+  
+  // Event Details
+  featureKey  String   // Feature identifier (e.g., "scheduling.board", "leads.create")
+  eventType   String   // Event type: "view", "click", "create", "update", "complete"
+  metadata    Json?    // Additional event context (page visited, button clicked, etc.)
+  
+  // Context
+  userAgent   String?  // Browser information
+  ipAddress   String?  // Source IP for usage pattern analysis
+  duration    Int?     // Time spent on feature (milliseconds)
+  
+  createdAt   DateTime @default(now())
+  
+  // Relations
+  org         Org      @relation("OrgAppEvents", fields: [orgId], references: [id])
+  user        User?    @relation("UserAppEvents", fields: [orgId, userId], references: [orgId, id])
+  
+  @@unique([orgId, id])
+  @@index([orgId, featureKey, createdAt])
+  @@index([orgId, userId, createdAt])
+  @@index([featureKey, eventType])
+  @@index([createdAt])
+}
+
+/// FeatureRegistry defines all available features with dependencies and requirements
+model FeatureRegistry {
+  id              String          @id @default(cuid())
+  
+  // Feature Definition
+  key             String          @unique  // Unique feature identifier
+  name            String          // Display name
+  description     String          // Feature description for users
+  category        FeatureCategory // AI_ANALYTICS, AUTOMATION, etc.
+  
+  // Feature Configuration
+  defaultEnabled  Boolean         @default(false)  // Default state for new orgs
+  requiresPlan    String?         // Required subscription plan
+  dependencies    String[]        // Required features that must be enabled first
+  incompatible    String[]        // Features that cannot be enabled simultaneously
+  
+  // Discovery & Recommendations
+  discoverability String          @default("STANDARD") // "HIDDEN", "STANDARD", "PROMOTED"
+  recommendWhen   Json?           // Conditions for AI recommendation
+  
+  // Documentation
+  helpUrl         String?         // Link to feature documentation
+  demoVideoUrl    String?         // Feature demonstration video
+  
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  
+  // Relations
+  orgFeatures     OrgFeatureState[] @relation("FeatureOrgStates")
+  actionLogs      AiActionLog[]   @relation("FeatureActionLogs")
+  
+  @@index([category, defaultEnabled])
+  @@index([discoverability])
+}
+
+/// OrgFeatureState tracks which features are enabled per organization
+model OrgFeatureState {
+  id            String   @id @default(cuid())
+  orgId         String
+  featureId     String   // FeatureRegistry.id
+  
+  // State Management
+  enabled       Boolean  @default(false)
+  enabledAt     DateTime?
+  enabledBy     String?  // User.id who enabled the feature
+  
+  // Configuration
+  config        Json?    // Feature-specific configuration
+  
+  // Usage Tracking
+  firstUsedAt   DateTime?
+  lastUsedAt    DateTime?
+  usageCount    Int      @default(0)
+  
+  // AI Recommendations
+  recommended   Boolean  @default(false)
+  recommendedAt DateTime?
+  recommendedBy String?  // AI recommendation source
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  org           Org             @relation("OrgFeatureStates", fields: [orgId], references: [id])
+  feature       FeatureRegistry @relation("FeatureOrgStates", fields: [featureId], references: [id])
+  enabledByUser User?           @relation("UserEnabledFeatures", fields: [orgId, enabledBy], references: [orgId, id])
+  
+  @@unique([orgId, featureId])  // One state per feature per org
+  @@index([orgId, enabled])
+  @@index([orgId, updatedAt])
+  @@index([featureId, enabled])
+  @@index([recommended, recommendedAt])
+}
+
+/// DelegationGrant allows Owners to delegate specific AI control permissions to individual users
+model DelegationGrant {
+  id           String   @id @default(cuid())
+  orgId        String
+  
+  // Delegation Details
+  granteeId    String   // User.id who receives the permission
+  granterId    String   // User.id (Owner) who grants the permission
+  
+  // Permission Scope
+  toolId       String   // AI tool identifier (e.g., "enable_feature", "update_setting")
+  scope        Json?    // Specific scope limitations (feature categories, etc.)
+  
+  // Lifecycle
+  isActive     Boolean  @default(true)
+  expiresAt    DateTime?  // Optional expiration
+  revokedAt    DateTime?
+  revokedBy    String?    // User.id who revoked
+  
+  // Usage Tracking
+  usedCount    Int      @default(0)
+  lastUsedAt   DateTime?
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  // Relations
+  org          Org      @relation("OrgDelegationGrants", fields: [orgId], references: [id])
+  grantee      User     @relation("UserDelegationGrants", fields: [orgId, granteeId], references: [orgId, id])
+  granter      User     @relation("UserGrantedDelegations", fields: [orgId, granterId], references: [orgId, id])
+  actionLogs   AiActionLog[] @relation("DelegationActionLogs")
+  
+  @@unique([orgId, id])
+  @@unique([orgId, granteeId, toolId, isActive])  // Prevent duplicate active grants
+  @@index([orgId, granteeId, isActive])
+  @@index([orgId, granterId, createdAt])
+  @@index([toolId, isActive])
+  @@index([expiresAt])
+}
+
+/// AiActionLog provides comprehensive audit trail for all AI-controlled actions
+model AiActionLog {
+  id               String   @id @default(cuid())
+  orgId            String
+  
+  // Action Details
+  toolId           String   // AI tool used (e.g., "enable_feature", "update_setting")
+  action           String   // Specific action performed
+  targetType       String   // What was acted upon (feature, setting, integration)
+  targetId         String?  // ID of the target entity
+  
+  // Authorization
+  requestedBy      String   // User.id who requested the action
+  authorizedBy     String?  // User.id who authorized (Owner or delegate)
+  delegationId     String?  // DelegationGrant.id if via delegation
+  
+  // Execution
+  status           String   // "pending", "approved", "executed", "failed", "cancelled"
+  beforeState      Json?    // State before the action
+  afterState       Json?    // State after the action
+  errorMessage     String?  // Error details if failed
+  
+  // Context
+  requestContext   Json?    // AI request context and reasoning
+  approvalMethod   String?  // "owner_direct", "delegation", "just_in_time"
+  costCents        Int?     // AI cost in cents
+  
+  createdAt        DateTime @default(now())
+  executedAt       DateTime?
+  
+  // Relations
+  org              Org             @relation("OrgAiActionLogs", fields: [orgId], references: [id])
+  requester        User            @relation("UserAiActionRequests", fields: [orgId, requestedBy], references: [orgId, id])
+  authorizer       User?           @relation("UserAiActionApprovals", fields: [orgId, authorizedBy], references: [orgId, id])
+  delegation       DelegationGrant? @relation("DelegationActionLogs", fields: [delegationId], references: [id])
+  feature          FeatureRegistry? @relation("FeatureActionLogs", fields: [targetId], references: [id])
+  
+  @@unique([orgId, id])
+  @@index([orgId, createdAt])
+  @@index([orgId, requestedBy, createdAt])
+  @@index([orgId, status, createdAt])
+  @@index([toolId, status])
+  @@index([status, createdAt])
+  @@index([delegationId])
+}
+
+/// AiDocChunk stores knowledge base content for RAG (Retrieval Augmented Generation)
+model AiDocChunk {
+  id          String   @id @default(cuid())
+  
+  // Content Details
+  title       String   // Document/section title
+  content     String   // Text content for RAG
+  contentType String   // "feature_doc", "how_to_guide", "api_reference", "changelog"
+  
+  // Metadata
+  sourceUrl   String?  // Original source URL
+  featureKey  String?  // Associated feature key
+  tags        String[] // Tags for categorization
+  version     String?  // Content version for updates
+  
+  // Vector Search (for future embedding integration)
+  embedding   String?  // Serialized vector embedding
+  tokenCount  Int?     // Token count for cost estimation
+  
+  // Lifecycle
+  isActive    Boolean  @default(true)
+  priority    Int      @default(0)  // Higher priority shown first
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([contentType, isActive])
+  @@index([featureKey, isActive])
+  @@index([priority, isActive])
+  @@index([isActive, updatedAt])
 }
 
 // ===== ENUMS FOR ENTERPRISE MODELS =====
