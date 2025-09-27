@@ -12,6 +12,7 @@ interface RoleTemplateData {
   scopeConfig: Record<string, any>;
   isSystemTemplate: boolean;
   isPublic: boolean;
+  isProviderExclusive?: boolean;  // Optional: true for provider-only roles
 }
 
 const industryTemplates: RoleTemplateData[] = [
