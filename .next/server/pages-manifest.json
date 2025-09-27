@@ -5,6 +5,6 @@
   "/administration": "pages/administration.js",
   "/profile": "pages/profile.js",
   "/dashboard": "pages/dashboard.js",
-  "/api/dashboard/summary": "pages/api/dashboard/summary.js",
-  "/api/me": "pages/api/me.js"
+  "/api/me": "pages/api/me.js",
+  "/login": "pages/login.js"
 }
