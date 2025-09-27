@@ -63,8 +63,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(401).json({ ok: false, error: "Unauthorized" });
     }
 
-    const { email, orgName, alsoProvider } = (typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body) as {
-      email?: string; orgName?: string; alsoProvider?: boolean;
+    const { email, orgName, alsoProvider, industryType, naicsCode } = (typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body) as {
+      email?: string; orgName?: string; alsoProvider?: boolean; industryType?: string; naicsCode?: string;
     };
 
     if (!email || !orgName) {
@@ -101,10 +101,42 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
-    // 3) Org
+    // 3) Org with Industry Configuration
     let org = await db.org.findFirst({ where: { name: orgName } });
     if (!org) {
-      org = await db.org.create({ data: { name: orgName, featureFlags: {} } });
+      // Get industry pack configuration if specified
+      let industryConfig = {};
+      let activeCapabilities: string[] = [];
+      
+      if (industryType) {
+        const industryPack = await db.industryPack.findUnique({
+          where: { industryCode: industryType },
+          include: {
+            capabilities: {
+              include: { capability: true },
+              where: { defaultEnabled: true }
+            }
+          }
+        });
+        
+        if (industryPack) {
+          // Note: industryConfig is stored in the IndustryPack model but may be used for future expansion
+          industryConfig = {};
+          activeCapabilities = industryPack.capabilities.map(ic => ic.capability.code);
+          console.log(`🏭 Configuring org for ${industryPack.displayName} with ${activeCapabilities.length} capabilities`);
+        }
+      }
+      
+      org = await db.org.create({ 
+        data: { 
+          name: orgName, 
+          featureFlags: {},
+          industryType: industryType || null,
+          naicsCode: naicsCode || null,
+          industryConfig,
+          activeCapabilities
+        } 
+      });
     }
 
     // 4) User upsert (make sure user exists and is active + linked to org; set legacy role=OWNER)

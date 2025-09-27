@@ -366,6 +366,13 @@ model Org {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
+  // 🏭 MULTI-INDUSTRY VERTICALIZATION FRAMEWORK
+  industryType      String?  // Primary industry: "cleaning", "hvac", "fencing", "electrical"
+  naicsCode         String?  // Official NAICS industry code for compliance
+  sicCode           String?  // SIC code for legacy systems integration
+  industryConfig    Json     @default("{}")  // Industry-specific configuration
+  activeCapabilities Json    @default("[]")  // Enabled capabilities for this org
+
   // AI Cost Control & Monetization - PROVIDER MODEL
   aiMonthlyBudgetCents Int      @default(5000)  // $50 provider cost limit  
   aiCreditBalance     Int      @default(1000)   // 1k credits = $50 worth (1 credit = $0.05 client-facing)
@@ -439,6 +446,114 @@ model Org {
   /// settingsJson stores arbitrary organization-level settings.  This can be used
   /// by owners to configure API keys or other preferences needed at runtime.
   settingsJson Json? @default("{}")
+  
+  // Multi-Industry Framework Relations
+  industryPack IndustryPack? @relation("OrgIndustryPack", fields: [industryType], references: [industryCode])
+}
+
+// =============================================================================
+// 🏭 MULTI-INDUSTRY VERTICALIZATION FRAMEWORK
+// =============================================================================
+
+/// IndustryPack defines industry-specific configurations, templates, and capabilities
+/// This enables WorkStream to adapt to different service industries (cleaning, HVAC, fencing, etc.)
+model IndustryPack {
+  id            String   @id @default(cuid())
+  industryCode  String   @unique  // "cleaning", "hvac", "fencing", "electrical"
+  displayName   String              // "Professional Cleaning Services"
+  description   String?             // Industry description
+  naicsRanges   Json     @default("[]")  // Supported NAICS codes ["562910", "561720"]
+  sicRanges     Json     @default("[]")   // Supported SIC codes 
+  
+  // Industry-Specific Configuration
+  leadFields    Json     @default("{}")   // Custom lead intake fields
+  workflowSteps Json     @default("[]")   // Standard workflow templates
+  catalogItems  Json     @default("[]")   // Default inventory/service catalog
+  contractTemplates Json @default("[]")   // Contract templates and clauses
+  complianceReqs Json    @default("{}")   // Industry compliance requirements
+  
+  // Estimation & Bidding Configuration
+  rateCards     Json     @default("[]")   // Labor, material, equipment rates
+  formulaSet    Json     @default("{}")   // Pricing formula DSL
+  measurementUnits Json  @default("[]")   // Industry-specific units (sq ft, linear ft)
+  
+  // Feature & Capability Configuration
+  requiredCapabilities Json @default("[]") // Must-have capabilities for this industry
+  optionalCapabilities Json @default("[]") // Nice-to-have capabilities
+  hiddenCapabilities   Json @default("[]") // Capabilities to hide for this industry
+  
+  isActive      Boolean  @default(true)
+  version       String   @default("1.0")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  organizations Org[]    @relation("OrgIndustryPack")
+  capabilities  IndustryCapability[] @relation("IndustryPackCapabilities")
+
+  @@index([industryCode])
+  @@index([isActive])
+}
+
+/// Capability defines a business feature that can be enabled/disabled per organization
+/// This allows fine-grained control over features based on industry needs and subscription tier
+model Capability {
+  id            String   @id @default(cuid())
+  code          String   @unique         // "inventory_management", "contract_esign", "mobile_app"
+  displayName   String                   // "Inventory Management"
+  description   String?                  // Feature description
+  category      String                   // "operations", "sales", "billing", "compliance"
+  
+  // Feature Control
+  isCore        Boolean  @default(false) // Core capabilities always enabled
+  requiresSubscription Boolean @default(false) // Premium feature flag
+  minimumPlan   String?                  // "BASIC", "PROFESSIONAL", "ENTERPRISE"
+  
+  // Technical Configuration
+  apiEndpoints  Json     @default("[]")  // API routes this capability controls
+  uiComponents  Json     @default("[]")  // UI components this capability shows/hides
+  permissions   Json     @default("[]")  // RBAC permissions related to this capability
+  dependencies  Json     @default("[]")  // Other capabilities this one depends on
+  
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  industries    IndustryCapability[] @relation("CapabilityIndustries")
+
+  @@index([code])
+  @@index([category])
+  @@index([isCore])
+}
+
+/// IndustryCapability links industries to their supported capabilities
+/// This determines which features are available for each industry type
+model IndustryCapability {
+  id             String   @id @default(cuid())
+  industryPackId String
+  capabilityId   String
+  
+  // Capability Configuration for this Industry
+  isRequired     Boolean  @default(false) // Must be enabled for this industry
+  isRecommended  Boolean  @default(false) // Recommended for this industry
+  isHidden       Boolean  @default(false) // Hidden from this industry
+  defaultEnabled Boolean  @default(false) // Enabled by default for new orgs
+  
+  // Industry-Specific Customization
+  industryConfig Json     @default("{}")  // Industry-specific settings for this capability
+  displayOrder   Int?                     // Order in capability list
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  // Relations
+  industryPack   IndustryPack @relation("IndustryPackCapabilities", fields: [industryPackId], references: [id])
+  capability     Capability   @relation("CapabilityIndustries", fields: [capabilityId], references: [id])
+  
+  @@unique([industryPackId, capabilityId])
+  @@index([industryPackId])
+  @@index([capabilityId])
 }
 
 model User {
