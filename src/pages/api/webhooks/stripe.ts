@@ -14,11 +14,12 @@
  * 
  * SPRINT 1 IMPLEMENTATION:
  * 
- * 1. REDIS QUEUE SETUP:
- *    - Install Redis: npm install redis bull @types/bull
- *    - Create webhook job queue: /src/lib/queues/webhookQueue.ts
- *    - Job processor: /src/lib/processors/webhookProcessor.ts
- *    - Worker service: /src/lib/workers/webhookWorker.ts
+ * 1. SERVERLESS QUEUE SETUP (VERCEL COMPATIBLE):
+ *    - CRITICAL: Bull/BullMQ won't work on Vercel serverless - no background workers
+ *    - Use Upstash QStash: npm install @upstash/qstash
+ *    - Alternative: Cloudflare Queues or Temporal for workflow orchestration
+ *    - Create webhook job publisher: /src/lib/queues/webhookPublisher.ts
+ *    - Separate API route processor: /src/pages/api/jobs/webhook-processor.ts
  * 
  * 2. IDEMPOTENCY STRATEGY:
  *    - Use Stripe event ID as idempotency key
@@ -46,28 +47,17 @@
  * | customer.updated             | Sync customer data              | LOW      |
  * | payment_method.attached      | Update payment methods          | LOW      |
  * 
- * 5. CONCRETE IMPLEMENTATION:
+ * 5. SERVERLESS IMPLEMENTATION (Upstash QStash):
  * 
  * ```typescript
- * // /src/lib/queues/webhookQueue.ts
- * import Queue from 'bull';
- * import Redis from 'redis';
+ * // /src/lib/queues/webhookPublisher.ts
+ * import { Client } from '@upstash/qstash';
  * 
- * const redis = new Redis(process.env.REDIS_URL);
- * export const webhookQueue = new Queue('webhook processing', {
- *   redis: {
- *     port: 6379,
- *     host: process.env.REDIS_HOST,
- *   },
- *   defaultJobOptions: {
- *     removeOnComplete: 100,
- *     removeOnFail: 50,
- *     attempts: 5,
- *     backoff: 'exponential',
- *   },
+ * const qstash = new Client({
+ *   token: process.env.QSTASH_TOKEN!,
  * });
  * 
- * // Event deduplication
+ * // Event deduplication & publishing
  * export async function enqueueWebhook(event: Stripe.Event): Promise<boolean> {
  *   const existingEvent = await db.billingEvent.findUnique({
  *     where: { stripeEventId: event.id }
@@ -88,9 +78,13 @@
  *     }
  *   });
  * 
- *   await webhookQueue.add('process', { eventId: event.id }, {
- *     priority: getEventPriority(event.type),
+ *   // Publish to QStash queue for async processing
+ *   await qstash.publishJSON({
+ *     url: `${process.env.NEXTAUTH_URL}/api/jobs/webhook-processor`,
+ *     body: { eventId: event.id },
+ *     retries: 5,
  *     delay: 0,
+ *     deduplicationId: event.id, // Automatic deduplication
  *   });
  * 
  *   return true;
@@ -135,15 +129,20 @@ import { prisma as db } from "@/lib/prisma";
  * 5. Monitoring: Log all webhook activity for debugging
  * 
  * Next Sprint Enhancements:
- * - Add Redis queue for async processing
+ * - Add Upstash QStash for serverless async processing (Vercel compatible)
  * - Implement circuit breaker for external calls
  * - Add webhook processing metrics and monitoring
  */
 
 export const config = {
   api: {
-    bodyParser: false, // Important: we need the raw body for signature verification
+    bodyParser: false, // CRITICAL for Vercel: Disable Next.js body parser for raw body access
   },
+  // VERCEL RUNTIME NOTES:
+  // - Webhook verification requires raw request body for signature validation
+  // - Next.js API routes auto-parse body by default, breaking Stripe signature verification
+  // - bodyParser: false ensures raw Buffer access for stripe.webhooks.constructEvent()
+  // - This is essential for Stripe webhook signature verification on Vercel
 };
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
