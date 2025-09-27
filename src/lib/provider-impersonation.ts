@@ -427,7 +427,7 @@ export class ProviderImpersonationManager {
       // Check for automatic termination conditions
       const terminationCheck = await this.checkTerminationConditions(session);
       if (terminationCheck.shouldTerminate) {
-        await this.terminateSession(sessionId, terminationCheck.reason, 'SYSTEM');
+        await this.terminateSession(sessionId, terminationCheck.reason || 'System termination', 'SYSTEM');
         return { 
           active: false, 
           session, 
@@ -679,8 +679,4 @@ export function createProviderImpersonationManager(providerId: string): Provider
   return new ProviderImpersonationManager(providerId);
 }
 
-export type {
-  ImpersonationRequest,
-  ImpersonationSession,
-  OwnerConsentRequest
-};
+// Type exports already declared with interfaces above

@@ -756,9 +756,4 @@ export function validateManagerAccess(
   return scopeManager.validateManagerScope(resource, action, scope);
 }
 
-// Export types for external use
-export type {
-  ManagerRoleCapabilities,
-  ManagerRoleConstraints,
-  ManagerScope
-};
+// Types already exported with interfaces above

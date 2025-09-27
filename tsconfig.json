@@ -37,6 +37,8 @@
 
   /* Keep excludes minimal */
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/ai-triage-agent*/**",
+    "/tmp/**"
   ]
 }

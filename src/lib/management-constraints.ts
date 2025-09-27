@@ -578,7 +578,12 @@ export function createSupervisorScope(
       credits: 100,
       adjustments: 200
     },
-    timeRestrictions: config.timeRestrictions || {
+    timeRestrictions: config.timeRestrictions ? {
+      businessHoursOnly: true,
+      startTime: config.timeRestrictions.startTime,
+      endTime: config.timeRestrictions.endTime,
+      daysOfWeek: config.timeRestrictions.daysOfWeek
+    } : {
       businessHoursOnly: true,
       startTime: '06:00',
       endTime: '22:00',
@@ -621,14 +626,19 @@ export function createManagerScope(
       monthly: 100000,
       quarterly: 300000
     },
-    approvalLimits: config.approvalLimits || {
-      expenses: 5000,
-      refunds: 2500,
-      purchases: 10000,
-      credits: 1000,
+    approvalLimits: {
+      expenses: config.approvalLimits?.expenses || 5000,
+      refunds: config.approvalLimits?.refunds || 2500,
+      purchases: config.approvalLimits?.purchases || 10000,
+      credits: config.approvalLimits?.credits || 1000,
       adjustments: 2000
     },
-    timeRestrictions: config.timeRestrictions || {
+    timeRestrictions: config.timeRestrictions ? {
+      businessHoursOnly: config.timeRestrictions.businessHoursOnly,
+      startTime: config.timeRestrictions.startTime,
+      endTime: config.timeRestrictions.endTime,
+      daysOfWeek: config.timeRestrictions.daysOfWeek
+    } : {
       businessHoursOnly: false,
       startTime: '06:00',
       endTime: '22:00',
@@ -653,7 +663,3 @@ export function createManagerScope(
   };
 }
 
-export type {
-  ManagementScope,
-  OperationalConstraints
-};

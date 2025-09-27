@@ -297,10 +297,10 @@ export async function cloneStaffVariant(
     ],
     defaultConstraints: {
       ...baseTemplate.defaultConstraints,
-      ...(variantConfig.expandedConstraints || {})
+      ...('expandedConstraints' in variantConfig ? variantConfig.expandedConstraints : {})
     },
-    ...(variantConfig.mobileOptimized && { mobileOptimized: true }),
-    ...(variantConfig.offlineCapabilities && { offlineCapabilities: true })
+    ...('mobileOptimized' in variantConfig && variantConfig.mobileOptimized ? { mobileOptimized: true } : {}),
+    ...('offlineCapabilities' in variantConfig && variantConfig.offlineCapabilities ? { offlineCapabilities: true } : {})
   };
 
   return clonedRole;
@@ -309,17 +309,22 @@ export async function cloneStaffVariant(
 // Temporary elevation functions
 export async function requestTemporaryElevation(
   userId: string,
+  orgId: string,
   targetRole: string,
+  currentRole: string,
   reason: string,
   durationMinutes: number = 60
 ) {
   const elevationRequest = await db.temporaryElevation.create({
     data: {
       userId,
+      orgId,
+      requestedBy: userId,
+      currentRole,
       targetRole,
       reason,
       requestedDuration: durationMinutes,
-      status: 'pending',
+      status: 'PENDING',
       requestedAt: new Date(),
       expiresAt: new Date(Date.now() + durationMinutes * 60 * 1000)
     }
@@ -337,4 +342,4 @@ async function triggerElevationApproval(elevationId: string) {
   console.log(`Elevation request ${elevationId} requires approval`);
 }
 
-export { StaffRoleCapabilities, StaffRoleConstraints, STAFF_ROLE_VARIANTS };
+// Types and constants already exported above

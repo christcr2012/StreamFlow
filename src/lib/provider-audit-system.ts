@@ -588,11 +588,6 @@ export function createProviderAuditSystem(providerId: string): ProviderAuditSyst
   return new ProviderAuditSystem(providerId);
 }
 
-export type {
-  ProviderAuditEntry,
-  TenantNotification,
-  ComplianceReportEntry
-};
+// Type exports already declared with interfaces above
 
-// Export factory functions for proper imports
-export { createProviderAuditSystem };
+// Factory function already exported above
