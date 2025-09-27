@@ -634,9 +634,4 @@ export function validateSupervisorAccess(
   return scopeManager.validateScope(resource, action, scope);
 }
 
-// Export types for external use
-export type {
-  SupervisorRoleCapabilities,
-  SupervisorRoleConstraints,
-  SupervisorScope
-};
+// Types already exported with interfaces above

@@ -591,9 +591,4 @@ export function enforceFinancialConstraints(
   return Promise.resolve();
 }
 
-// Export types for external use
-export type {
-  AccountantRoleCapabilities,
-  AccountantRoleConstraints,
-  FinancialAuditConfig
-};
+// Types already exported with interfaces above

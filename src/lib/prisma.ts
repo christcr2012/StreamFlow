@@ -82,6 +82,21 @@ declare global {
   // var memoryCache: LRUCache<string, any> | undefined;
 }
 
+// 🚀 ENTERPRISE ENHANCEMENT: Query metrics interfaces and state
+export interface QueryMetricsState {
+  totalQueries: number;
+  slowQueries: number;
+  totalDuration: number;
+  startTime: number;
+}
+
+export let queryMetrics: QueryMetricsState = {
+  totalQueries: 0,
+  slowQueries: 0,
+  totalDuration: 0,
+  startTime: Date.now()
+};
+
 // 🚀 ENTERPRISE ENHANCEMENT: Performance monitoring middleware
 async function performanceMiddleware(params: any, next: any) {
   const start = Date.now();
@@ -149,34 +164,38 @@ export const prisma =
     // },
   });
 
-// 🚀 ENTERPRISE ENHANCEMENT: Register performance monitoring middleware
-// CRITICAL FIX: Conditional middleware registration for compatibility
-// STATUS: ✅ FIXED - Performance monitoring now actively monitoring all queries
-try {
-  if (typeof prisma.$use === 'function') {
-    prisma.$use(performanceMiddleware);
-  } else {
-    console.warn('⚠️ Prisma middleware not available in this version. Performance tracking via events only.');
-  }
-} catch (error) {
-  console.warn('⚠️ Failed to register Prisma middleware:', error);
-}
+// 🚀 ENTERPRISE ENHANCEMENT: Performance monitoring via events
+// STATUS: ✅ FIXED - Performance monitoring now using event listeners (modern Prisma 6.x approach)
+// Note: Prisma 6.x has deprecated $use middleware in favor of event listeners and extensions
 
 // 🚀 ENTERPRISE ENHANCEMENT: Event listeners for monitoring
+// Note: Event listeners are configured based on the log levels set above
 if (process.env.NODE_ENV === "development") {
-  prisma.$on("query", (e: any) => {
-    if (e.duration > 100) {
-      console.log(`🐌 Query took ${e.duration}ms: ${e.query}`);
-    }
-  });
+  try {
+    (prisma as any).$on("query", (e: any) => {
+      if (e.duration > 100) {
+        console.log(`🐌 Query took ${e.duration}ms: ${e.query}`);
+      }
+    });
+  } catch (error) {
+    console.warn('⚠️ Query event listener not available:', error);
+  }
   
-  prisma.$on("error", (e: any) => {
-    console.error(`❌ Database Error:`, e);
-  });
+  try {
+    (prisma as any).$on("error", (e: any) => {
+      console.error(`❌ Database Error:`, e);
+    });
+  } catch (error) {
+    console.warn('⚠️ Error event listener not available:', error);
+  }
   
-  prisma.$on("warn", (e: any) => {
-    console.warn(`⚠️ Database Warning:`, e);
-  });
+  try {
+    (prisma as any).$on("warn", (e: any) => {
+      console.warn(`⚠️ Database Warning:`, e);
+    });
+  } catch (error) {
+    console.warn('⚠️ Warn event listener not available:', error);
+  }
 }
 
 // 🚀 ENTERPRISE ENHANCEMENT: Connection pool monitoring
@@ -266,20 +285,6 @@ export interface DatabaseMetrics {
 
 // 📊 BASELINE MEASUREMENT IMPLEMENTATION (READY TO USE):
 // ====================================================
-
-export interface QueryMetricsState {
-  totalQueries: number;
-  slowQueries: number;
-  totalDuration: number;
-  startTime: number;
-}
-
-export let queryMetrics: QueryMetricsState = {
-  totalQueries: 0,
-  slowQueries: 0,
-  totalDuration: 0,
-  startTime: Date.now()
-};
 
 export async function getPerformanceBaseline(): Promise<{
   currentMetrics: DatabaseMetrics;

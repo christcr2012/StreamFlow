@@ -102,7 +102,7 @@ async function handleCreateUser(req: NextApiRequest, res: NextApiResponse) {
     }
 
     // Generate password if not provided
-    const userPassword = password || crypto.randomBytes(12).toString("hex");
+    const userPassword = password || crypto.getRandomValues(new Uint8Array(12)).reduce((acc, val) => acc + val.toString(16).padStart(2, '0'), '');
     const passwordHash = await bcrypt.hash(userPassword, 12);
 
     // Get the organization ID from the requesting user

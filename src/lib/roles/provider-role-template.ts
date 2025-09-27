@@ -383,11 +383,7 @@ export const PROVIDER_ENFORCEMENT_LEVELS = {
   }
 };
 
-// Export types and configurations
-export type {
-  ProviderScope,
-  ProviderConstraints
-};
+// Types already exported with interfaces above
 
 export {
   PROVIDER_ROLE_TEMPLATE as default

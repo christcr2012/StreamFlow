@@ -124,7 +124,7 @@ export class FeatureCircuitBreaker {
             allowed: false,
             reason: `Usage limit exceeded. Current: ${currentUsage}, Limit: ${module.usageLimit}`,
             currentUsage,
-            usageLimit: module.usageLimit,
+            usageLimit: module.usageLimit || undefined,
           };
         }
 
@@ -192,7 +192,7 @@ export class FeatureCircuitBreaker {
         return {
           allowed: true,
           currentUsage: currentUsage + request.amount,
-          usageLimit: module.usageLimit,
+          usageLimit: module.usageLimit || undefined,
           currentSpend: projectedSpend,
           budgetLimit: budget.monthlyLimitCents,
           remainingBudget: budget.monthlyLimitCents - projectedSpend,

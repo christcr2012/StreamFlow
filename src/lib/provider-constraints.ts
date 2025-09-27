@@ -161,21 +161,21 @@ export class ProviderConstraintEnforcer {
       // Check for Prohibited Tenant Business Data
       const businessDataCheck = this.checkTenantBusinessDataAccess(resource, tenantId);
       if (!businessDataCheck.allowed) {
-        await this.logDataAccessViolation(resource, action, tenantId, 'CRITICAL', businessDataCheck.reason);
+        await this.logDataAccessViolation(resource, action, tenantId, 'CRITICAL', businessDataCheck.reason || 'Business data access violation');
         return businessDataCheck;
       }
 
       // Check System-Level vs Tenant-Level Resource
       const systemLevelCheck = this.validateSystemLevelAccess(resource, action);
       if (!systemLevelCheck.allowed) {
-        await this.logDataAccessViolation(resource, action, tenantId, 'HIGH', systemLevelCheck.reason);
+        await this.logDataAccessViolation(resource, action, tenantId, 'HIGH', systemLevelCheck.reason || 'System level access violation');
         return systemLevelCheck;
       }
 
       // Check Anonymization Requirements
       const anonymizationCheck = this.checkAnonymizationRequirements(resource, action);
       if (!anonymizationCheck.allowed) {
-        await this.logDataAccessViolation(resource, action, tenantId, 'MEDIUM', anonymizationCheck.reason);
+        await this.logDataAccessViolation(resource, action, tenantId, 'MEDIUM', anonymizationCheck.reason || 'Anonymization requirement violation');
         return anonymizationCheck;
       }
 
@@ -685,11 +685,7 @@ export function createProviderConstraintEnforcer(
   return new ProviderConstraintEnforcer(providerId, sessionId);
 }
 
-export type {
-  ProviderSession,
-  TenantDataAccessAttempt,
-  ProviderDataRestrictions
-};
+// Type exports already declared with interfaces above
 
 // Export factory functions for proper imports
-export { createProviderConstraintEnforcer };
+// Factory function already exported above
