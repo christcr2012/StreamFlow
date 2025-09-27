@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import AdvancedSecurityModal from "@/components/AdvancedSecurityModal";
+import EditProfileModal from "@/components/EditProfileModal";
 
 type Me =
   | { ok: true; user: { email: string; name: string | null } }
@@ -14,6 +15,7 @@ export default function ProfilePage() {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [showAdvancedSecurity, setShowAdvancedSecurity] = useState(false);
+  const [showEditProfile, setShowEditProfile] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -30,6 +32,13 @@ export default function ProfilePage() {
 
   const email = me && "ok" in me && me.ok ? me.user.email : "";
   const name = me && "ok" in me && me.ok ? me.user.name ?? "" : "";
+
+  // Handle profile update from modal
+  const handleProfileUpdated = (newName: string) => {
+    if (me && "ok" in me && me.ok) {
+      setMe({ ...me, user: { ...me.user, name: newName } });
+    }
+  };
 
   async function changePassword(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -127,7 +136,10 @@ export default function ProfilePage() {
           </div>
 
           <div className="mt-6">
-            <button className="btn-outline">
+            <button 
+              className="btn-outline"
+              onClick={() => setShowEditProfile(true)}
+            >
               <span>✏️ Edit Profile</span>
             </button>
           </div>
@@ -269,6 +281,14 @@ export default function ProfilePage() {
         onClose={() => setShowAdvancedSecurity(false)}
         currentPassword={currentPassword}
         newPassword={newPassword}
+      />
+
+      {/* Edit Profile Modal */}
+      <EditProfileModal
+        isOpen={showEditProfile}
+        onClose={() => setShowEditProfile(false)}
+        currentName={name}
+        onProfileUpdated={handleProfileUpdated}
       />
     </>
   );

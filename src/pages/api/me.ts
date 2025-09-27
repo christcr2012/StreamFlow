@@ -82,10 +82,66 @@ async function computePermCodes(userId: string, baseRole?: string | null): Promi
   return codes;
 }
 
+/**
+ * Handle PATCH requests to update user profile
+ */
+async function handleProfileUpdate(req: NextApiRequest, res: NextApiResponse, email: string) {
+  try {
+    const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : (req.body || {});
+    const name = body.name?.toString()?.trim();
+
+    // Validate input
+    if (name !== undefined && (name.length === 0 || name.length > 100)) {
+      return res.status(400).json({ ok: false, error: "Name must be between 1 and 100 characters" });
+    }
+
+    // Find user by email (from session)
+    const user = await db.user.findFirst({
+      where: { email },
+      select: { id: true },
+    });
+
+    if (!user) {
+      return res.status(404).json({ ok: false, error: "User not found" });
+    }
+
+    // Update user profile
+    const updateData: { name?: string } = {};
+    if (name !== undefined) {
+      updateData.name = name || null; // Allow clearing name by setting empty string
+    }
+
+    await db.user.update({
+      where: { id: user.id },
+      data: updateData,
+    });
+
+    return res.status(200).json({ 
+      ok: true, 
+      message: "Profile updated successfully" 
+    });
+
+  } catch (error) {
+    console.error('Profile update error:', error);
+    return res.status(500).json({ ok: false, error: "Failed to update profile" });
+  }
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse<MeResponse>) {
   try {
     const email = getEmailFromReq(req);
     if (!email) return res.status(401).json({ ok: false, error: "Not signed in" });
+
+    // Handle PATCH requests for profile updates
+    if (req.method === "PATCH") {
+      return await handleProfileUpdate(req, res, email);
+    }
+
+    // Handle GET requests (existing functionality)
+    if (req.method !== "GET") {
+      res.setHeader("Allow", ["GET", "PATCH"]);
+      return res.status(405).json({ ok: false, error: "Method not allowed" });
+    }
 
     // Dev bypass: grant all perms if DEV_USER_EMAIL matches
     const DEV_USER_EMAIL = process.env.DEV_USER_EMAIL?.toLowerCase() || null;
