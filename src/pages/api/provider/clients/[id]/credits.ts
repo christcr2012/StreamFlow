@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     // Simple auth check - Provider portal access
     const cookies = req.headers.cookie;
-    if (!cookies?.includes('mv_user')) {
+    if (!cookies?.includes('ws_user')) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
     

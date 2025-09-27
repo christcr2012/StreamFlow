@@ -207,11 +207,11 @@ const DEV_USER_EMAIL = process.env.DEV_USER_EMAIL?.toLowerCase() || null;
 /**
  * Extract current user's email from cookie or header.
  * - Cookie: ws_user=<email>
- * - Header: x-mv-user: <email>  (useful for scripts/tests)
+ * - Header: x-ws-user: <email>  (useful for scripts/tests)
  */
 export function getEmailFromReq(req: NextApiRequest): string | null {
   const fromCookie = req.cookies?.ws_user;
-  const fromHeader = (req.headers["x-mv-user"] || req.headers["x-mvuser"]) as string | undefined;
+  const fromHeader = (req.headers["x-ws-user"] || req.headers["x-wsuser"]) as string | undefined;
   const raw = (Array.isArray(fromCookie) ? fromCookie[0] : fromCookie) ?? fromHeader ?? "";
   const email = raw?.toString().trim().toLowerCase();
   return email || null;
