@@ -59,8 +59,8 @@ function nextInvoiceNumber(prefix = "LI"): string {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     if (req.method !== "POST") {
-      res.setHeader("Allow", "POST");
-      return res.status(405).end("Method Not Allowed");
+      (res as any).setHeader("Allow", "POST");
+      return res.status(405).end();
     }
 
     // ---- Provider Federation (optional, off by default) ---------------------
