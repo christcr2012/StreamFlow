@@ -4,7 +4,6 @@
   "/_document": "pages/_document.js",
   "/dashboard": "pages/dashboard.js",
   "/login": "pages/login.js",
-  "/api/me": "pages/api/me.js",
   "/api/dashboard/summary": "pages/api/dashboard/summary.js",
-  "/api/leads.list": "pages/api/leads.list.js"
+  "/": "pages/index.js"
 }
