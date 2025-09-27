@@ -6,9 +6,10 @@
   "/dashboard": "pages/dashboard.js",
   "/api/dashboard/summary": "pages/api/dashboard/summary.js",
   "/api/me": "pages/api/me.js",
+  "/api/leads.list": "pages/api/leads.list.js",
   "/analytics": "pages/analytics.js",
   "/reports": "pages/reports.js",
   "/documents": "pages/documents.js",
-  "/api/leads.list": "pages/api/leads.list.js",
-  "/administration": "pages/administration.js"
+  "/administration": "pages/administration.js",
+  "/profile": "pages/profile.js"
 }
