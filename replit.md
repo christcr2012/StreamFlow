@@ -1,34 +1,7 @@
 # WorkStream - Business Operating System for Service Companies
 
 ## Overview
-
-WorkStream is a comprehensive business operating system built for service businesses, particularly focusing on janitorial, cleaning, HVAC, landscaping, and similar companies. The system handles lead generation, scoring, conversion tracking, and automated billing for converted leads. It features integration with external data sources (SAM.gov for RFP imports), Stripe for payment processing, and includes role-based access control (RBAC) for multi-user organizations.
-
-WorkStream is designed as a multi-tenant SaaS platform where each service business gets their own isolated instance. The system is managed and scaled through StreamCore, the provider federation platform that enables centralized management of multiple WorkStream deployments.
-
-## Recent Changes
-
-**September 26, 2025 - WORKSTREAM & STREAMCORE ARCHITECTURE:**
-- Established WorkStream as the client system name and StreamCore as the provider federation platform
-- Updated to Provider-Client business model: StreamCore providers charge $100 per converted lead
-- Provider AI costs hard-limited to $50/month with atomic transaction enforcement  
-- Client-facing credit system: 1 credit = $0.05 (50x markup from provider cost)
-- Two lead types: Relationship-valued ($100/customer, hide future leads) vs Job-valued ($100/contract, show future leads)
-- Premium dashboard experience with enterprise-grade features at startup costs
-
-**EMPLOYEE REFERRAL SYSTEM & CONFLICT RESOLUTION:**
-- Employee referrals: WorkStream clients pay employees $50 directly (NO StreamCore provider billing)
-- StreamCore provider billing: Only for system/AI-generated leads ($100/lead)
-- CRITICAL: Industry-leading conflict resolution prevents double-payment scenarios
-- Anti-fraud protection with automatic blocking of high-risk conversions
-- Complete exclusion of employee referral data from StreamCore provider analytics
-
-**Business Model:**
-- StreamCore providers charge WorkStream clients $100 per converted lead
-- Provider costs stay under $50/month (guaranteed by atomic transactions)
-- WorkStream clients see value-based credit pricing reflecting lead generation ROI
-- SAM.gov integration provides high-value federal contract leads
-- 20-35x ROI for StreamCore providers: $100 revenue per $3-5 AI cost
+WorkStream is a multi-tenant SaaS platform for service businesses (janitorial, HVAC, etc.), offering lead generation, scoring, conversion tracking, and automated billing. It integrates with SAM.gov for RFP imports and Stripe for payments, featuring robust role-based access control. The platform aims to be a leading enterprise business operating system, providing high ROI for StreamCore providers who manage and scale deployments. The business vision is to achieve $10M ARR within 24 months, transforming from a proven MVP to a board-ready, enterprise-grade solution through systematic hardening, compliance, and market expansion.
 
 ## User Preferences
 
@@ -42,74 +15,70 @@ Preferred communication style: Simple, everyday language.
 
 ## System Architecture
 
-### Frontend Architecture
-- **Framework**: Next.js 15 with Pages Router (TypeScript)
-- **Styling**: Tailwind CSS with custom CSS variables for theming
-- **State Management**: SWR for data fetching and client-side state
+### Frontend
+- **Framework**: Next.js 15 (Pages Router, TypeScript)
+- **Styling**: Tailwind CSS with custom CSS variables (dark theme)
+- **State Management**: SWR
 - **Authentication**: Cookie-based session management (`ws_user` cookie)
-- **UI Components**: Custom components with a dark theme design system
 
-### Backend Architecture
+### Backend
 - **Framework**: Next.js API Routes
 - **Database**: PostgreSQL with Prisma ORM
-- **Authentication**: bcryptjs for password hashing, cookie-based sessions
-- **Authorization**: Custom RBAC system with roles and permissions
-- **Lead Scoring**: Configurable AI scoring system based on geography, service types, and source
-- **Billing**: Conversion-based billing system with automated invoice generation
+- **Authentication**: bcryptjs, cookie-based sessions
+- **Authorization**: Custom RBAC system
+- **Lead Scoring**: Configurable AI-driven system
+- **Billing**: Conversion-based, automated invoice generation
 
 ### Database Design
 - **Core Entities**: Organizations, Users, Leads, Customers, Opportunities
-- **RBAC System**: Roles, Permissions, and User-Role assignments
-- **Billing System**: Invoices, Payments, Ledger entries for financial tracking
-- **Audit Logging**: Complete audit trail for all system actions
-- **Lead Management**: Comprehensive lead tracking with deduplication and scoring
+- **RBAC System**: Roles, Permissions, User-Role assignments
+- **Billing System**: Invoices, Payments, Ledger entries
+- **Audit Logging**: Comprehensive audit trail
+- **Lead Management**: Tracking, deduplication, scoring
 
 ### Key Features
-1. **FREE Lead Generation**: 100% free lead sources with no per-lead costs or subscriptions
-2. **SAM.gov Integration**: Federal government contracts via free SAM.gov API
-3. **Billing System**: Automated billing for converted leads with Stripe integration
-4. **AI-Powered Lead Scoring**: Intelligent scoring system for lead prioritization
-5. **Multi-tenant**: Organization-based data isolation
-6. **Role-based Access**: Granular permissions system
-7. **StreamCore Federation**: Framework for cross-instance provider portal integration
-
-### Data Flow Patterns
-- **Lead Ingestion**: External sources → Deduplication → Scoring → Storage
-- **Conversion Tracking**: Lead status changes → Billing eligibility → Invoice generation
-- **User Management**: RBAC permissions → API endpoint authorization → UI feature gating
+- **Lead Generation**: Free sources, SAM.gov API integration
+- **Billing System**: Automated, Stripe integration
+- **AI-Powered Lead Scoring**: Prioritization based on various factors
+- **Multi-tenant**: Organization-based data isolation
+- **Role-based Access**: Granular permissions
+- **StreamCore Federation**: Cross-instance provider portal integration
+- **Business Model**: Conversion-based billing ($100/converted lead), AI costs capped at $50/month, supports Relationship-valued and Job-valued leads
+- **Employee Referral System**: Direct payments, anti-fraud protection
 
 ### Security Model
-- **Authentication**: Email/password with secure password hashing
-- **Session Management**: HttpOnly cookies with configurable security flags
-- **Authorization**: Permission-based access control at API level
-- **Data Isolation**: Organization-scoped queries prevent cross-tenant data access
-- **Federation Security**: HMAC-signed requests for StreamCore provider portal integration
+- **Authentication**: Email/password, secure hashing
+- **Session Management**: HttpOnly cookies
+- **Authorization**: Permission-based, API-level
+- **Data Isolation**: Organization-scoped queries
+- **Federation Security**: HMAC-signed requests
+
+### Enterprise Roadmap
+- **Compliance**: SOC 2 Type II certification, GDPR, data retention policies, DLP, key management, vendor risk management, incident response framework.
+- **Performance**: SLOs for 99.9% uptime and <200ms API response, error budget management, capacity planning for 16x growth.
+- **Testing**: Load, stress, spike, endurance testing; automated unit, integration, and E2E tests.
+- **Technology Milestones**: Foundation, Hardening, Compliance, Scale, Enterprise phases including SSO, MFA, advanced monitoring, multi-region deployment, AI/ML optimization, and predictive analytics.
 
 ## External Dependencies
 
 ### Database & ORM
-- **PostgreSQL**: Primary data store (configured via DATABASE_URL)
-- **Prisma**: Database toolkit and ORM for schema management and queries
-- **Connection Pooling**: Supports pgbouncer for production scaling
+- **PostgreSQL**: Primary data store
+- **Prisma**: ORM
 
 ### Payment Processing
-- **Stripe**: Payment processing and invoice management
-  - Secret key for server-side operations
-  - Publishable key for client-side operations
-  - Webhook endpoint for payment status updates
+- **Stripe**: Payment processing, invoice management
 
 ### External APIs
-- **SAM.gov**: Government contracting data for RFP imports
-- **SendGrid**: Email delivery service for notifications
-- **Twilio**: SMS/voice communication services
+- **SAM.gov**: Government contracting data
+- **SendGrid**: Email delivery
+- **Twilio**: SMS/voice communication
 
 ### Development & Build Tools
-- **TypeScript**: Type safety and developer experience
-- **ESLint**: Code quality and consistency
-- **Tailwind CSS**: Utility-first styling framework
-- **tsx**: TypeScript execution for scripts and development
+- **TypeScript**: Language
+- **ESLint**: Code quality
+- **Tailwind CSS**: Styling
+- **tsx**: TypeScript execution
 
 ### Runtime Environment
-- **Node.js 22.x**: Runtime environment
-- **Vercel**: Deployment platform with cron job support for automated billing
-- **Environment Variables**: Secure configuration for API keys and database connections
+- **Node.js 22.x**: Runtime
+- **Vercel**: Deployment platform
