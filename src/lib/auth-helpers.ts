@@ -146,11 +146,35 @@ const DEV_USER_EMAIL = process.env.DEV_USER_EMAIL?.toLowerCase() || null;
  * Get development user data for test emails
  * 🚨 DELETE THIS FUNCTION BEFORE PRODUCTION 🚨
  */
-function getDevUser(email: string): AuthenticatedUser | null {
+async function getDevUser(email: string): Promise<AuthenticatedUser | null> {
   // Only enabled in development environments
   if (process.env.NODE_ENV === 'production') return null;
   
-  // Check configured dev users (with defaults)
+  // First check if this is actually a real user in the database
+  // This allows dev emails to work with real user data
+  try {
+    const realUser = await db.user.findFirst({
+      where: {
+        email,
+        status: "active"
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        orgId: true,
+      }
+    });
+    
+    if (realUser) {
+      return realUser;
+    }
+  } catch (error) {
+    console.error("Dev user database lookup failed:", error);
+  }
+  
+  // Check configured dev users (with defaults) - fallback only
   for (const [role, devEmail] of Object.entries(DEV_USERS)) {
     if (devEmail && email.toLowerCase() === devEmail) {
       return {
@@ -191,7 +215,7 @@ export async function getAuthenticatedUser(req: NextApiRequest): Promise<Authent
 
     // 🚨 TEMP DEV CODE - DELETE BEFORE PRODUCTION 🚨
     // Check if this is a development test user first
-    const devUser = getDevUser(email);
+    const devUser = await getDevUser(email);
     if (devUser) {
       return devUser;
     }

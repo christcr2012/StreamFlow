@@ -708,8 +708,14 @@ model Lead {
   // budget          Decimal?          // Available budget
   // timeline        Timeline?         // Purchase timeline (IMMEDIATE, QUARTER, YEAR)
   
-  // === GEOGRAPHIC AND SERVICE INFO ===
-  serviceCode     String?
+  // === MULTI-INDUSTRY SERVICE & GEOGRAPHIC INFO ===
+  industryType    String?     // Industry: "cleaning", "hvac", "fencing", etc.
+  leadType        String      @default("job")  // "relationship", "job", "permit", "government"  
+  naicsCode       String?     // Industry classification
+  sicCode         String?     // Legacy industry code
+  serviceCode     String?     // Industry-specific service type code
+  
+  // Address information  
   zip             String?
   city            String?
   state           String?
@@ -718,6 +724,9 @@ model Lead {
   addressLine1    String?
   addressLine2    String?
   country         String?
+  
+  // 🏭 INDUSTRY-SPECIFIC CUSTOM FIELDS
+  customFields    Json        @default("{}")  // Industry-specific fields from IndustryPack.leadFields
   
   // === LEAD INTELLIGENCE ===
   enrichmentJson  Json       @default("{}")  // LEGACY: Migrate to structured models
