@@ -203,7 +203,7 @@ export default function AppNav() {
   return (
     <>
       {/* Premium Desktop-Style Sidebar Navigation */}
-      <div className="flex h-screen">
+      <div className="flex">
         {/* Fixed Desktop Sidebar */}
         <div className="hidden lg:flex lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:w-72 xl:w-80 2xl:w-96 lg:flex-col">
           <div 
