@@ -766,18 +766,9 @@ export class ObservabilityManager {
                    'staging' as const,
       timeWindow: '5m',  // Default time window
       samples: 1,  // Single sample for now
-      severity: currentValue > baselineValue * 2 ? 'high' as const : 'medium' as const
-    };
-      httpMethod: telemetry.httpMethod || 'UNKNOWN',
-      environment: telemetry.environment,
-      appVersion: telemetry.serviceVersion,
-      metadata: {
-        traceId: telemetry.traceId,
-        spanId: telemetry.spanId,
-        serviceName: telemetry.serviceName,
-        cpuUsage: telemetry.cpuUsage,
-        memoryUsage: telemetry.memoryUsage
-      }
+      severity: currentValue > baselineValue * 2 ? 'high' as const : 'medium' as const,
+      tenantId: telemetry.userContext?.organizationId || 'unknown',  // Required for PerformanceAnomaly interface
+      appVersion: telemetry.serviceVersion  // Required for PerformanceAnomaly interface
     };
   }
 
@@ -1042,9 +1033,3 @@ export const DEFAULT_OBSERVABILITY_CONFIG: ObservabilityConfig = {
   }
 };
 
-export type {
-  TelemetryEvent,
-  LogEntry,
-  DeploymentMetadata,
-  ObservabilityConfig
-};
