@@ -7,6 +7,99 @@
 
 import config from "@/config/leadScoringConfig";
 
+/*
+=== ENTERPRISE ROADMAP: LEAD SCORING SYSTEM ===
+
+CURRENT STATE vs ENTERPRISE STANDARDS:
+- Basic rule-based scoring with static weights
+- Limited to geographic, service, and source factors
+- No machine learning or adaptive scoring
+- Single-dimensional scoring (1-99 scale)
+
+ENTERPRISE CRM COMPARISON (Salesforce, HubSpot, Pipedrive):
+1. Machine Learning Scoring:
+   - Predictive lead scoring using historical conversion data
+   - Dynamic weight adjustment based on performance
+   - Ensemble models combining multiple algorithms
+   - Real-time score updates as lead data changes
+
+2. Multi-Dimensional Scoring:
+   - Separate scores for different outcomes (conversion, value, urgency)
+   - Lead quality vs lead fit scoring
+   - Time-decay factors for lead age
+   - Interaction-based scoring (email opens, form fills, etc.)
+
+3. Advanced Lead Intelligence:
+   - Company firmographics and technographics
+   - Intent data from third-party sources
+   - Social media engagement scoring
+   - Website behavior tracking and scoring
+
+IMPLEMENTATION ROADMAP:
+
+Phase 1: Enhanced Rule-Based Scoring (2-4 weeks)
+- Add time-decay factors for lead age
+- Implement interaction scoring (email opens, calls, meetings)
+- Add lead source quality metrics based on historical conversion rates
+- Create industry-specific scoring models
+
+Phase 2: Machine Learning Foundation (1-2 months)
+- Implement logistic regression model for conversion prediction
+- Add feature engineering pipeline for lead attributes
+- Create A/B testing framework for scoring model comparison
+- Implement model performance monitoring and drift detection
+
+Phase 3: Advanced ML Scoring (2-3 months) 
+- Deploy ensemble models (Random Forest, XGBoost)
+- Add clustering for lead segmentation
+- Implement real-time feature stores for dynamic scoring
+- Create automated model retraining pipeline
+
+Phase 4: Enterprise Integration (1-2 months)
+- API endpoints for external system integration
+- Webhook notifications for score changes
+- Bulk scoring APIs for data warehouse integration
+- Advanced analytics dashboard for scoring insights
+
+ENTERPRISE FEATURES TO IMPLEMENT:
+*/
+
+// ENTERPRISE FEATURE: Multi-dimensional scoring interface
+export type EnterpriseScoreResult = {
+  primaryScore: number;           // Overall lead quality (1-99)
+  conversionProbability: number;  // ML prediction (0-1)
+  estimatedValue: number;         // Predicted deal size
+  urgencyScore: number;           // Time sensitivity (1-10)
+  leadFit: number;               // ICP match score (1-100)
+  dataQuality: number;           // Completeness score (1-100)
+  reasons: string[];             // Scoring explanations
+  confidence: number;            // Model confidence (0-1)
+  lastUpdated: Date;             // Score computation timestamp
+  modelVersion: string;          // ML model version used
+};
+
+// ENTERPRISE FEATURE: Lead enrichment and validation
+export type LeadEnrichmentData = {
+  // Company intelligence (from Clearbit, ZoomInfo, etc.)
+  employeeCount?: number;
+  annualRevenue?: number;
+  industry?: string;
+  subIndustry?: string;
+  technologies?: string[];
+  
+  // Intent and engagement data
+  websiteVisits?: number;
+  contentDownloads?: number;
+  emailEngagement?: number;
+  socialEngagement?: number;
+  
+  // Data quality indicators
+  phoneVerified?: boolean;
+  emailDeliverable?: boolean;
+  addressValidated?: boolean;
+  duplicateCheckPassed?: boolean;
+};
+
 // Lead data structure for scoring input
 // Flexible interface accepts leads from various sources (SAM.gov, permits, manual entry)
 export type LeadLike = {

@@ -160,46 +160,152 @@ model UserTwoFactor {
   @@index([userId])
 }
 
+/*
+=== ENTERPRISE ROADMAP: LEAD DATA MODEL ===
+
+CURRENT STATE vs ENTERPRISE STANDARDS:
+- Basic lead fields with limited contact information
+- Simple JSON enrichment storage without schema validation
+- Basic scoring with single aiScore field
+- Limited pipeline management with simple status enum
+
+ENTERPRISE CRM COMPARISON (Salesforce, HubSpot, Dynamics Lead Object):
+1. Comprehensive Contact Management:
+   - Multiple contact persons per lead/account
+   - Contact roles and decision-maker hierarchy
+   - Contact preferences and communication history
+   - Social media profiles and professional networks
+
+2. Advanced Lead Intelligence:
+   - Company firmographics (employee count, revenue, industry)
+   - Technographics (technology stack, software usage)
+   - Intent data and buying signals
+   - Competitive landscape and win/loss history
+
+3. Pipeline and Lifecycle Management:
+   - Multi-stage opportunity pipeline with custom stages
+   - Stage-specific probability weights and requirements
+   - Sales velocity tracking and forecasting
+   - Automated workflow triggers and actions
+
+IMPLEMENTATION ROADMAP:
+
+Phase 1: Enhanced Lead Data Model (2-3 weeks)
+- Add company enrichment fields (employees, revenue, industry)
+- Create separate Contact model with lead relationships
+- Add lead source attribution and campaign tracking
+- Implement custom field support with type validation
+
+Phase 2: Advanced Scoring and Intelligence (1-2 months)
+- Add multi-dimensional scoring (conversion, value, urgency)
+- Create Lead Intelligence model for enrichment data
+- Add Intent Data model for buying signal tracking
+- Implement lead health and engagement scoring
+
+Phase 3: Pipeline and Workflow Management (2-3 months)
+- Create Opportunity model with multi-stage pipeline
+- Add Stage and Pipeline configuration models
+- Implement Workflow and Trigger models for automation
+- Add comprehensive activity and interaction tracking
+
+Phase 4: Enterprise Integration (1-2 months)
+- Add external system integration tracking
+- Create audit trail for all lead data changes
+- Implement data governance and compliance features
+- Add performance optimization for high-volume processing
+
+ENTERPRISE FEATURES TO ADD:
+*/
+
 model Lead {
   id              String     @id @default(cuid())
   orgId           String
   publicId        String     @unique
   sourceType      LeadSource
   identityHash    String
+  
+  // === BASIC CONTACT INFORMATION ===
   company         String?
   contactName     String?
   email           String?
   phoneE164       String?
   website         String?
+  
+  // === ENTERPRISE FIELDS TO ADD ===
+  // companySize     CompanySize?      // SMALL, MEDIUM, LARGE, ENTERPRISE
+  // annualRevenue   Decimal?          // Company annual revenue
+  // industry        Industry?         // Industry classification
+  // department      String?           // Contact department
+  // jobTitle        String?           // Contact job title
+  // decisionMaker   Boolean?          // Is primary decision maker
+  // budget          Decimal?          // Available budget
+  // timeline        Timeline?         // Purchase timeline (IMMEDIATE, QUARTER, YEAR)
+  
+  // === GEOGRAPHIC AND SERVICE INFO ===
   serviceCode     String?
   zip             String?
-  enrichmentJson  Json       @default("{}")
-  aiScore         Int        @default(0)
-  scoreFactors    Json       @default("{}")
-  /// systemGenerated: true if lead came from SAM/automated import
-  systemGenerated Boolean    @default(false)
-  /// convertedAt: timestamp when lead was converted (if status changes to converted)
-  convertedAt     DateTime?
-  /// rfp: raw RFP metadata from SAM.gov
-  rfp             Json?
-  /// Status of the lead. Stored as an enum rather than string for consistency.
-  status          LeadStatus @default(NEW)
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
   city            String?
-  notes           String?
-  sourceDetail    String?
   state           String?
   postalCode      String?    @db.VarChar(20)
   address         String?
   addressLine1    String?
   addressLine2    String?
   country         String?
-
+  
+  // === LEAD INTELLIGENCE ===
+  enrichmentJson  Json       @default("{}")  // LEGACY: Migrate to structured models
+  aiScore         Int        @default(0)     // LEGACY: Expand to multi-dimensional scoring
+  scoreFactors    Json       @default("{}")  // LEGACY: Move to structured scoring model
+  
+  // === ENTERPRISE SCORING TO ADD ===
+  // conversionScore    Int?           // ML-predicted conversion probability (0-100)
+  // valueScore         Int?           // Predicted deal value score (0-100)
+  // urgencyScore       Int?           // Purchase urgency score (0-100)
+  // engagementScore    Int?           // Lead engagement score (0-100)
+  // dataQualityScore   Int?           // Data completeness score (0-100)
+  
+  // === LIFECYCLE AND PIPELINE ===
+  systemGenerated Boolean    @default(false)
+  convertedAt     DateTime?
+  rfp             Json?      // MIGRATE: Move to structured RFP model
+  status          LeadStatus @default(NEW)   // EXPAND: Multi-stage pipeline
+  
+  // === ENTERPRISE PIPELINE TO ADD ===
+  // currentStage       String?        // Current pipeline stage
+  // stageEnteredAt     DateTime?      // When entered current stage
+  // stageProbability   Int?           // Win probability for current stage
+  // expectedCloseDate  DateTime?      // Predicted close date
+  // actualCloseDate    DateTime?      // Actual close date
+  // lostReason         String?        // Reason if lost
+  // competitorLost     String?        // Competitor who won
+  
+  // === AUDIT AND TRACKING ===
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  notes           String?
+  sourceDetail    String?
+  
+  // === ENTERPRISE ATTRIBUTION TO ADD ===
+  // campaign           String?        // Marketing campaign attribution
+  // medium             String?        // Traffic medium (organic, paid, referral)
+  // source             String?        // Traffic source (google, linkedin, etc)
+  // firstTouchDate     DateTime?      // First interaction timestamp
+  // lastTouchDate      DateTime?      // Last interaction timestamp
+  // touchpointCount    Int?           // Number of touchpoints
+  
+  // === RELATIONSHIPS ===
   org             Org               @relation(fields: [orgId], references: [id])
   LeadInvoiceLine LeadInvoiceLine[]
   activities      LeadActivity[]    @relation("LeadActivities")
   tasks           LeadTask[]        @relation("LeadTasks")
+  
+  // === ENTERPRISE RELATIONSHIPS TO ADD ===
+  // contacts        Contact[]         // Multiple contacts per lead
+  // opportunity     Opportunity?      // Associated opportunity
+  // campaigns       CampaignTouch[]   // Campaign interactions
+  // enrichments     LeadEnrichment[]  // External data enrichments
+  // scoringHistory  LeadScore[]       // Score history over time
+  // duplicates      LeadDuplicate[]   // Duplicate detection results
   
   @@unique([orgId, id])  // Multi-tenant isolation
   @@index([orgId, createdAt])
@@ -207,6 +313,17 @@ model Lead {
   @@index([orgId, status])
   @@index([orgId, sourceType])
   @@index([orgId, identityHash])
+  
+  // === ENTERPRISE INDEXES TO ADD ===
+  // @@index([orgId, conversionScore])
+  // @@index([orgId, currentStage])
+  // @@index([orgId, expectedCloseDate])
+  // @@index([orgId, campaign])
+  // @@index([orgId, industry])
+  // @@index([orgId, companySize])
+  // @@index([email])                    // Cross-org email lookup
+  // @@index([phoneE164])               // Cross-org phone lookup
+  // @@index([website])                 // Company website lookup
 }
 
 model Customer {

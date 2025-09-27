@@ -12,6 +12,103 @@
  *  - Preserves unrelated enrichmentJson fields.
  */
 
+/*
+=== ENTERPRISE ROADMAP: LEAD CONVERSION & PIPELINE MANAGEMENT ===
+
+CURRENT STATE vs ENTERPRISE STANDARDS:
+- Simple status-based conversion (NEW → CONVERTED)
+- Basic billing metadata stamping
+- Limited conversion tracking and analytics
+- No pipeline automation or workflow management
+
+ENTERPRISE CRM COMPARISON (Salesforce, HubSpot, Pipedrive):
+1. Advanced Pipeline Management:
+   - Multi-stage opportunity pipelines with custom stages
+   - Weighted probability scoring by stage
+   - Pipeline velocity tracking and forecasting
+   - Stage-specific automation and requirements
+
+2. Conversion Intelligence:
+   - AI-powered conversion probability scoring
+   - Win/loss analysis with detailed attribution
+   - Revenue forecasting and pipeline analytics
+   - Automated next-step recommendations
+
+3. Workflow Automation:
+   - Trigger-based automation on status changes
+   - Automated task creation and assignment
+   - Email sequences and nurturing campaigns
+   - Integration with external sales tools
+
+IMPLEMENTATION ROADMAP:
+
+Phase 1: Enhanced Pipeline Management (3-4 weeks)
+- Add opportunity pipeline stages beyond simple conversion
+- Implement stage-specific probability weighting
+- Add pipeline velocity tracking and reporting
+- Create conversion funnel analytics dashboard
+
+Phase 2: Conversion Intelligence (1-2 months)
+- Build ML models for conversion probability prediction
+- Add win/loss tracking with detailed reasons
+- Implement revenue forecasting based on pipeline
+- Create conversion attribution and source analysis
+
+Phase 3: Automation & Workflows (2-3 months)
+- Build workflow automation engine with triggers
+- Add automated task and activity creation
+- Implement email nurturing sequences
+- Create sales process enforcement and guidance
+
+Phase 4: Advanced Analytics (1-2 months)
+- Add comprehensive pipeline analytics dashboard
+- Implement sales performance tracking and KPIs
+- Create territory and rep performance analysis
+- Add forecasting accuracy tracking and improvement
+
+ENTERPRISE FEATURES TO IMPLEMENT:
+*/
+
+// ENTERPRISE FEATURE: Multi-stage opportunity pipeline
+export type OpportunityStage = {
+  id: string;
+  name: string;
+  probability: number;        // Win probability (0-100%)
+  order: number;             // Stage order in pipeline
+  requirements: string[];    // Required fields/actions for stage
+  automation: {
+    onEnter?: string[];      // Actions when entering stage
+    onExit?: string[];       // Actions when leaving stage
+    timeLimit?: number;      // Max days in stage
+  };
+};
+
+// ENTERPRISE FEATURE: Conversion prediction and analytics
+export type ConversionPrediction = {
+  probability: number;       // ML-predicted conversion probability
+  confidence: number;        // Model confidence score
+  timeToConversion: number;  // Predicted days to conversion
+  valueEstimate: number;     // Predicted deal value
+  riskFactors: string[];     // Factors that may prevent conversion
+  accelerators: string[];    // Factors that may speed conversion
+};
+
+// ENTERPRISE FEATURE: Win/loss analysis tracking
+export type WinLossAnalysis = {
+  outcome: 'won' | 'lost' | 'no-decision';
+  primaryReason: string;
+  competitorWon?: string;
+  valueRealized?: number;
+  salesCycle: number;        // Days from lead to close
+  touchpoints: number;       // Number of interactions
+  feedback: string;          // Detailed win/loss feedback
+  attribution: {
+    source: string;
+    campaign?: string;
+    channel: string;
+  };
+};
+
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma as db } from "@/lib/prisma";
 import { assertPermission, PERMS } from "@/lib/rbac";
