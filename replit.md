@@ -1,7 +1,7 @@
 # WorkStream - Business Operating System for Service Companies
 
 ## Overview
-WorkStream is a multi-tenant SaaS platform for service businesses (janitorial, HVAC, etc.), offering lead generation, scoring, conversion tracking, and automated billing. It integrates with SAM.gov for RFP imports and Stripe for payments, featuring robust role-based access control. The platform aims to be a leading enterprise business operating system, providing high ROI for StreamCore providers who manage and scale deployments. The business vision is to achieve $10M ARR within 24 months, transforming from a proven MVP to a board-ready, enterprise-grade solution through systematic hardening, compliance, and market expansion.
+WorkStream is a multi-industry enterprise operating system for service businesses, offering configurable lead generation, AI-powered triage, professional estimation/bidding, contract management, robust inventory control, and automated billing. Built with a verticalization framework that adapts to ANY service industry - from cleaning and HVAC to fencing and electrical work. It integrates with SAM.gov for RFP imports and Stripe for payments, featuring robust role-based access control. The platform aims to be a leading enterprise business operating system, providing high ROI for StreamCore providers who manage and scale deployments. The business vision is to achieve $10M ARR within 24 months, transforming from a proven MVP to a board-ready, enterprise-grade solution through systematic hardening, compliance, and market expansion.
 
 ## User Preferences
 
@@ -12,6 +12,21 @@ Preferred communication style: Simple, everyday language.
 - Manually maintain .env file for cross-platform compatibility (GitHub/Vercel/Neon workflow)
 - CRITICAL: Never clear, delete, or modify the .env file - user manages this manually
 - Dual approach provides both Replit convenience and external development portability
+
+## Multi-Industry Platform Architecture
+
+### Industry Verticalization Framework
+- **IndustryPack System**: Configurable templates, workflows, and catalogs per industry
+- **Capability Registry**: Dynamic feature enabling based on industry needs
+- **JSON Schema Configuration**: Industry-specific forms, checklists, and workflows
+- **NAICS/SIC Integration**: Proper industry classification and compliance
+
+### Professional Service Tools
+- **Estimation Engine**: Configurable catalogs, rate cards, formula DSL, takeoff import
+- **Contract Management**: Industry-specific templates, e-signatures, automated work orders
+- **Advanced Inventory**: Multi-location tracking (warehouse/vehicle/site), BOM, consumption
+- **Mobile Field Operations**: QR scanning, offline functionality, real-time updates
+- **Dynamic Workflows**: Configurable work orders, checklists, inspections per industry
 
 ## System Architecture
 
