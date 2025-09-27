@@ -2,7 +2,8 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/profile": "pages/profile.js",
-  "/login": "pages/login.js",
-  "/api/auth/password-requirements": "pages/api/auth/password-requirements.js"
+  "/dashboard": "pages/dashboard.js",
+  "/api/me": "pages/api/me.js",
+  "/api/leads.list": "pages/api/leads.list.js",
+  "/api/dashboard/summary": "pages/api/dashboard/summary.js"
 }
