@@ -16,6 +16,9 @@ export default function ProfilePage() {
   const [msg, setMsg] = useState<string | null>(null);
   const [showAdvancedSecurity, setShowAdvancedSecurity] = useState(false);
   const [showEditProfile, setShowEditProfile] = useState(false);
+  const [sessions, setSessions] = useState<any[]>([]);
+  const [loadingSessions, setLoadingSessions] = useState(true);
+  const [sessionError, setSessionError] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -30,6 +33,29 @@ export default function ProfilePage() {
     })();
   }, []);
 
+  // Load user sessions
+  useEffect(() => {
+    (async () => {
+      if (me && "ok" in me && me.ok) {
+        try {
+          setLoadingSessions(true);
+          const response = await fetch('/api/security/sessions');
+          const result = await response.json();
+          
+          if (result.ok) {
+            setSessions(result.sessions || []);
+          } else {
+            setSessionError(result.error || 'Failed to load sessions');
+          }
+        } catch (error) {
+          setSessionError('Failed to connect to session API');
+        } finally {
+          setLoadingSessions(false);
+        }
+      }
+    })();
+  }, [me]);
+
   const email = me && "ok" in me && me.ok ? me.user.email : "";
   const name = me && "ok" in me && me.ok ? me.user.name ?? "" : "";
 
@@ -37,6 +63,49 @@ export default function ProfilePage() {
   const handleProfileUpdated = (newName: string) => {
     if (me && "ok" in me && me.ok) {
       setMe({ ...me, user: { ...me.user, name: newName } });
+    }
+  };
+
+  // Handle session revocation
+  const handleRevokeSession = async (sessionId: string) => {
+    try {
+      const response = await fetch('/api/security/sessions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId }),
+      });
+      
+      const result = await response.json();
+      if (result.ok) {
+        // Remove revoked session from the list
+        setSessions(prev => prev.filter(session => session.sessionId !== sessionId));
+      } else {
+        alert('Failed to revoke session: ' + result.error);
+      }
+    } catch (error) {
+      alert('Failed to revoke session');
+    }
+  };
+
+  // Handle revoking all other sessions
+  const handleRevokeOtherSessions = async () => {
+    try {
+      const response = await fetch('/api/security/sessions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'revoke-others' }),
+      });
+      
+      const result = await response.json();
+      if (result.ok) {
+        // Keep only the current session
+        setSessions(prev => prev.filter(session => session.isCurrent));
+        alert(`Revoked ${result.revokedCount} other sessions`);
+      } else {
+        alert('Failed to revoke sessions: ' + result.error);
+      }
+    } catch (error) {
+      alert('Failed to revoke sessions');
     }
   };
 
@@ -234,37 +303,57 @@ export default function ProfilePage() {
           </div>
 
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 rounded-xl" 
-                 style={{ background: 'var(--surface-2)', border: '1px solid var(--border-primary)' }}>
-              <div className="flex items-center gap-3">
-                <div className="w-2 h-2 rounded-full" style={{ background: 'var(--accent-success)' }}></div>
-                <div>
-                  <div className="font-medium">Current Session</div>
-                  <div className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
-                    Chrome on Windows • Active now
+            {loadingSessions ? (
+              <div className="text-center py-8" style={{ color: 'var(--text-tertiary)' }}>
+                <div className="animate-pulse">Loading sessions...</div>
+              </div>
+            ) : sessionError ? (
+              <div className="text-center py-8" style={{ color: 'var(--text-error)' }}>
+                Error: {sessionError}
+              </div>
+            ) : sessions.length === 0 ? (
+              <div className="text-center py-8" style={{ color: 'var(--text-tertiary)' }}>
+                No active sessions found
+              </div>
+            ) : (
+              sessions.map((session) => (
+                <div key={session.id} className="flex items-center justify-between p-4 rounded-xl" 
+                     style={{ background: 'var(--surface-2)', border: '1px solid var(--border-primary)' }}>
+                  <div className="flex items-center gap-3">
+                    <div 
+                      className={`w-2 h-2 rounded-full ${session.isCurrent ? 'bg-green-500' : 'bg-gray-400'}`}
+                      style={session.isCurrent ? { background: 'var(--accent-success)' } : {}}
+                    ></div>
+                    <div>
+                      <div className="font-medium">
+                        {session.isCurrent ? 'Current Session' : 'Active Session'}
+                      </div>
+                      <div className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                        {session.deviceInfo || session.userAgent || 'Unknown device'} • 
+                        {session.isCurrent 
+                          ? ' Active now' 
+                          : ` Last seen ${new Date(session.lastSeenAt).toLocaleString()}`
+                        }
+                        {session.ipAddress && ` • ${session.ipAddress}`}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-sm">
+                    {session.isCurrent ? (
+                      <span style={{ color: 'var(--text-tertiary)' }}>Current</span>
+                    ) : (
+                      <button 
+                        className="text-sm hover:underline" 
+                        style={{ color: 'var(--brand-primary)' }}
+                        onClick={() => handleRevokeSession(session.sessionId)}
+                      >
+                        Revoke
+                      </button>
+                    )}
                   </div>
                 </div>
-              </div>
-              <div className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
-                Current
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between p-4 rounded-xl" 
-                 style={{ background: 'var(--surface-2)', border: '1px solid var(--border-primary)' }}>
-              <div className="flex items-center gap-3">
-                <div className="w-2 h-2 rounded-full bg-gray-400"></div>
-                <div>
-                  <div className="font-medium">Previous Session</div>
-                  <div className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
-                    Safari on macOS • 2 hours ago
-                  </div>
-                </div>
-              </div>
-              <button className="text-sm" style={{ color: 'var(--brand-primary)' }}>
-                Revoke
-              </button>
-            </div>
+              ))
+            )}
           </div>
 
           <div className="mt-6">

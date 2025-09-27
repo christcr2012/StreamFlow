@@ -113,7 +113,31 @@ model User {
   // Temporary Elevation Relations
   temporaryElevations TemporaryElevation[] @relation("UserTemporaryElevations")
   
+  // User Session Relations
+  sessions UserSession[] @relation("UserSessions")
+  
   @@unique([orgId, id])  // Multi-tenant isolation
+}
+
+/// UserSession tracks active user login sessions for security and session management
+model UserSession {
+  id          String   @id @default(cuid())
+  userId      String
+  sessionId   String   @unique  // Session identifier stored in cookie
+  ipAddress   String?  // IP address when session was created
+  userAgent   String?  // Browser/client user agent
+  deviceInfo  String?  // Parsed device information (OS, browser)
+  location    String?  // Geographic location (city, country)
+  isActive    Boolean  @default(true)
+  lastSeenAt  DateTime @default(now())
+  expiresAt   DateTime // Session expiration time
+  createdAt   DateTime @default(now())
+  
+  user User @relation("UserSessions", fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([sessionId])
+  @@index([isActive])
 }
 
 model Lead {
