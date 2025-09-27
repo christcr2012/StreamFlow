@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Simple auth check - Provider portal access  
     // TODO: Add proper Provider role verification
     const cookies = req.headers.cookie;
-    if (!cookies?.includes('mv_user')) {
+    if (!cookies?.includes('ws_user')) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 

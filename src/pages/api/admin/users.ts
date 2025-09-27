@@ -106,7 +106,7 @@ async function handleCreateUser(req: NextApiRequest, res: NextApiResponse) {
     const passwordHash = await bcrypt.hash(userPassword, 12);
 
     // Get the organization ID from the requesting user
-    const requestingUserEmail = req.cookies?.mv_user;
+    const requestingUserEmail = req.cookies?.ws_user;
     const requestingUser = await db.user.findUnique({
       where: { email: requestingUserEmail },
       select: { orgId: true }
@@ -186,7 +186,7 @@ async function handleUpdateUser(req: NextApiRequest, res: NextApiResponse) {
     }
 
     // Get the organization ID from the requesting user
-    const requestingUserEmail = req.cookies?.mv_user;
+    const requestingUserEmail = req.cookies?.ws_user;
     const requestingUser = await db.user.findUnique({
       where: { email: requestingUserEmail },
       select: { orgId: true }

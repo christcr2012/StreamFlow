@@ -26,10 +26,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!apiKey) return res.status(200).json({ ok: true, imported: 0, skipped: 0, note: "Set SAM_API_KEY in env." });
 
     // Resolve org from current user cookie or fallback to first Org
-    const mvEmail = (req.cookies?.mv_user ?? "").trim().toLowerCase() || null;
+    const wsEmail = (req.cookies?.ws_user ?? "").trim().toLowerCase() || null;
     let orgId: string | null = null;
-    if (mvEmail) {
-      const user = await db.user.findFirst({ where: { email: mvEmail }, select: { orgId: true } });
+    if (wsEmail) {
+      const user = await db.user.findFirst({ where: { email: wsEmail }, select: { orgId: true } });
       if (user?.orgId) orgId = user.orgId;
     }
     if (!orgId) {
