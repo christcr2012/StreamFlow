@@ -2,12 +2,13 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
+  "/leads": "pages/leads.js",
+  "/revenue": "pages/revenue.js",
+  "/administration": "pages/administration.js",
+  "/api/me": "pages/api/me.js",
+  "/api/leads.list": "pages/api/leads.list.js",
+  "/projects": "pages/projects.js",
   "/login": "pages/login.js",
   "/dashboard": "pages/dashboard.js",
-  "/api/me": "pages/api/me.js",
-  "/api/dashboard/summary": "pages/api/dashboard/summary.js",
-  "/api/leads.list": "pages/api/leads.list.js",
-  "/leads": "pages/leads.js",
-  "/jobs": "pages/jobs.js",
-  "/clients": "pages/clients.js"
+  "/api/dashboard/summary": "pages/api/dashboard/summary.js"
 }
