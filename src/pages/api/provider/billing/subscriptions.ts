@@ -256,8 +256,8 @@ async function handleCreateSubscription(
       subscription: {
         id: subscription.id,
         status: subscription.status,
-        clientSecret: subscription.latest_invoice?.payment_intent?.client_secret,
-        hostedInvoiceUrl: subscription.latest_invoice?.hosted_invoice_url
+        clientSecret: (subscription.latest_invoice as any)?.payment_intent?.client_secret,
+        hostedInvoiceUrl: (subscription.latest_invoice as any)?.hosted_invoice_url
       },
       plan: PROVIDER_PLANS[planId.toUpperCase() as keyof typeof PROVIDER_PLANS]
     });

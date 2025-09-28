@@ -261,7 +261,7 @@ export async function calculateProviderRevenue(
     });
 
     const aiUsageRevenue = Math.min(
-      (aiUsage?.costUsd || 0) * 100, // Convert to cents
+      (Number(aiUsage?.costUsd) || 0) * 100, // Convert to cents
       org.aiMonthlyBudgetCents // Cap at budget limit
     );
 

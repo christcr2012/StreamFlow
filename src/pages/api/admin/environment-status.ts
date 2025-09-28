@@ -2,7 +2,7 @@
 
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getEnvironmentStatus, validateEnvironment, ENV } from '../../../lib/environment';
-import { assertPermission } from '../../../lib/rbac';
+import { assertPermission, PERMS } from '../../../lib/rbac';
 
 /**
  * 🎯 ENVIRONMENT STATUS & MANAGEMENT API
@@ -17,7 +17,7 @@ import { assertPermission } from '../../../lib/rbac';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     // Require admin permissions for environment management
-    if (!(await assertPermission(req, res, 'admin:manage'))) {
+    if (!(await assertPermission(req, res, PERMS.ADMIN_OVERRIDE))) {
       return; // assertPermission already sent response
     }
 

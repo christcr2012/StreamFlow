@@ -195,7 +195,9 @@
  * And, defensively, any *string* containing "referral" is treated as referral.
  */
 
-import { LeadSource } from "@prisma/client";
+import { LeadSource, PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 // 🚨 CURRENT: Flat price — Phase 2 policy (BASIC IMPLEMENTATION)
 export const UNIT_PRICE_CENTS = 10000; // $100
@@ -322,15 +324,15 @@ export class PricingEngine {
       // Revenue recognition schedule (ASC 606 compliant)
       revenueSchedule: this.calculateRevenueSchedule(finalTotal, plan.interval),
       // Detailed pricing breakdown for transparency
-      pricingBreakdown: {
-        basePlan: { amount: plan.basePriceCents, description: `${plan.name} plan` },
-        usage: usageCharges.map(charge => ({
-          amount: charge.totalCents,
-          description: `${charge.metric}: ${charge.quantity} × $${charge.unitPriceCents/100}`
-        })),
-        tax: { amount: taxCents, description: 'Applicable taxes' },
-        discounts: { amount: -discountCents, description: 'Applied discounts' }
-      },
+      pricingBreakdown: [
+        { description: `${plan.name} plan`, quantity: 1, rate: plan.basePriceCents, amount: plan.basePriceCents },
+        { description: 'Lead overages', quantity: Math.max(0, usage.leadsProcessed - plan.features.leadsPerMonth), rate: plan.usageOverages.leadCents, amount: usageCharges.leads },
+        { description: 'User overages', quantity: Math.max(0, usage.activeUsers - plan.features.users), rate: plan.usageOverages.userCents, amount: usageCharges.users },
+        { description: 'API call overages', quantity: Math.max(0, usage.apiCallsUsed - plan.features.apiCallsPerMonth), rate: plan.usageOverages.apiCallCents, amount: usageCharges.apiCalls },
+        { description: 'Storage overages', quantity: Math.max(0, usage.storageUsedGB - plan.features.storageGB), rate: plan.usageOverages.storageCents, amount: usageCharges.storage },
+        { description: 'Applicable taxes', quantity: 1, rate: taxCents, amount: taxCents },
+        { description: 'Applied discounts', quantity: 1, rate: -discountCents, amount: -discountCents }
+      ].filter(item => item.amount !== 0), // Only include non-zero items
     };
   }
   
