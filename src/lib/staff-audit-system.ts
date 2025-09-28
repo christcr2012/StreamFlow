@@ -210,6 +210,11 @@ export class StaffAuditSystem {
   }
 
   // Access Review System
+  /* TODO: Implement AccessReview model as part of DEVELOPMENT_ROADMAP.md Phase 6
+   * This comprehensive access review system will support SOC 2 Type II compliance
+   * by providing automated and manual access reviews with full audit trails
+   */
+  /*
   async initializeAccessReview(config: AccessReviewConfig): Promise<string> {
     const user = await db.user.findFirst({
       where: { id: this.userId },
@@ -259,7 +264,12 @@ export class StaffAuditSystem {
 
     return review.id;
   }
+  */
 
+  /* TODO: Implement AccessReview model - processAccessReviewDecision function
+   * This function will process reviewer decisions and apply access changes
+   */
+  /*
   async processAccessReviewDecision(
     reviewId: string,
     decisions: {
@@ -314,8 +324,14 @@ export class StaffAuditSystem {
     // Schedule next review
     await this.scheduleNextReview(config.reviewFrequency);
   }
+  */
 
   // Security Incident Handling
+  /* TODO: Implement SecurityIncident model as part of DEVELOPMENT_ROADMAP.md Phase 6
+   * This comprehensive security incident handling system will support SOC 2 Type II compliance
+   * by providing automated incident detection, response workflows, and audit trails
+   */
+  /*
   async handleSecurityIncident(
     incidentType: string,
     severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL',
@@ -378,7 +394,12 @@ export class StaffAuditSystem {
 
     return incident.id;
   }
+  */
 
+  /* TODO: Implement SecurityIncident model - updateIncidentStatus function
+   * This function will update incident status and track resolution progress
+   */
+  /*
   async updateIncidentStatus(
     incidentId: string,
     status: 'OPEN' | 'INVESTIGATING' | 'CONTAINED' | 'RESOLVED' | 'FALSE_POSITIVE',
@@ -416,6 +437,7 @@ export class StaffAuditSystem {
       }
     });
   }
+  */
 
   // Error Fallback and Safe Error Handling
   async handleUnauthorizedAccess(
@@ -437,16 +459,17 @@ export class StaffAuditSystem {
     
     if (recentDenials.length > 5) {
       // Potential brute force or privilege escalation attempt
-      await this.handleSecurityIncident(
-        'PRIVILEGE_ESCALATION_ATTEMPT',
-        'HIGH',
-        {
-          description: `Multiple unauthorized access attempts detected`,
-          attemptedActions: recentDenials.map(d => d.action),
-          detectionMethod: 'PATTERN_ANALYSIS'
-        },
-        DEFAULT_SECURITY_CONFIG
-      );
+      // TODO: Implement SecurityIncident model - handleSecurityIncident call
+      // await this.handleSecurityIncident(
+      //   'PRIVILEGE_ESCALATION_ATTEMPT',
+      //   'HIGH',
+      //   {
+      //     description: `Multiple unauthorized access attempts detected`,
+      //     attemptedActions: recentDenials.map(d => d.action),
+      //     detectionMethod: 'PATTERN_ANALYSIS'
+      //   },
+      //   DEFAULT_SECURITY_CONFIG
+      // );
     }
 
     // Display safe error message (no sensitive information)
@@ -476,20 +499,21 @@ export class StaffAuditSystem {
 
     // Check if error could indicate a security issue
     if (this.isSecurityRelevantError(error)) {
-      await this.handleSecurityIncident(
-        'SUSPICIOUS_ACTIVITY',
-        'MEDIUM',
-        {
-          description: `Potential security-relevant system error`,
-          operation,
-          errorDetails: {
-            type: error.constructor.name,
-            message: error.message
-          },
-          detectionMethod: 'ERROR_ANALYSIS'
-        },
-        DEFAULT_SECURITY_CONFIG
-      );
+      // TODO: Implement SecurityIncident model - handleSecurityIncident call
+      // await this.handleSecurityIncident(
+      //   'SUSPICIOUS_ACTIVITY',
+      //   'MEDIUM',
+      //   {
+      //     description: `Potential security-relevant system error`,
+      //     operation,
+      //     errorDetails: {
+      //       type: error.constructor.name,
+      //       message: error.message
+      //     },
+      //     detectionMethod: 'ERROR_ANALYSIS'
+      //   },
+      //   DEFAULT_SECURITY_CONFIG
+      // );
     }
   }
 
@@ -538,7 +562,8 @@ export class StaffAuditSystem {
     const triggerActions = ['role_change', 'permission_escalation', 'bulk_data_access'];
     
     if (triggerActions.some(trigger => entry.action.includes(trigger))) {
-      await this.scheduleAccessReview('TRIGGERED');
+      // TODO: Implement AccessReview model - scheduleAccessReview call
+      // await this.scheduleAccessReview('TRIGGERED');
     }
   }
 
@@ -730,8 +755,3 @@ export function createStaffAuditSystem(
 ): StaffAuditSystem {
   return new StaffAuditSystem(orgId, userId, sessionId);
 }
-
-export type { ActivityLogEntry, AccessReviewConfig, SecurityIncidentConfig };
-
-// Export factory function
-export { createStaffAuditSystem };

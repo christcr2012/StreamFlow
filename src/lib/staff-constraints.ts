@@ -146,12 +146,12 @@ export class StaffConstraintEnforcer {
       include: { employeeProfile: true }
     });
 
-    const userDepartment = userProfile?.employeeProfile?.department;
-
-    if (userDepartment) {
-      // Add department filter based on entity type
-      query.department = userDepartment;
-    }
+    // TODO: Implement department field in EmployeeProfile model
+    // const userDepartment = userProfile?.employeeProfile?.department;
+    // if (userDepartment) {
+    //   // Add department filter based on entity type
+    //   query.department = userDepartment;
+    // }
 
     return query;
   }
@@ -255,6 +255,10 @@ export class StaffConstraintEnforcer {
     };
   }
 
+  /* TODO: Implement ApprovalRequest model as part of DEVELOPMENT_ROADMAP.md Phase 6
+   * This function will create approval requests for sensitive actions requiring workflow approval
+   */
+  /*
   private async createApprovalRequest(
     action: string,
     entityType: string,
@@ -287,6 +291,7 @@ export class StaffConstraintEnforcer {
 
     return approvalRequest;
   }
+  */
 
   // Security Safeguards Enforcement
   async enforceSecuritySafeguards(
@@ -347,7 +352,7 @@ export class StaffConstraintEnforcer {
     // Check for unusual data access patterns
     const recentDataAccess = await db.auditLog.count({
       where: {
-        userId: this.userId,
+        actorId: this.userId,
         action: { contains: 'read' },
         createdAt: { gte: hourAgo }
       }
@@ -363,7 +368,7 @@ export class StaffConstraintEnforcer {
     // Check for rapid actions
     const recentActions = await db.auditLog.count({
       where: {
-        userId: this.userId,
+        actorId: this.userId,
         createdAt: { gte: new Date(now.getTime() - 5 * 60 * 1000) } // Last 5 minutes
       }
     });
@@ -380,7 +385,7 @@ export class StaffConstraintEnforcer {
     if ((currentHour < 6 || currentHour > 22)) {
       const offHoursActions = await db.auditLog.count({
         where: {
-          userId: this.userId,
+          actorId: this.userId,
           createdAt: { gte: new Date(now.getTime() - 24 * 60 * 60 * 1000) }, // Last 24 hours
           action: { not: { contains: 'read' } } // Exclude read-only actions
         }
@@ -403,21 +408,22 @@ export class StaffConstraintEnforcer {
     context: any
   ): Promise<void> {
     // Log the violation
-    await db.securityIncident.create({
-      data: {
-        orgId: this.orgId,
-        userId: this.userId,
-        incidentType: 'constraint_violation',
-        violationType,
-        severity: this.determineSeverity(violationType),
-        description: error.message,
-        context: context,
-        ipAddress: context.ipAddress || 'unknown',
-        userAgent: context.userAgent || 'unknown',
-        status: 'open',
-        detectedAt: new Date()
-      }
-    });
+    // TODO: Implement SecurityIncident model - constraint violation logging
+    // await db.securityIncident.create({
+    //   data: {
+    //     orgId: this.orgId,
+    //     userId: this.userId,
+    //     incidentType: 'constraint_violation',
+    //     violationType,
+    //     severity: this.determineSeverity(violationType),
+    //     description: error.message,
+    //     context: context,
+    //     ipAddress: context.ipAddress || 'unknown',
+    //     userAgent: context.userAgent || 'unknown',
+    //     status: 'open',
+    //     detectedAt: new Date()
+    //   }
+    // });
 
     // Send alert to security team
     await this.sendSecurityAlert(violationType, error.message, context);
@@ -433,26 +439,27 @@ export class StaffConstraintEnforcer {
     request: any
   ): Promise<void> {
     // Log security incident
-    await db.securityIncident.create({
-      data: {
-        orgId: this.orgId,
-        userId: this.userId,
-        incidentType: 'security_violation',
-        violationType: 'safeguard_breach',
-        severity: 'high',
-        description: `Security safeguard violation: ${error.message}`,
-        context: {
-          action,
-          safeguards: Object.keys(safeguards),
-          userAgent: request.headers['user-agent'],
-          ip: request.ip
-        },
-        ipAddress: request.ip,
-        userAgent: request.headers['user-agent'],
-        status: 'open',
-        detectedAt: new Date()
-      }
-    });
+    // TODO: Implement SecurityIncident model - security violation logging
+    // await db.securityIncident.create({
+    //   data: {
+    //     orgId: this.orgId,
+    //     userId: this.userId,
+    //     incidentType: 'security_violation',
+    //     violationType: 'safeguard_breach',
+    //     severity: 'high',
+    //     description: `Security safeguard violation: ${error.message}`,
+    //     context: {
+    //       action,
+    //       safeguards: Object.keys(safeguards),
+    //       userAgent: request.headers['user-agent'],
+    //       ip: request.ip
+    //     },
+    //     ipAddress: request.ip,
+    //     userAgent: request.headers['user-agent'],
+    //     status: 'open',
+    //     detectedAt: new Date()
+    //   }
+    // });
 
     // Apply lockout if configured
     if (safeguards.autoLockout.enabled) {
@@ -483,30 +490,33 @@ export class StaffConstraintEnforcer {
       include: { employeeProfile: true }
     });
 
-    return userProfile?.employeeProfile?.assignedTerritories || [];
+    // TODO: Implement assignedTerritories field in EmployeeProfile model
+    return []; // userProfile?.employeeProfile?.assignedTerritories || [];
   }
 
   private async getUserProjects(): Promise<string[]> {
-    const assignments = await db.jobAssignment.findMany({
-      where: { 
-        userId: this.userId,
-        isActive: true
-      },
-      select: { jobSite: { select: { projectId: true } } }
-    });
+    // TODO: Fix JobAssignment model fields - userId and jobSite don't exist
+    // const assignments = await db.jobAssignment.findMany({
+    //   where: {
+    //     userId: this.userId,
+    //     isActive: true
+    //   },
+    //   select: { jobSite: { select: { projectId: true } } }
+    // });
+    // return assignments
+    //   .map(a => a.jobSite?.projectId)
+    //   .filter(Boolean) as string[];
 
-    return assignments
-      .map(a => a.jobSite?.projectId)
-      .filter(Boolean) as string[];
+    return []; // Temporary return until model is fixed
   }
 
   private async logDataAccess(entityType: string, action: string, query: any): Promise<void> {
     await db.auditLog.create({
       data: {
         orgId: this.orgId,
-        userId: this.userId,
+        actorId: this.userId,
         action: `${entityType}_${action}`,
-        target: entityType,
+        entityType: entityType,
         category: 'DATA_ACCESS',
         details: {
           entityType,
@@ -529,9 +539,9 @@ export class StaffConstraintEnforcer {
     await db.auditLog.create({
       data: {
         orgId: this.orgId,
-        userId: this.userId,
+        actorId: this.userId,
         action: `${entityType}_${action}`,
-        target: entityType,
+        entityType: entityType,
         targetId: entityId,
         category: 'ACTION_EXECUTION',
         details: {
@@ -580,8 +590,9 @@ export class StaffConstraintEnforcer {
   }
 
   private async trackDevice(userAgent: string, ip: string): Promise<void> {
+    // TODO: Implement DeviceAccess model for device tracking
     // Device tracking implementation
-    await db.deviceAccess.upsert({
+    // await db.deviceAccess.upsert({
       where: { userId_userAgent: { userId: this.userId, userAgent } },
       update: { 
         lastSeenAt: new Date(),
@@ -591,28 +602,29 @@ export class StaffConstraintEnforcer {
       create: {
         userId: this.userId,
         userAgent,
-        ipAddress: ip,
-        firstSeenAt: new Date(),
-        lastSeenAt: new Date(),
-        accessCount: 1
-      }
-    });
+    //     ipAddress: ip,
+    //     firstSeenAt: new Date(),
+    //     lastSeenAt: new Date(),
+    //     accessCount: 1
+    //   }
+    // });
   }
 
   private async triggerAnomalyAlert(type: string, details: any): Promise<void> {
-    await db.securityIncident.create({
+    // TODO: Implement SecurityIncident model - anomaly alert
+    // await db.securityIncident.create({
       data: {
         orgId: this.orgId,
         userId: this.userId,
         incidentType: 'anomaly_detection',
-        violationType: type,
-        severity: 'medium',
-        description: `Anomalous behavior detected: ${type}`,
-        context: details,
-        status: 'open',
-        detectedAt: new Date()
-      }
-    });
+    //   violationType: type,
+    //   severity: 'medium',
+    //   description: `Anomalous behavior detected: ${type}`,
+    //   context: details,
+    //   status: 'open',
+    //   detectedAt: new Date()
+    // }
+    // });
   }
 
   private async sendSecurityAlert(type: string, message: string, context: any): Promise<void> {
@@ -637,15 +649,16 @@ export class StaffConstraintEnforcer {
   }
 
   private async applyAutoLockout(lockoutConfig: SecuritySafeguards['autoLockout']): Promise<void> {
-    await db.userLockout.create({
-      data: {
-        userId: this.userId,
-        reason: 'Security violation - automatic lockout',
-        lockedAt: new Date(),
-        expiresAt: new Date(Date.now() + lockoutConfig.lockoutDurationMinutes * 60 * 1000),
-        isActive: true
-      }
-    });
+    // TODO: Implement UserLockout model for automatic lockouts
+    // await db.userLockout.create({
+    //   data: {
+    //     userId: this.userId,
+    //     reason: 'Security violation - automatic lockout',
+    //     lockedAt: new Date(),
+    //     expiresAt: new Date(Date.now() + lockoutConfig.lockoutDurationMinutes * 60 * 1000),
+    //     isActive: true
+    //   }
+    // });
   }
 }
 
@@ -735,7 +748,4 @@ export const DEFAULT_STAFF_CONSTRAINTS = {
   }
 };
 
-export type { DataVisibilityConstraints, SensitiveActionConstraints, SecuritySafeguards };
-
-// Export factory function and constraint enforcer
-export { StaffConstraintEnforcer, createStaffConstraintEnforcer };
+// Factory function already exported above
