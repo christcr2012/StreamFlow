@@ -538,8 +538,8 @@ async function cloneRole(req: NextApiRequest, res: NextApiResponse, user: any) {
           scopeType: scope.scopeType,
           scopeKey: scope.scopeKey,
           scopeName: scope.scopeName,
-          permissions: scope.permissions,
-          restrictions: scope.restrictions,
+          permissions: scope.permissions as any,
+          restrictions: scope.restrictions as any,
           startDate: scope.startDate,
           endDate: scope.endDate,
           timeZone: scope.timeZone,
@@ -705,7 +705,7 @@ async function createPermissionBundle(req: NextApiRequest, res: NextApiResponse,
   if (validPermissions.length !== permissions.length) {
     return res.status(400).json({ 
       error: "Some permissions are invalid",
-      invalid: permissions.filter(p => !validPermissions.find(vp => vp.code === p))
+      invalid: permissions.filter((p: string) => !validPermissions.find(vp => vp.code === p))
     });
   }
 
@@ -804,9 +804,9 @@ async function createProvisioningFlow(req: NextApiRequest, res: NextApiResponse,
       name,
       description,
       trigger,
-      flowConfig,
-      scimConfig,
-      ssoConfig,
+      // flowConfig, // Field doesn't exist in ProvisioningFlow model
+      // scimConfig, // Field doesn't exist in ProvisioningFlow model
+      // ssoConfig, // Field doesn't exist in ProvisioningFlow model
       isActive,
       usageCount: 0,
       successRate: 0,
@@ -907,9 +907,9 @@ async function approveRoleReview(req: NextApiRequest, res: NextApiResponse, user
     where: { id: reviewId },
     data: {
       status: decision === 'approve' ? 'approved' : 'rejected',
-      reviewedBy: user.id,
-      reviewedAt: new Date(),
-      reviewNotes: notes,
+      reviewerId: user.id,
+      // reviewedAt: new Date(), // Field doesn't exist in RoleReview model
+      // reviewNotes: notes, // Field doesn't exist in RoleReview model
       nextReviewDate: nextReviewDate ? new Date(nextReviewDate) : null
     }
   });
@@ -917,12 +917,12 @@ async function approveRoleReview(req: NextApiRequest, res: NextApiResponse, user
   await auditAction(req, {
     action: 'role_review_complete',
     target: 'rbac_role',
-    targetId: review.roleId,
+    targetId: review.roleId || undefined,
     category: 'AUTHORIZATION',
     severity: decision === 'reject' ? 'WARNING' : 'INFO',
     details: { 
       reviewId,
-      roleName: review.role.name,
+      roleName: review.role?.name || 'Unknown Role',
       decision,
       reviewType: review.reviewType
     }
@@ -994,9 +994,9 @@ async function rollbackToVersion(req: NextApiRequest, res: NextApiResponse, user
         changeReason: reason || `Rollback to version ${targetVersion}`,
         changedBy: user.id,
         isActive: true,
-        permissions: targetVersionData.permissions,
-        config: targetVersionData.config,
-        scopeConfig: targetVersionData.scopeConfig,
+        permissions: targetVersionData.permissions as any,
+        config: targetVersionData.config as any,
+        scopeConfig: targetVersionData.scopeConfig as any,
       }
     });
 

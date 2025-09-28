@@ -12,7 +12,7 @@ import { authenticator } from "otplib";
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const email = getEmailFromReq(req);
+    const email = await getEmailFromReq(req);
     if (!email) {
       return res.status(401).json({ ok: false, error: "Authentication required" });
     }

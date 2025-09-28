@@ -83,7 +83,7 @@ async function getMyElevationRequests(req: NextApiRequest, res: NextApiResponse,
 
 async function getPendingApprovals(req: NextApiRequest, res: NextApiResponse, user: any) {
   // Only managers/owners can see pending approvals
-  if (!(await assertPermission(req, res, PERMS.USER_MANAGE))) return;
+  if (!(await assertPermission(req, res, PERMS.HR_MANAGE))) return;
 
   const pendingRequests = await db.temporaryElevation.findMany({
     where: {
@@ -131,7 +131,7 @@ async function getPendingApprovals(req: NextApiRequest, res: NextApiResponse, us
 
 async function getActiveElevations(req: NextApiRequest, res: NextApiResponse, user: any) {
   // Managers can see all active elevations, staff can see only their own
-  const canViewAll = await assertPermission(req, res, PERMS.USER_MANAGE, false);
+  const canViewAll = await assertPermission(req, res, PERMS.HR_MANAGE);
   
   const whereClause: any = {
     orgId: user.orgId,
@@ -169,7 +169,7 @@ async function getActiveElevations(req: NextApiRequest, res: NextApiResponse, us
 async function getElevationHistory(req: NextApiRequest, res: NextApiResponse, user: any) {
   const { userId, limit = 50, offset = 0 } = req.query;
   
-  const canViewAll = await assertPermission(req, res, PERMS.USER_MANAGE, false);
+  const canViewAll = await assertPermission(req, res, PERMS.HR_MANAGE);
   
   const whereClause: any = {
     orgId: user.orgId,
@@ -269,7 +269,7 @@ async function getAvailableElevationRoles(req: NextApiRequest, res: NextApiRespo
 }
 
 async function getElevationOverview(req: NextApiRequest, res: NextApiResponse, user: any) {
-  const canViewAll = await assertPermission(req, res, PERMS.USER_MANAGE, false);
+  const canViewAll = await assertPermission(req, res, PERMS.HR_MANAGE);
   
   const baseWhere = canViewAll ? { orgId: user.orgId } : { orgId: user.orgId, userId: user.id };
 
@@ -338,9 +338,11 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, user: any) 
     case "approve":
       return await approveElevation(req, res, user);
     case "reject":
-      return await rejectElevation(req, res, user);
+      // TODO: Implement rejectElevation function
+      return res.status(501).json({ error: 'Elevation rejection not yet implemented' });
     case "emergency":
-      return await requestEmergencyElevation(req, res, user);
+      // TODO: Implement requestEmergencyElevation function
+      return res.status(501).json({ error: 'Emergency elevation not yet implemented' });
     default:
       return res.status(400).json({ error: "Invalid action" });
   }
@@ -464,7 +466,7 @@ async function requestElevation(req: NextApiRequest, res: NextApiResponse, user:
 }
 
 async function approveElevation(req: NextApiRequest, res: NextApiResponse, user: any) {
-  if (!(await assertPermission(req, res, PERMS.USER_MANAGE))) return;
+  if (!(await assertPermission(req, res, PERMS.HR_MANAGE))) return;
 
   const { elevationId, actualDuration, notes } = req.body;
 
@@ -612,7 +614,8 @@ async function handlePut(req: NextApiRequest, res: NextApiResponse, user: any) {
     case "terminate":
       return await terminateElevation(req, res, user);
     case "extend":
-      return await extendElevation(req, res, user);
+      // TODO: Implement extendElevation function
+      return res.status(501).json({ error: 'Elevation extension not yet implemented' });
     default:
       return res.status(400).json({ error: "Invalid action" });
   }
@@ -635,7 +638,7 @@ async function terminateElevation(req: NextApiRequest, res: NextApiResponse, use
 
   // Only the user themselves or a manager can terminate
   const canTerminate = elevation.userId === user.id || 
-    await assertPermission(req, res, PERMS.USER_MANAGE, false);
+    await assertPermission(req, res, PERMS.HR_MANAGE);
 
   if (!canTerminate) {
     return res.status(403).json({ error: "Not authorized to terminate this elevation" });

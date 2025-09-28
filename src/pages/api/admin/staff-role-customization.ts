@@ -142,7 +142,7 @@ async function getCurrentStaffConfig(req: NextApiRequest, res: NextApiResponse, 
   res.json({ 
     currentConfig: staffRole,
     analysis,
-    customizationRecommendations: generateCustomizationRecommendations(analysis)
+    customizationRecommendations: generateStrategicRecommendations(analysis, [])
   });
 }
 
@@ -259,7 +259,7 @@ async function getStaffRoleOverview(req: NextApiRequest, res: NextApiResponse, u
     db.auditLog.findMany({
       where: { 
         orgId: user.orgId,
-        target: 'rbac_role',
+        entityType: 'rbac_role',
         action: { contains: 'staff' }
       },
       orderBy: { createdAt: 'desc' },
@@ -282,9 +282,9 @@ async function getStaffRoleOverview(req: NextApiRequest, res: NextApiResponse, u
     },
 
     metrics: {
-      permissionCount: staffRole?.rolePerms?.length || 0,
+      permissionCount: 0, // TODO: Implement rolePerms relationship
       scopeComplexity: calculateScopeComplexity(staffRole?.scopes || []),
-      lastModified: staffRole?.updatedAt,
+      lastModified: staffRole?.createdAt, // Use createdAt since updatedAt doesn't exist
       complianceScore: calculateComplianceScore(staffRole)
     }
   };
@@ -301,9 +301,11 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, user: any) 
     case "clone-variant":
       return await cloneStaffVariant(req, res, user);
     case "apply-preset":
-      return await applyIndustryPreset(req, res, user);
+      // TODO: Implement applyIndustryPreset function
+      return res.status(501).json({ error: 'Industry preset application not yet implemented' });
     case "request-elevation":
-      return await requestTemporaryElevation(req, res, user);
+      // TODO: Implement requestTemporaryElevation function
+      return res.status(501).json({ error: 'Temporary elevation request not yet implemented' });
     default:
       return res.status(400).json({ error: "Invalid action" });
   }
@@ -478,7 +480,7 @@ async function cloneStaffVariant(req: NextApiRequest, res: NextApiResponse, user
         },
         scopeConfig: {
           ...STAFF_ROLE_TEMPLATE.defaultConstraints,
-          ...(variantConfig.expandedConstraints || {}),
+          ...(variantConfig as any).expandedConstraints || {},
           ...(customizations.constraints || {})
         },
       }

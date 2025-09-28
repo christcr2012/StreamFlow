@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '../../../../lib/prisma';
-import { getUser } from '../../../../lib/auth';
-import { hasPermission } from '../../../../lib/rbac';
+import { getAuthenticatedUser } from '../../../../lib/auth-helpers';
+import { assertPermission } from '../../../../lib/rbac';
 import { LeadStatus } from '@prisma/client';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const user = await getUser(req);
+    const user = await getAuthenticatedUser(req);
     if (!user) {
       return res.status(401).json({ ok: false, error: 'Unauthorized' });
     }
@@ -29,9 +29,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (req.method === 'PATCH') {
       // Update lead status
-      const canUpdateLeads = await hasPermission(user, 'leads.write');
-      if (!canUpdateLeads) {
-        return res.status(403).json({ ok: false, error: 'Permission denied' });
+      if (!(await assertPermission(req, res, 'lead:update'))) {
+        return; // assertPermission already sent the response
       }
 
       const { status } = req.body;

@@ -81,12 +81,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const dayKey = date.toISOString().split('T')[0];
       
       // Find usage for this day
-      const dayUsage = dailyUsage.filter(day => 
+      const dayUsage = dailyUsage.filter((day: any) =>
         day.createdAt.toISOString().split('T')[0] === dayKey
       );
-      
-      const dayCredits = dayUsage.reduce((sum, usage) => sum + (usage._sum?.creditsUsed || 0), 0);
-      const dayRequests = dayUsage.reduce((sum, usage) => sum + (usage._count?.id || 0), 0);
+
+      const dayCredits = dayUsage.reduce((sum: number, usage: any) => sum + (usage._sum?.creditsUsed || 0), 0);
+      const dayRequests = dayUsage.reduce((sum: number, usage: any) => sum + (usage._count?.id || 0), 0);
       
       dailyBuckets.push({
         date: dayKey,
@@ -120,7 +120,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         upgradeRecommendation: getUpgradeRecommendation(usage),
         // Real analytics data
         monthlyRequestCount: monthlySummary?.callCount || 0,
-        recentEvents: recentEvents.map(event => ({
+        recentEvents: recentEvents.map((event: any) => ({
           id: event.id,
           feature: event.feature,
           model: event.model,
@@ -131,7 +131,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           // Human-friendly relative time
           timeAgo: getTimeAgo(event.createdAt)
         })),
-        featureBreakdown: featureStats.map(stat => ({
+        featureBreakdown: featureStats.map((stat: any) => ({
           feature: stat.feature,
           requests: stat._count.id,
           creditsUsed: stat._sum.creditsUsed || 0,

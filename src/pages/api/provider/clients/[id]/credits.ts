@@ -64,12 +64,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         action: 'CREDITS_ADDED',
         entityType: 'Org',
         entityId: clientId,
-        details: JSON.stringify({
+        delta: {
           creditsAdded: credits,
           newBalance: updatedOrg.aiCreditBalance,
-          addedBy: 'Provider'
-        }),
-        ipAddress: req.headers['x-forwarded-for'] as string || req.socket.remoteAddress || 'unknown'
+          addedBy: 'Provider',
+          ipAddress: req.headers['x-forwarded-for'] as string || req.socket.remoteAddress || 'unknown'
+        }
       }
     });
 

@@ -70,8 +70,8 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, user: any) {
     slug: role.slug,
     isSystem: role.isSystem,
     createdAt: role.createdAt,
-    permissions: includePermissions === 'true' 
-      ? role.rolePerms.map(rp => rp.permission.code)
+    permissions: includePermissions === 'true'
+      ? role.rolePerms.map(rp => (rp as any).permission?.code || rp.permissionId)
       : [],
     userCount: role.userRoles.length,
   }));
@@ -116,7 +116,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, user: any) 
   });
 
   if (validPermissions.length !== permissions.length) {
-    const invalid = permissions.filter(p => !validPermissions.find(vp => vp.code === p));
+    const invalid = permissions.filter((p: string) => !validPermissions.find(vp => vp.code === p));
     return res.status(400).json({ error: `Invalid permissions: ${invalid.join(', ')}` });
   }
 
@@ -203,7 +203,7 @@ async function handlePut(req: NextApiRequest, res: NextApiResponse, user: any) {
     });
 
     if (validPermissions.length !== permissions.length) {
-      const invalid = permissions.filter(p => !validPermissions.find(vp => vp.code === p));
+      const invalid = permissions.filter((p: string) => !validPermissions.find(vp => vp.code === p));
       return res.status(400).json({ error: `Invalid permissions: ${invalid.join(', ')}` });
     }
   }

@@ -76,8 +76,8 @@ function generateMarketIntelligence(location: string, clientType: string, servic
     marketConditions: 'moderate',
     competitionLevel: 'medium',
     pricingTrends: 'stable',
-    seasonalFactors: [],
-    regionalAdvantages: []
+    seasonalFactors: [] as string[],
+    regionalAdvantages: [] as string[]
   };
 
   // Location-specific analysis
@@ -105,7 +105,7 @@ function generateMarketIntelligence(location: string, clientType: string, servic
 function generateCompetitiveStrategy(squareFootage: number, location: string, competitorCount: string) {
   const strategy = {
     positioningApproach: 'value-based',
-    keyDifferentiators: [],
+    keyDifferentiators: [] as string[],
     pricingTactic: 'competitive',
     winProbability: 'medium'
   };

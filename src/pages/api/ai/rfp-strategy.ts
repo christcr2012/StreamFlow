@@ -26,9 +26,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // If leadId provided, fetch lead data from database
     if (leadId) {
       const lead = await db.lead.findFirst({
-        where: { 
-          id: leadId, 
-          orgId: orgId
+        where: {
+          id: leadId,
+          orgId: orgId || undefined
         },
         select: {
           publicId: true,
@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           sourceDetail: true,
           city: true,
           state: true,
-          enrichmentData: true
+          // enrichmentData: true // Field doesn't exist in Lead model
         }
       });
 
@@ -46,15 +46,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       // Extract RFP details from lead enrichment data
-      const enrichment = lead.enrichmentData as any;
+      // const enrichment = lead.enrichmentData as any; // Field doesn't exist
       rfpInfo = {
         title: lead.company || 'RFP Analysis',
         description: lead.notes || 'Federal cleaning contract',
-        agency: enrichment?.rfp?.agency || 'Federal Agency',
+        agency: 'Federal Agency', // TODO: Get from enrichmentData when implemented
         location: [lead.city, lead.state].filter(Boolean).join(', '),
-        requirements: enrichment?.rfp?.psc || enrichment?.rfp?.naics || '',
-        responseDeadline: enrichment?.rfp?.responseDate,
-        estimatedValue: enrichment?.rfp?.estimatedValue
+        requirements: '', // TODO: Get from enrichmentData when implemented
+        responseDeadline: null, // TODO: Get from enrichmentData when implemented
+        estimatedValue: null // TODO: Get from enrichmentData when implemented
       };
     }
 

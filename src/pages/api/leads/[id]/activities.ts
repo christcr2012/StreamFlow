@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '../../../../lib/prisma';
-import { getUser } from '../../../../lib/auth';
-import { hasPermission } from '../../../../lib/rbac';
+import { getAuthenticatedUser } from '../../../../lib/auth-helpers';
+import { assertPermission } from '../../../../lib/rbac';
 import { ActivityType } from '@prisma/client';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const user = await getUser(req);
+    const user = await getAuthenticatedUser(req);
     if (!user) {
       return res.status(401).json({ ok: false, error: 'Unauthorized' });
     }
@@ -29,9 +29,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (req.method === 'GET') {
       // Get activities for this lead
-      const canViewActivities = await hasPermission(user, 'leads.read');
-      if (!canViewActivities) {
-        return res.status(403).json({ ok: false, error: 'Permission denied' });
+      if (!(await assertPermission(req, res, 'lead:read'))) {
+        return; // assertPermission already sent the response
       }
 
       const activities = await prisma.leadActivity.findMany({
@@ -49,9 +48,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (req.method === 'POST') {
       // Create new activity
-      const canCreateActivities = await hasPermission(user, 'leads.write');
-      if (!canCreateActivities) {
-        return res.status(403).json({ ok: false, error: 'Permission denied' });
+      if (!(await assertPermission(req, res, 'lead:update'))) {
+        return; // assertPermission already sent the response
       }
 
       const {
