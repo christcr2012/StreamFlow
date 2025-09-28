@@ -7,19 +7,21 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma as db } from "@/lib/prisma";
 import { getEmailFromReq } from "@/lib/rbac";
 
-// Helper to ensure the caller is a provider. Responds with 403 if not.
+// Helper to ensure the caller is a provider using environment-based auth
 async function ensureProvider(req: NextApiRequest, res: NextApiResponse): Promise<{ ok: false } | { ok: true; user: { role: string } }> {
+  const providerEmail = process.env.PROVIDER_EMAIL;
+  if (!providerEmail) {
+    res.status(500).json({ ok: false, error: "Provider system not configured" });
+    return { ok: false };
+  }
+
   const email = getEmailFromReq(req);
-  if (!email) {
-    res.status(401).json({ ok: false, error: "Unauthorized" });
+  if (!email || email.toLowerCase() !== providerEmail.toLowerCase()) {
+    res.status(403).json({ ok: false, error: "Provider access required" });
     return { ok: false };
   }
-  const user = await db.user.findUnique({ where: { email }, select: { role: true } });
-  if (!user || user.role !== "PROVIDER") {
-    res.status(403).json({ ok: false, error: "Forbidden" });
-    return { ok: false };
-  }
-  return { ok: true, user };
+
+  return { ok: true, user: { role: "PROVIDER" } };
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

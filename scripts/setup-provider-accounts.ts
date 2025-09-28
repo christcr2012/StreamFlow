@@ -48,13 +48,13 @@ async function main() {
       update: {
         passwordHash,
         status: 'active',
-        role: 'PROVIDER',
+        role: 'OWNER', // Provider accounts are now OWNER role
         name: 'Chris (Provider)',
       },
       create: {
         email: PROVIDER_EMAIL,
         name: 'Chris (Provider)',
-        role: 'PROVIDER',
+        role: 'OWNER', // Provider accounts are now OWNER role
         orgId: org.id,
         status: 'active',
         passwordHash,

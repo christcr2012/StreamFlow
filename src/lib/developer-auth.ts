@@ -47,44 +47,33 @@ export interface DeveloperSession {
  */
 export async function authenticateDeveloper(req: NextApiRequest): Promise<DeveloperUser | null> {
   try {
-    // Use the same cookie-based authentication as the rest of the system
+    // Environment-based authentication for developer system
+    const developerEmail = process.env.DEVELOPER_EMAIL;
+    const developerPassword = process.env.DEVELOPER_PASSWORD;
+
+    if (!developerEmail || !developerPassword) {
+      console.error('Developer environment variables not configured');
+      return null;
+    }
+
+    // Check for developer credentials in request
     const email = req.cookies.ws_user;
 
-    if (!email) {
-      return null;
+    // For now, allow cookie-based auth if it matches developer email
+    // TODO: Implement proper JWT-based developer authentication
+    if (email && email.toLowerCase() === developerEmail.toLowerCase()) {
+      return {
+        id: 'developer-system',
+        email: developerEmail,
+        role: 'OWNER', // Use OWNER role for type compatibility
+        orgId: 'developer-system', // Developer operates across all systems
+        permissions: getDeveloperPermissions(),
+        lastLogin: new Date(),
+        isDeveloper: true,
+      };
     }
 
-    // Get user from database
-    const user = await prisma.user.findUnique({
-      where: { email },
-      include: {
-        org: true,
-      },
-    });
-
-    if (!user) {
-      return null;
-    }
-
-    // Check if user has developer access
-    const isDeveloper = user.role === 'OWNER' || user.email === 'gametcr3@gmail.com';
-    
-    if (!isDeveloper) {
-      return null;
-    }
-
-    // Log developer access
-    await logDeveloperAccess(user.id, req);
-
-    return {
-      id: user.id,
-      email: user.email,
-      role: 'OWNER',
-      orgId: user.orgId,
-      permissions: getDeveloperPermissions(user),
-      lastLogin: new Date(), // Use current time since lastLogin may not be in schema
-      isDeveloper: true,
-    };
+    return null;
   } catch (error) {
     console.error('Developer authentication error:', error);
     return null;
@@ -113,31 +102,27 @@ export function requireDeveloperAuth(handler: (req: NextApiRequest, res: NextApi
 }
 
 /**
- * Get developer-specific permissions
+ * Get developer-specific permissions (environment-based, not user-based)
  */
-function getDeveloperPermissions(user: any): string[] {
-  const basePermissions = [
+function getDeveloperPermissions(): string[] {
+  // Developer permissions are system-level, not user-specific
+  return [
     'dev:read',
     'dev:dashboard',
     'dev:system:read',
+    'dev:system:write',
     'dev:metrics:read',
     'dev:logs:read',
+    'dev:admin',
+    'dev:database:admin',
+    'dev:ai:admin',
+    'dev:federation:admin',
+    'dev:deployment:admin',
+    'dev:testing:admin',
+    'dev:user:impersonate',
+    'dev:system:monitor',
+    'dev:debug:all',
   ];
-
-  // Enhanced permissions for specific developer accounts
-  if (user.email === 'gametcr3@gmail.com' || user.role === 'OWNER') {
-    basePermissions.push(
-      'dev:admin',
-      'dev:system:write',
-      'dev:database:admin',
-      'dev:ai:admin',
-      'dev:federation:admin',
-      'dev:deployment:admin',
-      'dev:testing:admin'
-    );
-  }
-
-  return basePermissions;
 }
 
 /**

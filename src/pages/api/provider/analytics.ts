@@ -3,25 +3,21 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma as db } from "@/lib/prisma";
 import { getEmailFromReq } from "@/lib/rbac";
 
-// Ensure only providers can access this endpoint
+// Ensure only providers can access this endpoint using environment-based auth
 async function ensureProvider(req: NextApiRequest, res: NextApiResponse) {
-  const email = getEmailFromReq(req);
-  if (!email) {
-    res.status(401).json({ ok: false, error: "Unauthorized" });
+  const providerEmail = process.env.PROVIDER_EMAIL;
+  if (!providerEmail) {
+    res.status(500).json({ ok: false, error: "Provider system not configured" });
     return null;
   }
 
-  const user = await db.user.findUnique({
-    where: { email },
-    select: { id: true, role: true },
-  });
-
-  if (!user || user.role !== 'PROVIDER') {
+  const email = getEmailFromReq(req);
+  if (!email || email.toLowerCase() !== providerEmail.toLowerCase()) {
     res.status(403).json({ ok: false, error: "Provider access required" });
     return null;
   }
 
-  return user;
+  return { id: 'provider-system', email: providerEmail };
 }
 
 function getDateRange(range: string) {

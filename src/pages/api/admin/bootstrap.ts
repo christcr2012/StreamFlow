@@ -45,8 +45,8 @@ const ROLE_SEED: RoleSeed[] = [
     perms: [PERMS.DASHBOARD_VIEW, PERMS.LEAD_READ],
   },
   {
-    slug: "provider", name: "Provider", isSystem: true,
-    perms: Object.values(PERMS),
+    slug: "employee", name: "Employee", isSystem: true,
+    perms: [PERMS.DASHBOARD_VIEW, PERMS.LEAD_READ],
   },
 ];
 

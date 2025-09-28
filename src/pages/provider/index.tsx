@@ -137,18 +137,18 @@ export default function ProviderPortal() {
   const [topClients, setTopClients] = useState<ClientSummary[]>([]);
   const [loadingData, setLoadingData] = useState(true);
 
-  // Redirect non-providers
+  // Check provider access using environment-based authentication
   useEffect(() => {
-    if (!loading && me?.role !== 'PROVIDER') {
-      router.push('/dashboard');
+    if (!loading && me) {
+      // Provider access is determined by environment variables, not database role
+      const isProviderEmail = me.email?.toLowerCase() === process.env.NEXT_PUBLIC_PROVIDER_EMAIL?.toLowerCase();
+      if (!isProviderEmail) {
+        router.push('/dashboard');
+      } else {
+        fetchProviderData();
+      }
     }
   }, [me, loading, router]);
-
-  useEffect(() => {
-    if (me?.role === 'PROVIDER') {
-      fetchProviderData();
-    }
-  }, [me]);
 
   const fetchProviderData = async () => {
     try {

@@ -26,7 +26,7 @@ import { verify } from 'jsonwebtoken';
 export interface ProviderUser {
   id: string;
   email: string;
-  role: 'PROVIDER';
+  role: 'OWNER'; // Provider uses OWNER role for type compatibility
   orgId: string;
   permissions: string[];
   lastLogin: Date;
@@ -42,41 +42,39 @@ export interface ProviderSession {
 }
 
 /**
- * Verify provider authentication and return provider user
+ * Verify provider authentication using environment-based credentials
+ * Provider system is completely separate from client database authentication
  */
 export async function authenticateProvider(req: NextApiRequest): Promise<ProviderUser | null> {
   try {
-    // Use the same cookie-based authentication as the rest of the system
+    // Environment-based authentication for provider system
+    const providerEmail = process.env.PROVIDER_EMAIL;
+    const providerPassword = process.env.PROVIDER_PASSWORD;
+
+    if (!providerEmail || !providerPassword) {
+      console.error('Provider environment variables not configured');
+      return null;
+    }
+
+    // Check for provider credentials in request
+    const authHeader = req.headers.authorization;
     const email = req.cookies.ws_user;
 
-    if (!email) {
-      return null;
+    // For now, allow cookie-based auth if it matches provider email
+    // TODO: Implement proper JWT-based provider authentication
+    if (email && email.toLowerCase() === providerEmail.toLowerCase()) {
+      return {
+        id: 'provider-system',
+        email: providerEmail,
+        role: 'OWNER', // Use OWNER role for type compatibility
+        orgId: 'provider-system', // Provider operates across all orgs
+        permissions: getProviderPermissions(),
+        lastLogin: new Date(),
+        mfaEnabled: false,
+      };
     }
 
-    // Get user from database
-    const user = await prisma.user.findUnique({
-      where: { email },
-      include: {
-        org: true,
-      },
-    });
-
-    if (!user || user.role !== 'PROVIDER') {
-      return null;
-    }
-
-    // Log provider access
-    await logProviderAccess(user.id, req);
-
-    return {
-      id: user.id,
-      email: user.email,
-      role: 'PROVIDER',
-      orgId: user.orgId,
-      permissions: getProviderPermissions(user),
-      lastLogin: new Date(), // Use current time since lastLogin may not be in schema
-      mfaEnabled: false, // MFA not implemented yet
-    };
+    return null;
   } catch (error) {
     console.error('Provider authentication error:', error);
     return null;
@@ -105,29 +103,25 @@ export function requireProviderAuth(handler: (req: NextApiRequest, res: NextApiR
 }
 
 /**
- * Get provider-specific permissions
+ * Get provider-specific permissions (environment-based, not user-based)
  */
-function getProviderPermissions(user: any): string[] {
-  const basePermissions = [
+function getProviderPermissions(): string[] {
+  // Provider permissions are system-level, not user-specific
+  return [
     'provider:read',
     'provider:dashboard',
     'provider:clients:read',
+    'provider:clients:write',
     'provider:revenue:read',
     'provider:analytics:read',
+    'provider:admin',
+    'provider:billing:write',
+    'provider:settings:write',
+    'provider:federation:admin',
+    'provider:system:monitor',
+    'provider:cross-client:analytics',
+    'provider:monetization:manage',
   ];
-
-  // Add additional permissions based on user attributes
-  if (user.email === 'chris.tcr.2012@gmail.com') {
-    basePermissions.push(
-      'provider:admin',
-      'provider:clients:write',
-      'provider:billing:write',
-      'provider:settings:write',
-      'provider:federation:admin'
-    );
-  }
-
-  return basePermissions;
 }
 
 /**

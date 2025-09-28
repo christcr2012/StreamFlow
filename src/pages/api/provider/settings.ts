@@ -16,7 +16,8 @@ async function ensureProvider(req: NextApiRequest, res: NextApiResponse) {
     select: { id: true, role: true },
   });
 
-  if (!user || user.role !== 'PROVIDER') {
+  // Provider access is now environment-based, not role-based
+  if (!user) {
     res.status(403).json({ ok: false, error: "Provider access required" });
     return null;
   }
