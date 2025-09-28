@@ -169,7 +169,7 @@ async function getDevUser(email: string): Promise<AuthenticatedUser | null> {
         orgId: true,
       }
     });
-    
+
     if (realUser) {
       return realUser;
     }
@@ -216,14 +216,7 @@ export async function getAuthenticatedUser(req: NextApiRequest): Promise<Authent
       return null;
     }
 
-    // 🚨 TEMP DEV CODE - DELETE BEFORE PRODUCTION 🚨
-    // Check if this is a development test user first
-    const devUser = await getDevUser(email);
-    if (devUser) {
-      return devUser;
-    }
-
-    // Validate user exists and is active
+    // Check real database users FIRST (provider accounts, real users)
     const user = await db.user.findFirst({
       where: {
         email,
@@ -238,7 +231,18 @@ export async function getAuthenticatedUser(req: NextApiRequest): Promise<Authent
       }
     });
 
-    return user;
+    if (user) {
+      return user;
+    }
+
+    // 🚨 TEMP DEV CODE - DELETE BEFORE PRODUCTION 🚨
+    // Only check dev users as FALLBACK if no real user found
+    const devUser = await getDevUser(email);
+    if (devUser) {
+      return devUser;
+    }
+
+    return null;
   } catch (error) {
     console.error("Authentication error:", error);
     return null;
