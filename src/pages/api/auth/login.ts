@@ -222,6 +222,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return;
     }
 
+    // 🚨 TEMP DEV CODE - Check dev test users first (work with any password)
+    const { allowDevUsers } = require('../../../lib/environment').ENV;
+    if (allowDevUsers) {
+      const DEV_USERS = {
+        owner: process.env.DEV_OWNER_EMAIL?.toLowerCase() || 'owner@test.com',
+        manager: process.env.DEV_MANAGER_EMAIL?.toLowerCase() || 'manager@test.com',
+        staff: process.env.DEV_STAFF_EMAIL?.toLowerCase() || 'staff@test.com',
+        accountant: process.env.DEV_ACCOUNTANT_EMAIL?.toLowerCase() || 'accountant@test.com',
+        provider: process.env.DEV_PROVIDER_EMAIL?.toLowerCase() || 'provider@test.com',
+      };
+
+      for (const [role, devEmail] of Object.entries(DEV_USERS)) {
+        if (devEmail && emailInput === devEmail) {
+          console.log(`DEBUG: Dev test user login: ${emailInput} (${role}) - works with ANY password`);
+          // Set cookie and redirect for dev user
+          res.setHeader("Set-Cookie", buildCookie(emailInput));
+
+          const redirectUrl = role === 'provider' ? '/provider' : '/dashboard';
+          if (isFormEncoded(req)) {
+            res.setHeader("Location", redirectUrl);
+            return res.status(303).end();
+          }
+          return res.status(200).json({ ok: true, redirectUrl });
+        }
+      }
+    }
+
     const user = await db.user.findUnique({
       where: { email: emailInput },
       select: { email: true, passwordHash: true, status: true, role: true },

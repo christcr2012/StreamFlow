@@ -152,32 +152,8 @@ async function getDevUser(email: string): Promise<AuthenticatedUser | null> {
   // Only disable in true production when serving real clients
   const { allowDevUsers } = require('./environment').ENV;
   if (!allowDevUsers) return null;
-  
-  // First check if this is actually a real user in the database
-  // This allows dev emails to work with real user data
-  try {
-    const realUser = await db.user.findFirst({
-      where: {
-        email,
-        status: "active"
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        orgId: true,
-      }
-    });
 
-    if (realUser) {
-      return realUser;
-    }
-  } catch (error) {
-    console.error("Dev user database lookup failed:", error);
-  }
-  
-  // Check configured dev users (with defaults) - fallback only
+  // Check configured dev test users (these work with ANY password)
   for (const [role, devEmail] of Object.entries(DEV_USERS)) {
     if (devEmail && email.toLowerCase() === devEmail) {
       return {

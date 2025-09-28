@@ -469,13 +469,64 @@ export class ProviderAuditSystem {
 
   // Helper Methods
   private extractDataAccess(context: any): ProviderAuditEntry['dataAccessed'] {
-    // Extract data access information from context
-    return []; // Placeholder
+    const dataAccess = [];
+
+    if (context.query) {
+      dataAccess.push({
+        table: context.table || 'unknown',
+        operation: context.operation || 'read',
+        recordCount: context.recordCount || 0,
+        fields: context.fields || [],
+        filters: context.filters || {}
+      });
+    }
+
+    if (context.impersonation) {
+      dataAccess.push({
+        table: 'user_sessions',
+        operation: 'impersonate',
+        recordCount: 1,
+        fields: ['user_id', 'session_data'],
+        filters: { targetUserId: context.impersonation.targetUserId }
+      });
+    }
+
+    return dataAccess;
   }
 
   private extractChanges(context: any): ProviderAuditEntry['changesApplied'] {
-    // Extract change information from context
-    return []; // Placeholder
+    const changes = [];
+
+    if (context.updates) {
+      for (const [field, change] of Object.entries(context.updates)) {
+        changes.push({
+          field,
+          oldValue: (change as any).from,
+          newValue: (change as any).to,
+          changeType: 'update'
+        });
+      }
+    }
+
+    if (context.created) {
+      changes.push({
+        field: 'record',
+        oldValue: null,
+        newValue: context.created,
+        changeType: 'create'
+      });
+    }
+
+    if (context.deleted) {
+      changes.push({
+        field: 'record',
+        oldValue: context.deleted,
+        newValue: null,
+        changeType: 'delete'
+      });
+    }
+
+    return changes;
   }
 
   private determineComplianceRequirements(action: string, context: any): ProviderAuditEntry['complianceData'] {
