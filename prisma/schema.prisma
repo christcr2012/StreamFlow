@@ -452,6 +452,12 @@ model Org {
   webhookEndpoints WebhookEndpoint[] @relation("OrgWebhooks")
   webhookEvents    WebhookEvent[]    @relation("OrgWebhookEvents")
 
+  // Encryption System Relations
+  encryptionKeys   EncryptionKey[]   @relation("OrgEncryptionKeys")
+
+  // Backup System Relations
+  backups          Backup[]          @relation("OrgBackups")
+
   /// brandConfig stores white-label brand settings such as name, colors, and logo URL.
   /// It is JSON to allow arbitrary keys like { name: "Mountain Vista", color: "#123456", logoUrl: "https://..." }
   brandConfig Json? @default("{}")
@@ -2576,6 +2582,55 @@ enum WebhookDeliveryStatus {
   DELIVERED
   FAILED
   RETRYING
+}
+
+/// Encryption key management for data protection
+model EncryptionKey {
+  id          String   @id @default(cuid())
+  keyId       String   @unique // Key identifier for derivation
+  orgId       String
+  algorithm   String   @default("aes-256-gcm")
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  rotatedAt   DateTime?
+
+  // Relations
+  org Org @relation("OrgEncryptionKeys", fields: [orgId], references: [id])
+
+  @@map("encryption_keys")
+}
+
+/// Backup management for disaster recovery
+model Backup {
+  id           String   @id @default(cuid())
+  orgId        String
+  type         BackupType @default(FULL)
+  status       BackupStatus @default(PENDING)
+  size         Int?     // Backup size in bytes
+  checksum     String?  // SHA-256 checksum for integrity
+  encrypted    Boolean  @default(true)
+  compressed   Boolean  @default(true)
+  destinations String[] // Storage destinations
+  errorMessage String?  // Error message if failed
+  createdAt    DateTime @default(now())
+
+  // Relations
+  org Org @relation("OrgBackups", fields: [orgId], references: [id])
+
+  @@map("backups")
+}
+
+enum BackupType {
+  FULL
+  INCREMENTAL
+  DIFFERENTIAL
+}
+
+enum BackupStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
 }
 
 enum SupportSessionType {
