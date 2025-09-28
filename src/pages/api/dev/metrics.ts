@@ -21,7 +21,7 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma as db } from '@/lib/prisma';
-import { assertPermission, PERMS } from '@/lib/rbac';
+import { requireDeveloperAuth, DeveloperUser } from '@/lib/developer-auth';
 
 interface DeveloperMetrics {
   // System Health
@@ -48,25 +48,12 @@ interface DeveloperMetrics {
   federationLatency: number;
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default requireDeveloperAuth(async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  user: DeveloperUser
+) {
   try {
-    // Check if user has developer access (OWNER role or specific dev email)
-    const email = req.cookies.ws_user;
-    if (!email) {
-      return res.status(401).json({ ok: false, error: 'Unauthorized' });
-    }
-
-    const user = await db.user.findUnique({
-      where: { email },
-      select: { role: true, email: true }
-    });
-
-    const isDeveloper = user?.role === 'OWNER' || user?.email === 'gametcr3@gmail.com';
-    
-    if (!isDeveloper) {
-      return res.status(403).json({ ok: false, error: 'Developer access required' });
-    }
-
     if (req.method !== 'GET') {
       res.setHeader('Allow', ['GET']);
       return res.status(405).json({ ok: false, error: 'Method not allowed' });
@@ -85,7 +72,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       error: 'Internal server error'
     });
   }
-}
+});
 
 async function calculateDeveloperMetrics(): Promise<DeveloperMetrics> {
   try {

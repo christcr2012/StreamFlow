@@ -1,38 +1,18 @@
 // src/pages/api/provider/metrics.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma as db } from "@/lib/prisma";
-import { getEmailFromReq } from "@/lib/rbac";
+import { requireProviderAuth, ProviderUser } from "@/lib/provider-auth";
 
-// Ensure only providers can access this endpoint
-async function ensureProvider(req: NextApiRequest, res: NextApiResponse) {
-  const email = getEmailFromReq(req);
-  if (!email) {
-    res.status(401).json({ ok: false, error: "Unauthorized" });
-    return null;
-  }
-
-  const user = await db.user.findUnique({
-    where: { email },
-    select: { id: true, role: true },
-  });
-
-  if (!user || user.role !== 'PROVIDER') {
-    res.status(403).json({ ok: false, error: "Provider access required" });
-    return null;
-  }
-
-  return user;
-}
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default requireProviderAuth(async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  user: ProviderUser
+) {
   try {
     if (req.method !== 'GET') {
       res.setHeader('Allow', 'GET');
       return res.status(405).json({ ok: false, error: 'Method not allowed' });
     }
-
-    const user = await ensureProvider(req, res);
-    if (!user) return;
 
     // Get current month start/end for monthly calculations
     const now = new Date();
@@ -147,4 +127,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       error: error.message || 'Failed to fetch provider metrics' 
     });
   }
-}
+});

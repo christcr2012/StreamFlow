@@ -8,9 +8,8 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
-import AppShell from '@/components/AppShell';
+import DeveloperShell from '@/components/DeveloperShell';
 import { useMe } from '@/lib/useMe';
 import useSWR from 'swr';
 
@@ -66,7 +65,7 @@ export default function DeveloperDashboard() {
 
   if (loading) {
     return (
-      <AppShell>
+      <DeveloperShell title="Loading Developer Dashboard...">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="animate-pulse space-y-6">
             <div className="h-8 bg-gray-200 rounded w-1/3"></div>
@@ -77,7 +76,7 @@ export default function DeveloperDashboard() {
             </div>
           </div>
         </div>
-      </AppShell>
+      </DeveloperShell>
     );
   }
 
@@ -107,10 +106,7 @@ export default function DeveloperDashboard() {
   const formatNumber = (value: number) => value?.toLocaleString() || '0';
 
   return (
-    <AppShell>
-      <Head>
-        <title>Developer Command Center - StreamFlow</title>
-      </Head>
+    <DeveloperShell title="Developer Command Center - StreamFlow">
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
@@ -273,6 +269,6 @@ export default function DeveloperDashboard() {
           </div>
         )}
       </div>
-    </AppShell>
+    </DeveloperShell>
   );
 }
