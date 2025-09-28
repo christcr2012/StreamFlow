@@ -58,11 +58,10 @@ export async function authenticateProvider(req: NextApiRequest): Promise<Provide
 
     // Check for provider credentials in request
     const authHeader = req.headers.authorization;
-    const email = req.cookies.ws_user;
+    const providerCookieEmail = req.cookies.ws_provider; // Use PROVIDER-SPECIFIC cookie
 
-    // For now, allow cookie-based auth if it matches provider email
-    // TODO: Implement proper JWT-based provider authentication
-    if (email && email.toLowerCase() === providerEmail.toLowerCase()) {
+    // Provider authentication using provider-specific cookie
+    if (providerCookieEmail && providerCookieEmail.toLowerCase() === providerEmail.toLowerCase()) {
       return {
         id: 'provider-system',
         email: providerEmail,

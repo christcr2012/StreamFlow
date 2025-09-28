@@ -165,23 +165,27 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // Get user authentication
-  const cookie = req.cookies.get("ws_user")?.value;
-  const email = cookie?.toLowerCase();
+  // Get user authentication from SEPARATE cookie systems
+  const clientCookie = req.cookies.get("ws_user")?.value;
+  const providerCookie = req.cookies.get("ws_provider")?.value;
+  const developerCookie = req.cookies.get("ws_developer")?.value;
 
   // Define system boundaries
   const providerEmail = process.env.PROVIDER_EMAIL?.toLowerCase();
   const developerEmail = process.env.DEVELOPER_EMAIL?.toLowerCase();
 
-  // Determine user type
+  // Determine user type based on WHICH cookie is present
   let userType: 'PROVIDER' | 'DEVELOPER' | 'CLIENT' | 'UNAUTHENTICATED' = 'UNAUTHENTICATED';
 
-  if (email === providerEmail) {
+  if (providerCookie && providerCookie.toLowerCase() === providerEmail) {
     userType = 'PROVIDER';
-  } else if (email === developerEmail) {
+    console.log(`🏢 PROVIDER ACCESS: ${providerCookie}`);
+  } else if (developerCookie && developerCookie.toLowerCase() === developerEmail) {
     userType = 'DEVELOPER';
-  } else if (email) {
+    console.log(`🔧 DEVELOPER ACCESS: ${developerCookie}`);
+  } else if (clientCookie) {
     userType = 'CLIENT';
+    console.log(`👤 CLIENT ACCESS: ${clientCookie}`);
   }
 
   // Define route systems

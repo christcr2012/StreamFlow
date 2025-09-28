@@ -230,8 +230,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Check Provider System Authentication
     if (providerEmail && providerPassword && emailInput === providerEmail && password === providerPassword) {
-      console.log(`Provider system login: ${emailInput}`);
-      res.setHeader("Set-Cookie", buildCookie(emailInput));
+      console.log(`🏢 PROVIDER SYSTEM LOGIN: ${emailInput}`);
+
+      // Set PROVIDER-SPECIFIC cookie (different from client cookie)
+      let providerCookie = `ws_provider=${encodeURIComponent(emailInput)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`;
+      if (process.env.NODE_ENV === "production") providerCookie += "; Secure";
+      res.setHeader("Set-Cookie", providerCookie);
 
       const redirectUrl = '/provider';
       if (isFormEncoded(req)) {
@@ -243,8 +247,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Check Developer System Authentication
     if (developerEmail && developerPassword && emailInput === developerEmail && password === developerPassword) {
-      console.log(`Developer system login: ${emailInput}`);
-      res.setHeader("Set-Cookie", buildCookie(emailInput));
+      console.log(`🔧 DEVELOPER SYSTEM LOGIN: ${emailInput}`);
+
+      // Set DEVELOPER-SPECIFIC cookie (different from client cookie)
+      let developerCookie = `ws_developer=${encodeURIComponent(emailInput)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`;
+      if (process.env.NODE_ENV === "production") developerCookie += "; Secure";
+      res.setHeader("Set-Cookie", developerCookie);
 
       const redirectUrl = '/dev';
       if (isFormEncoded(req)) {

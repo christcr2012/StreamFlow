@@ -344,13 +344,37 @@ const DEV_USER_EMAIL = process.env.DEV_USER_EMAIL?.toLowerCase() || null;
 
 /**
  * Extract current user's email from cookie or header.
- * - Cookie: ws_user=<email>
+ * - Cookie: ws_user=<email> (CLIENT SYSTEM ONLY)
  * - Header: x-ws-user: <email>  (useful for scripts/tests)
+ *
+ * ⚠️  WARNING: This function ONLY works for CLIENT system authentication!
+ * ⚠️  Provider system uses ws_provider cookie
+ * ⚠️  Developer system uses ws_developer cookie
  */
 export function getEmailFromReq(req: NextApiRequest): string | null {
-  const fromCookie = req.cookies?.ws_user;
+  const fromCookie = req.cookies?.ws_user; // CLIENT SYSTEM ONLY
   const fromHeader = (req.headers["x-ws-user"] || req.headers["x-wsuser"]) as string | undefined;
   const raw = (Array.isArray(fromCookie) ? fromCookie[0] : fromCookie) ?? fromHeader ?? "";
+  const email = raw?.toString().trim().toLowerCase();
+  return email || null;
+}
+
+/**
+ * Extract provider email from provider-specific cookie
+ */
+export function getProviderEmailFromReq(req: NextApiRequest): string | null {
+  const fromCookie = req.cookies?.ws_provider; // PROVIDER SYSTEM ONLY
+  const raw = Array.isArray(fromCookie) ? fromCookie[0] : fromCookie;
+  const email = raw?.toString().trim().toLowerCase();
+  return email || null;
+}
+
+/**
+ * Extract developer email from developer-specific cookie
+ */
+export function getDeveloperEmailFromReq(req: NextApiRequest): string | null {
+  const fromCookie = req.cookies?.ws_developer; // DEVELOPER SYSTEM ONLY
+  const raw = Array.isArray(fromCookie) ? fromCookie[0] : fromCookie;
   const email = raw?.toString().trim().toLowerCase();
   return email || null;
 }

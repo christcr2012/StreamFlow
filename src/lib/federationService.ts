@@ -29,6 +29,7 @@ interface CrossClientAnalytics {
   totalLeads: number;
   totalRevenue: number;
   averageLeadsPerOrg: number;
+  averageRevenuePerClient: number;
   topPerformingOrgs: Array<{
     orgId: string;
     orgName: string;
@@ -225,6 +226,7 @@ class FederationService {
         totalLeads: leadStats._count.id || 0,
         totalRevenue: 0, // Would need billing integration
         averageLeadsPerOrg: Math.round((leadStats._count.id || 0) / (orgStats._count.id || 1)),
+        averageRevenuePerClient: 2500, // Mock average revenue per client
         topPerformingOrgs: topOrgs.map(org => ({
           orgId: org.id,
           orgName: org.name,

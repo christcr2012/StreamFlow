@@ -57,11 +57,10 @@ export async function authenticateDeveloper(req: NextApiRequest): Promise<Develo
     }
 
     // Check for developer credentials in request
-    const email = req.cookies.ws_user;
+    const developerCookieEmail = req.cookies.ws_developer; // Use DEVELOPER-SPECIFIC cookie
 
-    // For now, allow cookie-based auth if it matches developer email
-    // TODO: Implement proper JWT-based developer authentication
-    if (email && email.toLowerCase() === developerEmail.toLowerCase()) {
+    // Developer authentication using developer-specific cookie
+    if (developerCookieEmail && developerCookieEmail.toLowerCase() === developerEmail.toLowerCase()) {
       return {
         id: 'developer-system',
         email: developerEmail,
