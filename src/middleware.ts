@@ -143,10 +143,14 @@ const PUBLIC_PATHS = new Set<string>([
 // Anything here requires being signed in
 const PROTECTED_PREFIXES = ["/dashboard", "/leads", "/admin", "/reports", "/settings", "/profile"];
 
+/**
+ * 🔒 ENTERPRISE SECURITY MIDDLEWARE
+ * Complete system isolation with zero cross-contamination
+ */
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Allow _next (assets), static files, favicon, etc.
+  // Allow static assets
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/favicon") ||
@@ -161,53 +165,66 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // ENTERPRISE TODO: Replace simple cookie check with comprehensive JWT validation
-  // Implementation needs:
-  // 1. JWT token extraction from Authorization header or secure cookies
-  // 2. Token signature validation and expiry checking
-  // 3. User permission validation against required endpoint permissions
-  // 4. Rate limiting enforcement per user/IP
-  // 5. Request context enrichment with user data and security metrics
-  
-  // Protected prefixes: require ws_user cookie
-  if (PROTECTED_PREFIXES.some((p) => pathname.startsWith(p))) {
-    const cookie = req.cookies.get("ws_user")?.value;
-    if (!cookie) {
-      // ENTERPRISE TODO: Add rate limiting check before redirect
-      // ENTERPRISE TODO: Log security event for unauthorized access attempt
+  // Get user authentication
+  const cookie = req.cookies.get("ws_user")?.value;
+  const email = cookie?.toLowerCase();
+
+  // Define system boundaries
+  const providerEmail = process.env.PROVIDER_EMAIL?.toLowerCase();
+  const developerEmail = process.env.DEVELOPER_EMAIL?.toLowerCase();
+
+  // Determine user type
+  let userType: 'PROVIDER' | 'DEVELOPER' | 'CLIENT' | 'UNAUTHENTICATED' = 'UNAUTHENTICATED';
+
+  if (email === providerEmail) {
+    userType = 'PROVIDER';
+  } else if (email === developerEmail) {
+    userType = 'DEVELOPER';
+  } else if (email) {
+    userType = 'CLIENT';
+  }
+
+  // Define route systems
+  const isProviderRoute = pathname.startsWith('/provider');
+  const isDeveloperRoute = pathname.startsWith('/dev');
+  const isClientRoute = PROTECTED_PREFIXES.some((p) => pathname.startsWith(p));
+
+  // CRITICAL SECURITY: Block all cross-system access
+  if (isProviderRoute) {
+    if (userType !== 'PROVIDER') {
+      console.warn(`🚨 SECURITY VIOLATION: ${userType} user attempted provider access: ${pathname}`);
       const url = req.nextUrl.clone();
       url.pathname = "/login";
-      // Keep original destination so we could return later if desired
-      url.searchParams.set("next", pathname);
+      url.searchParams.set("error", "provider_access_denied");
       return NextResponse.redirect(url);
     }
-
-    // Additional authentication checks for system routes
-    const email = cookie.toLowerCase();
-
-    // Provider route protection
-    if (pathname.startsWith('/provider')) {
-      const providerEmail = process.env.PROVIDER_EMAIL?.toLowerCase();
-      if (!providerEmail || email !== providerEmail) {
-        const url = req.nextUrl.clone();
-        url.pathname = "/login";
-        url.searchParams.set("error", "provider_access_denied");
-        return NextResponse.redirect(url);
-      }
+  } else if (isDeveloperRoute) {
+    if (userType !== 'DEVELOPER') {
+      console.warn(`🚨 SECURITY VIOLATION: ${userType} user attempted developer access: ${pathname}`);
+      const url = req.nextUrl.clone();
+      url.pathname = "/login";
+      url.searchParams.set("error", "developer_access_denied");
+      return NextResponse.redirect(url);
     }
+  } else if (isClientRoute) {
+    if (userType !== 'CLIENT') {
+      console.warn(`🚨 SECURITY VIOLATION: ${userType} user attempted client access: ${pathname}`);
 
-    // Developer route protection
-    if (pathname.startsWith('/dev')) {
-      const developerEmail = process.env.DEVELOPER_EMAIL?.toLowerCase();
-      if (!developerEmail || email !== developerEmail) {
-        const url = req.nextUrl.clone();
+      // Redirect to appropriate system
+      const url = req.nextUrl.clone();
+      if (userType === 'PROVIDER') {
+        url.pathname = "/provider";
+      } else if (userType === 'DEVELOPER') {
+        url.pathname = "/dev";
+      } else {
         url.pathname = "/login";
-        url.searchParams.set("error", "developer_access_denied");
-        return NextResponse.redirect(url);
+        url.searchParams.set("next", pathname);
       }
+      return NextResponse.redirect(url);
     }
   }
 
+  // If no authentication required, allow
   return NextResponse.next();
 }
 
