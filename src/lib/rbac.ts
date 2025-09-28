@@ -360,8 +360,11 @@ export function getEmailFromReq(req: NextApiRequest): string | null {
  * 🚨 DELETE THIS FUNCTION BEFORE PRODUCTION 🚨
  */
 function getDevUserRole(email: string): string | null {
-  // Only enabled in development environments
-  if (process.env.NODE_ENV === 'production') return null;
+  // 🎯 SMART ENVIRONMENT DETECTION
+  // Enable dev users in development AND staging (for testing/evaluation)
+  // Only disable in true production when serving real clients
+  const { allowDevUsers } = require('./environment').ENV;
+  if (!allowDevUsers) return null;
   
   // Check configured dev users (with defaults)
   for (const [role, devEmail] of Object.entries(DEV_USERS)) {

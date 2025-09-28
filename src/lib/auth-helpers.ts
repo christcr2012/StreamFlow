@@ -147,8 +147,11 @@ const DEV_USER_EMAIL = process.env.DEV_USER_EMAIL?.toLowerCase() || null;
  * 🚨 DELETE THIS FUNCTION BEFORE PRODUCTION 🚨
  */
 async function getDevUser(email: string): Promise<AuthenticatedUser | null> {
-  // Only enabled in development environments
-  if (process.env.NODE_ENV === 'production') return null;
+  // 🎯 SMART ENVIRONMENT DETECTION
+  // Enable dev users in development AND staging (for testing/evaluation)
+  // Only disable in true production when serving real clients
+  const { allowDevUsers } = require('./environment').ENV;
+  if (!allowDevUsers) return null;
   
   // First check if this is actually a real user in the database
   // This allows dev emails to work with real user data
