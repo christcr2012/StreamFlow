@@ -1005,19 +1005,11 @@ model LeadInvoiceLine {
 model AuditLog {
   id          String   @id @default(cuid())
   orgId       String
-  actorUserId String?
-  /// The entity type affected (e.g. 'lead', 'invoice', 'pricing', etc.)
-  entity      String
-  /// Identifier of the record affected
-  entityId    String?
-  /// Name of the field that was changed (nullable for record-level actions)
-  field       String?
-  /// Previous value (JSON) before the change, if applicable
-  oldValue    Json?
-  /// New value (JSON) after the change, if applicable
-  newValue    Json?
-  /// Free-form reason or comment describing why the change was made
-  reason      String?
+  actorId     String?  // Changed from actorUserId to match migration and usage
+  action      String   // Action performed (create, update, delete, etc.)
+  entityType  String   // What was acted upon (lead, invoice, etc.)
+  entityId    String?  // ID of the target entity
+  delta       Json     @default("{}") // Changes made (JSON format)
   createdAt   DateTime @default(now())
 
   org Org @relation(fields: [orgId], references: [id])

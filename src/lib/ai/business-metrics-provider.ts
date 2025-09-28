@@ -143,7 +143,7 @@ export class BusinessMetricsProvider {
 
       // Industry-Specific Metrics
       industryType: org?.industryType || undefined,
-      seasonalityFactor: this.calculateSeasonalityFactor(org?.industryType),
+      seasonalityFactor: this.calculateSeasonalityFactor(org?.industryType || undefined),
       serviceComplexity: this.assessServiceComplexity(jobMetrics.avgValue, leadMetrics.conversionRate),
     };
   }

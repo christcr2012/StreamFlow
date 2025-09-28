@@ -85,23 +85,25 @@ export class StaffAuditSystem {
       const auditEntry = await db.auditLog.create({
         data: {
           orgId: this.orgId,
-          userId: this.userId,
+          actorId: this.userId,
           action: entry.action,
-          target: entry.target,
-          targetId: entry.targetId,
-          category: entry.category,
-          severity: entry.severity,
-          details: {
-            ...entry.details,
-            businessImpact: entry.businessImpact,
-            sessionId: this.sessionId
-          },
-          ipAddress: entry.context.ipAddress,
-          userAgent: entry.context.userAgent,
-          metadata: {
-            location: entry.context.location,
-            deviceInfo: entry.context.deviceInfo,
-            sessionId: entry.context.sessionId
+          entityType: entry.target,
+          entityId: entry.targetId,
+          delta: {
+            category: entry.category,
+            severity: entry.severity,
+            details: {
+              ...entry.details,
+              businessImpact: entry.businessImpact,
+              sessionId: this.sessionId
+            },
+            ipAddress: entry.context.ipAddress,
+            userAgent: entry.context.userAgent,
+            metadata: {
+              location: entry.context.location,
+              deviceInfo: entry.context.deviceInfo,
+              sessionId: entry.context.sessionId
+            }
           }
         }
       });
@@ -113,7 +115,8 @@ export class StaffAuditSystem {
       await this.checkReviewTriggers(entry);
 
       // Update user activity metrics
-      await this.updateActivityMetrics(entry);
+      // TODO: Implement UserActivityMetrics model as part of DEVELOPMENT_ROADMAP.md Phase 6
+      // await this.updateActivityMetrics(entry);
 
     } catch (error) {
       // Fail-safe logging to ensure audit trail integrity
@@ -539,6 +542,11 @@ export class StaffAuditSystem {
     }
   }
 
+  /* TODO: Implement UserActivityMetrics model as part of DEVELOPMENT_ROADMAP.md Phase 6
+   * This function will track user activity patterns for behavioral analysis and anomaly detection
+   * as part of the comprehensive audit framework supporting SOC 2 Type II compliance
+   */
+  /*
   private async updateActivityMetrics(entry: ActivityLogEntry): Promise<void> {
     // Update user activity metrics for behavioral analysis
     await db.userActivityMetrics.upsert({
@@ -557,6 +565,7 @@ export class StaffAuditSystem {
       }
     });
   }
+  */
 
   private sanitizeChanges(changes: any): any {
     // Remove sensitive information from change logs
