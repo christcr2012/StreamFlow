@@ -222,7 +222,39 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return;
     }
 
-    // 🚨 TEMP DEV CODE - Check dev test users first (work with any password)
+    // 🔧 SYSTEM AUTHENTICATION - Check provider and developer credentials first
+    const providerEmail = process.env.PROVIDER_EMAIL?.toLowerCase();
+    const providerPassword = process.env.PROVIDER_PASSWORD;
+    const developerEmail = process.env.DEVELOPER_EMAIL?.toLowerCase();
+    const developerPassword = process.env.DEVELOPER_PASSWORD;
+
+    // Check Provider System Authentication
+    if (providerEmail && providerPassword && emailInput === providerEmail && password === providerPassword) {
+      console.log(`Provider system login: ${emailInput}`);
+      res.setHeader("Set-Cookie", buildCookie(emailInput));
+
+      const redirectUrl = '/provider';
+      if (isFormEncoded(req)) {
+        res.setHeader("Location", redirectUrl);
+        return res.status(303).end();
+      }
+      return res.status(200).json({ ok: true, redirectUrl });
+    }
+
+    // Check Developer System Authentication
+    if (developerEmail && developerPassword && emailInput === developerEmail && password === developerPassword) {
+      console.log(`Developer system login: ${emailInput}`);
+      res.setHeader("Set-Cookie", buildCookie(emailInput));
+
+      const redirectUrl = '/dev';
+      if (isFormEncoded(req)) {
+        res.setHeader("Location", redirectUrl);
+        return res.status(303).end();
+      }
+      return res.status(200).json({ ok: true, redirectUrl });
+    }
+
+    // 🚨 TEMP DEV CODE - Check dev test users (work with any password)
     const { allowDevUsers } = require('../../../lib/environment').ENV;
     if (allowDevUsers) {
       const DEV_USERS = {
@@ -230,16 +262,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         manager: process.env.DEV_MANAGER_EMAIL?.toLowerCase() || 'manager@test.com',
         staff: process.env.DEV_STAFF_EMAIL?.toLowerCase() || 'staff@test.com',
         accountant: process.env.DEV_ACCOUNTANT_EMAIL?.toLowerCase() || 'accountant@test.com',
-        provider: process.env.DEV_PROVIDER_EMAIL?.toLowerCase() || 'provider@test.com',
       };
 
       for (const [role, devEmail] of Object.entries(DEV_USERS)) {
         if (devEmail && emailInput === devEmail) {
           console.log(`DEBUG: Dev test user login: ${emailInput} (${role}) - works with ANY password`);
-          // Set cookie and redirect for dev user
           res.setHeader("Set-Cookie", buildCookie(emailInput));
 
-          const redirectUrl = role === 'provider' ? '/provider' : '/dashboard';
+          const redirectUrl = '/dashboard';
           if (isFormEncoded(req)) {
             res.setHeader("Location", redirectUrl);
             return res.status(303).end();

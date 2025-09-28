@@ -125,8 +125,10 @@ export default function DeveloperLayout({ children, title = 'Developer System' }
               <p className="text-gray-400 mt-1">Developer system administration and debugging tools</p>
             </div>
             
-            <div className="bg-gray-800 rounded-lg border border-green-500/20 min-h-[600px]">
-              {children}
+            <div className="bg-gray-800 rounded-lg border border-green-500/20 min-h-[600px] overflow-hidden">
+              <div className="h-full">
+                {children}
+              </div>
             </div>
           </div>
         </main>

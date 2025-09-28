@@ -7,12 +7,15 @@ import "@/styles/globals.css";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  
-  // Hide navigation on login page
+
+  // Pages that should not have the global layout
   const isLoginPage = router.pathname === '/login';
-  
-  if (isLoginPage) {
-    // Login page without navigation
+  const isProviderPage = router.pathname.startsWith('/provider');
+  const isDeveloperPage = router.pathname.startsWith('/dev');
+  const isSystemPage = isLoginPage || isProviderPage || isDeveloperPage;
+
+  if (isSystemPage) {
+    // System pages (login, provider, developer) without global navigation
     return (
       <div className="min-h-screen" style={{ background: 'var(--bg-main)', color: 'var(--text-primary)' }}>
         <Component {...pageProps} />

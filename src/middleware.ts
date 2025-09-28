@@ -181,6 +181,31 @@ export function middleware(req: NextRequest) {
       url.searchParams.set("next", pathname);
       return NextResponse.redirect(url);
     }
+
+    // Additional authentication checks for system routes
+    const email = cookie.toLowerCase();
+
+    // Provider route protection
+    if (pathname.startsWith('/provider')) {
+      const providerEmail = process.env.PROVIDER_EMAIL?.toLowerCase();
+      if (!providerEmail || email !== providerEmail) {
+        const url = req.nextUrl.clone();
+        url.pathname = "/login";
+        url.searchParams.set("error", "provider_access_denied");
+        return NextResponse.redirect(url);
+      }
+    }
+
+    // Developer route protection
+    if (pathname.startsWith('/dev')) {
+      const developerEmail = process.env.DEVELOPER_EMAIL?.toLowerCase();
+      if (!developerEmail || email !== developerEmail) {
+        const url = req.nextUrl.clone();
+        url.pathname = "/login";
+        url.searchParams.set("error", "developer_access_denied");
+        return NextResponse.redirect(url);
+      }
+    }
   }
 
   return NextResponse.next();

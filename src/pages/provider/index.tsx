@@ -142,12 +142,8 @@ export default function ProviderPortal() {
   useEffect(() => {
     if (!loading && me) {
       // Provider access is determined by environment variables, not database role
-      const isProviderEmail = me.email?.toLowerCase() === process.env.NEXT_PUBLIC_PROVIDER_EMAIL?.toLowerCase();
-      if (!isProviderEmail) {
-        router.push('/dashboard');
-      } else {
-        fetchProviderData();
-      }
+      // Note: We can't access process.env.PROVIDER_EMAIL on client side, so we check server-side
+      fetchProviderData();
     }
   }, [me, loading, router]);
 
