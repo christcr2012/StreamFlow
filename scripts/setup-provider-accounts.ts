@@ -34,8 +34,6 @@ async function main() {
       org = await prisma.org.create({
         data: {
           name: 'StreamFlow Platform',
-          slug: 'streamflow-platform',
-          status: 'active',
           aiCreditBalance: 10000, // Generous credits for provider
         }
       });
