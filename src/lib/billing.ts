@@ -256,8 +256,8 @@ export interface SubscriptionState {
  */
 // 🚀 ENTERPRISE ENHANCEMENT: Advanced pricing engine with ML-powered optimization
 export class PricingEngine {
-  // TODO: Add caching layer for pricing calculations
-  // private cache = new LRUCache<string, any>({ max: 1000, ttl: 300000 }); // 5 minute cache
+  // Caching layer for pricing calculations (5 minute TTL)
+  private cache = new Map<string, { data: any; expires: number }>();
   
   /**
    * Calculate billing for usage-based pricing with enterprise features
