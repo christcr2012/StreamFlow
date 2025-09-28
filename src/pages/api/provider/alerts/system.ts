@@ -234,11 +234,11 @@ async function checkAiUsageSpike(): Promise<{
     const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000);
 
     const [recentUsage, previousUsage] = await Promise.all([
-      db.aiMeter.aggregate({
+      db.aiUsageEvent.aggregate({
         where: { createdAt: { gte: oneHourAgo } },
         _sum: { costUsd: true }
       }),
-      db.aiMeter.aggregate({
+      db.aiUsageEvent.aggregate({
         where: { 
           createdAt: { gte: twoHoursAgo, lt: oneHourAgo }
         },
@@ -270,7 +270,11 @@ async function checkComplianceIssues(): Promise<Array<{
   severity: 'info' | 'warning' | 'error' | 'critical';
   message: string;
 }>> {
-  const issues = [];
+  const issues: Array<{
+    type: string;
+    severity: 'info' | 'warning' | 'error' | 'critical';
+    message: string;
+  }> = [];
   
   try {
     // Check for audit log retention compliance

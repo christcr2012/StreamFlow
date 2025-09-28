@@ -106,8 +106,8 @@ async function checkDatabaseHealth(): Promise<'healthy' | 'warning' | 'error'> {
     // Check for recent database errors
     const recentErrors = await db.auditLog.count({
       where: {
-        action: { contains: 'database' },
-        details: { contains: 'error' },
+        action: { contains: 'error' },
+        entityType: { contains: 'database' },
         createdAt: { gte: new Date(Date.now() - 5 * 60 * 1000) } // Last 5 minutes
       }
     });
@@ -131,8 +131,8 @@ async function checkApiHealth(): Promise<'healthy' | 'warning' | 'error'> {
     // Check recent API errors
     const recentApiErrors = await db.auditLog.count({
       where: {
-        action: { contains: 'api' },
-        details: { contains: 'error' },
+        action: { contains: 'error' },
+        entityType: { contains: 'api' },
         createdAt: { gte: new Date(Date.now() - 5 * 60 * 1000) }
       }
     });
@@ -162,22 +162,22 @@ async function checkAiHealth(): Promise<'healthy' | 'warning' | 'error'> {
   try {
     // Check recent AI usage and errors
     const [recentAiUsage, recentAiErrors] = await Promise.all([
-      db.aiMeter.count({
+      db.aiUsageEvent.count({
         where: {
           createdAt: { gte: new Date(Date.now() - 5 * 60 * 1000) }
         }
       }),
       db.auditLog.count({
         where: {
-          action: { contains: 'ai' },
-          details: { contains: 'error' },
+          action: { contains: 'error' },
+          entityType: { contains: 'ai' },
           createdAt: { gte: new Date(Date.now() - 5 * 60 * 1000) }
         }
       })
     ]);
 
     // Check AI cost efficiency
-    const recentCosts = await db.aiMeter.aggregate({
+    const recentCosts = await db.aiUsageEvent.aggregate({
       where: {
         createdAt: { gte: new Date(Date.now() - 60 * 60 * 1000) } // Last hour
       },
@@ -208,8 +208,8 @@ async function checkFederationHealth(): Promise<'healthy' | 'warning' | 'error'>
     // Check for federation-related errors
     const federationErrors = await db.auditLog.count({
       where: {
-        action: { contains: 'federation' },
-        details: { contains: 'error' },
+        action: { contains: 'error' },
+        entityType: { contains: 'federation' },
         createdAt: { gte: new Date(Date.now() - 10 * 60 * 1000) } // Last 10 minutes
       }
     });

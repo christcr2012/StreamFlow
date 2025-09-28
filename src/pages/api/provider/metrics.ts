@@ -74,8 +74,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
     const monthlyRevenue = monthlyConversions * 100;
 
-    // Real AI cost calculation from aiMeter system
-    const aiUsage = await db.aiMeter.aggregate({
+    // Real AI cost calculation from aiUsageEvent system
+    const aiUsage = await db.aiUsageEvent.aggregate({
       where: {
         createdAt: {
           gte: monthStart,

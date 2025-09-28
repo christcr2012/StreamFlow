@@ -248,12 +248,12 @@ async function calculateActiveAiModels(): Promise<number> {
   // In production, this would check actual AI model deployments
   // For now, simulate based on AI usage
   try {
-    const recentAiUsage = await db.aiMeter.count({
+    const recentAiUsage = await db.aiUsageEvent.count({
       where: {
         createdAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
       }
     });
-    
+
     // Estimate active models based on usage patterns
     return Math.min(Math.max(Math.floor(recentAiUsage / 100), 1), 5);
   } catch {
@@ -263,12 +263,14 @@ async function calculateActiveAiModels(): Promise<number> {
 
 async function calculateAiTokenUsage(since: Date): Promise<number> {
   try {
-    const usage = await db.aiMeter.aggregate({
+    const usage = await db.aiUsageEvent.aggregate({
       where: { createdAt: { gte: since } },
-      _sum: { tokensUsed: true }
+      _sum: { tokensIn: true, tokensOut: true }
     });
-    
-    return Number(usage._sum.tokensUsed) || 0;
+
+    const tokensIn = Number(usage._sum.tokensIn) || 0;
+    const tokensOut = Number(usage._sum.tokensOut) || 0;
+    return tokensIn + tokensOut;
   } catch {
     return 125000;
   }
@@ -277,22 +279,22 @@ async function calculateAiTokenUsage(since: Date): Promise<number> {
 async function calculateAiCostOptimization(): Promise<number> {
   // Calculate AI cost efficiency
   try {
-    const totalCost = await db.aiMeter.aggregate({
+    const totalCost = await db.aiUsageEvent.aggregate({
       where: {
         createdAt: { gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) }
       },
       _sum: { costUsd: true }
     });
-    
+
     const totalLeads = await db.lead.count({
       where: {
         createdAt: { gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) }
       }
     });
-    
+
     const cost = Number(totalCost._sum.costUsd) || 0;
     const costPerLead = totalLeads > 0 ? cost / totalLeads : 0;
-    
+
     // Optimization score based on cost efficiency
     const targetCostPerLead = 0.05; // $0.05 per lead target
     const efficiency = costPerLead > 0 ? Math.min(targetCostPerLead / costPerLead, 1.0) : 1.0;

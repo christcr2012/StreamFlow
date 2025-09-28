@@ -473,21 +473,19 @@ export class ProviderAuditSystem {
 
     if (context.query) {
       dataAccess.push({
-        table: context.table || 'unknown',
-        operation: context.operation || 'read',
-        recordCount: context.recordCount || 0,
-        fields: context.fields || [],
-        filters: context.filters || {}
+        resourceType: context.table || 'unknown',
+        anonymized: context.anonymized || false,
+        aggregated: context.aggregated || false,
+        tenantSpecific: context.tenantSpecific !== false
       });
     }
 
     if (context.impersonation) {
       dataAccess.push({
-        table: 'user_sessions',
-        operation: 'impersonate',
-        recordCount: 1,
-        fields: ['user_id', 'session_data'],
-        filters: { targetUserId: context.impersonation.targetUserId }
+        resourceType: 'user_sessions',
+        anonymized: false,
+        aggregated: false,
+        tenantSpecific: true
       });
     }
 
@@ -500,29 +498,29 @@ export class ProviderAuditSystem {
     if (context.updates) {
       for (const [field, change] of Object.entries(context.updates)) {
         changes.push({
-          field,
-          oldValue: (change as any).from,
+          changeType: 'update',
+          previousValue: (change as any).from,
           newValue: (change as any).to,
-          changeType: 'update'
+          rollbackPossible: true
         });
       }
     }
 
     if (context.created) {
       changes.push({
-        field: 'record',
-        oldValue: null,
+        changeType: 'create',
+        previousValue: null,
         newValue: context.created,
-        changeType: 'create'
+        rollbackPossible: true
       });
     }
 
     if (context.deleted) {
       changes.push({
-        field: 'record',
-        oldValue: context.deleted,
+        changeType: 'delete',
+        previousValue: context.deleted,
         newValue: null,
-        changeType: 'delete'
+        rollbackPossible: false
       });
     }
 

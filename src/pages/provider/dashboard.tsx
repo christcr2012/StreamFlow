@@ -201,8 +201,8 @@ export default function ProviderDashboard() {
         </div>
 
         {/* Critical Alerts Banner */}
-        {(clientAlerts?.filter(a => a.severity === 'critical').length > 0 || 
-          systemAlerts?.filter(a => a.severity === 'critical').length > 0) && (
+        {((clientAlerts?.filter(a => a.severity === 'critical').length || 0) > 0 ||
+          (systemAlerts?.filter(a => a.severity === 'critical').length || 0) > 0) && (
           <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
             <div className="flex items-center">
               <div className="flex-shrink-0">
@@ -211,14 +211,14 @@ export default function ProviderDashboard() {
               <div className="ml-3">
                 <h3 className="text-sm font-medium text-red-800">Critical Alerts Require Attention</h3>
                 <div className="mt-2 text-sm text-red-700">
-                  {clientAlerts?.filter(a => a.severity === 'critical').length > 0 && (
+                  {(clientAlerts?.filter(a => a.severity === 'critical').length || 0) > 0 && (
                     <span className="mr-4">
-                      {clientAlerts.filter(a => a.severity === 'critical').length} client alerts
+                      {clientAlerts?.filter(a => a.severity === 'critical').length || 0} client alerts
                     </span>
                   )}
-                  {systemAlerts?.filter(a => a.severity === 'critical').length > 0 && (
+                  {(systemAlerts?.filter(a => a.severity === 'critical').length || 0) > 0 && (
                     <span>
-                      {systemAlerts.filter(a => a.severity === 'critical').length} system alerts
+                      {systemAlerts?.filter(a => a.severity === 'critical').length || 0} system alerts
                     </span>
                   )}
                 </div>

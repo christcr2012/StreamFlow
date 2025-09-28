@@ -142,7 +142,7 @@ async function generateClientHealthAlerts(): Promise<ClientHealthAlert[]> {
       }
 
       // 3. Usage Spike Detection
-      const recentAiUsage = await db.aiMeter.aggregate({
+      const recentAiUsage = await db.aiUsageEvent.aggregate({
         where: {
           orgId: org.id,
           createdAt: { gte: sevenDaysAgo }
@@ -150,7 +150,7 @@ async function generateClientHealthAlerts(): Promise<ClientHealthAlert[]> {
         _sum: { costUsd: true }
       });
 
-      const previousAiUsage = await db.aiMeter.aggregate({
+      const previousAiUsage = await db.aiUsageEvent.aggregate({
         where: {
           orgId: org.id,
           createdAt: { 
