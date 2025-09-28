@@ -420,9 +420,9 @@ async function createRoleFromTemplate(req: NextApiRequest, res: NextApiResponse,
         changeReason: `Created from template: ${template.name}`,
         changedBy: user.id,
         isActive: true,
-        permissions: template.permissions,
-        config: { ...template.config, ...customizations },
-        scopeConfig: template.scopeConfig,
+        permissions: template.permissions as any,
+        config: { ...(template.config as any), ...customizations },
+        scopeConfig: template.scopeConfig as any,
       }
     });
 

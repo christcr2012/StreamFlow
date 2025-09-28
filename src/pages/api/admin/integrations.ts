@@ -145,7 +145,7 @@ async function handlePut(req: NextApiRequest, res: NextApiResponse, user: any) {
   }
 
   // Merge config if provided
-  let updatedConfig = existingIntegration.config;
+  let updatedConfig = existingIntegration.config as any;
   if (config) {
     updatedConfig = { ...updatedConfig, ...sanitizeConfig(config) };
   }
@@ -156,7 +156,7 @@ async function handlePut(req: NextApiRequest, res: NextApiResponse, user: any) {
       ...(name && { name }),
       ...(enabled !== undefined && { enabled }),
       ...(config && { config: updatedConfig }),
-      ...(metadata && { metadata: { ...existingIntegration.metadata, ...metadata } }),
+      ...(metadata && { metadata: { ...(existingIntegration.metadata as any), ...metadata } }),
       ...(enabled && !existingIntegration.enabled && { lastSyncAt: new Date() }),
     },
   });
