@@ -60,7 +60,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await prisma.auditLog.create({
       data: {
         orgId: clientId,
-        userId: userId,
+        actorId: userId,
         action: 'CREDITS_ADDED',
         entityType: 'Org',
         entityId: clientId,

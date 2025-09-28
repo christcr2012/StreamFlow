@@ -232,17 +232,18 @@ export class StaffConstraintEnforcer {
 
     // Check if action requires approval
     if (constraints.requireApproval.includes(action)) {
-      const approvalRequest = await this.createApprovalRequest(
-        action,
-        entityType,
-        entityId,
-        constraints.approvalWorkflow
-      );
+      // TODO: Implement ApprovalRequest model - createApprovalRequest call
+      // const approvalRequest = await this.createApprovalRequest(
+      //   action,
+      //   entityType,
+      //   entityId,
+      //   constraints.approvalWorkflow
+      // );
 
       return {
         approved: false,
         requiresApproval: true,
-        approvalId: approvalRequest.id
+        approvalId: 'pending' // approvalRequest.id
       };
     }
 
@@ -517,7 +518,7 @@ export class StaffConstraintEnforcer {
         actorId: this.userId,
         action: `${entityType}_${action}`,
         entityType: entityType,
-        category: 'DATA_ACCESS',
+        // category: 'DATA_ACCESS', // Field doesn't exist in AuditLog model
         details: {
           entityType,
           action,
@@ -542,7 +543,7 @@ export class StaffConstraintEnforcer {
         actorId: this.userId,
         action: `${entityType}_${action}`,
         entityType: entityType,
-        targetId: entityId,
+        entityId: entityId,
         category: 'ACTION_EXECUTION',
         details: {
           action,
@@ -593,15 +594,15 @@ export class StaffConstraintEnforcer {
     // TODO: Implement DeviceAccess model for device tracking
     // Device tracking implementation
     // await db.deviceAccess.upsert({
-      where: { userId_userAgent: { userId: this.userId, userAgent } },
-      update: { 
-        lastSeenAt: new Date(),
-        ipAddress: ip,
-        accessCount: { increment: 1 }
-      },
-      create: {
-        userId: this.userId,
-        userAgent,
+    //   where: { userId_userAgent: { userId: this.userId, userAgent } },
+    //   update: {
+    //     lastSeenAt: new Date(),
+    //     ipAddress: ip,
+    //     accessCount: { increment: 1 }
+    //   },
+    //   create: {
+    //     userId: this.userId,
+    //     userAgent,
     //     ipAddress: ip,
     //     firstSeenAt: new Date(),
     //     lastSeenAt: new Date(),
@@ -613,17 +614,17 @@ export class StaffConstraintEnforcer {
   private async triggerAnomalyAlert(type: string, details: any): Promise<void> {
     // TODO: Implement SecurityIncident model - anomaly alert
     // await db.securityIncident.create({
-      data: {
-        orgId: this.orgId,
-        userId: this.userId,
-        incidentType: 'anomaly_detection',
-    //   violationType: type,
-    //   severity: 'medium',
-    //   description: `Anomalous behavior detected: ${type}`,
-    //   context: details,
-    //   status: 'open',
-    //   detectedAt: new Date()
-    // }
+    //   data: {
+    //     orgId: this.orgId,
+    //     userId: this.userId,
+    //     incidentType: 'anomaly_detection',
+    //     violationType: type,
+    //     severity: 'medium',
+    //     description: `Anomalous behavior detected: ${type}`,
+    //     context: details,
+    //     status: 'open',
+    //     detectedAt: new Date()
+    //   }
     // });
   }
 

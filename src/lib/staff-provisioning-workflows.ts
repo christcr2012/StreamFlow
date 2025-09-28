@@ -636,4 +636,4 @@ export function createStaffProvisioningWorkflowEngine(
   return new StaffProvisioningWorkflowEngine(orgId, operatorId);
 }
 
-export type { RoleAssignmentWorkflow, OnboardingConfig, OffboardingConfig };
+// Types already exported above at their definitions
