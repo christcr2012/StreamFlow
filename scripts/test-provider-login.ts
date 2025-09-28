@@ -16,7 +16,7 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🔍 Testing Provider Account Login...\n');
 
-  const testPassword = 'YourPasswordHere123!';
+  const testPassword = 'Thrillicous01no';
   const providerEmail = 'chris.tcr.2012@gmail.com';
   const devEmail = 'gametcr3@gmail.com';
 
