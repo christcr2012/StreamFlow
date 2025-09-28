@@ -1,11 +1,11 @@
 // src/pages/clients.tsx
 import { useState, useEffect } from "react";
-import { AppShell } from "@/components/AppShell";
+import AppShell from "@/components/AppShell";
 import { useMe } from "@/lib/useMe";
 import { useRouter } from "next/router";
 
 export default function ClientsPage() {
-  const { data: me } = useMe();
+  const { me } = useMe();
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
 

@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useMe } from "@/lib/useMe";
 import { useRouter } from "next/router";
-import { AppShell } from "@/components/AppShell";
+import AppShell from "@/components/AppShell";
 
 export default function AiUsageDashboard() {
-  const { data: me } = useMe();
+  const { me } = useMe();
   const router = useRouter();
   const [usageData, setUsageData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);

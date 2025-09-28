@@ -519,14 +519,13 @@ export class StaffConstraintEnforcer {
         action: `${entityType}_${action}`,
         entityType: entityType,
         // category: 'DATA_ACCESS', // Field doesn't exist in AuditLog model
-        details: {
+        delta: {
           entityType,
           action,
           queryFilters: Object.keys(query),
           constraintsApplied: true
-        },
-        ipAddress: 'system',
-        userAgent: 'constraint_enforcer'
+        }
+        // ipAddress and userAgent fields don't exist in AuditLog model
       }
     });
   }
@@ -544,15 +543,14 @@ export class StaffConstraintEnforcer {
         action: `${entityType}_${action}`,
         entityType: entityType,
         entityId: entityId,
-        category: 'ACTION_EXECUTION',
-        details: {
+        // category: 'ACTION_EXECUTION', // Field doesn't exist in AuditLog model
+        delta: {
           action,
           entityType,
           entityId,
           approvalStatus: approval
-        },
-        ipAddress: 'system',
-        userAgent: 'constraint_enforcer'
+        }
+        // ipAddress and userAgent fields don't exist in AuditLog model
       }
     });
   }

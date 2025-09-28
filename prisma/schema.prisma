@@ -113,10 +113,13 @@
 //
 generator client {
   provider = "prisma-client-js"
-  
+
   // 🚀 ENTERPRISE ENHANCEMENT: Enable advanced Prisma features
   // - Query engine optimization for complex joins
   // - Extended type safety for business logic
+  // - Query logging for performance monitoring
+  log      = ["query", "info", "warn", "error"]
+
   // TODO: Add after upgrading to Prisma 6.x
   // output   = "./generated/client"
   // engineType = "binary"  // Better performance for complex queries
@@ -601,6 +604,12 @@ model User {
   aiActionApprovals   AiActionLog[]     @relation("UserAiActionApprovals")
   
   @@unique([orgId, id])  // Multi-tenant isolation
+
+  // 🚀 PERFORMANCE INDEXES FOR USER QUERIES
+  @@index([email])                   // Login performance (already unique, but explicit)
+  @@index([orgId, role])             // Permission checks & role filtering
+  @@index([orgId, status])           // Active user queries
+  @@index([orgId, createdAt])        // User management queries
 }
 
 /// UserSession tracks active user login sessions for security and session management
@@ -798,11 +807,19 @@ model Lead {
   // duplicates      LeadDuplicate[]   // Duplicate detection results
   
   @@unique([orgId, id])  // Multi-tenant isolation
-  @@index([orgId, createdAt])
-  @@index([orgId, convertedAt])
-  @@index([orgId, status])
-  @@index([orgId, sourceType])
-  @@index([orgId, identityHash])
+
+  // 🚀 PERFORMANCE INDEXES FOR ENTERPRISE SCALE
+  @@index([orgId, createdAt])        // Dashboard queries (existing)
+  @@index([orgId, status])           // Fast lead filtering by status
+  @@index([orgId, status, createdAt]) // Combined status + time queries
+  @@index([email])                   // Duplicate detection & email lookups
+  @@index([phoneE164])               // Phone number lookups
+  @@index([orgId, industryType])     // Industry-specific queries
+  @@index([orgId, aiScore])          // Lead scoring queries
+  @@index([identityHash])            // Duplicate detection
+  @@index([publicId])                // Public API lookups (already unique, but explicit)
+  @@index([orgId, convertedAt])      // Conversion tracking
+  @@index([orgId, sourceType])       // Source analysis
   
   // === ENTERPRISE INDEXES TO ADD ===
   // @@index([orgId, conversionScore])
@@ -868,6 +885,12 @@ model Invoice {
   payments Payment[]
   
   @@unique([orgId, id])  // Multi-tenant isolation
+
+  // 🚀 PERFORMANCE INDEXES FOR INVOICE QUERIES
+  @@index([orgId, status])           // Invoice status filtering
+  @@index([orgId, issuedAt])         // Invoice timeline queries
+  @@index([orgId, customerId])       // Customer invoice history
+  @@index([orgId, status, issuedAt]) // Combined status + time queries
 }
 
 model Payment {
@@ -883,6 +906,11 @@ model Payment {
   org     Org      @relation(fields: [orgId], references: [id])
   
   @@unique([orgId, id])  // Multi-tenant isolation
+
+  // 🚀 PERFORMANCE INDEXES FOR PAYMENT QUERIES
+  @@index([orgId, receivedAt])       // Payment timeline queries
+  @@index([orgId, method])           // Payment method analysis
+  @@index([invoiceId])               // Invoice payment lookup
 }
 
 model Rfp {
@@ -1013,6 +1041,13 @@ model AuditLog {
   createdAt   DateTime @default(now())
 
   org Org @relation(fields: [orgId], references: [id])
+
+  // 🚀 PERFORMANCE INDEXES FOR AUDIT QUERIES
+  @@index([orgId, createdAt])        // Audit timeline queries
+  @@index([actorId, createdAt])      // User activity tracking
+  @@index([orgId, entityType])       // Entity-specific audit logs
+  @@index([orgId, action])           // Action-specific queries
+  @@index([entityType, entityId])    // Entity audit history
 }
 
 enum Role {

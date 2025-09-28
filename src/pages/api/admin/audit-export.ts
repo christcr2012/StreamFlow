@@ -76,7 +76,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     // Get user details for events
-    const userIds = [...new Set(events.map(e => e.userId).filter(Boolean))];
+    const userIds = [...new Set(events.map(e => e.userId).filter(Boolean))] as string[];
     const users = await db.user.findMany({
       where: { id: { in: userIds } },
       select: { id: true, email: true, name: true },
