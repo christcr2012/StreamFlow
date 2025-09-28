@@ -448,6 +448,10 @@ model Org {
   delegationGrants DelegationGrant[] @relation("OrgDelegationGrants")
   aiActionLogs    AiActionLog[]     @relation("OrgAiActionLogs")
 
+  // Webhook System Relations
+  webhookEndpoints WebhookEndpoint[] @relation("OrgWebhooks")
+  webhookEvents    WebhookEvent[]    @relation("OrgWebhookEvents")
+
   /// brandConfig stores white-label brand settings such as name, colors, and logo URL.
   /// It is JSON to allow arbitrary keys like { name: "Mountain Vista", color: "#123456", logoUrl: "https://..." }
   brandConfig Json? @default("{}")
@@ -2509,6 +2513,69 @@ enum IntegrationType {
   API_INTEGRATION  // Third-party API integration
   ACCOUNTING       // QuickBooks, Xero, etc.
   COMMUNICATION    // Slack, Teams, etc.
+}
+
+/// Webhook endpoint configuration for real-time event notifications
+model WebhookEndpoint {
+  id              String   @id @default(cuid())
+  orgId           String
+  url             String
+  secret          String   // HMAC secret for signature verification
+  events          String[] // Array of event types to subscribe to
+  active          Boolean  @default(true)
+  failureCount    Int      @default(0)
+  maxRetries      Int      @default(5)
+  lastDeliveryAt  DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  org         Org               @relation("OrgWebhooks", fields: [orgId], references: [id])
+  deliveries  WebhookDelivery[]
+
+  @@map("webhook_endpoints")
+}
+
+/// Webhook event records for audit and replay
+model WebhookEvent {
+  id        String   @id @default(cuid())
+  type      String   // Event type (e.g., "lead.created")
+  data      Json     // Event payload
+  orgId     String
+  timestamp DateTime @default(now())
+
+  // Relations
+  org         Org               @relation("OrgWebhookEvents", fields: [orgId], references: [id])
+  deliveries  WebhookDelivery[]
+
+  @@map("webhook_events")
+}
+
+/// Webhook delivery tracking with retry logic
+model WebhookDelivery {
+  id                String   @id @default(cuid())
+  webhookEndpointId String
+  eventId           String
+  status            WebhookDeliveryStatus @default(PENDING)
+  httpStatus        Int?
+  responseBody      String?
+  attemptCount      Int      @default(0)
+  nextRetryAt       DateTime?
+  deliveredAt       DateTime?
+  createdAt         DateTime @default(now())
+
+  // Relations
+  webhookEndpoint WebhookEndpoint @relation(fields: [webhookEndpointId], references: [id])
+  event           WebhookEvent    @relation(fields: [eventId], references: [id])
+
+  @@map("webhook_deliveries")
+}
+
+enum WebhookDeliveryStatus {
+  PENDING
+  DELIVERED
+  FAILED
+  RETRYING
 }
 
 enum SupportSessionType {
