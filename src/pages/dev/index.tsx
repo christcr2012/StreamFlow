@@ -9,7 +9,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import DeveloperShell from '@/components/DeveloperShell';
+import DeveloperLayout from '@/components/DeveloperLayout';
 import { useMe } from '@/lib/useMe';
 import useSWR from 'swr';
 
@@ -65,7 +65,7 @@ export default function DeveloperDashboard() {
 
   if (loading) {
     return (
-      <DeveloperShell title="Loading Developer Dashboard...">
+      <DeveloperLayout title="Loading Developer Dashboard...">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="animate-pulse space-y-6">
             <div className="h-8 bg-gray-200 rounded w-1/3"></div>
@@ -76,7 +76,7 @@ export default function DeveloperDashboard() {
             </div>
           </div>
         </div>
-      </DeveloperShell>
+      </DeveloperLayout>
     );
   }
 
@@ -106,7 +106,7 @@ export default function DeveloperDashboard() {
   const formatNumber = (value: number) => value?.toLocaleString() || '0';
 
   return (
-    <DeveloperShell title="Developer Command Center - StreamFlow">
+    <DeveloperLayout title="Developer Command Center - StreamFlow">
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
@@ -269,6 +269,6 @@ export default function DeveloperDashboard() {
           </div>
         )}
       </div>
-    </DeveloperShell>
+    </DeveloperLayout>
   );
 }

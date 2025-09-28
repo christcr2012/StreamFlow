@@ -109,6 +109,7 @@ import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useMe } from '@/lib/useMe';
 import { useRouter } from 'next/router';
+import ProviderLayout from '@/components/ProviderLayout';
 
 type ProviderMetrics = {
   totalClients: number;
@@ -172,8 +173,8 @@ export default function ProviderPortal() {
     }
   };
 
-  // Show loading or unauthorized states
-  if (loading || me?.role !== 'PROVIDER') {
+  // Show loading or unauthorized states (Provider access is now environment-based)
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -186,12 +187,12 @@ export default function ProviderPortal() {
   }
 
   return (
-    <>
+    <ProviderLayout title="Provider Portal">
       <Head>
-        <title>Provider Portal • Mountain Vista</title>
+        <title>Provider Portal • StreamCore</title>
       </Head>
-      
-      <div className="max-w-[1400px] mx-auto space-y-8">
+
+      <div className="p-6 space-y-8">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -462,6 +463,6 @@ export default function ProviderPortal() {
           </div>
         </div>
       </div>
-    </>
+    </ProviderLayout>
   );
 }
