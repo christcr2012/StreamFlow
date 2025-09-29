@@ -229,7 +229,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const developerPassword = process.env.DEVELOPER_PASSWORD;
 
     // Check Provider System Authentication
-    if (providerEmail && providerPassword && emailInput === providerEmail && password === providerPassword) {
+    if (providerEmail && providerPassword && emailInput.toLowerCase() === providerEmail && password === providerPassword) {
       console.log(`🏢 PROVIDER SYSTEM LOGIN: ${emailInput}`);
 
       // Set PROVIDER-SPECIFIC cookie (different from client cookie)
@@ -246,7 +246,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Check Developer System Authentication
-    if (developerEmail && developerPassword && emailInput === developerEmail && password === developerPassword) {
+    if (developerEmail && developerPassword && emailInput.toLowerCase() === developerEmail && password === developerPassword) {
       console.log(`🔧 DEVELOPER SYSTEM LOGIN: ${emailInput}`);
 
       // Set DEVELOPER-SPECIFIC cookie (different from client cookie)
