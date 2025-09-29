@@ -12,10 +12,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const isLoginPage = router.pathname === '/login';
   const isProviderPage = router.pathname.startsWith('/provider');
   const isDeveloperPage = router.pathname.startsWith('/dev');
-  const isSystemPage = isLoginPage || isProviderPage || isDeveloperPage;
+  const isAccountantPage = router.pathname.startsWith('/accountant');
+  const isSystemPage = isLoginPage || isProviderPage || isDeveloperPage || isAccountantPage;
 
   if (isSystemPage) {
-    // System pages (login, provider, developer) without global navigation
+    // System pages (login, provider, developer, accountant) without global navigation
     return (
       <div className="min-h-screen" style={{ background: 'var(--bg-main)', color: 'var(--text-primary)' }}>
         <Component {...pageProps} />

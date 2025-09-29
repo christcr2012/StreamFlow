@@ -17,15 +17,28 @@
 import React, { ReactNode } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { 
-  ChartBarIcon, 
-  CogIcon, 
+import {
+  ChartBarIcon,
+  CogIcon,
   BuildingOfficeIcon,
   CurrencyDollarIcon,
   BellIcon,
   PaintBrushIcon,
   ServerStackIcon,
-  UserGroupIcon
+  UserGroupIcon,
+  TrendingUpIcon,
+  DocumentTextIcon,
+  ShieldCheckIcon,
+  GlobeAltIcon,
+  CreditCardIcon,
+  ChartPieIcon,
+  BoltIcon,
+  CloudIcon,
+  KeyIcon,
+  BeakerIcon,
+  MegaphoneIcon,
+  AcademicCapIcon,
+  ArrowRightOnRectangleIcon
 } from '@heroicons/react/24/outline';
 
 interface ProviderLayoutProps {
@@ -33,16 +46,74 @@ interface ProviderLayoutProps {
   title?: string;
 }
 
-const navigation = [
-  { name: 'Provider Dashboard', href: '/provider', icon: ChartBarIcon },
-  { name: 'Client Management', href: '/provider/clients', icon: BuildingOfficeIcon },
-  { name: 'Revenue Analytics', href: '/provider/revenue', icon: CurrencyDollarIcon },
-  { name: 'Monetization Console', href: '/provider/monetization', icon: CurrencyDollarIcon },
-  { name: 'Client Health', href: '/provider/health', icon: UserGroupIcon },
-  { name: 'System Alerts', href: '/provider/alerts', icon: BellIcon },
-  { name: 'White-Label', href: '/provider/branding', icon: PaintBrushIcon },
-  { name: 'Federation', href: '/provider/federation', icon: ServerStackIcon },
-  { name: 'Provider Settings', href: '/provider/settings', icon: CogIcon },
+const navigationSections = [
+  {
+    title: 'Business Intelligence',
+    items: [
+      { name: 'Provider Dashboard', href: '/provider', icon: ChartBarIcon },
+      { name: 'Revenue Analytics', href: '/provider/revenue', icon: TrendingUpIcon },
+      { name: 'Performance Metrics', href: '/provider/metrics', icon: ChartPieIcon },
+      { name: 'Market Intelligence', href: '/provider/market', icon: GlobeAltIcon },
+      { name: 'Competitive Analysis', href: '/provider/competition', icon: BeakerIcon },
+    ]
+  },
+  {
+    title: 'Client Operations',
+    items: [
+      { name: 'Client Portfolio', href: '/provider/clients', icon: BuildingOfficeIcon },
+      { name: 'Client Health Monitoring', href: '/provider/health', icon: UserGroupIcon },
+      { name: 'Client Onboarding', href: '/provider/onboarding', icon: AcademicCapIcon },
+      { name: 'Client Success Management', href: '/provider/success', icon: TrendingUpIcon },
+      { name: 'Churn Prevention', href: '/provider/retention', icon: ShieldCheckIcon },
+    ]
+  },
+  {
+    title: 'Monetization & Billing',
+    items: [
+      { name: 'Monetization Console', href: '/provider/monetization', icon: CurrencyDollarIcon },
+      { name: 'Pricing Strategy', href: '/provider/pricing', icon: CreditCardIcon },
+      { name: 'Billing Management', href: '/provider/billing', icon: DocumentTextIcon },
+      { name: 'Revenue Optimization', href: '/provider/optimization', icon: BoltIcon },
+      { name: 'Payment Processing', href: '/provider/payments', icon: CreditCardIcon },
+    ]
+  },
+  {
+    title: 'Platform Management',
+    items: [
+      { name: 'White-Label Branding', href: '/provider/branding', icon: PaintBrushIcon },
+      { name: 'Feature Management', href: '/provider/features', icon: BoltIcon },
+      { name: 'API Management', href: '/provider/api', icon: CloudIcon },
+      { name: 'Security Center', href: '/provider/security', icon: ShieldCheckIcon },
+      { name: 'System Alerts', href: '/provider/alerts', icon: BellIcon },
+    ]
+  },
+  {
+    title: 'Federation & Scaling',
+    items: [
+      { name: 'StreamCore Federation', href: '/provider/federation', icon: ServerStackIcon },
+      { name: 'Partner Network', href: '/provider/partners', icon: UserGroupIcon },
+      { name: 'Integration Hub', href: '/provider/integrations', icon: CloudIcon },
+      { name: 'Marketplace', href: '/provider/marketplace', icon: GlobeAltIcon },
+    ]
+  },
+  {
+    title: 'Marketing & Growth',
+    items: [
+      { name: 'Lead Generation', href: '/provider/leads', icon: MegaphoneIcon },
+      { name: 'Campaign Management', href: '/provider/campaigns', icon: BoltIcon },
+      { name: 'A/B Testing', href: '/provider/testing', icon: BeakerIcon },
+      { name: 'Growth Analytics', href: '/provider/growth', icon: TrendingUpIcon },
+    ]
+  },
+  {
+    title: 'System Administration',
+    items: [
+      { name: 'Provider Settings', href: '/provider/settings', icon: CogIcon },
+      { name: 'Access Management', href: '/provider/access', icon: KeyIcon },
+      { name: 'Audit Logs', href: '/provider/audit', icon: DocumentTextIcon },
+      { name: 'System Health', href: '/provider/system-health', icon: ServerStackIcon },
+    ]
+  }
 ];
 
 export default function ProviderLayout({ children, title = 'StreamCore Provider' }: ProviderLayoutProps) {

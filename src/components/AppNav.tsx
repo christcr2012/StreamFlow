@@ -236,21 +236,14 @@ export default function AppNav() {
         };
         
       case "ACCOUNTANT":
+        // ACCOUNTANT users should NEVER see client-side navigation
+        // They have their own completely separate portal at /accountant
+        console.error('🚨 SECURITY VIOLATION: Accountant user should not be using client-side AppNav');
         return {
-          portalName: "Accountant Portal",
-          homeRoute: "/dashboard",
-          leftLinks: [
-            { href: "/dashboard", label: "Financial Dashboard" },
-            { href: "/billing/invoices", label: "Invoices & Billing" },
-            { href: "/worker/payroll", label: "Payroll Management" },
-            { href: "/revenue", label: "Revenue Tracking" },
-          ],
-          rightLinks: [
-            { href: "/reports", label: "Financial Reports" },
-            { href: "/analytics", label: "Financial Analytics" },
-            { href: "/administration", label: "Administration" },
-            { href: "/settings", label: "Settings" },
-          ]
+          portalName: "ERROR - Accountant Portal",
+          homeRoute: "/accountant",
+          leftLinks: [],
+          rightLinks: []
         };
         
       case "OWNER":
