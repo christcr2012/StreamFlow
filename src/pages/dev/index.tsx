@@ -253,6 +253,9 @@ export default function DeveloperDashboard() {
                     { name: "Provider Portal", href: "/provider", description: "Provider federation and analytics", icon: "🏢" },
                     { name: "Accountant Portal", href: "/accountant/reports", description: "Financial reports and exports", icon: "📊" },
                     { name: "Client Portal", href: "/clients", description: "Client management interface", icon: "🤝" },
+                    { name: "System Validation", href: "/dev/system-validation", description: "Complete system health monitoring", icon: "🧪" },
+                    { name: "Final Integration", href: "/dev/final-integration", description: "Cross-portal integration testing", icon: "🚀" },
+                    { name: "Integration Test", href: "/dev/integration-test", description: "System integration analysis", icon: "⚡" },
                   ].map((portal) => (
                     <button
                       key={portal.name}
