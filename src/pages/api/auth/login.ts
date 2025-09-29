@@ -184,6 +184,7 @@ export interface EnterpriseLoginResponse {
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma as db } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { handlePostLoginRedirect } from '@/lib/post-login-redirect';
 
 // 🛡️ CRITICAL SECURITY: Rate Limiting Implementation
 const loginAttempts = new Map<string, { count: number; lastAttempt: number; lockoutUntil?: number }>();
@@ -511,21 +512,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Set cookie and determine redirect based on role
     res.setHeader("Set-Cookie", buildCookie(user.email));
     
-    // Determine appropriate redirect URL based on user role
+    // Determine appropriate redirect URL using post-login redirect system
     let redirectUrl: string;
     if (explicitNext && explicitNext.startsWith("/")) {
       // If there's an explicit next URL, use it
       redirectUrl = explicitNext;
     } else {
-      // Default redirect based on role
-      switch (user.role) {
-        case "STAFF":
-          redirectUrl = "/worker/home";
-          break;
-        default:
-          redirectUrl = "/dashboard";
-          break;
-      }
+      // Use the new post-login redirect system
+      const redirectDestination = await handlePostLoginRedirect(user, 'client', req);
+      redirectUrl = redirectDestination.url;
+
+      console.log(`🔄 Post-login redirect: ${user.email} (${user.role}) -> ${redirectUrl} (${redirectDestination.reason})`);
     }
 
     if (isFormEncoded(req)) {

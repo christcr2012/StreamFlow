@@ -27,18 +27,22 @@ async function handler(req: NextApiRequest, res: NextApiResponse<IndustryTemplat
         const appliedConfig = applyIndustryTemplate(industryId, baseConfig);
         
         // Log the template application
-        await consolidatedAudit.logSystemAdmin({
-          action: 'INDUSTRY_TEMPLATE_APPLIED',
-          entityType: 'CONFIGURATION',
-          entityId: industryId,
-          details: {
+        await consolidatedAudit.logSystemAdmin(
+          'INDUSTRY_TEMPLATE_APPLIED',
+          'provider@streamflow.com',
+          'PROVIDER',
+          'CONFIGURATION',
+          {
+            ipAddress: req.headers['x-forwarded-for'] as string || req.connection?.remoteAddress,
+            userAgent: req.headers['user-agent'] as string
+          },
+          {
             industryId,
             templateApplied: true,
             featuresEnabled: Object.keys(appliedConfig.features || {}).filter(key => appliedConfig.features[key]?.enabled),
             timestamp: new Date().toISOString()
-          },
-          req
-        });
+          }
+        );
 
         return res.status(200).json({
           success: true,
@@ -102,18 +106,22 @@ async function handler(req: NextApiRequest, res: NextApiResponse<IndustryTemplat
       const appliedConfig = applyIndustryTemplate(industryId, baseConfig);
       
       // Log the template preview
-      await consolidatedAudit.logSystemAdmin({
-        action: 'INDUSTRY_TEMPLATE_PREVIEWED',
-        entityType: 'CONFIGURATION',
-        entityId: industryId,
-        details: {
+      await consolidatedAudit.logSystemAdmin(
+        'INDUSTRY_TEMPLATE_PREVIEWED',
+        'provider@streamflow.com',
+        'PROVIDER',
+        'CONFIGURATION',
+        {
+          ipAddress: req.headers['x-forwarded-for'] as string || req.connection?.remoteAddress,
+          userAgent: req.headers['user-agent'] as string
+        },
+        {
           industryId,
           templateName: template.name,
           previewGenerated: true,
           timestamp: new Date().toISOString()
-        },
-        req
-      });
+        }
+      );
 
       return res.status(200).json({
         success: true,
@@ -148,18 +156,22 @@ async function handler(req: NextApiRequest, res: NextApiResponse<IndustryTemplat
     console.error('Industry Templates API Error:', error);
     
     // Log the error
-    await consolidatedAudit.logSystemAdmin({
-      action: 'INDUSTRY_TEMPLATE_ERROR',
-      entityType: 'API',
-      entityId: 'industry-templates',
-      details: {
+    await consolidatedAudit.logSystemAdmin(
+      'INDUSTRY_TEMPLATE_ERROR',
+      'provider@streamflow.com',
+      'PROVIDER',
+      'API',
+      {
+        ipAddress: req.headers['x-forwarded-for'] as string || req.connection?.remoteAddress,
+        userAgent: req.headers['user-agent'] as string
+      },
+      {
         error: error instanceof Error ? error.message : 'Unknown error',
         method: req.method,
         query: req.query,
         timestamp: new Date().toISOString()
-      },
-      req
-    });
+      }
+    );
 
     return res.status(500).json({
       success: false,

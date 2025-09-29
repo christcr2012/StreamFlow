@@ -11,6 +11,7 @@ import { prisma } from '@/lib/prisma';
 import { consolidatedAudit } from '@/lib/consolidated-audit';
 import { withSpaceGuard, SPACE_GUARDS } from '@/lib/space-guards';
 import { applyIndustryTemplate, getIndustryTemplate } from '@/lib/industry-templates';
+import { providerFederation, ProviderFederationService } from '@/lib/provider-federation';
 import crypto from 'crypto';
 
 export interface TenantRegistrationRequest {
@@ -155,6 +156,21 @@ export async function createTenant(
         }
       }
     });
+
+    // 8. Send federation handshake to provider portal (outside transaction)
+    const federationData = ProviderFederationService.createTenantFederationData(
+      org,
+      ownerUser,
+      industryTemplate?.features || {}
+    );
+
+    const federationResult = await providerFederation.sendFederationHandshake(
+      'tenant_created',
+      federationData,
+      idempotencyKey
+    );
+
+    console.log('🔗 Federation handshake result:', federationResult);
 
     return {
       success: true,
