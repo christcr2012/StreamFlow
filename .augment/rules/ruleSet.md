@@ -2,6 +2,7 @@
 type: "always_apply"
 ---
 
+CRITICAL- always leave proper commenting and clear TODO comments
 CRITICAL – System Separation: Enforce strict boundaries so that the Client, Provider, Developer, and Accountant systems are completely separate. The Client portal uses only OWNER/MANAGER/STAFF/EMPLOYEE roles. No PROVIDER or DEVELOPER role may appear in client code. Each portal must have its own UI layout and authentication.
 
 CRITICAL – No Role Mixing: Never mix roles or business logic across systems. For example, client-side code should only reference OWNER, MANAGER, STAFF, EMPLOYEE (and if applicable an ACCOUNTANT role for client finances), and must not reference any provider or developer logic. Provider/developer/accountant code must not include client RBAC.
