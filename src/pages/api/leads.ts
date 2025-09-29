@@ -145,6 +145,7 @@ export type AdvancedLeadSearch = {
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma as db } from "@/lib/prisma";
 import { assertPermission, getOrgIdFromReq, PERMS } from "@/lib/rbac";
+import { withTenantScope, TenantScopedPrisma } from "@/lib/tenant-scope";
 import { LeadSource, LeadStatus, Prisma } from "@prisma/client";
 import crypto from "node:crypto";
 
@@ -181,7 +182,7 @@ function leadPublicId(): string {
   return `LEAD_${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse, tenantPrisma: TenantScopedPrisma) {
   try {
     if (req.method !== "POST") {
       res.setHeader("Allow", "POST");
@@ -241,9 +242,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const publicId = leadPublicId();
     const ih = identityHash({ email, phoneE164: phoneE164 ?? null, company, name: contactName });
 
-    const lead = await db.lead.create({
+    const lead = await tenantPrisma.create('lead', {
       data: {
-        orgId,
         publicId,
         sourceType: srcType,
         identityHash: ih,
@@ -270,7 +270,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         status,
         convertedAt: status === LeadStatus.CONVERTED ? new Date() : null, // if you want auto-set on converted
       },
-      select: { id: true, publicId: true },
+      select: { id: true, publicId: true }
     });
 
     return res.status(200).json({ ok: true, lead });
@@ -280,3 +280,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(500).json({ ok: false, error: msg });
   }
 }
+
+// Apply tenant scoping to ensure all queries include orgId
+export default withTenantScope(handler);

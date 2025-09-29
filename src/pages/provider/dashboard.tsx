@@ -22,6 +22,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import type { GetServerSidePropsContext } from 'next';
 import ProviderShell from '@/components/ProviderShell';
 import { useMe } from '@/lib/useMe';
 import useSWR from 'swr';
@@ -418,4 +419,18 @@ export default function ProviderDashboard() {
       </div>
     </ProviderShell>
   );
+}
+
+// Server-side page guard - only allow provider space
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { withPageGuard, SPACE_GUARDS } = await import('@/lib/space-guards');
+
+  const guardResult = await withPageGuard(context, SPACE_GUARDS.PROVIDER_ONLY);
+  if (guardResult) {
+    return guardResult;
+  }
+
+  return {
+    props: {}
+  };
 }

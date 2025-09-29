@@ -38,6 +38,11 @@ export type MeResponse =
         isOwner: boolean;
         isProvider: boolean;
         perms: string[];       // e.g. ["billing:manage","lead:read"]
+        // New fields for GitHub issue #1
+        tenantId: string | null;  // Equivalent to orgId for multi-tenant isolation
+        space: "client" | "provider" | "developer" | "accountant" | null; // Current user interface space
+        roles: string[];       // Alias for rbacRoles for consistency
+        orgId: string | null;  // Direct access to organization ID
       };
       org?: OrgShape; // optional on purpose
     }

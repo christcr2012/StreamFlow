@@ -43,6 +43,18 @@ function validateBrandConfig(rawBrandConfig: unknown): BrandConfig {
 }
 
 /**
+ * Determine the current user interface space based on authentication context
+ */
+function determineUserSpace(req: NextApiRequest): "client" | "provider" | "developer" | "accountant" | null {
+  // Check authentication cookies to determine which space the user is in
+  if (req.cookies.ws_provider) return "provider";
+  if (req.cookies.ws_developer) return "developer";
+  if (req.cookies.ws_accountant) return "accountant";
+  if (req.cookies.ws_user) return "client";
+  return null;
+}
+
+/**
  * Compute effective permission codes for a user:
  *  - Union of all permissions from RBAC roles assigned to the user
  *  - Plus legacy fallbacks based on baseRole (OWNER/MANAGER/STAFF)
@@ -176,7 +188,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         // Get proper RBAC permissions for this specific dev role (not bypass)
         const codes = await computePermCodes('dev-user-id', devRole);
         const perms = Array.from(codes).sort();
-        
+        const currentSpace = determineUserSpace(req);
+        const devOrgId = process.env.DEV_ORG_ID || null;
+
         return res.status(200).json({
           ok: true,
           user: {
@@ -187,10 +201,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             isOwner: devRole === "OWNER",
             isProvider: devRole === "PROVIDER",
             perms, // Proper role-based permissions
+            // New fields for GitHub issue #1
+            tenantId: devOrgId, // Use DEV_ORG_ID as tenantId for dev users
+            space: currentSpace,
+            roles: [devRole.toLowerCase()], // Alias for rbacRoles
+            orgId: devOrgId,
           },
-          ...(process.env.DEV_ORG_ID ? {
+          ...(devOrgId ? {
             org: {
-              id: process.env.DEV_ORG_ID,
+              id: devOrgId,
               name: "Dev Test Organization",
               featureFlags: { allFeaturesEnabled: true },
               brandConfig: { name: "WorkStream Dev" }
@@ -242,6 +261,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     // Effective permission codes
     const codes = await computePermCodes(user.id, user.role);
     const perms = Array.from(codes).sort();
+    const currentSpace = determineUserSpace(req);
 
     return res.status(200).json({
       ok: true,
@@ -253,6 +273,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         isOwner,
         isProvider,
         perms,
+        // New fields for GitHub issue #1
+        tenantId: user.orgId, // tenantId is equivalent to orgId in our multi-tenant system
+        space: currentSpace,
+        roles: rbacSlugs, // Alias for rbacRoles for consistency
+        orgId: user.orgId,
       },
       ...(orgPayload ? { org: orgPayload } : {}),
     });

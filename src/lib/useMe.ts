@@ -15,6 +15,11 @@ export interface CurrentUser {
   isOwner: boolean;
   isProvider: boolean;
   perms: string[]; // <- IMPORTANT: effective permission codes (e.g. "billing:manage")
+  // New fields for GitHub issue #1
+  tenantId: string | null;  // Equivalent to orgId for multi-tenant isolation
+  space: "client" | "provider" | "developer" | "accountant" | null; // Current user interface space
+  roles: string[];       // Alias for rbacRoles for consistency
+  orgId: string | null;  // Direct access to organization ID
 }
 
 type MeState =
@@ -50,6 +55,11 @@ export function useMe() {
         isOwner: !!u.isOwner,
         isProvider: !!u.isProvider,
         perms: Array.isArray(u.perms) ? u.perms : [], // <- the new field
+        // New fields for GitHub issue #1
+        tenantId: u.tenantId ?? null,
+        space: u.space ?? null,
+        roles: Array.isArray(u.roles) ? u.roles : Array.isArray(u.rbacRoles) ? u.rbacRoles : [], // Fallback to rbacRoles
+        orgId: u.orgId ?? null,
       };
 
       setState({ me, org, loading: false, error: null });

@@ -186,131 +186,142 @@ export default function AppNav() {
   // Pull current user for portal routing
   const { me } = useMe();
   const { pathname } = useRouter();
-  const userRole = me?.role;
-  
+  const userSpace = me?.space; // Use new space field from GitHub issue #1
+  const userRole = me?.role; // Use role field for role-specific logic
+
   // Mobile navigation state
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
+
   // Close mobile menu when clicking a nav item
   const handleMobileNavClick = () => {
     setIsMobileMenuOpen(false);
   };
 
-  // Define portal-specific navigation based on user role
+  // Define portal-specific navigation based on user space (GitHub issue #4)
   const getPortalNavigation = () => {
-    switch (userRole) {
-      case "PROVIDER":
+    // Only render navigation for current space - prevents cross-space access
+    switch (userSpace) {
+      case "provider":
         return {
           portalName: "Provider Portal",
-          homeRoute: "/provider",
+          homeRoute: "/provider/dashboard",
           leftLinks: [
-            { href: "/provider", label: "Dashboard" },
+            { href: "/provider/dashboard", label: "Dashboard" },
             { href: "/provider/clients", label: "Client Management" },
-            { href: "/leads", label: "Lead Pipeline" },
-            { href: "/provider/billing", label: "Billing & Revenue" },
-          ],
-          rightLinks: [
             { href: "/provider/analytics", label: "Analytics" },
-            { href: "/provider/revenue", label: "Revenue Reports" },
+            { href: "/provider/billing", label: "Billing" },
             { href: "/provider/settings", label: "Settings" },
-          ]
-        };
-      
-      case "STAFF":
-        return {
-          portalName: "Employee Portal",
-          homeRoute: "/worker/home",
-          leftLinks: [
-            { href: "/worker/home", label: "Home" },
-            { href: "/worker/clock", label: "Time Clock" },
-            { href: "/worker/jobs", label: "My Jobs" },
-            { href: "/schedule", label: "My Schedule" },
-            { href: "/workforce", label: "Team" },
           ],
           rightLinks: [
-            { href: "/worker/training", label: "Training" },
-            { href: "/reports", label: "Reports" },
-            { href: "/worker/payroll", label: "Payroll" },
-            { href: "/worker/profile", label: "Profile" },
+            { href: "/provider/federation", label: "Federation" },
+            { href: "/provider/audit", label: "Audit Logs" },
+            { href: "/provider/support", label: "Support" },
           ]
         };
-        
-      case "ACCOUNTANT":
-        // ACCOUNTANT users should NEVER see client-side navigation
-        // They have their own completely separate portal at /accountant
-        console.error('🚨 SECURITY VIOLATION: Accountant user should not be using client-side AppNav');
+
+      case "developer":
         return {
-          portalName: "ERROR - Accountant Portal",
+          portalName: "Developer Portal",
+          homeRoute: "/dev/system",
+          leftLinks: [
+            { href: "/dev/system", label: "System Status" },
+            { href: "/dev/database", label: "Database" },
+            { href: "/dev/logs", label: "Logs" },
+            { href: "/dev/testing", label: "Testing" },
+          ],
+          rightLinks: [
+            { href: "/dev/metrics", label: "Metrics" },
+            { href: "/dev/deployment", label: "Deployment" },
+          ]
+        };
+
+      case "accountant":
+        return {
+          portalName: "Accountant Portal",
           homeRoute: "/accountant",
-          leftLinks: [],
-          rightLinks: []
-        };
-        
-      case "OWNER":
-        // Check if this is a dev testing scenario - if accessing dev page or has dev intent
-        if (pathname.startsWith('/dev')) {
-          return {
-            portalName: "Dev Center",
-            homeRoute: "/dev",
-            leftLinks: [
-              { href: "/dev", label: "Dev Home" },
-            ],
-            rightLinks: [
-              { href: "/dashboard", label: "→ Admin Portal" },
-              { href: "/worker/home", label: "→ Employee Portal" },
-              { href: "/provider", label: "→ Provider Portal" },
-              { href: "/dashboard", label: "→ Accountant Portal" },
-            ]
-          };
-        }
-        // Premium Command Center for OWNER
-        return {
-          portalName: "Business Command Center",
-          homeRoute: "/dashboard",
-          // Core Business Functions (Primary Navigation)
           leftLinks: [
-            { href: "/dashboard", label: "Command Center" },
-            { href: "/leads", label: "Lead Management" },
-            { href: "/jobs", label: "Job Management" },
-            { href: "/workforce", label: "Workforce" },
-            { href: "/projects", label: "Projects" },
-            { href: "/revenue", label: "Revenue & Billing" },
-            { href: "/clients", label: "Client Portal" },
+            { href: "/accountant", label: "Dashboard" },
+            { href: "/accountant/reports", label: "Financial Reports" },
+            { href: "/accountant/reconciliation", label: "Reconciliation" },
           ],
-          // Analytics, Reports & Administration (Secondary Navigation)
           rightLinks: [
-            { href: "/analytics", label: "Analytics" },
-            { href: "/reports", label: "Reports" },
-            { href: "/documents", label: "Documents" },
-            { href: "/ai-usage", label: "AI Usage" },
-            { href: "/administration", label: "Administration" },
-            { href: "/profile", label: "Profile" },
+            { href: "/accountant/audit", label: "Audit Trail" },
           ]
         };
-        
-      case "MANAGER":
+
+      case "client":
       default:
-        return {
-          portalName: "Manager Portal",
-          homeRoute: "/dashboard",
-          // Core Management Functions
-          leftLinks: [
-            { href: "/dashboard", label: "Dashboard" },
-            { href: "/leads", label: "Lead Management" },
-            { href: "/jobs", label: "Job Management" },
-            { href: "/schedule", label: "Scheduling" },
-            { href: "/team", label: "Team Management" },
-            { href: "/clients", label: "Client Relations" },
-          ],
-          // Reports & Administration
-          rightLinks: [
-            { href: "/analytics", label: "Analytics" },
-            { href: "/billing/invoices", label: "Invoices" },
-            { href: "/reports", label: "Reports" },
-            { href: "/documents", label: "Documents" },
-            { href: "/settings", label: "Settings" },
-          ]
-        };
+        // Client space navigation based on user role
+        switch (userRole) {
+          case "STAFF":
+            return {
+              portalName: "Employee Portal",
+              homeRoute: "/worker/home",
+              leftLinks: [
+                { href: "/worker/home", label: "Home" },
+                { href: "/worker/clock", label: "Time Clock" },
+                { href: "/worker/jobs", label: "My Jobs" },
+                { href: "/schedule", label: "My Schedule" },
+                { href: "/workforce", label: "Team" },
+              ],
+              rightLinks: [
+                { href: "/worker/training", label: "Training" },
+                { href: "/reports", label: "Reports" },
+                { href: "/worker/payroll", label: "Payroll" },
+                { href: "/worker/profile", label: "Profile" },
+              ]
+            };
+
+          case "OWNER":
+            // Premium Command Center for OWNER
+            return {
+              portalName: "Business Command Center",
+              homeRoute: "/dashboard",
+              // Core Business Functions (Primary Navigation)
+              leftLinks: [
+                { href: "/dashboard", label: "Command Center" },
+                { href: "/leads", label: "Lead Management" },
+                { href: "/jobs", label: "Job Management" },
+                { href: "/workforce", label: "Workforce" },
+                { href: "/projects", label: "Projects" },
+                { href: "/revenue", label: "Revenue & Billing" },
+                { href: "/clients", label: "Client Portal" },
+              ],
+              // Analytics, Reports & Administration (Secondary Navigation)
+              rightLinks: [
+                { href: "/analytics", label: "Analytics" },
+                { href: "/reports", label: "Reports" },
+                { href: "/documents", label: "Documents" },
+                { href: "/ai-usage", label: "AI Usage" },
+                { href: "/administration", label: "Administration" },
+                { href: "/profile", label: "Profile" },
+              ]
+            };
+
+          case "MANAGER":
+          default:
+            return {
+              portalName: "Manager Portal",
+              homeRoute: "/dashboard",
+              // Core Management Functions
+              leftLinks: [
+                { href: "/dashboard", label: "Dashboard" },
+                { href: "/leads", label: "Lead Management" },
+                { href: "/jobs", label: "Job Management" },
+                { href: "/schedule", label: "Scheduling" },
+                { href: "/team", label: "Team Management" },
+                { href: "/clients", label: "Client Relations" },
+              ],
+              // Reports & Administration
+              rightLinks: [
+                { href: "/analytics", label: "Analytics" },
+                { href: "/billing/invoices", label: "Invoices" },
+                { href: "/reports", label: "Reports" },
+                { href: "/documents", label: "Documents" },
+                { href: "/settings", label: "Settings" },
+              ]
+            };
+        }
     }
   };
 

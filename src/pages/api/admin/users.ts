@@ -3,9 +3,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma as db } from "@/lib/prisma";
 import { assertPermission, PERMS } from "@/lib/rbac";
 import { requireAuth, auditLog, generateTemporaryPassword } from "@/lib/auth-helpers";
+import { withSpaceGuard, SPACE_GUARDS } from "@/lib/space-guards";
 import bcrypt from "bcryptjs";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
     return handleGetUsers(req, res);
   } else if (req.method === "POST") {
@@ -278,3 +279,6 @@ async function handleDeleteUser(req: NextApiRequest, res: NextApiResponse) {
     res.status(500).json({ error: "Failed to delete user" });
   }
 }
+
+// Apply space guard - only allow client space with OWNER role for admin user management
+export default withSpaceGuard(SPACE_GUARDS.OWNER_ONLY)(handler);
