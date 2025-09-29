@@ -39,7 +39,8 @@ import {
   BeakerIcon,
   MegaphoneIcon,
   AcademicCapIcon,
-  ArrowRightOnRectangleIcon
+  ArrowRightOnRectangleIcon,
+  SwatchIcon
 } from '@heroicons/react/24/outline';
 
 interface ProviderLayoutProps {
@@ -111,6 +112,7 @@ const navigationSections = [
     title: 'System Administration',
     items: [
       { name: 'Provider Settings', href: '/provider/settings', icon: CogIcon },
+      { name: 'Theme Management', href: '/provider/themes', icon: SwatchIcon },
       { name: 'Access Management', href: '/provider/access', icon: KeyIcon },
       { name: 'Audit Logs', href: '/provider/audit', icon: DocumentTextIcon },
       { name: 'System Health', href: '/provider/system-health', icon: ServerStackIcon },

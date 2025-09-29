@@ -458,6 +458,10 @@ model Org {
   // Backup System Relations
   backups          Backup[]          @relation("OrgBackups")
 
+  // Theme System Relations
+  themeConfigs     ThemeConfig[]     @relation("OrgThemeConfigs")
+  themeUsage       ThemeUsage[]      @relation("OrgThemeUsage")
+
   /// brandConfig stores white-label brand settings such as name, colors, and logo URL.
   /// It is JSON to allow arbitrary keys like { name: "Mountain Vista", color: "#123456", logoUrl: "https://..." }
   brandConfig Json? @default("{}")
@@ -465,7 +469,7 @@ model Org {
   /// settingsJson stores arbitrary organization-level settings.  This can be used
   /// by owners to configure API keys or other preferences needed at runtime.
   settingsJson Json? @default("{}")
-  
+
   // Multi-Industry Framework Relations
   industryPack IndustryPack? @relation("OrgIndustryPack", fields: [industryType], references: [industryCode])
 }
@@ -612,6 +616,9 @@ model User {
   grantedDelegations  DelegationGrant[] @relation("UserGrantedDelegations")
   aiActionRequests    AiActionLog[]     @relation("UserAiActionRequests")
   aiActionApprovals   AiActionLog[]     @relation("UserAiActionApprovals")
+
+  // Theme System Relations
+  themeUsage          ThemeUsage[]      @relation("UserThemeUsage")
   
   @@unique([orgId, id])  // Multi-tenant isolation
 
@@ -722,6 +729,79 @@ model ProviderAuditLog {
   @@index([action])
   @@index([timestamp])
   @@index([isRecoveryMode])
+}
+
+/*
+=== ENTERPRISE THEME SYSTEM ===
+
+Theme configuration and customization system for the StreamFlow platform.
+Supports 6 cutting-edge themes with provider-level management and owner-only client customization.
+
+FEATURES:
+- Real-time theme switching
+- Provider-level theme management
+- Owner-only client customization
+- Brand asset integration
+- Theme inheritance and overrides
+*/
+
+// Theme Configuration Model
+model ThemeConfig {
+  id              String   @id @default(cuid())
+
+  // Theme Identity
+  themeId         String   // References theme-definitions.ts theme IDs
+  name            String
+  description     String?
+  category        String   // futuristic, professional, luxury, tactical, cosmic
+
+  // Ownership and Scope
+  orgId           String?  // If set, this is an org-specific theme override
+  isGlobal        Boolean  @default(false) // Provider-managed global themes
+  isActive        Boolean  @default(true)
+
+  // Theme Customization
+  customColors    Json?    // Override specific colors from base theme
+  customPatterns  Json?    // Override patterns
+  customTypography Json?   // Override typography settings
+  brandAssets     Json?    // Logo URLs, brand colors, etc.
+
+  // Metadata
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  createdBy       String?  // User ID who created this theme config
+
+  // Relationships
+  org             Org?     @relation("OrgThemeConfigs", fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+  @@index([themeId])
+  @@index([isGlobal])
+  @@index([isActive])
+  @@unique([orgId, themeId]) // One theme config per org per theme
+}
+
+// Theme Usage Tracking
+model ThemeUsage {
+  id              String   @id @default(cuid())
+
+  // Usage Context
+  orgId           String
+  themeId         String
+  userId          String?  // User who applied the theme
+
+  // Usage Details
+  appliedAt       DateTime @default(now())
+  sessionId       String?
+  userAgent       String?
+
+  // Relationships
+  org             Org      @relation("OrgThemeUsage", fields: [orgId], references: [id], onDelete: Cascade)
+  user            User?    @relation("UserThemeUsage", fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([orgId])
+  @@index([themeId])
+  @@index([appliedAt])
 }
 
 /*
