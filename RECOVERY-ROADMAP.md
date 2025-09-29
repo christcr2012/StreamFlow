@@ -16,18 +16,32 @@
 
 #### **🏢 CLIENT-SIDE SYSTEM** (StreamFlow Business OS)
 **Purpose**: Serves individual service businesses (Mountain Vista, future clients)
-**Users**: Business owners, managers, staff, accountants, employees
+**Users**: Business owners, managers, staff, employees
 **Authentication**: Database-driven with RBAC
-**Roles**: OWNER, MANAGER, STAFF, ACCOUNTANT, EMPLOYEE
-**Features**: Lead management, CRM, accounting, job tracking, employee portal
+**Roles**: OWNER, MANAGER, STAFF, EMPLOYEE
+**Features**: Lead management, CRM, operations, job tracking, employee portal
 
 ```
 CLIENT SYSTEM ROLES (ONLY):
 ├── OWNER - Full business control
 ├── MANAGER - Operations management
 ├── STAFF - Day-to-day operations
-├── ACCOUNTANT - Financial access only
 └── EMPLOYEE - Field work and time tracking
+```
+
+#### **💰 ACCOUNTANT SYSTEM** (Third-Party Financial Professionals)
+**Purpose**: Separate system for external accounting professionals (CPAs, bookkeepers, tax professionals)
+**Users**: Third-party accountants, CPAs, bookkeepers, tax specialists
+**Authentication**: Environment-based (separate from client system)
+**Access**: Financial data, accounting integrations, compliance tools only
+**Features**: QuickBooks/Xero integration, financial reporting, tax preparation, audit support
+
+```
+ACCOUNTANT SYSTEM ACCESS:
+├── Financial Operations - Full accounting suite access
+├── Integration Management - QuickBooks, Xero, banking connections
+├── Compliance Tools - GAAP/IFRS, audit preparation, tax filings
+└── Client Financial Data - Read/write access to assigned client financials
 ```
 
 #### **🎛️ PROVIDER-SIDE SYSTEM** (StreamCore Management)

@@ -149,8 +149,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       owner: process.env.DEV_OWNER_EMAIL?.toLowerCase() || 'owner@test.com',
       manager: process.env.DEV_MANAGER_EMAIL?.toLowerCase() || 'manager@test.com',
       staff: process.env.DEV_STAFF_EMAIL?.toLowerCase() || 'staff@test.com',
-      accountant: process.env.DEV_ACCOUNTANT_EMAIL?.toLowerCase() || 'accountant@test.com',
-      provider: process.env.DEV_PROVIDER_EMAIL?.toLowerCase() || 'provider@test.com',
     } as const;
     const DEV_USER_EMAIL = process.env.DEV_USER_EMAIL?.toLowerCase() || null;
 

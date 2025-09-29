@@ -35,10 +35,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           enabled: ENV.allowDevUsers,
           accounts: ENV.allowDevUsers ? [
             'owner@test.com',
-            'manager@test.com', 
-            'staff@test.com',
-            'accountant@test.com',
-            'provider@test.com'
+            'manager@test.com',
+            'staff@test.com'
           ] : [],
         }
       });

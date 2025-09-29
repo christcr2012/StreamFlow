@@ -262,6 +262,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).json({ ok: true, redirectUrl });
     }
 
+    // Check Accountant System Authentication
+    const accountantEmail = process.env.ACCOUNTANT_EMAIL?.toLowerCase();
+    const accountantPassword = process.env.ACCOUNTANT_PASSWORD;
+    if (accountantEmail && accountantPassword && emailInput.toLowerCase() === accountantEmail && password === accountantPassword) {
+      console.log(`💰 ACCOUNTANT SYSTEM LOGIN: ${emailInput}`);
+
+      // Set ACCOUNTANT-SPECIFIC cookie (different from all other cookies)
+      let accountantCookie = `ws_accountant=${encodeURIComponent(emailInput)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`;
+      if (process.env.NODE_ENV === "production") accountantCookie += "; Secure";
+      res.setHeader("Set-Cookie", accountantCookie);
+
+      const redirectUrl = '/accountant';
+      if (isFormEncoded(req)) {
+        res.setHeader("Location", redirectUrl);
+        return res.status(303).end();
+      }
+      return res.status(200).json({ ok: true, redirectUrl });
+    }
+
     // 🚨 TEMP DEV CODE - Check dev test users (work with any password)
     const { allowDevUsers } = require('../../../lib/environment').ENV;
     if (allowDevUsers) {
@@ -269,7 +288,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         owner: process.env.DEV_OWNER_EMAIL?.toLowerCase() || 'owner@test.com',
         manager: process.env.DEV_MANAGER_EMAIL?.toLowerCase() || 'manager@test.com',
         staff: process.env.DEV_STAFF_EMAIL?.toLowerCase() || 'staff@test.com',
-        accountant: process.env.DEV_ACCOUNTANT_EMAIL?.toLowerCase() || 'accountant@test.com',
       };
 
       for (const [role, devEmail] of Object.entries(DEV_USERS)) {

@@ -13,7 +13,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const cookies = [
     `ws_user=; ${cookieOptions}`,      // Client system cookie
     `ws_provider=; ${cookieOptions}`,  // Provider system cookie
-    `ws_developer=; ${cookieOptions}`  // Developer system cookie
+    `ws_developer=; ${cookieOptions}`, // Developer system cookie
+    `ws_accountant=; ${cookieOptions}` // Accountant system cookie
   ];
 
   res.setHeader("Set-Cookie", cookies);

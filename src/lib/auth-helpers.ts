@@ -136,7 +136,6 @@ const DEV_USERS = {
   owner: process.env.DEV_OWNER_EMAIL?.toLowerCase() || 'owner@test.com',
   manager: process.env.DEV_MANAGER_EMAIL?.toLowerCase() || 'manager@test.com',
   staff: process.env.DEV_STAFF_EMAIL?.toLowerCase() || 'staff@test.com',
-  accountant: process.env.DEV_ACCOUNTANT_EMAIL?.toLowerCase() || 'accountant@test.com',
   employee: process.env.DEV_EMPLOYEE_EMAIL?.toLowerCase() || 'employee@test.com',
 } as const;
 

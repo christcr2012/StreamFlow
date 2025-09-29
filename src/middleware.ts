@@ -176,13 +176,15 @@ export function middleware(req: NextRequest) {
   const clientCookie = req.cookies.get("ws_user")?.value;
   const providerCookie = decodeURIComponent(req.cookies.get("ws_provider")?.value || '');
   const developerCookie = decodeURIComponent(req.cookies.get("ws_developer")?.value || '');
+  const accountantCookie = decodeURIComponent(req.cookies.get("ws_accountant")?.value || '');
 
   // Define system boundaries
   const providerEmail = process.env.PROVIDER_EMAIL?.toLowerCase();
   const developerEmail = process.env.DEVELOPER_EMAIL?.toLowerCase();
+  const accountantEmail = process.env.ACCOUNTANT_EMAIL?.toLowerCase();
 
   // Determine user type based on WHICH cookie is present
-  let userType: 'PROVIDER' | 'DEVELOPER' | 'CLIENT' | 'UNAUTHENTICATED' = 'UNAUTHENTICATED';
+  let userType: 'PROVIDER' | 'DEVELOPER' | 'CLIENT' | 'ACCOUNTANT' | 'UNAUTHENTICATED' = 'UNAUTHENTICATED';
 
   if (providerCookie && providerEmail && providerCookie.toLowerCase() === providerEmail) {
     userType = 'PROVIDER';
@@ -190,6 +192,9 @@ export function middleware(req: NextRequest) {
   } else if (developerCookie && developerEmail && developerCookie.toLowerCase() === developerEmail) {
     userType = 'DEVELOPER';
     console.log(`🔧 DEVELOPER ACCESS: ${developerCookie}`);
+  } else if (accountantCookie && accountantEmail && accountantCookie.toLowerCase() === accountantEmail) {
+    userType = 'ACCOUNTANT';
+    console.log(`💰 ACCOUNTANT ACCESS: ${accountantCookie}`);
   } else if (clientCookie) {
     userType = 'CLIENT';
     console.log(`👤 CLIENT ACCESS: ${clientCookie}`);
@@ -198,6 +203,7 @@ export function middleware(req: NextRequest) {
   // Define route systems
   const isProviderRoute = pathname.startsWith('/provider');
   const isDeveloperRoute = pathname.startsWith('/dev');
+  const isAccountantRoute = pathname.startsWith('/accountant');
   const isClientRoute = PROTECTED_PREFIXES.some((p) => pathname.startsWith(p));
 
   // CRITICAL SECURITY: Block all cross-system access
@@ -217,6 +223,14 @@ export function middleware(req: NextRequest) {
       url.searchParams.set("error", "developer_access_denied");
       return NextResponse.redirect(url);
     }
+  } else if (isAccountantRoute) {
+    if (userType !== 'ACCOUNTANT') {
+      console.warn(`🚨 SECURITY VIOLATION: ${userType} user attempted accountant access: ${pathname}`);
+      const url = req.nextUrl.clone();
+      url.pathname = "/login";
+      url.searchParams.set("error", "accountant_access_denied");
+      return NextResponse.redirect(url);
+    }
   } else if (isClientRoute) {
     if (userType !== 'CLIENT') {
       console.warn(`🚨 SECURITY VIOLATION: ${userType} user attempted client access: ${pathname}`);
@@ -227,6 +241,8 @@ export function middleware(req: NextRequest) {
         url.pathname = "/provider";
       } else if (userType === 'DEVELOPER') {
         url.pathname = "/dev";
+      } else if (userType === 'ACCOUNTANT') {
+        url.pathname = "/accountant";
       } else {
         url.pathname = "/login";
         url.searchParams.set("next", pathname);
