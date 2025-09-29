@@ -1,48 +1,156 @@
 // src/pages/dev/database.tsx
 
 /**
- * 🗄️ DATABASE ADMIN - Developer Tools
- * 
- * Database administration and management interface
+ * 🗄️ DATABASE ADMINISTRATION DASHBOARD
+ *
+ * Comprehensive database management and monitoring tools.
+ * Advanced database administration for developers.
+ *
+ * FEATURES:
+ * - Database performance monitoring
+ * - Query optimization tools
+ * - Schema management
+ * - Data migration tools
+ * - Backup and restore
+ * - Connection pool monitoring
  */
 
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import DeveloperLayout from '@/components/DeveloperLayout';
+import useSWR from 'swr';
 
-export default function DatabaseAdmin() {
+const fetcher = (url: string) => fetch(url).then(r => r.json());
+
+interface DatabaseMetrics {
+  connectionCount: number;
+  activeQueries: number;
+  slowQueries: number;
+  cacheHitRatio: number;
+  diskUsage: number;
+  indexEfficiency: number;
+  replicationLag: number;
+  transactionsPerSecond: number;
+}
+
+interface QueryInfo {
+  id: string;
+  query: string;
+  duration: number;
+  status: 'running' | 'completed' | 'failed';
+  startTime: string;
+  database: string;
+}
+
+export default function DatabasePage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('overview');
+  const [selectedQuery, setSelectedQuery] = useState<string | null>(null);
+  const [sqlQuery, setSqlQuery] = useState('');
+  const [queryResults, setQueryResults] = useState<any>(null);
+  const [isExecuting, setIsExecuting] = useState(false);
 
-  const tabs = [
-    { id: 'overview', name: 'Overview', icon: '📊' },
-    { id: 'tables', name: 'Tables', icon: '🗂️' },
-    { id: 'queries', name: 'Queries', icon: '🔍' },
-    { id: 'migrations', name: 'Migrations', icon: '🔄' },
-  ];
+  // Fetch database metrics
+  const { data: metricsData } = useSWR('/api/dev/database/metrics', fetcher, {
+    refreshInterval: 5000
+  });
+
+  const { data: queriesData } = useSWR('/api/dev/database/queries', fetcher);
+  const { data: schemasData } = useSWR('/api/dev/database/schemas', fetcher);
+
+  const metrics: DatabaseMetrics = metricsData?.metrics || {
+    connectionCount: 0, activeQueries: 0, slowQueries: 0, cacheHitRatio: 0,
+    diskUsage: 0, indexEfficiency: 0, replicationLag: 0, transactionsPerSecond: 0
+  };
+
+  const queries: QueryInfo[] = queriesData?.queries || [];
+  const schemas = schemasData?.schemas || [];
+
+  const executeQuery = async () => {
+    if (!sqlQuery.trim()) return;
+
+    setIsExecuting(true);
+    try {
+      const response = await fetch('/api/dev/database/execute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: sqlQuery })
+      });
+
+      const result = await response.json();
+      setQueryResults(result);
+    } catch (error) {
+      console.error('Query execution failed:', error);
+      setQueryResults({ error: 'Query execution failed' });
+    } finally {
+      setIsExecuting(false);
+    }
+  };
+
+  const optimizeDatabase = async () => {
+    try {
+      const response = await fetch('/api/dev/database/optimize', {
+        method: 'POST'
+      });
+
+      if (response.ok) {
+        alert('Database optimization started');
+      }
+    } catch (error) {
+      console.error('Optimization failed:', error);
+    }
+  };
 
   return (
-    <DeveloperLayout title="Database Admin">
-      <div className="p-6">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-white mb-2">Database Administration</h2>
-          <p className="text-gray-400">Manage database schema, queries, and performance</p>
+    <DeveloperLayout title="Database Administration">
+      <div className="space-y-8">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-green-100 bg-clip-text text-transparent">
+              🗄️ Database Administration
+            </h1>
+            <p className="text-slate-400 mt-2">
+              Comprehensive database management and monitoring
+            </p>
+          </div>
+          <div className="flex space-x-4">
+            <button
+              onClick={optimizeDatabase}
+              className="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300"
+            >
+              Optimize DB
+            </button>
+            <button className="px-6 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300">
+              Backup Now
+            </button>
+          </div>
         </div>
 
-        {/* Tabs */}
-        <div className="flex space-x-1 mb-6">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-2 ${
-                activeTab === tab.id
-                  ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                  : 'text-gray-300 hover:bg-gray-700 hover:text-green-400'
-              }`}
-            >
-              <span>{tab.icon}</span>
-              <span>{tab.name}</span>
-            </button>
-          ))}
+        {/* Navigation Tabs */}
+        <div className="border-b border-green-500/20">
+          <nav className="flex space-x-8">
+            {[
+              { id: 'overview', label: 'Overview', icon: '📊' },
+              { id: 'queries', label: 'Query Monitor', icon: '🔍' },
+              { id: 'console', label: 'SQL Console', icon: '💻' },
+              { id: 'schema', label: 'Schema', icon: '🏗️' },
+              { id: 'performance', label: 'Performance', icon: '⚡' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center px-4 py-3 text-sm font-medium transition-all duration-300 border-b-2 ${
+                  activeTab === tab.id
+                    ? 'border-green-500 text-green-400'
+                    : 'border-transparent text-slate-400 hover:text-green-400'
+                }`}
+              >
+                <span className="mr-2">{tab.icon}</span>
+                {tab.label}
+              </button>
+            ))}
+          </nav>
         </div>
 
         {/* Tab Content */}
