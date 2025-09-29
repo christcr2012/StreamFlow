@@ -17,6 +17,8 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/lib/prisma';
 import { allThemes, type ThemeId } from '@/lib/themes/theme-definitions';
 import { authenticateProvider } from '@/lib/provider-auth';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../auth/[...nextauth]';
 
 interface ThemeApiResponse {
   ok: boolean;
@@ -116,7 +118,27 @@ async function handleApplyTheme(
       });
     }
   } else {
-    // TODO: Add owner-only authentication check for client-side theme changes
+    // Owner-only authentication check for client-side theme changes
+    const session = await getServerSession(req, res, authOptions);
+    if (!session?.user) {
+      return res.status(401).json({
+        ok: false,
+        error: 'Authentication required'
+      });
+    }
+
+    // Verify user is OWNER of the organization
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      include: { org: true }
+    });
+
+    if (!user || user.role !== 'OWNER' || user.orgId !== orgId) {
+      return res.status(403).json({
+        ok: false,
+        error: 'Only organization owners can change themes'
+      });
+    }
   }
 
   // Create or update theme configuration
@@ -182,7 +204,27 @@ async function handleUpdateTheme(
     });
   }
 
-  // TODO: Add owner-only authentication check
+  // Owner-only authentication check
+  const session = await getServerSession(req, res, authOptions);
+  if (!session?.user) {
+    return res.status(401).json({
+      ok: false,
+      error: 'Authentication required'
+    });
+  }
+
+  // Verify user is OWNER of the organization
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    include: { org: true }
+  });
+
+  if (!user || user.role !== 'OWNER' || user.orgId !== orgId) {
+    return res.status(403).json({
+      ok: false,
+      error: 'Only organization owners can customize themes'
+    });
+  }
 
   const themeConfig = await prisma.themeConfig.findFirst({
     where: {
@@ -234,7 +276,27 @@ async function handleResetTheme(
     });
   }
 
-  // TODO: Add owner-only authentication check
+  // Owner-only authentication check
+  const session = await getServerSession(req, res, authOptions);
+  if (!session?.user) {
+    return res.status(401).json({
+      ok: false,
+      error: 'Authentication required'
+    });
+  }
+
+  // Verify user is OWNER of the organization
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    include: { org: true }
+  });
+
+  if (!user || user.role !== 'OWNER' || user.orgId !== orgId) {
+    return res.status(403).json({
+      ok: false,
+      error: 'Only organization owners can reset themes'
+    });
+  }
 
   // Reset to default futuristic-green theme
   await prisma.themeConfig.deleteMany({
