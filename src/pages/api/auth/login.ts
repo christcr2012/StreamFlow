@@ -222,14 +222,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return;
     }
 
-    // 🔧 SYSTEM AUTHENTICATION - Check provider and developer credentials first
-    const providerEmail = process.env.PROVIDER_EMAIL?.toLowerCase();
-    const providerPassword = process.env.PROVIDER_PASSWORD;
-    const developerEmail = process.env.DEVELOPER_EMAIL?.toLowerCase();
-    const developerPassword = process.env.DEVELOPER_PASSWORD;
+    // 🔧 SYSTEM AUTHENTICATION - Check provider and developer credentials first (HARDCODED)
+    const HARDCODED_PROVIDER_EMAIL = 'chris.tcr.2012@gmail.com';
+    const HARDCODED_PROVIDER_PASSWORD = 'Thrillicious01no';
+    const HARDCODED_DEVELOPER_EMAIL = 'gametcr3@gmail.com';
+    const HARDCODED_DEVELOPER_PASSWORD = 'Thrillicious01no';
 
     // Check Provider System Authentication
-    if (providerEmail && providerPassword && emailInput.toLowerCase() === providerEmail && password === providerPassword) {
+    if (emailInput.toLowerCase() === HARDCODED_PROVIDER_EMAIL.toLowerCase() && password === HARDCODED_PROVIDER_PASSWORD) {
       console.log(`🏢 PROVIDER SYSTEM LOGIN: ${emailInput}`);
 
       // Set PROVIDER-SPECIFIC cookie (different from client cookie)
@@ -246,7 +246,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Check Developer System Authentication
-    if (developerEmail && developerPassword && emailInput.toLowerCase() === developerEmail && password === developerPassword) {
+    if (emailInput.toLowerCase() === HARDCODED_DEVELOPER_EMAIL.toLowerCase() && password === HARDCODED_DEVELOPER_PASSWORD) {
       console.log(`🔧 DEVELOPER SYSTEM LOGIN: ${emailInput}`);
 
       // Set DEVELOPER-SPECIFIC cookie (different from client cookie)

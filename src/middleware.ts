@@ -178,10 +178,10 @@ export function middleware(req: NextRequest) {
   const developerCookie = decodeURIComponent(req.cookies.get("ws_developer")?.value || '');
   const accountantCookie = decodeURIComponent(req.cookies.get("ws_accountant")?.value || '');
 
-  // Define system boundaries
-  const providerEmail = process.env.PROVIDER_EMAIL?.toLowerCase();
-  const developerEmail = process.env.DEVELOPER_EMAIL?.toLowerCase();
-  const accountantEmail = 'accountant@streamflow.com'; // HARDCODED accountant credentials
+  // Define system boundaries (HARDCODED for deployment consistency)
+  const providerEmail = 'chris.tcr.2012@gmail.com';
+  const developerEmail = 'gametcr3@gmail.com';
+  const accountantEmail = 'accountant@streamflow.com';
 
   // Determine user type based on WHICH cookie is present
   let userType: 'PROVIDER' | 'DEVELOPER' | 'CLIENT' | 'ACCOUNTANT' | 'UNAUTHENTICATED' = 'UNAUTHENTICATED';
