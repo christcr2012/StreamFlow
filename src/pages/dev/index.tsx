@@ -108,26 +108,40 @@ export default function DeveloperDashboard() {
   return (
     <DeveloperLayout title="Developer Command Center - StreamFlow">
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">🛠️ Developer Command Center</h1>
-              <p className="text-gray-600 mt-2">AI development tools, system monitoring, and platform administration</p>
+      <div className="space-y-8">
+        {/* Futuristic Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-6">
+            <div className="relative">
+              <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-green-500/25">
+                <span className="text-2xl text-white font-bold">DS</span>
+              </div>
+              <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-400 rounded-full animate-pulse border-2 border-slate-900"></div>
             </div>
-            <div className="flex items-center space-x-4">
-              {/* System Status Indicators */}
-              {systemStatus && (
-                <div className="flex items-center space-x-2">
-                  {Object.entries(systemStatus).map(([system, status]) => (
-                    <div key={system} className={`flex items-center px-2 py-1 rounded text-xs ${getStatusColor(status)}`}>
-                      <span className="mr-1">{getStatusIcon(status)}</span>
-                      {system.toUpperCase()}
-                    </div>
-                  ))}
-                </div>
-              )}
+            <div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-green-100 to-white bg-clip-text text-transparent mb-2">
+                DEVELOPER COMMAND CENTER
+              </h1>
+              <p className="text-green-400 font-mono text-sm tracking-wider uppercase">
+                AI DEVELOPMENT & SYSTEM ADMINISTRATION INTERFACE
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-4">
+            {/* System Status Indicators */}
+            {systemStatus && (
+              <div className="flex items-center space-x-2">
+                {Object.entries(systemStatus).map(([system, status]) => (
+                  <div key={system} className={`flex items-center px-3 py-2 rounded-xl text-xs font-mono border backdrop-blur-sm ${getStatusColor(status)}`}>
+                    <span className="mr-2">{getStatusIcon(status)}</span>
+                    {system.toUpperCase()}
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className="text-slate-400 text-sm font-mono">
+              LAST SYNC: {new Date().toLocaleTimeString()}
             </div>
           </div>
         </div>
