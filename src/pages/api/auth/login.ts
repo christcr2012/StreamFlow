@@ -262,10 +262,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).json({ ok: true, redirectUrl });
     }
 
-    // Check Accountant System Authentication
-    const accountantEmail = process.env.ACCOUNTANT_EMAIL?.toLowerCase();
-    const accountantPassword = process.env.ACCOUNTANT_PASSWORD;
-    if (accountantEmail && accountantPassword && emailInput.toLowerCase() === accountantEmail && password === accountantPassword) {
+    // Check Accountant System Authentication (HARDCODED)
+    const HARDCODED_ACCOUNTANT_EMAIL = 'accountant@streamflow.com';
+    const HARDCODED_ACCOUNTANT_PASSWORD = 'Thrillicious01no';
+
+    if (emailInput.toLowerCase() === HARDCODED_ACCOUNTANT_EMAIL.toLowerCase() && password === HARDCODED_ACCOUNTANT_PASSWORD) {
       console.log(`💰 ACCOUNTANT SYSTEM LOGIN: ${emailInput}`);
 
       // Set ACCOUNTANT-SPECIFIC cookie (different from all other cookies)

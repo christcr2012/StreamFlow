@@ -30,20 +30,20 @@ export class AccountantAuthTester {
     
     console.log('💰 DIAGNOSING ACCOUNTANT AUTHENTICATION SYSTEM...\n');
 
-    // Test 1: Environment Variables Check
-    await this.runTest(results, 'Environment Variables Check', async () => {
-      const accountantEmail = process.env.ACCOUNTANT_EMAIL;
-      const accountantPassword = process.env.ACCOUNTANT_PASSWORD;
-      
-      if (!accountantEmail) {
-        throw new Error('ACCOUNTANT_EMAIL environment variable is not set');
+    // Test 1: Hardcoded Credentials Check
+    await this.runTest(results, 'Hardcoded Credentials Check', async () => {
+      const HARDCODED_ACCOUNTANT_EMAIL = 'accountant@streamflow.com';
+      const HARDCODED_ACCOUNTANT_PASSWORD = 'Thrillicious01no';
+
+      if (!HARDCODED_ACCOUNTANT_EMAIL) {
+        throw new Error('Hardcoded accountant email is not set');
       }
-      
-      if (!accountantPassword) {
-        throw new Error('ACCOUNTANT_PASSWORD environment variable is not set');
+
+      if (!HARDCODED_ACCOUNTANT_PASSWORD) {
+        throw new Error('Hardcoded accountant password is not set');
       }
-      
-      return `Environment variables configured: ${accountantEmail} / ${accountantPassword ? '[PASSWORD SET]' : '[NO PASSWORD]'}`;
+
+      return `Hardcoded credentials configured: ${HARDCODED_ACCOUNTANT_EMAIL} / [PASSWORD SET]`;
     });
 
     // Test 2: Login API Test

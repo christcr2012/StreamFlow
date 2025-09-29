@@ -26,9 +26,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     console.log('🔧 DEVELOPER TESTING ACCOUNTANT LOGIN LOGIC');
 
-    // Get environment variables
-    const accountantEmail = process.env.ACCOUNTANT_EMAIL?.toLowerCase();
-    const accountantPassword = process.env.ACCOUNTANT_PASSWORD;
+    // HARDCODED accountant credentials (not environment variables)
+    const HARDCODED_ACCOUNTANT_EMAIL = 'accountant@streamflow.com';
+    const HARDCODED_ACCOUNTANT_PASSWORD = 'Thrillicious01no';
+    const accountantEmail = HARDCODED_ACCOUNTANT_EMAIL.toLowerCase();
+    const accountantPassword = HARDCODED_ACCOUNTANT_PASSWORD;
 
     // Test input
     const testEmail = 'accountant@streamflow.com';
@@ -46,10 +48,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const testResults = {
       environment: {
-        ACCOUNTANT_EMAIL: process.env.ACCOUNTANT_EMAIL,
+        HARDCODED_ACCOUNTANT_EMAIL: HARDCODED_ACCOUNTANT_EMAIL,
         ACCOUNTANT_EMAIL_LOWERCASE: accountantEmail,
         ACCOUNTANT_PASSWORD_SET: !!accountantPassword,
-        NODE_ENV: process.env.NODE_ENV
+        NODE_ENV: process.env.NODE_ENV,
+        NOTE: 'Accountant credentials are HARDCODED, not from environment variables'
       },
       testInput: {
         email: testEmail,

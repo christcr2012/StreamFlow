@@ -48,23 +48,17 @@ export interface AccountantSession {
  */
 export async function authenticateAccountant(req: NextApiRequest): Promise<AccountantUser | null> {
   try {
-    // Environment-based authentication for accountant system
-    const accountantEmail = process.env.ACCOUNTANT_EMAIL;
-    const accountantPassword = process.env.ACCOUNTANT_PASSWORD;
-
-    if (!accountantEmail || !accountantPassword) {
-      console.error('Accountant environment variables not configured');
-      return null;
-    }
+    // HARDCODED authentication for accountant system
+    const HARDCODED_ACCOUNTANT_EMAIL = 'accountant@streamflow.com';
 
     // Check for accountant credentials in request
     const accountantCookieEmail = req.cookies.ws_accountant; // Use ACCOUNTANT-SPECIFIC cookie
 
     // Accountant authentication using accountant-specific cookie
-    if (accountantCookieEmail && accountantCookieEmail.toLowerCase() === accountantEmail.toLowerCase()) {
+    if (accountantCookieEmail && decodeURIComponent(accountantCookieEmail).toLowerCase() === HARDCODED_ACCOUNTANT_EMAIL.toLowerCase()) {
       return {
         id: 'accountant-system',
-        email: accountantEmail,
+        email: HARDCODED_ACCOUNTANT_EMAIL,
         role: 'ACCOUNTANT',
         orgId: 'accountant-system', // Accountant operates on assigned client orgs
         permissions: getAccountantPermissions(),

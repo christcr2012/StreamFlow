@@ -181,7 +181,7 @@ export function middleware(req: NextRequest) {
   // Define system boundaries
   const providerEmail = process.env.PROVIDER_EMAIL?.toLowerCase();
   const developerEmail = process.env.DEVELOPER_EMAIL?.toLowerCase();
-  const accountantEmail = process.env.ACCOUNTANT_EMAIL?.toLowerCase();
+  const accountantEmail = 'accountant@streamflow.com'; // HARDCODED accountant credentials
 
   // Determine user type based on WHICH cookie is present
   let userType: 'PROVIDER' | 'DEVELOPER' | 'CLIENT' | 'ACCOUNTANT' | 'UNAUTHENTICATED' = 'UNAUTHENTICATED';
