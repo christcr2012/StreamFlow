@@ -21,8 +21,8 @@ import {
   ChartBarIcon,
   CurrencyDollarIcon,
   UserGroupIcon,
-  TrendingUpIcon,
-  TrendingDownIcon,
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
   ClockIcon,
   CheckCircleIcon,
   ExclamationTriangleIcon,
@@ -228,7 +228,7 @@ export default function RobinsonDashboard() {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-semibold text-white">Revenue Performance</h2>
               <div className="flex items-center space-x-2">
-                <TrendingUpIcon className="h-5 w-5 text-green-400" />
+                <ArrowTrendingUpIcon className="h-5 w-5 text-green-400" />
                 <span className="text-green-400 text-sm font-medium">+15.2%</span>
               </div>
             </div>

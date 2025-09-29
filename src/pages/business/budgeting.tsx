@@ -34,7 +34,8 @@ import {
   CreditCardIcon,
   BuildingOfficeIcon,
   TruckIcon,
-  WrenchScrewdriverIcon
+  WrenchScrewdriverIcon,
+  CogIcon
 } from '@heroicons/react/24/outline';
 
 interface BudgetCategory {

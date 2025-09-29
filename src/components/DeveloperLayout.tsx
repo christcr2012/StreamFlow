@@ -323,3 +323,5 @@ export default function DeveloperLayout({ children, title = 'Developer System' }
     </div>
   );
 }
+
+export default DeveloperLayout;

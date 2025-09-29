@@ -25,7 +25,7 @@ import {
   ExclamationTriangleIcon,
   CheckCircleIcon,
   ClockIcon,
-  ThermometerIcon,
+  FireIcon,
   BoltIcon,
   WrenchScrewdriverIcon
 } from '@heroicons/react/24/outline';
@@ -212,7 +212,7 @@ export default function HVACDashboard() {
             <div className="flex items-center space-x-4">
               <div className="bg-slate-900/60 backdrop-blur-xl rounded-lg border border-blue-500/20 p-4">
                 <div className="flex items-center space-x-3">
-                  <ThermometerIcon className="h-6 w-6 text-blue-400" />
+                  <FireIcon className="h-6 w-6 text-blue-400" />
                   <div>
                     <div className="text-white font-semibold">{currentWeather.temp}°F</div>
                     <div className="text-xs text-slate-400">{currentWeather.condition}</div>

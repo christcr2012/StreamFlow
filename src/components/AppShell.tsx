@@ -284,6 +284,7 @@ function AppShellContent({
           {children}
         </div>
       </main>
+      </div>
     </div>
   );
 }

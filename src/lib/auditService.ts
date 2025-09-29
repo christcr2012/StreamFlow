@@ -403,6 +403,7 @@ class AuditService {
 }
 
 // Export singleton instance
+export { AuditService };
 export const auditService = new AuditService();
 
 // Convenience functions

@@ -233,8 +233,6 @@ export default function ProviderThemesPage() {
                   </div>
                 );
               })}
-                </div>
-              ))}
             </div>
           </div>
 

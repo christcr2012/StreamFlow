@@ -8,7 +8,7 @@
  */
 
 import { useState } from 'react';
-import { DeveloperLayout } from '@/components/DeveloperLayout';
+import DeveloperLayout from '@/components/DeveloperLayout';
 import { 
   CheckCircleIcon, 
   XCircleIcon, 
