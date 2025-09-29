@@ -112,93 +112,15 @@ export default function AccountantDashboard() {
   }
 
   return (
-    <>
+    <AccountantLayout title="Financial Dashboard">
       <Head>
         <title>Accountant Dashboard - StreamFlow</title>
         <meta name="description" content="Professional accounting dashboard for StreamFlow clients" />
       </Head>
 
-      <div className="min-h-screen bg-gray-50">
-        {/* Accountant System Header - Completely Separate from Client Business Flow */}
-        <header className="bg-gradient-to-r from-green-600 to-green-700 shadow-lg">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <div className="flex items-center">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                    <span className="text-green-600 font-bold text-lg">💰</span>
-                  </div>
-                  <div>
-                    <h1 className="text-xl font-semibold text-white">
-                      StreamFlow Accountant Portal
-                    </h1>
-                    <p className="text-green-100 text-xs">
-                      Professional Financial Management System
-                    </p>
-                  </div>
-                </div>
-                <span className="ml-6 px-3 py-1 bg-green-500 text-white text-xs rounded-full font-medium">
-                  {dashboardData?.user.complianceLevel || 'CPA'}
-                </span>
-              </div>
-              <div className="flex items-center space-x-4">
-                <div className="text-right">
-                  <div className="text-white text-sm font-medium">
-                    {dashboardData?.user.email}
-                  </div>
-                  <div className="text-green-100 text-xs">
-                    Last Login: {dashboardData?.user.lastLogin ? new Date(dashboardData.user.lastLogin).toLocaleDateString() : 'N/A'}
-                  </div>
-                </div>
-                <button
-                  onClick={handleLogout}
-                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  Logout
-                </button>
-              </div>
-            </div>
-          </div>
-        </header>
 
-        {/* Accountant Navigation Bar - Financial Operations Only */}
-        <nav className="bg-white border-b border-gray-200 shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex space-x-8 overflow-x-auto">
-              <button className="flex items-center px-3 py-4 text-sm font-medium text-green-600 border-b-2 border-green-600 whitespace-nowrap">
-                <span className="mr-2">📊</span>
-                Dashboard
-              </button>
-              <button className="flex items-center px-3 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300 whitespace-nowrap">
-                <span className="mr-2">📋</span>
-                Financial Reports
-              </button>
-              <button className="flex items-center px-3 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300 whitespace-nowrap">
-                <span className="mr-2">🔄</span>
-                Reconciliation
-              </button>
-              <button className="flex items-center px-3 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300 whitespace-nowrap">
-                <span className="mr-2">📄</span>
-                Tax Management
-              </button>
-              <button className="flex items-center px-3 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300 whitespace-nowrap">
-                <span className="mr-2">🔗</span>
-                Integrations
-              </button>
-              <button className="flex items-center px-3 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300 whitespace-nowrap">
-                <span className="mr-2">👥</span>
-                Client Access
-              </button>
-              <button className="flex items-center px-3 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300 whitespace-nowrap">
-                <span className="mr-2">⚙️</span>
-                Settings
-              </button>
-            </div>
-          </div>
-        </nav>
-
-        {/* Main Content */}
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Financial Dashboard Content */}
+        <div className="space-y-8">
           {/* Financial Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div className="bg-white p-6 rounded-lg shadow">
@@ -397,8 +319,7 @@ export default function AccountantDashboard() {
               </table>
             </div>
           </div>
-        </main>
-      </div>
-    </>
+        </div>
+    </AccountantLayout>
   );
 }
