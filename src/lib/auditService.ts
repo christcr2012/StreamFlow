@@ -62,13 +62,22 @@ class AuditService {
         details: event.details
       });
 
-      // TODO: Store in audit table when schema is ready
-      // await prisma.auditEvent.create({
-      //   data: {
-      //     ...event,
-      //     timestamp: new Date()
-      //   }
-      // });
+      // Store in audit log table
+      await prisma.auditLog.create({
+        data: {
+          orgId: event.orgId || 'SYSTEM',
+          actorId: event.userId,
+          action: event.action,
+          entityType: event.entityType || 'UNKNOWN',
+          entityId: event.entityId,
+          delta: {
+            userSystem: event.userSystem,
+            success: event.success,
+            details: event.details,
+            timestamp: new Date().toISOString()
+          }
+        }
+      });
 
     } catch (error) {
       console.error('Failed to log audit event:', error);
@@ -239,9 +248,37 @@ class AuditService {
    * Query audit events (for compliance reporting)
    */
   async queryEvents(query: AuditQuery): Promise<AuditEvent[]> {
-    // TODO: Implement database query when audit table is ready
-    // For now, return mock data for demonstration
-    
+    // Query audit logs from database
+    const auditLogs = await prisma.auditLog.findMany({
+      where: {
+        orgId: query.orgId,
+        createdAt: {
+          gte: query.startDate,
+          lte: query.endDate
+        },
+        ...(query.userId && { actorId: query.userId }),
+        ...(query.action && { action: { contains: query.action } }),
+        ...(query.entityType && { entityType: query.entityType })
+      },
+      orderBy: { createdAt: 'desc' },
+      take: query.limit || 100
+    });
+
+    // Convert to AuditEvent format
+    return auditLogs.map(log => ({
+      id: log.id,
+      orgId: log.orgId,
+      userId: log.actorId,
+      action: log.action,
+      entityType: log.entityType,
+      entityId: log.entityId,
+      userSystem: (log.delta as any)?.userSystem || 'unknown',
+      success: (log.delta as any)?.success ?? true,
+      details: (log.delta as any)?.details || {},
+      timestamp: log.createdAt
+    }));
+
+    // Fallback mock data for demonstration
     const mockEvents: AuditEvent[] = [
       {
         id: '1',
@@ -288,21 +325,79 @@ class AuditService {
     riskLevel: 'LOW' | 'MEDIUM' | 'HIGH';
     recommendations: string[];
   }> {
-    // TODO: Implement real compliance reporting
+    // Query actual audit data
+    const whereClause = {
+      createdAt: { gte: startDate, lte: endDate },
+      ...(orgId && { orgId })
+    };
+
+    const [
+      totalEvents,
+      securityViolations,
+      failedLogins,
+      dataAccess,
+      systemChanges
+    ] = await Promise.all([
+      prisma.auditLog.count({ where: whereClause }),
+      prisma.auditLog.count({
+        where: {
+          ...whereClause,
+          action: { contains: 'SECURITY' }
+        }
+      }),
+      prisma.auditLog.count({
+        where: {
+          ...whereClause,
+          action: { contains: 'LOGIN_FAILED' }
+        }
+      }),
+      prisma.auditLog.count({
+        where: {
+          ...whereClause,
+          action: { contains: 'DATA_ACCESS' }
+        }
+      }),
+      prisma.auditLog.count({
+        where: {
+          ...whereClause,
+          action: { contains: 'SYSTEM_CHANGE' }
+        }
+      })
+    ]);
+
+    // Determine risk level based on violations
+    let riskLevel: 'LOW' | 'MEDIUM' | 'HIGH' = 'LOW';
+    if (securityViolations > 10 || failedLogins > 50) {
+      riskLevel = 'HIGH';
+    } else if (securityViolations > 5 || failedLogins > 20) {
+      riskLevel = 'MEDIUM';
+    }
+
+    // Generate recommendations based on data
+    const recommendations: string[] = [];
+    if (securityViolations > 0) {
+      recommendations.push('Review security violation patterns');
+    }
+    if (failedLogins > 10) {
+      recommendations.push('Implement additional MFA for high-privilege accounts');
+    }
+    if (riskLevel === 'HIGH') {
+      recommendations.push('Consider IP whitelisting for provider access');
+    }
+    if (recommendations.length === 0) {
+      recommendations.push('Continue monitoring security metrics');
+    }
+
     return {
       summary: {
-        totalEvents: 1247,
-        securityViolations: 3,
-        failedLogins: 12,
-        dataAccess: 856,
-        systemChanges: 5
+        totalEvents,
+        securityViolations,
+        failedLogins,
+        dataAccess,
+        systemChanges
       },
-      riskLevel: 'LOW',
-      recommendations: [
-        'Review security violation patterns',
-        'Implement additional MFA for high-privilege accounts',
-        'Consider IP whitelisting for provider access'
-      ]
+      riskLevel,
+      recommendations
     };
   }
 }
