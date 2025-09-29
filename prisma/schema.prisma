@@ -376,6 +376,12 @@ model Org {
   industryConfig    Json     @default("{}")  // Industry-specific configuration
   activeCapabilities Json    @default("[]")  // Enabled capabilities for this org
 
+  // Tenant Registration Fields
+  plan              String?  // STARTER, PROFESSIONAL, ENTERPRISE
+  industry          String?  // Industry type for tenant registration
+  externalCustomerId String? // External customer ID for integration
+  settings          Json     @default("{}")  // Organization settings
+
   // AI Cost Control & Monetization - PROVIDER MODEL
   aiMonthlyBudgetCents Int      @default(5000)  // $50 provider cost limit  
   aiCreditBalance     Int      @default(1000)   // 1k credits = $50 worth (1 credit = $0.05 client-facing)
@@ -467,6 +473,11 @@ model Org {
   securityIncidents SecurityIncident[] @relation("OrgSecurityIncidents")
   deviceAccess     DeviceAccess[]    @relation("OrgDeviceAccess")
   userLockouts     UserLockout[]     @relation("OrgUserLockouts")
+
+  // Tenant Registration Relations
+  tenantRegistrations TenantRegistration[]
+  leadSourceConfigs   LeadSourceConfig[]
+  jobTemplates        JobTemplate[]
 
   /// brandConfig stores white-label brand settings such as name, colors, and logo URL.
   /// It is JSON to allow arbitrary keys like { name: "Mountain Vista", color: "#123456", logoUrl: "https://..." }
@@ -593,6 +604,7 @@ model User {
   role               Role     @default(STAFF)
   passwordHash       String?  @db.VarChar(255)
   mustChangePassword Boolean  @default(false)
+  emailVerified      Boolean  @default(false)
   status             String   @default("active")
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
@@ -634,6 +646,9 @@ model User {
   deviceAccess        DeviceAccess[]    @relation("UserDeviceAccess")
   lockouts            UserLockout[]     @relation("UserLockouts")
   unlockedUsers       UserLockout[]     @relation("UnlockedUsers")
+
+  // Tenant Registration Relations
+  tenantRegistrations TenantRegistration[]
 
   @@unique([orgId, id])  // Multi-tenant isolation
 
@@ -3007,4 +3022,67 @@ enum AuditCategory {
   POLICY_CHANGE    // Security policy changes
   ADMIN_ACTION     // Administrative actions
   SECURITY_EVENT   // Security-related events
+  FINANCIAL        // Financial operations
+  SYSTEM           // System operations
+  COMPLIANCE       // Compliance-related events
+  AUTH             // Authentication events
+  DATA             // Data operations
+  SECURITY         // Security events
+}
+
+/// TenantRegistration tracks tenant creation for idempotency and auditing
+model TenantRegistration {
+  id                  String   @id @default(cuid())
+  idempotencyKey      String   @unique
+  orgId               String
+  ownerUserId         String
+  plan                String   // STARTER, PROFESSIONAL, ENTERPRISE
+  industry            String
+  externalCustomerId  String?
+  welcomeEmailQueued  Boolean  @default(false)
+  createdAt           DateTime @default(now())
+
+  // Relationships
+  org       Org  @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  ownerUser User @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+  @@index([ownerUserId])
+  @@index([idempotencyKey])
+  @@index([createdAt])
+}
+
+/// LeadSourceConfig tracks different sources of leads for each organization
+model LeadSourceConfig {
+  id        String   @id @default(cuid())
+  orgId     String
+  name      String
+  type      String   // REFERRAL, EVENT, DIGITAL, PARTNER, etc.
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  // Relationships
+  org Org @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, name])
+  @@index([orgId])
+  @@index([active])
+}
+
+/// JobTemplate provides industry-specific job templates
+model JobTemplate {
+  id             String   @id @default(cuid())
+  orgId          String
+  name           String
+  description    String?
+  estimatedHours Int      @default(0)
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+
+  // Relationships
+  org Org @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, name])
+  @@index([orgId])
+  @@index([active])
 }
