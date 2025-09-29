@@ -232,18 +232,17 @@ export class StaffConstraintEnforcer {
 
     // Check if action requires approval
     if (constraints.requireApproval.includes(action)) {
-      // TODO: Implement ApprovalRequest model - createApprovalRequest call
-      // const approvalRequest = await this.createApprovalRequest(
-      //   action,
-      //   entityType,
-      //   entityId,
-      //   constraints.approvalWorkflow
-      // );
+      const approvalRequest = await this.createApprovalRequest(
+        action,
+        entityType,
+        entityId,
+        constraints.approvalWorkflow
+      );
 
       return {
         approved: false,
         requiresApproval: true,
-        approvalId: 'pending' // approvalRequest.id
+        approvalId: approvalRequest.id
       };
     }
 
@@ -256,10 +255,9 @@ export class StaffConstraintEnforcer {
     };
   }
 
-  /* TODO: Implement ApprovalRequest model as part of DEVELOPMENT_ROADMAP.md Phase 6
-   * This function will create approval requests for sensitive actions requiring workflow approval
+  /**
+   * Create approval request for sensitive actions requiring workflow approval
    */
-  /*
   private async createApprovalRequest(
     action: string,
     entityType: string,
@@ -273,12 +271,10 @@ export class StaffConstraintEnforcer {
         action,
         entityType,
         entityId,
-        status: 'pending',
+        status: 'PENDING',
         approverRoles: workflow.approverRoles,
-        requireReason: workflow.requireReason,
         expiresAt: new Date(Date.now() + workflow.timeoutMinutes * 60 * 1000),
-        escalationRules: workflow.escalationRules,
-        requestedAt: new Date()
+        escalationRules: workflow.escalationRules
       }
     });
 
@@ -292,7 +288,6 @@ export class StaffConstraintEnforcer {
 
     return approvalRequest;
   }
-  */
 
   // Security Safeguards Enforcement
   async enforceSecuritySafeguards(
@@ -409,28 +404,42 @@ export class StaffConstraintEnforcer {
     context: any
   ): Promise<void> {
     // Log the violation
-    // TODO: Implement SecurityIncident model - constraint violation logging
-    // await db.securityIncident.create({
-    //   data: {
-    //     orgId: this.orgId,
-    //     userId: this.userId,
-    //     incidentType: 'constraint_violation',
-    //     violationType,
-    //     severity: this.determineSeverity(violationType),
-    //     description: error.message,
-    //     context: context,
-    //     ipAddress: context.ipAddress || 'unknown',
-    //     userAgent: context.userAgent || 'unknown',
-    //     status: 'open',
-    //     detectedAt: new Date()
-    //   }
-    // });
+    await db.securityIncident.create({
+      data: {
+        orgId: this.orgId,
+        userId: this.userId,
+        incidentType: 'CONSTRAINT_VIOLATION',
+        severity: this.determineSeverity(violationType),
+        description: error.message,
+        ipAddress: context.ipAddress || 'unknown',
+        userAgent: context.userAgent || 'unknown',
+        status: 'OPEN',
+        metadata: {
+          violationType,
+          context,
+          timestamp: new Date().toISOString()
+        }
+      }
+    });
 
     // Send alert to security team
     await this.sendSecurityAlert(violationType, error.message, context);
 
     // Apply automatic response if configured
     await this.applyAutomaticResponse(violationType);
+  }
+
+  private determineSeverity(violationType: string): 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL' {
+    const severityMap: Record<string, 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL'> = {
+      'data_access_violation': 'HIGH',
+      'permission_escalation': 'CRITICAL',
+      'unauthorized_action': 'HIGH',
+      'constraint_violation': 'MEDIUM',
+      'suspicious_activity': 'MEDIUM',
+      'failed_authentication': 'LOW'
+    };
+
+    return severityMap[violationType] || 'MEDIUM';
   }
 
   private async handleSecurityViolation(
@@ -589,24 +598,37 @@ export class StaffConstraintEnforcer {
   }
 
   private async trackDevice(userAgent: string, ip: string): Promise<void> {
-    // TODO: Implement DeviceAccess model for device tracking
     // Device tracking implementation
-    // await db.deviceAccess.upsert({
-    //   where: { userId_userAgent: { userId: this.userId, userAgent } },
-    //   update: {
-    //     lastSeenAt: new Date(),
-    //     ipAddress: ip,
-    //     accessCount: { increment: 1 }
-    //   },
-    //   create: {
-    //     userId: this.userId,
-    //     userAgent,
-    //     ipAddress: ip,
-    //     firstSeenAt: new Date(),
-    //     lastSeenAt: new Date(),
-    //     accessCount: 1
-    //   }
-    // });
+    await db.deviceAccess.upsert({
+      where: { userId_userAgent: { userId: this.userId, userAgent } },
+      update: {
+        lastSeenAt: new Date(),
+        lastIpAddress: ip,
+        accessCount: { increment: 1 }
+      },
+      create: {
+        orgId: this.orgId,
+        userId: this.userId,
+        userAgent,
+        lastIpAddress: ip,
+        accessCount: 1,
+        deviceType: this.detectDeviceType(userAgent)
+      }
+    });
+  }
+
+  private detectDeviceType(userAgent: string): 'DESKTOP' | 'MOBILE' | 'TABLET' | 'UNKNOWN' {
+    const ua = userAgent.toLowerCase();
+    if (ua.includes('mobile') || ua.includes('android') || ua.includes('iphone')) {
+      return 'MOBILE';
+    }
+    if (ua.includes('tablet') || ua.includes('ipad')) {
+      return 'TABLET';
+    }
+    if (ua.includes('windows') || ua.includes('mac') || ua.includes('linux')) {
+      return 'DESKTOP';
+    }
+    return 'UNKNOWN';
   }
 
   private async triggerAnomalyAlert(type: string, details: any): Promise<void> {
@@ -648,16 +670,24 @@ export class StaffConstraintEnforcer {
   }
 
   private async applyAutoLockout(lockoutConfig: SecuritySafeguards['autoLockout']): Promise<void> {
-    // TODO: Implement UserLockout model for automatic lockouts
-    // await db.userLockout.create({
-    //   data: {
-    //     userId: this.userId,
-    //     reason: 'Security violation - automatic lockout',
-    //     lockedAt: new Date(),
-    //     expiresAt: new Date(Date.now() + lockoutConfig.lockoutDurationMinutes * 60 * 1000),
-    //     isActive: true
-    //   }
-    // });
+    await db.userLockout.create({
+      data: {
+        orgId: this.orgId,
+        userId: this.userId,
+        reason: 'Security violation - automatic lockout',
+        lockoutType: 'SECURITY_VIOLATION',
+        severity: 'HIGH',
+        expiresAt: new Date(Date.now() + lockoutConfig.lockoutDurationMinutes * 60 * 1000)
+      }
+    });
+
+    // Invalidate all user sessions
+    await this.invalidateUserSessions();
+  }
+
+  private async invalidateUserSessions(): Promise<void> {
+    // Implementation would invalidate all active sessions for the user
+    console.log(`Invalidating all sessions for user ${this.userId}`);
   }
 }
 
