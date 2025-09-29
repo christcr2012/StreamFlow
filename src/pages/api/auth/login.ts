@@ -241,12 +241,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
 
       if (providerAuthResult.success) {
-        console.log(`🏢 PROVIDER SYSTEM LOGIN SUCCESS: ${emailInput} (mode: ${providerAuthResult.mode})`);
+        console.log(`🎉 PROVIDER SYSTEM LOGIN SUCCESS: ${emailInput} (mode: ${providerAuthResult.mode})`);
+        console.log(`🔧 Setting provider cookie: ws_provider=${emailInput}`);
 
         // Set PROVIDER-SPECIFIC cookie (different from client cookie)
         let providerCookie = `ws_provider=${encodeURIComponent(emailInput)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`;
         if (process.env.NODE_ENV === "production") providerCookie += "; Secure";
         res.setHeader("Set-Cookie", providerCookie);
+        console.log(`🍪 Provider cookie set: ${providerCookie}`);
 
         const redirectUrl = '/provider';
         if (isFormEncoded(req)) {
