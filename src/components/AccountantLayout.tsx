@@ -30,9 +30,9 @@ import {
   ClipboardDocumentListIcon,
   ArrowRightOnRectangleIcon,
   UserGroupIcon,
-  TrendingUpIcon,
+  ArrowTrendingUpIcon,
   PresentationChartLineIcon,
-  DocumentMagnifyingGlassIcon,
+  MagnifyingGlassIcon,
   DocumentIcon,
   CreditCardIcon,
   ArrowPathIcon,
@@ -44,7 +44,7 @@ import {
   ServerIcon,
   HeartIcon,
   UsersIcon,
-  ReceiptTaxIcon
+  ReceiptPercentIcon
 } from '@heroicons/react/24/outline';
 
 interface AccountantLayoutProps {
@@ -75,7 +75,7 @@ const navigationSections = [
     items: [
       { name: 'Financial Reports', href: '/accountant/reports', icon: DocumentTextIcon },
       { name: 'Management Reports', href: '/accountant/management', icon: ChartBarIcon },
-      { name: 'Variance Analysis', href: '/accountant/variance', icon: TrendingUpIcon },
+      { name: 'Variance Analysis', href: '/accountant/variance', icon: ArrowTrendingUpIcon },
       { name: 'KPI Dashboards', href: '/accountant/kpis', icon: PresentationChartLineIcon },
     ]
   },
@@ -83,9 +83,9 @@ const navigationSections = [
     title: 'Tax & Compliance',
     items: [
       { name: 'Tax Management', href: '/accountant/tax', icon: CalculatorIcon },
-      { name: 'Sales Tax', href: '/accountant/sales-tax', icon: ReceiptTaxIcon },
+      { name: 'Sales Tax', href: '/accountant/sales-tax', icon: ReceiptPercentIcon },
       { name: 'Payroll Tax', href: '/accountant/payroll-tax', icon: UsersIcon },
-      { name: 'Audit Trail', href: '/accountant/audit', icon: DocumentMagnifyingGlassIcon },
+      { name: 'Audit Trail', href: '/accountant/audit', icon: MagnifyingGlassIcon },
       { name: '1099 Management', href: '/accountant/1099', icon: DocumentIcon },
     ]
   },

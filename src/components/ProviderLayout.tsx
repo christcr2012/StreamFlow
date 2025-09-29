@@ -26,7 +26,7 @@ import {
   PaintBrushIcon,
   ServerStackIcon,
   UserGroupIcon,
-  TrendingUpIcon,
+  ArrowTrendingUpIcon,
   DocumentTextIcon,
   ShieldCheckIcon,
   GlobeAltIcon,
@@ -51,7 +51,7 @@ const navigationSections = [
     title: 'Business Intelligence',
     items: [
       { name: 'Provider Dashboard', href: '/provider', icon: ChartBarIcon },
-      { name: 'Revenue Analytics', href: '/provider/revenue', icon: TrendingUpIcon },
+      { name: 'Revenue Analytics', href: '/provider/revenue', icon: ArrowTrendingUpIcon },
       { name: 'Performance Metrics', href: '/provider/metrics', icon: ChartPieIcon },
       { name: 'Market Intelligence', href: '/provider/market', icon: GlobeAltIcon },
       { name: 'Competitive Analysis', href: '/provider/competition', icon: BeakerIcon },
@@ -63,7 +63,7 @@ const navigationSections = [
       { name: 'Client Portfolio', href: '/provider/clients', icon: BuildingOfficeIcon },
       { name: 'Client Health Monitoring', href: '/provider/health', icon: UserGroupIcon },
       { name: 'Client Onboarding', href: '/provider/onboarding', icon: AcademicCapIcon },
-      { name: 'Client Success Management', href: '/provider/success', icon: TrendingUpIcon },
+      { name: 'Client Success Management', href: '/provider/success', icon: ArrowTrendingUpIcon },
       { name: 'Churn Prevention', href: '/provider/retention', icon: ShieldCheckIcon },
     ]
   },
@@ -102,7 +102,7 @@ const navigationSections = [
       { name: 'Lead Generation', href: '/provider/leads', icon: MegaphoneIcon },
       { name: 'Campaign Management', href: '/provider/campaigns', icon: BoltIcon },
       { name: 'A/B Testing', href: '/provider/testing', icon: BeakerIcon },
-      { name: 'Growth Analytics', href: '/provider/growth', icon: TrendingUpIcon },
+      { name: 'Growth Analytics', href: '/provider/growth', icon: ArrowTrendingUpIcon },
     ]
   },
   {
@@ -153,28 +153,35 @@ export default function ProviderLayout({ children, title = 'StreamCore Provider'
       <div className="flex">
         {/* Provider Sidebar */}
         <nav className="w-64 bg-white border-r border-slate-200 min-h-screen">
-          <div className="p-4">
-            <div className="space-y-1">
-              {navigation.map((item) => {
-                const isActive = router.pathname === item.href;
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={`
-                      flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
-                      ${isActive 
-                        ? 'bg-blue-50 text-blue-700 border border-blue-200' 
-                        : 'text-slate-700 hover:bg-slate-50 hover:text-blue-700'
-                      }
-                    `}
-                  >
-                    <item.icon className="w-5 h-5" />
-                    <span>{item.name}</span>
-                  </Link>
-                );
-              })}
-            </div>
+          <div className="p-4 overflow-y-auto">
+            {navigationSections.map((section) => (
+              <div key={section.title} className="mb-6">
+                <h3 className="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
+                  {section.title}
+                </h3>
+                <div className="space-y-1">
+                  {section.items.map((item) => {
+                    const isActive = router.pathname === item.href;
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className={`
+                          flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                          ${isActive
+                            ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                            : 'text-slate-700 hover:bg-slate-50 hover:text-blue-700'
+                          }
+                        `}
+                      >
+                        <item.icon className="w-4 h-4" />
+                        <span>{item.name}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* Client Count & Status */}

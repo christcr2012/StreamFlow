@@ -166,28 +166,35 @@ export default function DeveloperLayout({ children, title = 'Developer System' }
       <div className="flex">
         {/* Developer Sidebar */}
         <nav className="w-64 bg-gray-800 border-r border-green-500/20 min-h-screen">
-          <div className="p-4">
-            <div className="space-y-2">
-              {navigation.map((item) => {
-                const isActive = router.pathname === item.href;
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={`
-                      flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
-                      ${isActive 
-                        ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
-                        : 'text-gray-300 hover:bg-gray-700 hover:text-green-400'
-                      }
-                    `}
-                  >
-                    <item.icon className="w-5 h-5" />
-                    <span>{item.name}</span>
-                  </Link>
-                );
-              })}
-            </div>
+          <div className="p-4 overflow-y-auto">
+            {navigationSections.map((section) => (
+              <div key={section.title} className="mb-6">
+                <h3 className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                  {section.title}
+                </h3>
+                <div className="space-y-1">
+                  {section.items.map((item) => {
+                    const isActive = router.pathname === item.href;
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className={`
+                          flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                          ${isActive
+                            ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                            : 'text-gray-300 hover:bg-gray-700 hover:text-green-400'
+                          }
+                        `}
+                      >
+                        <item.icon className="w-4 h-4" />
+                        <span>{item.name}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* System Status */}
