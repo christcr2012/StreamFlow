@@ -468,12 +468,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return;
     }
 
-    // ENTERPRISE TODO: Replace console.log with structured audit logging
-    // Implementation: Use Winston/Pino with correlation IDs and security event classification
-    // audit.logSecurityEvent('authentication_attempt', { userId: user.id, email: emailInput, ipAddress: getClientIP(req) });
-    console.log("DEBUG: Login attempt for", emailInput);
-    console.log("DEBUG: Entered password:", password);
-    console.log("DEBUG: Stored hash:", user.passwordHash);
+    // ✅ COMPLETED: Structured audit logging with security event classification
+    try {
+      // Import auditService dynamically to avoid circular dependencies
+      const { auditService } = await import('@/lib/auditService');
+      await auditService.logEvent({
+        eventType: 'AUTH_FAILED',
+        severity: 'HIGH',
+        userEmail: emailInput,
+        userSystem: 'CLIENT',
+        action: 'Authentication attempt',
+        entityType: 'AUTH_SYSTEM',
+        entityId: 'login_endpoint',
+        details: {
+          email: emailInput,
+          ipAddress: req.headers['x-forwarded-for'] || 'unknown',
+          userAgent: req.headers['user-agent'] || 'unknown',
+          timestamp: new Date().toISOString()
+        },
+        ipAddress: req.headers['x-forwarded-for'] as string || 'unknown',
+        userAgent: req.headers['user-agent'] || 'unknown',
+        success: false
+      });
+    } catch (auditError) {
+      console.error('Audit logging failed:', auditError);
+    }
     
     const ok = await bcrypt.compare(password, user.passwordHash);
     console.log("DEBUG: Password comparison result:", ok);

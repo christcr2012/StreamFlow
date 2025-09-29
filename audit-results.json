@@ -1,0 +1,267 @@
+{
+  "authentication": {
+    "score": 0,
+    "issues": [
+      "Provider Authentication failed with status 429",
+      "Developer Authentication failed with status 429",
+      "Accountant Authentication failed with status 429"
+    ],
+    "tests": [
+      {
+        "name": "Provider Authentication",
+        "email": "chris.tcr.2012@gmail.com",
+        "password": "Thrillicious01no",
+        "expectedRedirect": "/provider",
+        "success": false,
+        "statusCode": 429
+      },
+      {
+        "name": "Developer Authentication",
+        "email": "gametcr3@gmail.com",
+        "password": "Thrillicious01no",
+        "expectedRedirect": "/dev",
+        "success": false,
+        "statusCode": 429
+      },
+      {
+        "name": "Accountant Authentication",
+        "email": "accountant@streamflow.com",
+        "password": "Thrillicious01no",
+        "expectedRedirect": "/accountant",
+        "success": false,
+        "statusCode": 429
+      }
+    ]
+  },
+  "database": {
+    "score": 100,
+    "issues": [],
+    "schemas": []
+  },
+  "security": {
+    "score": 25,
+    "vulnerabilities": [
+      "SQL Injection Protection failed - payload accepted",
+      "XSS Protection failed - payload accepted",
+      "Path Traversal Protection failed - payload accepted"
+    ],
+    "tests": []
+  },
+  "performance": {
+    "score": 100,
+    "metrics": {
+      "Health Check": {
+        "responseTime": 6,
+        "statusCode": 200
+      },
+      "Authentication": {
+        "responseTime": 6,
+        "statusCode": 429
+      },
+      "Dashboard API": {
+        "responseTime": 4,
+        "statusCode": 307
+      }
+    },
+    "bottlenecks": []
+  },
+  "integration": {
+    "score": 0,
+    "issues": [],
+    "systems": []
+  },
+  "documentation": {
+    "score": 100,
+    "missing": [],
+    "todos": [
+      {
+        "file": "src\\pages\\dev\\integration-test.tsx",
+        "count": 28
+      },
+      {
+        "file": "comprehensive-system-audit.js",
+        "count": 24
+      },
+      {
+        "file": "src\\pages\\api\\webhooks\\provider-stripe.ts",
+        "count": 11
+      },
+      {
+        "file": "src\\pages\\api\\webhooks\\stripe.ts",
+        "count": 10
+      },
+      {
+        "file": "src\\lib\\staff-audit-system.ts",
+        "count": 9
+      },
+      {
+        "file": "src\\lib\\audit.ts",
+        "count": 7
+      },
+      {
+        "file": "src\\lib\\prisma.ts",
+        "count": 7
+      },
+      {
+        "file": "src\\pages\\api\\themes\\index.ts",
+        "count": 6
+      },
+      {
+        "file": "src\\lib\\staff-constraints.ts",
+        "count": 5
+      },
+      {
+        "file": "src\\pages\\api\\admin\\temporary-elevation.ts",
+        "count": 5
+      },
+      {
+        "file": "src\\pages\\api\\ai\\rfp-strategy.ts",
+        "count": 4
+      },
+      {
+        "file": "src\\pages\\api\\provider\\billing\\subscriptions.ts",
+        "count": 4
+      },
+      {
+        "file": "src\\lib\\themes\\ThemeProvider.tsx",
+        "count": 3
+      },
+      {
+        "file": "src\\pages\\api\\admin\\export.json.ts",
+        "count": 3
+      },
+      {
+        "file": "src\\pages\\api\\admin\\staff-role-customization.ts",
+        "count": 3
+      },
+      {
+        "file": "src\\pages\\api\\integrations\\permits\\fetch.ts",
+        "count": 3
+      },
+      {
+        "file": "src\\pages\\api\\_health.ts",
+        "count": 3
+      },
+      {
+        "file": "src\\lib\\auth-system-test.ts",
+        "count": 2
+      },
+      {
+        "file": "src\\lib\\developer-auth.ts",
+        "count": 2
+      },
+      {
+        "file": "src\\lib\\stripeHelpers.ts",
+        "count": 2
+      },
+      {
+        "file": "src\\pages\\api\\ai\\generate-response.ts",
+        "count": 2
+      },
+      {
+        "file": "src\\pages\\api\\integrations\\twilio\\send-sms.ts",
+        "count": 2
+      },
+      {
+        "file": "src\\pages\\api\\provider\\clients\\[id]\\upgrade.ts",
+        "count": 2
+      },
+      {
+        "file": "src\\pages\\api\\provider\\revenue.ts",
+        "count": 2
+      },
+      {
+        "file": "src\\pages\\api\\quick-actions.ts",
+        "count": 2
+      },
+      {
+        "file": "src\\pages\\worker\\clock.tsx",
+        "count": 2
+      },
+      {
+        "file": "src\\pages\\worker\\jobs.tsx",
+        "count": 2
+      },
+      {
+        "file": "src\\pages\\worker\\profile.tsx",
+        "count": 2
+      },
+      {
+        "file": "prisma\\feature-registry-seed.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\components\\EmployeeLayout.tsx",
+        "count": 1
+      },
+      {
+        "file": "src\\config\\leadScoringConfig.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\lib\\accountant-auth.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\lib\\auth-service.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\lib\\password-policy.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\pages\\api\\auth\\login.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\pages\\api\\provider\\analytics.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\pages\\api\\provider\\billing\\revenue.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\pages\\api\\provider\\branding.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\pages\\api\\provider\\clients\\[id]\\credits.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\pages\\api\\provider\\stats.ts",
+        "count": 1
+      },
+      {
+        "file": "src\\pages\\provider\\themes.tsx",
+        "count": 1
+      },
+      {
+        "file": "src\\pages\\worker\\home.tsx",
+        "count": 1
+      },
+      {
+        "file": "src\\pages\\worker\\payroll.tsx",
+        "count": 1
+      },
+      {
+        "file": "src\\pages\\worker\\training.tsx",
+        "count": 1
+      }
+    ]
+  },
+  "overall": {
+    "score": 56.25,
+    "critical": [
+      "Provider Authentication failed with status 429",
+      "Developer Authentication failed with status 429",
+      "Accountant Authentication failed with status 429",
+      "SQL Injection Protection failed - payload accepted",
+      "XSS Protection failed - payload accepted",
+      "Path Traversal Protection failed - payload accepted"
+    ],
+    "warnings": []
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "normalMode": {
+    "passed": 4,
+    "failed": 0,
+    "tests": [
+      {
+        "name": "Provider Authentication",
+        "email": "chris.tcr.2012@gmail.com",
+        "password": "Thrillicious01no",
+        "expectedStatus": [
+          200,
+          429
+        ],
+        "success": true,
+        "actualStatus": 200,
+        "response": "{\"ok\":true,\"redirectUrl\":\"/provider\",\"mode\":\"recovery\",\"isRecoveryMode\":true}"
+      },
+      {
+        "name": "Developer Authentication",
+        "email": "gametcr3@gmail.com",
+        "password": "Thrillicious01no",
+        "expectedStatus": [
+          200,
+          429
+        ],
+        "success": true,
+        "actualStatus": 200,
+        "response": "{\"ok\":true,\"redirectUrl\":\"/dev\"}"
+      },
+      {
+        "name": "Accountant Authentication",
+        "email": "accountant@streamflow.com",
+        "password": "Thrillicious01no",
+        "expectedStatus": [
+          200,
+          429
+        ],
+        "success": true,
+        "actualStatus": 200,
+        "response": "{\"ok\":true,\"redirectUrl\":\"/accountant\"}"
+      },
+      {
+        "name": "Invalid Credentials",
+        "email": "invalid@test.com",
+        "password": "wrongpassword",
+        "expectedStatus": [
+          401,
+          429
+        ],
+        "success": true,
+        "actualStatus": 401,
+        "response": "{\"ok\":false,\"error\":\"Invalid credentials\"}"
+      }
+    ]
+  },
+  "recoveryMode": {
+    "passed": 2,
+    "failed": 1,
+    "tests": [
+      {
+        "name": "Recovery Mode Detection",
+        "description": "Verify system can detect database failures",
+        "success": true
+      },
+      {
+        "name": "Environment Variable Validation",
+        "description": "Verify break-glass credentials are configured",
+        "success": false
+      },
+      {
+        "name": "Recovery Mode UI",
+        "description": "Verify recovery mode shows appropriate warnings",
+        "success": true
+      }
+    ]
+  },
+  "securityBoundaries": {
+    "passed": 2,
+    "failed": 1,
+    "tests": [
+      {
+        "name": "Cross-System Access Prevention",
+        "description": "Verify users cannot access other system portals",
+        "success": true
+      },
+      {
+        "name": "Rate Limiting Protection",
+        "description": "Verify rate limiting prevents brute force attacks",
+        "success": false
+      },
+      {
+        "name": "SQL Injection Protection",
+        "description": "Verify SQL injection attempts are blocked",
+        "success": true
+      }
+    ]
+  },
+  "performance": {
+    "passed": 2,
+    "failed": 0,
+    "tests": [
+      {
+        "name": "Concurrent Authentication Requests",
+        "description": "Test system handles multiple auth requests",
+        "success": true
+      },
+      {
+        "name": "Authentication Response Time",
+        "description": "Verify auth endpoints respond quickly",
+        "success": true
+      }
+    ]
+  },
+  "overall": {
+    "passed": 10,
+    "failed": 2,
+    "score": 83.33333333333334
+  }
+}
