@@ -48,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     // Provider authentication
     const providerAuth = await authenticateProvider(req);
-    if (!providerAuth.success) {
+    if (!providerAuth) {
       return res.status(401).json({
         ok: false,
         error: 'Provider authentication required'
@@ -84,12 +84,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 async function handleGetBrandConfigs(req: NextApiRequest, res: NextApiResponse) {
   try {
     // Get all organizations with their brand configurations
-    const organizations = await prisma.organization.findMany({
+    const organizations = await prisma.org.findMany({
       select: {
         id: true,
         name: true,
         brandConfig: true,
-        customDomain: true,
+
         createdAt: true,
         updatedAt: true
       },
@@ -107,7 +107,7 @@ async function handleGetBrandConfigs(req: NextApiRequest, res: NextApiResponse) 
         clientName: org.name,
         brandName: brandConfig.name || org.name,
         domain: `${org.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.streamflow.app`,
-        customDomain: org.customDomain || undefined,
+        customDomain: undefined, // TODO: Add customDomain field to Org model
         logo: brandConfig.logo || undefined,
         favicon: brandConfig.favicon || undefined,
         primaryColor: brandConfig.primaryColor || '#22c55e',
@@ -165,7 +165,7 @@ async function handleCreateBrandConfig(req: NextApiRequest, res: NextApiResponse
     }
 
     // Update organization with brand configuration
-    const updatedOrg = await prisma.organization.update({
+    const updatedOrg = await prisma.org.update({
       where: { id: clientId },
       data: {
         brandConfig: brandConfig,

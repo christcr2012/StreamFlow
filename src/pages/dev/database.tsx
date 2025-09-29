@@ -45,6 +45,14 @@ interface QueryInfo {
 export default function DatabasePage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('overview');
+
+  const tabs = [
+    { id: 'overview', name: 'Overview' },
+    { id: 'queries', name: 'Query Monitor' },
+    { id: 'schemas', name: 'Schema Browser' },
+    { id: 'performance', name: 'Performance' },
+    { id: 'maintenance', name: 'Maintenance' }
+  ];
   const [selectedQuery, setSelectedQuery] = useState<string | null>(null);
   const [sqlQuery, setSqlQuery] = useState('');
   const [queryResults, setQueryResults] = useState<any>(null);

@@ -46,6 +46,7 @@ import {
 interface DeveloperLayoutProps {
   children: ReactNode;
   title?: string;
+  subtitle?: string;
 }
 
 const navigationSections = [
@@ -129,7 +130,7 @@ const navigationSections = [
   }
 ];
 
-export default function DeveloperLayout({ children, title = 'Developer System' }: DeveloperLayoutProps) {
+function DeveloperLayout({ children, title = 'Developer System', subtitle }: DeveloperLayoutProps) {
   const router = useRouter();
 
   return (
@@ -304,7 +305,7 @@ export default function DeveloperLayout({ children, title = 'Developer System' }
                 </h2>
               </div>
               <p className="text-slate-300 ml-6 text-lg">
-                Developer system administration and debugging tools
+                {subtitle || 'Developer system administration and debugging tools'}
               </p>
             </div>
 

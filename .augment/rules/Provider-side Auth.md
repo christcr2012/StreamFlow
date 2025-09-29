@@ -1,5 +1,6 @@
 ---
 type: "always_apply"
+description: "Example description"
 ---
 
 Here’s a battle-tested pattern that keeps Provider auth not dependent on the DB, while still letting you manage credentials from the app when everything’s healthy.

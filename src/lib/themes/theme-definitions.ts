@@ -59,6 +59,7 @@ export interface ThemeColors {
   
   // Shadow Colors
   shadowPrimary: string;
+  shadowSecondary: string;
   shadowAccent: string;
 }
 
@@ -66,12 +67,14 @@ export interface ThemeConfig {
   id: string;
   name: string;
   description: string;
-  category: 'futuristic' | 'professional' | 'luxury' | 'tactical' | 'cosmic';
+  category: 'futuristic' | 'professional' | 'luxury' | 'tactical' | 'cosmic' | 'premium';
   colors: ThemeColors;
   patterns: {
     gridPattern?: string;
     backgroundPattern?: string;
     accentPattern?: string;
+    dotPattern?: string;
+    hexPattern?: string;
   };
   animations: {
     pulseColor: string;
@@ -125,6 +128,7 @@ export const futuristicGreenTheme: ThemeConfig = {
     borderSecondary: 'rgba(255, 255, 255, 0.1)',
     borderAccent: 'rgba(34, 197, 94, 0.3)',
     shadowPrimary: 'rgba(0, 0, 0, 0.5)',
+    shadowSecondary: 'rgba(34, 197, 94, 0.05)',
     shadowAccent: 'rgba(34, 197, 94, 0.1)'
   },
   patterns: {
@@ -189,6 +193,7 @@ export const crimsonCommandTheme: ThemeConfig = {
     borderSecondary: 'rgba(255, 255, 255, 0.1)',
     borderAccent: 'rgba(220, 38, 38, 0.3)',
     shadowPrimary: 'rgba(0, 0, 0, 0.5)',
+    shadowSecondary: 'rgba(220, 38, 38, 0.05)',
     shadowAccent: 'rgba(220, 38, 38, 0.1)'
   },
   patterns: {
@@ -253,6 +258,7 @@ export const platinumEliteTheme: ThemeConfig = {
     borderSecondary: 'rgba(0, 0, 0, 0.1)',
     borderAccent: 'rgba(148, 163, 184, 0.3)',
     shadowPrimary: 'rgba(0, 0, 0, 0.1)',
+    shadowSecondary: 'rgba(148, 163, 184, 0.1)',
     shadowAccent: 'rgba(148, 163, 184, 0.2)'
   },
   patterns: {
@@ -317,6 +323,7 @@ export const oceanDeepTheme: ThemeConfig = {
     borderSecondary: 'rgba(255, 255, 255, 0.1)',
     borderAccent: 'rgba(59, 130, 246, 0.3)',
     shadowPrimary: 'rgba(0, 0, 0, 0.5)',
+    shadowSecondary: 'rgba(59, 130, 246, 0.05)',
     shadowAccent: 'rgba(59, 130, 246, 0.1)'
   },
   patterns: {
@@ -381,6 +388,7 @@ export const sunsetProTheme: ThemeConfig = {
     borderSecondary: 'rgba(255, 255, 255, 0.1)',
     borderAccent: 'rgba(251, 146, 60, 0.3)',
     shadowPrimary: 'rgba(0, 0, 0, 0.5)',
+    shadowSecondary: 'rgba(251, 146, 60, 0.05)',
     shadowAccent: 'rgba(251, 146, 60, 0.1)'
   },
   patterns: {
@@ -445,6 +453,7 @@ export const cosmicPurpleTheme: ThemeConfig = {
     borderSecondary: 'rgba(255, 255, 255, 0.1)',
     borderAccent: 'rgba(139, 92, 246, 0.3)',
     shadowPrimary: 'rgba(0, 0, 0, 0.5)',
+    shadowSecondary: 'rgba(139, 92, 246, 0.05)',
     shadowAccent: 'rgba(139, 92, 246, 0.1)'
   },
   patterns: {
@@ -476,6 +485,36 @@ const robinsonPremiumTheme: ThemeConfig = {
   description: 'Ultra-premium metallic blue design for Robinson Solutions enterprise platform',
   category: 'premium',
   colors: {
+    // Background Colors
+    bgPrimary: '#0a0e14',
+    bgSecondary: '#0f1419',
+    bgTertiary: '#141a21',
+    bgElevated: '#1a2029',
+    bgMain: `
+      radial-gradient(ellipse 1400px 900px at 50% -20%, rgba(74,144,226,0.08), transparent 60%),
+      radial-gradient(ellipse 1200px 800px at 20% 100%, rgba(74,144,226,0.06), transparent 50%),
+      linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #334155 100%)
+    `,
+
+    // Glass Effects
+    glassBg: 'rgba(74, 144, 226, 0.05)',
+    glassBgLight: 'rgba(74, 144, 226, 0.08)',
+    glassBorder: 'rgba(74, 144, 226, 0.15)',
+    glassBorderAccent: 'rgba(74, 144, 226, 0.25)',
+
+    // Surface Colors
+    surface1: 'rgba(74, 144, 226, 0.03)',
+    surface2: 'rgba(74, 144, 226, 0.06)',
+    surface3: 'rgba(74, 144, 226, 0.09)',
+    surfaceHover: 'rgba(74, 144, 226, 0.12)',
+
+    // Typography
+    textPrimary: '#ffffff',
+    textSecondary: '#e2e8f0',
+    textTertiary: '#cbd5e1',
+    textMuted: '#94a3b8',
+    textAccent: '#4a90e2',
+
     // Medium metallic blue color scheme
     accentPrimary: '#4a90e2',      // Medium metallic blue
     accentSecondary: '#357abd',     // Deeper metallic blue
@@ -485,24 +524,7 @@ const robinsonPremiumTheme: ThemeConfig = {
     accentError: '#dc3545',        // Error red
     accentInfo: '#17a2b8',         // Info cyan
 
-    // Background gradients with metallic finish
-    bgMain: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f1419 100%)',
-    bgSecondary: 'linear-gradient(135deg, #16213e 0%, #1a1a2e 50%, #0f1419 100%)',
-    bgTertiary: 'linear-gradient(135deg, #0f1419 0%, #16213e 100%)',
-
-    // Surface colors with metallic sheen
-    surface1: 'rgba(74, 144, 226, 0.08)',
-    surface2: 'rgba(74, 144, 226, 0.12)',
-    surface3: 'rgba(74, 144, 226, 0.16)',
-
-    // Text colors optimized for metallic blue
-    textPrimary: '#ffffff',
-    textSecondary: '#e2e8f0',
-    textTertiary: '#94a3b8',
-    textAccent: '#4a90e2',
-    textMuted: '#64748b',
-
-    // Border colors with metallic effect
+    // Border Colors
     borderPrimary: 'rgba(74, 144, 226, 0.2)',
     borderSecondary: 'rgba(74, 144, 226, 0.15)',
     borderAccent: 'rgba(74, 144, 226, 0.4)',

@@ -58,7 +58,7 @@ export default async function handler(
 
   // Authenticate developer
   const authResult = await authenticateDeveloper(req);
-  if (!authResult.success) {
+  if (!authResult) {
     return res.status(401).json({
       success: false,
       overallStatus: 'failed',
@@ -116,12 +116,14 @@ export default async function handler(
     
     // Test audit logging
     await auditService.logEvent({
+      eventType: 'SYSTEM_ACCESS',
+      severity: 'LOW',
       orgId: 'test-org',
       userId: 'test-user',
       action: 'SYSTEM_TEST',
       entityType: 'TEST',
       entityId: 'test-entity',
-      userSystem: 'developer',
+      userSystem: 'DEVELOPER',
       success: true,
       details: { test: 'system validation' }
     });
@@ -149,12 +151,22 @@ export default async function handler(
     );
     
     // Test constraint checking (should not throw)
-    const result = await constraintEnforcer.checkActionPermission(
+    const result = await constraintEnforcer.enforceSensitiveActionConstraints(
       'read',
       'test_entity',
-      'test_id'
+      'test_id',
+      {
+        requireApproval: [],
+        blockedActions: [],
+        approvalWorkflow: {
+          approverRoles: [],
+          requireReason: false,
+          timeoutMinutes: 60,
+          escalationRules: []
+        }
+      }
     );
-    
+
     return `Staff constraints operational: action ${result.approved ? 'approved' : 'denied'}`;
   });
 

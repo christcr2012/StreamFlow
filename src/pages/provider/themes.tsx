@@ -220,7 +220,7 @@ export default function ProviderThemesPage() {
                         Used by {clients.filter(c => c.currentTheme === themeId).length} clients
                       </div>
                       <button
-                        onClick={() => applyThemeToAllClients(themeId)}
+                        onClick={() => applyThemeToAllClients(themeId as ThemeId)}
                         className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
                           isPremium
                             ? 'bg-blue-500/20 text-blue-400 hover:bg-blue-500/30'

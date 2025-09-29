@@ -25,6 +25,8 @@ export interface AuditEvent {
   resourceType?: string;
   resourceId?: string;
   action: string;
+  entityType?: string;
+  entityId?: string;
   details: Record<string, any>;
   ipAddress?: string;
   userAgent?: string;
@@ -40,6 +42,8 @@ export interface AuditQuery {
   userSystem?: ('PROVIDER' | 'DEVELOPER' | 'CLIENT')[];
   userId?: string;
   orgId?: string;
+  action?: string;
+  entityType?: string;
   startDate?: Date;
   endDate?: Date;
   success?: boolean;
@@ -267,12 +271,14 @@ class AuditService {
     // Convert to AuditEvent format
     return auditLogs.map(log => ({
       id: log.id,
+      eventType: 'SYSTEM_ACCESS' as AuditEventType,
+      severity: 'LOW' as AuditSeverity,
       orgId: log.orgId,
-      userId: log.actorId,
+      userId: log.actorId || undefined,
       action: log.action,
       entityType: log.entityType,
-      entityId: log.entityId,
-      userSystem: (log.delta as any)?.userSystem || 'unknown',
+      entityId: log.entityId || undefined,
+      userSystem: (log.delta as any)?.userSystem || 'CLIENT' as 'PROVIDER' | 'DEVELOPER' | 'CLIENT',
       success: (log.delta as any)?.success ?? true,
       details: (log.delta as any)?.details || {},
       timestamp: log.createdAt

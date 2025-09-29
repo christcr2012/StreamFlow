@@ -40,7 +40,7 @@ function TestThemeContent() {
       const bgMain = getComputedStyle(root).getPropertyValue('--theme-bg-main');
       
       const isWorking = accentColor && bgMain && accentColor.trim() !== '';
-      setTestResults(prev => ({ ...prev, [themeId]: isWorking }));
+      setTestResults(prev => ({ ...prev, [themeId]: isWorking as boolean }));
     }, 100);
   };
 
@@ -165,10 +165,9 @@ function TestThemeContent() {
                   backgroundColor: currentTheme === themeId 
                     ? 'var(--theme-surface-2)' 
                     : 'var(--theme-surface-1)',
-                  borderColor: currentTheme === themeId 
-                    ? 'var(--theme-accent-primary)' 
-                    : 'var(--theme-border-secondary)',
-                  ringColor: 'var(--theme-accent-primary)'
+                  borderColor: currentTheme === themeId
+                    ? 'var(--theme-accent-primary)'
+                    : 'var(--theme-border-secondary)'
                 }}
               >
                 <div className="flex items-center space-x-3 mb-2">

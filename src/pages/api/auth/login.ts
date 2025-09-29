@@ -185,6 +185,78 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma as db } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
+// 🛡️ CRITICAL SECURITY: Rate Limiting Implementation
+const loginAttempts = new Map<string, { count: number; lastAttempt: number; lockoutUntil?: number }>();
+
+const RATE_LIMIT_CONFIG = {
+  maxAttempts: 5,
+  lockoutDuration: 30 * 60 * 1000, // 30 minutes
+  windowDuration: 15 * 60 * 1000,  // 15 minutes
+  progressiveDelays: [1000, 2000, 5000, 10000, 30000] // Progressive delays in ms
+};
+
+function getRateLimitKey(req: NextApiRequest): string {
+  // Use IP address as primary key
+  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'unknown';
+  return `${ip}`;
+}
+
+function checkRateLimit(key: string): { allowed: boolean; delay: number; lockoutUntil?: number } {
+  const now = Date.now();
+  const attempts = loginAttempts.get(key);
+
+  if (!attempts) {
+    return { allowed: true, delay: 0 };
+  }
+
+  // Check if still in lockout period
+  if (attempts.lockoutUntil && now < attempts.lockoutUntil) {
+    return {
+      allowed: false,
+      delay: 0,
+      lockoutUntil: attempts.lockoutUntil
+    };
+  }
+
+  // Reset if window has expired
+  if (now - attempts.lastAttempt > RATE_LIMIT_CONFIG.windowDuration) {
+    loginAttempts.delete(key);
+    return { allowed: true, delay: 0 };
+  }
+
+  // Check if max attempts exceeded
+  if (attempts.count >= RATE_LIMIT_CONFIG.maxAttempts) {
+    const lockoutUntil = now + RATE_LIMIT_CONFIG.lockoutDuration;
+    loginAttempts.set(key, { ...attempts, lockoutUntil });
+    return { allowed: false, delay: 0, lockoutUntil };
+  }
+
+  // Apply progressive delay
+  const delayIndex = Math.min(attempts.count - 1, RATE_LIMIT_CONFIG.progressiveDelays.length - 1);
+  const delay = RATE_LIMIT_CONFIG.progressiveDelays[delayIndex] || 0;
+
+  return { allowed: true, delay };
+}
+
+function recordFailedAttempt(key: string): void {
+  const now = Date.now();
+  const attempts = loginAttempts.get(key);
+
+  if (!attempts || now - attempts.lastAttempt > RATE_LIMIT_CONFIG.windowDuration) {
+    loginAttempts.set(key, { count: 1, lastAttempt: now });
+  } else {
+    loginAttempts.set(key, {
+      count: attempts.count + 1,
+      lastAttempt: now,
+      lockoutUntil: attempts.lockoutUntil
+    });
+  }
+}
+
+function recordSuccessfulAttempt(key: string): void {
+  loginAttempts.delete(key);
+}
+
 function buildCookie(email: string) {
   let cookie = `ws_user=${encodeURIComponent(email)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`;
   if (process.env.NODE_ENV === "production") cookie += "; Secure";
@@ -202,6 +274,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (req.method !== "POST") {
       res.setHeader("Allow", "POST");
       return res.status(405).end("Method Not Allowed");
+    }
+
+    // 🛡️ CRITICAL SECURITY: Rate Limiting Check
+    const rateLimitKey = getRateLimitKey(req);
+    const rateLimit = checkRateLimit(rateLimitKey);
+
+    if (!rateLimit.allowed) {
+      if (rateLimit.lockoutUntil) {
+        const lockoutMinutes = Math.ceil((rateLimit.lockoutUntil - Date.now()) / 60000);
+        return res.status(429).json({
+          error: "Account temporarily locked due to too many failed login attempts",
+          lockoutUntil: rateLimit.lockoutUntil,
+          retryAfter: lockoutMinutes,
+          requiresCaptcha: true
+        });
+      }
+    }
+
+    // Apply progressive delay if needed
+    if (rateLimit.delay > 0) {
+      await new Promise(resolve => setTimeout(resolve, rateLimit.delay));
     }
 
     // Parse body (Next does it for us for JSON & urlencoded by default)
@@ -255,6 +348,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           res.setHeader("Location", redirectUrl);
           return res.status(303).end();
         }
+        recordSuccessfulAttempt(rateLimitKey);
         return res.status(200).json({
           ok: true,
           redirectUrl,
@@ -269,6 +363,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
       } else {
         console.log(`❌ PROVIDER AUTH FAILED: ${emailInput} - ${providerAuthResult.error}`);
+        recordFailedAttempt(rateLimitKey);
       }
     } catch (error) {
       console.error('Provider authentication system error:', error);
@@ -285,6 +380,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           res.setHeader("Location", redirectUrl);
           return res.status(303).end();
         }
+        recordSuccessfulAttempt(rateLimitKey);
         return res.status(200).json({
           ok: true,
           redirectUrl,
@@ -308,6 +404,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.setHeader("Location", redirectUrl);
         return res.status(303).end();
       }
+      recordSuccessfulAttempt(rateLimitKey);
       return res.status(200).json({ ok: true, redirectUrl });
     }
 
@@ -328,6 +425,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.setHeader("Location", redirectUrl);
         return res.status(303).end();
       }
+      recordSuccessfulAttempt(rateLimitKey);
       return res.status(200).json({ ok: true, redirectUrl });
     }
 
@@ -350,6 +448,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             res.setHeader("Location", redirectUrl);
             return res.status(303).end();
           }
+          recordSuccessfulAttempt(rateLimitKey);
           return res.status(200).json({ ok: true, redirectUrl });
         }
       }
@@ -385,6 +484,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.setHeader("Location", `/login?error=invalid`);
         return res.status(303).end();
       }
+      recordFailedAttempt(rateLimitKey);
       res.status(401).json({ ok: false, error: "Invalid credentials" });
       return;
     }
@@ -414,6 +514,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(303).end();
     }
 
+    recordSuccessfulAttempt(rateLimitKey);
     res.status(200).json({ ok: true, redirect: redirectUrl });
   } catch (e: unknown) {
     console.error("/api/auth/login error:", e);

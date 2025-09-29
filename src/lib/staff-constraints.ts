@@ -564,17 +564,7 @@ export class StaffConstraintEnforcer {
     });
   }
 
-  private determineSeverity(violationType: string): string {
-    const severityMap: Record<string, string> = {
-      'blocked_action': 'high',
-      'data_visibility': 'medium',
-      'time_restriction': 'low',
-      'ip_restriction': 'high',
-      'concurrent_session': 'medium'
-    };
 
-    return severityMap[violationType] || 'medium';
-  }
 
   private isIpInCidrRange(ip: string, cidrs: string[]): boolean {
     // Simplified CIDR check - in production, use a proper CIDR library

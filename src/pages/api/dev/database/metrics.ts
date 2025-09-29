@@ -207,7 +207,8 @@ async function getTableStatistics(): Promise<TableStats[]> {
             rowCount = await prisma.user.count();
             break;
           case 'organization':
-            rowCount = await prisma.organization.count();
+          case 'org':
+            rowCount = await prisma.org.count();
             break;
           case 'lead':
             rowCount = await prisma.lead.count();

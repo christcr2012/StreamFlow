@@ -163,9 +163,10 @@ async function getActiveUsers(): Promise<number> {
     // Count users who have been active in the last 15 minutes
     const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000);
     
-    const activeUsers = await prisma.user.count({
+    const activeUsers = await prisma.userSession.count({
       where: {
-        lastLogin: {
+        isActive: true,
+        lastSeenAt: {
           gte: fifteenMinutesAgo
         }
       }
