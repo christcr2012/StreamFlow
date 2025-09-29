@@ -60,66 +60,108 @@ export default function RecoveryModeBanner({
   }
 
   return (
-    <div className={`bg-red-50 border-l-4 border-red-400 p-4 mb-6 ${className}`}>
+    <div className={`bg-gradient-to-r from-red-900/80 to-orange-900/80 backdrop-blur-xl border border-red-500/30 rounded-2xl p-6 mb-8 shadow-2xl shadow-red-500/10 ${className}`}>
       <div className="flex items-start">
         <div className="flex-shrink-0">
-          <ExclamationTriangleIcon 
-            className="h-6 w-6 text-red-400 animate-pulse" 
-            aria-hidden="true" 
-          />
+          <div className="w-12 h-12 bg-gradient-to-br from-red-500/20 to-orange-500/20 rounded-xl flex items-center justify-center border border-red-500/30">
+            <ExclamationTriangleIcon
+              className="h-7 w-7 text-red-400 animate-pulse"
+              aria-hidden="true"
+            />
+          </div>
         </div>
-        
-        <div className="ml-3 flex-1">
+
+        <div className="ml-4 flex-1">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-red-800">
-              🚨 Recovery Mode Active
-            </h3>
-            
+            <div className="flex items-center space-x-3">
+              <h3 className="text-xl font-bold text-red-100">
+                RECOVERY MODE ACTIVE
+              </h3>
+              <div className="px-3 py-1 bg-red-500/20 border border-red-500/30 rounded-full">
+                <span className="text-xs font-mono text-red-300 uppercase tracking-wider">EMERGENCY</span>
+              </div>
+            </div>
+
             <button
               onClick={handleManualRefresh}
               disabled={isRefreshing}
-              className="inline-flex items-center px-3 py-1 border border-red-300 shadow-sm text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
+              className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-slate-700 to-slate-800 border border-green-500/30 shadow-sm text-sm font-medium rounded-xl text-green-100 hover:from-slate-600 hover:to-slate-700 focus:outline-none focus:ring-2 focus:ring-green-500/50 disabled:opacity-50 transition-all duration-300"
             >
-              <ArrowPathIcon 
-                className={`h-4 w-4 mr-1 ${isRefreshing ? 'animate-spin' : ''}`} 
+              <ArrowPathIcon
+                className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`}
               />
-              {isRefreshing ? 'Checking...' : 'Check Status'}
+              {isRefreshing ? 'SCANNING...' : 'STATUS CHECK'}
             </button>
           </div>
           
-          <div className="mt-2 text-sm text-red-700">
-            <p className="font-medium mb-2">
-              The provider portal is operating in emergency recovery mode due to database connectivity issues.
+          <div className="mt-4 text-sm text-red-100">
+            <p className="font-medium mb-4 text-red-200">
+              PROVIDER PORTAL OPERATING IN EMERGENCY RECOVERY MODE - DATABASE CONNECTIVITY COMPROMISED
             </p>
-            
-            <div className="bg-red-100 rounded-md p-3 mb-3">
-              <h4 className="font-semibold text-red-800 mb-2">⚠️ Limited Functionality Available:</h4>
-              <ul className="list-disc list-inside space-y-1 text-red-700">
-                <li>System health monitoring and diagnostics</li>
-                <li>Emergency configuration changes</li>
-                <li>Log viewing and analysis</li>
-                <li>Basic operational controls</li>
-              </ul>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div className="bg-green-900/30 backdrop-blur-sm rounded-xl p-4 border border-green-500/20">
+                <h4 className="font-bold text-green-300 mb-3 flex items-center">
+                  <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+                  AVAILABLE SYSTEMS
+                </h4>
+                <ul className="space-y-2 text-green-200 text-sm">
+                  <li className="flex items-center">
+                    <span className="w-1 h-1 bg-green-400 rounded-full mr-2"></span>
+                    System health monitoring and diagnostics
+                  </li>
+                  <li className="flex items-center">
+                    <span className="w-1 h-1 bg-green-400 rounded-full mr-2"></span>
+                    Emergency configuration changes
+                  </li>
+                  <li className="flex items-center">
+                    <span className="w-1 h-1 bg-green-400 rounded-full mr-2"></span>
+                    Log viewing and analysis
+                  </li>
+                  <li className="flex items-center">
+                    <span className="w-1 h-1 bg-green-400 rounded-full mr-2"></span>
+                    Basic operational controls
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-red-900/30 backdrop-blur-sm rounded-xl p-4 border border-red-500/20">
+                <h4 className="font-bold text-red-300 mb-3 flex items-center">
+                  <div className="w-2 h-2 bg-red-400 rounded-full mr-2 animate-pulse"></div>
+                  DISABLED SYSTEMS
+                </h4>
+                <ul className="space-y-2 text-red-200 text-sm">
+                  <li className="flex items-center">
+                    <span className="w-1 h-1 bg-red-400 rounded-full mr-2"></span>
+                    Client data access and modifications
+                  </li>
+                  <li className="flex items-center">
+                    <span className="w-1 h-1 bg-red-400 rounded-full mr-2"></span>
+                    Billing operations and invoice generation
+                  </li>
+                  <li className="flex items-center">
+                    <span className="w-1 h-1 bg-red-400 rounded-full mr-2"></span>
+                    AI processing and lead scoring
+                  </li>
+                  <li className="flex items-center">
+                    <span className="w-1 h-1 bg-red-400 rounded-full mr-2"></span>
+                    User account management
+                  </li>
+                  <li className="flex items-center">
+                    <span className="w-1 h-1 bg-red-400 rounded-full mr-2"></span>
+                    Analytics and reporting
+                  </li>
+                </ul>
+              </div>
             </div>
-            
-            <div className="bg-red-100 rounded-md p-3 mb-3">
-              <h4 className="font-semibold text-red-800 mb-2">🚫 Disabled Features:</h4>
-              <ul className="list-disc list-inside space-y-1 text-red-700">
-                <li>Client data access and modifications</li>
-                <li>Billing operations and invoice generation</li>
-                <li>AI processing and lead scoring</li>
-                <li>User account management</li>
-                <li>Analytics and reporting</li>
-              </ul>
-            </div>
-            
-            <div className="flex items-center justify-between text-xs text-red-600 mt-3">
-              <span>
-                Last checked: {lastChecked.toLocaleTimeString()}
+
+            <div className="flex items-center justify-between text-xs text-slate-300 mt-4 p-3 bg-slate-800/50 rounded-xl border border-slate-600/30">
+              <span className="font-mono">
+                LAST SCAN: {lastChecked.toLocaleTimeString()}
               </span>
-              <span className="flex items-center">
-                <span className="inline-block w-2 h-2 bg-red-500 rounded-full mr-1 animate-pulse"></span>
-                Auto-refresh every 30s
+              <span className="flex items-center font-mono">
+                <span className="inline-block w-2 h-2 bg-orange-400 rounded-full mr-2 animate-pulse"></span>
+                AUTO-SCAN: 30s INTERVAL
               </span>
             </div>
           </div>

@@ -188,97 +188,127 @@ export default function ProviderPortal() {
         <title>Provider Portal • StreamCore</title>
       </Head>
 
-      <div className="p-6 space-y-8">
-        {/* Header */}
+      <div className="space-y-8">
+        {/* Futuristic Header */}
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-4xl font-bold text-gradient mb-2">
-              Provider Portal
-            </h1>
-            <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
-              Multi-client lead generation & revenue management
-            </p>
+          <div className="flex items-center space-x-6">
+            <div className="relative">
+              <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-green-500/25">
+                <span className="text-2xl text-white font-bold">SC</span>
+              </div>
+              <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-400 rounded-full animate-pulse border-2 border-slate-900"></div>
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-green-100 to-white bg-clip-text text-transparent mb-2">
+                COMMAND CENTER
+              </h1>
+              <p className="text-green-400 font-mono text-sm tracking-wider uppercase">
+                MULTI-CLIENT REVENUE OPTIMIZATION SYSTEM
+              </p>
+            </div>
           </div>
-          
-          <div className="flex gap-4">
-            <button 
+
+          <div className="flex items-center space-x-4">
+            <button
               onClick={() => router.push('/provider/clients/new')}
-              className="btn-primary"
+              className="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-xl shadow-lg shadow-green-500/25 hover:from-green-400 hover:to-green-500 transition-all duration-300 flex items-center space-x-2"
             >
-              <span>+ Add Client</span>
+              <span className="text-lg">+</span>
+              <span>ADD CLIENT</span>
             </button>
-            <button 
+            <button
               onClick={fetchProviderData}
-              className="btn-secondary"
               disabled={loadingData}
+              className="px-6 py-3 bg-slate-800 border border-green-500/30 text-green-100 font-semibold rounded-xl hover:bg-slate-700 transition-all duration-300 flex items-center space-x-2 disabled:opacity-50"
             >
-              <span>{loadingData ? '🔄' : '↻'} Refresh</span>
+              <span className={loadingData ? 'animate-spin' : ''}>{loadingData ? '⟳' : '↻'}</span>
+              <span>REFRESH</span>
             </button>
           </div>
         </div>
 
-        {/* Key Metrics Grid */}
+        {/* Futuristic Metrics Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="premium-card">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
-                Total Clients
-              </h3>
-              <span className="text-2xl">🏢</span>
+          <div className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-xl rounded-2xl p-6 border border-green-500/20 shadow-2xl shadow-green-500/5 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-green-500/5"></div>
+            <div className="relative">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xs font-bold text-green-400 uppercase tracking-widest">
+                  Network Nodes
+                </h3>
+                <div className="w-10 h-10 bg-gradient-to-br from-green-500/20 to-green-600/10 rounded-xl flex items-center justify-center border border-green-500/30">
+                  <span className="text-green-400 text-lg">🏢</span>
+                </div>
+              </div>
+              <p className="text-4xl font-bold text-white font-mono mb-2">
+                {metrics?.totalClients || 0}
+              </p>
+              <p className="text-xs text-slate-400 font-mono">
+                ACTIVE ORGANIZATIONS
+              </p>
             </div>
-            <p className="text-3xl font-bold text-gradient">
-              {metrics?.totalClients || 0}
-            </p>
-            <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
-              Active organizations
-            </p>
           </div>
 
-          <div className="premium-card">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
-                Monthly Revenue
-              </h3>
-              <span className="text-2xl">💰</span>
+          <div className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-xl rounded-2xl p-6 border border-green-500/20 shadow-2xl shadow-green-500/5 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-green-500/5"></div>
+            <div className="relative">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xs font-bold text-green-400 uppercase tracking-widest">
+                  Revenue Stream
+                </h3>
+                <div className="w-10 h-10 bg-gradient-to-br from-green-500/20 to-green-600/10 rounded-xl flex items-center justify-center border border-green-500/30">
+                  <span className="text-green-400 text-lg">💰</span>
+                </div>
+              </div>
+              <p className="text-4xl font-bold text-white font-mono mb-2">
+                ${metrics?.monthlyRevenue?.toLocaleString() || '0'}
+              </p>
+              <p className="text-xs text-slate-400 font-mono">
+                ${metrics?.totalRevenue?.toLocaleString() || '0'} TOTAL
+              </p>
             </div>
-            <p className="text-3xl font-bold text-gradient">
-              ${metrics?.monthlyRevenue?.toLocaleString() || '0'}
-            </p>
-            <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
-              ${metrics?.totalRevenue?.toLocaleString() || '0'} total
-            </p>
           </div>
 
-          <div className="premium-card">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
-                AI Costs This Month
-              </h3>
-              <span className="text-2xl">🤖</span>
+          <div className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-xl rounded-2xl p-6 border border-green-500/20 shadow-2xl shadow-green-500/5 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-green-500/5"></div>
+            <div className="relative">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xs font-bold text-green-400 uppercase tracking-widest">
+                  AI Processing
+                </h3>
+                <div className="w-10 h-10 bg-gradient-to-br from-green-500/20 to-green-600/10 rounded-xl flex items-center justify-center border border-green-500/30">
+                  <span className="text-green-400 text-lg">🤖</span>
+                </div>
+              </div>
+              <p className={`text-4xl font-bold font-mono mb-2 ${
+                (metrics?.aiCostThisMonth || 0) > 45 ? 'text-red-400' : 'text-green-400'
+              }`}>
+                ${metrics?.aiCostThisMonth?.toFixed(2) || '0.00'}
+              </p>
+              <p className="text-xs text-slate-400 font-mono">
+                ${(50 - (metrics?.aiCostThisMonth || 0)).toFixed(2)} REMAINING
+              </p>
             </div>
-            <p className="text-3xl font-bold" style={{ 
-              color: (metrics?.aiCostThisMonth || 0) > 45 ? 'var(--accent-warning)' : 'var(--accent-success)'
-            }}>
-              ${metrics?.aiCostThisMonth?.toFixed(2) || '0.00'}
-            </p>
-            <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
-              ${(50 - (metrics?.aiCostThisMonth || 0)).toFixed(2)} remaining
-            </p>
           </div>
 
-          <div className="premium-card">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
-                Profit Margin
-              </h3>
-              <span className="text-2xl">📈</span>
+          <div className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-xl rounded-2xl p-6 border border-green-500/20 shadow-2xl shadow-green-500/5 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-green-500/5"></div>
+            <div className="relative">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xs font-bold text-green-400 uppercase tracking-widest">
+                  Profit Margin
+                </h3>
+                <div className="w-10 h-10 bg-gradient-to-br from-green-500/20 to-green-600/10 rounded-xl flex items-center justify-center border border-green-500/30">
+                  <span className="text-green-400 text-lg">📈</span>
+                </div>
+              </div>
+              <p className="text-4xl font-bold text-green-400 font-mono mb-2">
+                {((metrics?.profitMargin || 0) * 100).toFixed(1)}%
+              </p>
+              <p className="text-xs text-slate-400 font-mono">
+                AFTER AI COSTS
+              </p>
             </div>
-            <p className="text-3xl font-bold text-gradient">
-              {((metrics?.profitMargin || 0) * 100).toFixed(1)}%
-            </p>
-            <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
-              After AI costs
-            </p>
           </div>
         </div>
 
