@@ -56,6 +56,9 @@ SCORE: 6.5/10 - Good foundation, needs mobile-first enhancement
 @tailwind components;
 @tailwind utilities;
 
+/* Import Enterprise Theme System */
+@import './themes.css';
+
 /* Ensure the theme takes priority over everything */
 html, body, #__next {
   min-height: 100vh !important;

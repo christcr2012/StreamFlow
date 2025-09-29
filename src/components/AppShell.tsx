@@ -3,12 +3,35 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { useMe } from "@/lib/useMe";
+import { ThemeProvider } from "@/lib/themes/ThemeProvider";
 import type { BrandConfig } from "@/lib/types/me";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const { pathname } = useRouter();
   const { org, loading } = useMe();
   const active = (p:string) => pathname === p || pathname.startsWith(p + "/");
+
+  // Wrap everything in ThemeProvider for system-wide theme support
+  return (
+    <ThemeProvider orgId={org?.id}>
+      <AppShellContent active={active} org={org} loading={loading}>
+        {children}
+      </AppShellContent>
+    </ThemeProvider>
+  );
+}
+
+function AppShellContent({
+  children,
+  active,
+  org,
+  loading
+}: {
+  children: React.ReactNode;
+  active: (p: string) => boolean;
+  org: any;
+  loading: boolean;
+}) {
   
   // Extract brand config safely with proper typing
   const brandConfig: BrandConfig = org?.brandConfig || {};
@@ -68,16 +91,19 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Futuristic Grid Background */}
+    <div
+      className="min-h-screen"
+      style={{ background: 'var(--theme-bg-main, linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #334155 100%))' }}
+    >
+      {/* Dynamic Grid Background */}
       <div className="fixed inset-0 opacity-10">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `
-            linear-gradient(rgba(34, 197, 94, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(34, 197, 94, 0.1) 1px, transparent 1px)
-          `,
-          backgroundSize: '20px 20px'
-        }}></div>
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: 'var(--theme-grid-pattern)',
+            backgroundSize: '20px 20px'
+          }}
+        ></div>
       </div>
 
       <div
@@ -88,8 +114,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           alignItems: "start",
           ...dynamicStyles
         }}>
-        {/* Futuristic Sidebar */}
-        <aside style={{gridRow:"1 / span 2"}} className="bg-slate-900/95 backdrop-blur-xl border-r border-green-500/20 shadow-2xl">
+        {/* Dynamic Themed Sidebar */}
+        <aside
+          style={{
+            gridRow:"1 / span 2",
+            backgroundColor: 'var(--theme-surface-1, rgba(20, 25, 35, 0.9))',
+            borderRight: '1px solid var(--theme-border-primary, rgba(34, 197, 94, 0.2))'
+          }}
+          className="backdrop-blur-xl shadow-2xl"
+        >
           {/* Futuristic Logo Section */}
           <div className="h-24 flex items-center justify-center border-b border-green-500/20 px-6">
             <Link href="/" aria-label="Home" className="block text-center">
@@ -157,32 +190,68 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             <NavLink href="/settings" active={active("/settings")}>
               <span className="text-lg mr-3">🔧</span>Settings
             </NavLink>
+            <NavLink href="/settings/themes" active={active("/settings/themes")}>
+              <span className="text-lg mr-3">🎨</span>Themes
+            </NavLink>
           </nav>
       </aside>
 
-      {/* Futuristic Top Bar */}
-      <header className="bg-slate-900/95 backdrop-blur-xl border-b border-green-500/20 shadow-2xl">
+      {/* Dynamic Themed Top Bar */}
+      <header
+        className="backdrop-blur-xl shadow-2xl"
+        style={{
+          backgroundColor: 'var(--theme-surface-1, rgba(20, 25, 35, 0.9))',
+          borderBottom: '1px solid var(--theme-border-primary, rgba(34, 197, 94, 0.2))'
+        }}
+      >
         <div className="h-20 px-8 flex items-center justify-between">
-          {/* Futuristic Brand Display */}
+          {/* Dynamic Brand Display */}
           <div className="flex items-center space-x-4">
-            <div className="w-1 h-8 bg-gradient-to-b from-green-400 to-green-600 rounded-full"></div>
+            <div
+              className="w-1 h-8 rounded-full"
+              style={{
+                background: 'linear-gradient(to bottom, var(--theme-accent-primary, #22c55e), var(--theme-accent-secondary, #16a34a))'
+              }}
+            ></div>
             <div>
-              <h2 className="text-xl font-bold bg-gradient-to-r from-white to-green-100 bg-clip-text text-transparent">
+              <h2
+                className="text-xl font-bold bg-clip-text text-transparent"
+                style={{
+                  background: 'var(--theme-heading-gradient, linear-gradient(to right, #ffffff, #dcfce7))',
+                  WebkitBackgroundClip: 'text'
+                }}
+              >
                 {brandName}
               </h2>
-              <p className="text-xs text-green-400 font-mono">BUSINESS.CORE</p>
+              <p
+                className="text-xs font-mono"
+                style={{ color: 'var(--theme-text-accent, #22c55e)' }}
+              >
+                BUSINESS.CORE
+              </p>
             </div>
           </div>
 
           <div className="flex items-center space-x-4">
             <Link
               href="/profile"
-              className="px-4 py-2 bg-slate-800 border border-green-500/30 text-green-400 rounded-lg hover:bg-slate-700 transition-all duration-300 text-sm font-medium"
+              className="px-4 py-2 rounded-lg transition-all duration-300 text-sm font-medium border"
+              style={{
+                backgroundColor: 'var(--theme-surface-2, rgba(26, 31, 40, 0.95))',
+                borderColor: 'var(--theme-border-accent, rgba(34, 197, 94, 0.3))',
+                color: 'var(--theme-text-accent, #22c55e)'
+              }}
             >
               Profile
             </Link>
             <form action="/api/auth/logout" method="post">
-              <button className="px-4 py-2 bg-gradient-to-r from-red-500/20 to-red-600/10 border border-red-500/30 text-red-400 rounded-lg hover:bg-red-500/20 transition-all duration-300 text-sm font-medium">
+              <button
+                className="px-4 py-2 rounded-lg transition-all duration-300 text-sm font-medium border border-red-500/30"
+                style={{
+                  backgroundColor: 'var(--theme-accent-error, #ef4444)20',
+                  color: 'var(--theme-accent-error, #ef4444)'
+                }}
+              >
                 Sign Out
               </button>
             </form>
@@ -190,19 +259,25 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      {/* Futuristic Content Area */}
-      <main className="p-8 bg-gradient-to-br from-slate-800/50 to-slate-900/50 relative overflow-auto" style={{
-        alignSelf: "start",
-        justifySelf: "start",
-        height: "fit-content",
-        minHeight: 0
-      }}>
-        {/* Content Background Pattern */}
+      {/* Dynamic Themed Content Area */}
+      <main
+        className="p-8 relative overflow-auto"
+        style={{
+          alignSelf: "start",
+          justifySelf: "start",
+          height: "fit-content",
+          minHeight: 0,
+          backgroundColor: 'var(--theme-surface-1, rgba(20, 25, 35, 0.9))50'
+        }}
+      >
+        {/* Dynamic Content Background Pattern */}
         <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 25% 25%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
-                             radial-gradient(circle at 75% 75%, rgba(34, 197, 94, 0.1) 0%, transparent 50%)`
-          }}></div>
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: 'var(--theme-background-pattern)'
+            }}
+          ></div>
         </div>
 
         <div className="max-w-6xl mx-auto w-full relative">
@@ -217,17 +292,30 @@ function NavLink({ href, active, children }:{href:string; active:boolean; childr
   return (
     <Link
       href={href}
-      className={`
-        group flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 relative overflow-hidden
-        ${active
-          ? 'bg-gradient-to-r from-green-500/20 to-green-600/10 text-green-100 border border-green-500/30 shadow-lg shadow-green-500/10'
-          : 'text-slate-300 hover:bg-slate-800/50 hover:text-green-100 hover:border-green-500/20 border border-transparent'
-        }
-      `}
+      className="group flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 relative overflow-hidden border"
+      style={{
+        backgroundColor: active
+          ? 'var(--theme-surface-2, rgba(26, 31, 40, 0.95))'
+          : 'transparent',
+        color: active
+          ? 'var(--theme-text-accent, #22c55e)'
+          : 'var(--theme-text-secondary, #cbd5e1)',
+        borderColor: active
+          ? 'var(--theme-border-accent, rgba(34, 197, 94, 0.3))'
+          : 'transparent',
+        boxShadow: active
+          ? '0 4px 6px -1px var(--theme-shadow-accent, rgba(34, 197, 94, 0.1))'
+          : 'none'
+      }}
     >
       {/* Active indicator */}
       {active && (
-        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-green-400 to-green-600"></div>
+        <div
+          className="absolute left-0 top-0 bottom-0 w-1 rounded-r"
+          style={{
+            background: 'linear-gradient(to bottom, var(--theme-accent-primary, #22c55e), var(--theme-accent-secondary, #16a34a))'
+          }}
+        ></div>
       )}
 
       <span className="flex items-center space-x-3 relative z-10">
@@ -235,7 +323,12 @@ function NavLink({ href, active, children }:{href:string; active:boolean; childr
       </span>
 
       {/* Hover effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      <div
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"
+        style={{
+          background: 'linear-gradient(to right, transparent, var(--theme-accent-primary, #22c55e)05, transparent)'
+        }}
+      ></div>
     </Link>
   );
 }

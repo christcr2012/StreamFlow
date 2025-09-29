@@ -1,0 +1,235 @@
+/* src/styles/themes.css */
+
+/**
+ * 🎨 ENTERPRISE THEME SYSTEM CSS
+ * 
+ * Global CSS for the 6-theme system with dynamic CSS custom properties.
+ * Provides fallbacks and ensures consistent styling across all themes.
+ * 
+ * THEMES:
+ * - Futuristic Green (default)
+ * - Crimson Command
+ * - Platinum Elite
+ * - Ocean Deep
+ * - Sunset Pro
+ * - Cosmic Purple
+ */
+
+/* === THEME SYSTEM BASE === */
+:root {
+  /* Default theme variables (Futuristic Green) */
+  --theme-bg-primary: #0a0c10;
+  --theme-bg-secondary: #0f1318;
+  --theme-bg-tertiary: #141920;
+  --theme-bg-elevated: #1a1f28;
+  --theme-bg-main: radial-gradient(ellipse 1400px 900px at 50% -20%, rgba(34,197,94,0.08), transparent 60%), radial-gradient(ellipse 1200px 800px at 20% 100%, rgba(34,197,94,0.06), transparent 50%), linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  
+  --theme-glass-bg: rgba(20, 25, 35, 0.8);
+  --theme-glass-bg-light: rgba(30, 35, 45, 0.6);
+  --theme-glass-border: rgba(255, 255, 255, 0.1);
+  --theme-glass-border-accent: rgba(34, 197, 94, 0.3);
+  
+  --theme-surface-1: rgba(20, 25, 35, 0.9);
+  --theme-surface-2: rgba(26, 31, 40, 0.95);
+  --theme-surface-3: rgba(32, 37, 48, 0.98);
+  --theme-surface-hover: rgba(40, 45, 56, 0.8);
+  
+  --theme-text-primary: #f8fafc;
+  --theme-text-secondary: #cbd5e1;
+  --theme-text-tertiary: #94a3b8;
+  --theme-text-muted: #64748b;
+  --theme-text-accent: #22c55e;
+  
+  --theme-accent-primary: #22c55e;
+  --theme-accent-secondary: #16a34a;
+  --theme-accent-tertiary: #15803d;
+  --theme-accent-success: #10b981;
+  --theme-accent-warning: #f59e0b;
+  --theme-accent-error: #ef4444;
+  --theme-accent-info: #3b82f6;
+  
+  --theme-border-primary: rgba(34, 197, 94, 0.2);
+  --theme-border-secondary: rgba(255, 255, 255, 0.1);
+  --theme-border-accent: rgba(34, 197, 94, 0.3);
+  
+  --theme-shadow-primary: rgba(0, 0, 0, 0.5);
+  --theme-shadow-accent: rgba(34, 197, 94, 0.1);
+  
+  --theme-grid-pattern: linear-gradient(rgba(34, 197, 94, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(34, 197, 94, 0.1) 1px, transparent 1px);
+  --theme-background-pattern: radial-gradient(circle at 25% 25%, rgba(34, 197, 94, 0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(34, 197, 94, 0.1) 0%, transparent 50%);
+  
+  --theme-pulse-color: #22c55e;
+  --theme-glow-color: rgba(34, 197, 94, 0.5);
+  --theme-hover-transition: all 0.3s ease;
+  
+  --theme-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  --theme-heading-gradient: linear-gradient(to right, #ffffff, #dcfce7);
+  --theme-accent-font: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* === THEME-SPECIFIC CLASSES === */
+
+/* Futuristic Green Theme */
+.theme-futuristic-green {
+  --theme-accent-primary: #22c55e;
+  --theme-accent-secondary: #16a34a;
+  --theme-accent-tertiary: #15803d;
+  --theme-text-accent: #22c55e;
+  --theme-border-accent: rgba(34, 197, 94, 0.3);
+  --theme-shadow-accent: rgba(34, 197, 94, 0.1);
+  --theme-pulse-color: #22c55e;
+  --theme-glow-color: rgba(34, 197, 94, 0.5);
+  --theme-grid-pattern: linear-gradient(rgba(34, 197, 94, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(34, 197, 94, 0.1) 1px, transparent 1px);
+  --theme-background-pattern: radial-gradient(circle at 25% 25%, rgba(34, 197, 94, 0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(34, 197, 94, 0.1) 0%, transparent 50%);
+  --theme-heading-gradient: linear-gradient(to right, #ffffff, #dcfce7);
+}
+
+/* Crimson Command Theme */
+.theme-crimson-command {
+  --theme-bg-main: radial-gradient(ellipse 1400px 900px at 50% -20%, rgba(220,38,38,0.08), transparent 60%), radial-gradient(ellipse 1200px 800px at 20% 100%, rgba(185,28,28,0.06), transparent 50%), linear-gradient(180deg, #1c1917 0%, #292524 50%, #44403c 100%);
+  --theme-accent-primary: #dc2626;
+  --theme-accent-secondary: #b91c1c;
+  --theme-accent-tertiary: #991b1b;
+  --theme-text-accent: #dc2626;
+  --theme-border-accent: rgba(220, 38, 38, 0.3);
+  --theme-shadow-accent: rgba(220, 38, 38, 0.1);
+  --theme-pulse-color: #dc2626;
+  --theme-glow-color: rgba(220, 38, 38, 0.5);
+  --theme-grid-pattern: linear-gradient(rgba(220, 38, 38, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(220, 38, 38, 0.1) 1px, transparent 1px);
+  --theme-background-pattern: radial-gradient(circle at 25% 25%, rgba(220, 38, 38, 0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(220, 38, 38, 0.1) 0%, transparent 50%);
+  --theme-heading-gradient: linear-gradient(to right, #ffffff, #fecaca);
+}
+
+/* Platinum Elite Theme */
+.theme-platinum-elite {
+  --theme-bg-main: radial-gradient(ellipse 1400px 900px at 50% -20%, rgba(148,163,184,0.08), transparent 60%), radial-gradient(ellipse 1200px 800px at 20% 100%, rgba(100,116,139,0.06), transparent 50%), linear-gradient(180deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+  --theme-text-primary: #0f172a;
+  --theme-text-secondary: #334155;
+  --theme-text-tertiary: #64748b;
+  --theme-text-muted: #94a3b8;
+  --theme-accent-primary: #64748b;
+  --theme-accent-secondary: #475569;
+  --theme-accent-tertiary: #334155;
+  --theme-text-accent: #475569;
+  --theme-border-accent: rgba(148, 163, 184, 0.3);
+  --theme-shadow-accent: rgba(148, 163, 184, 0.2);
+  --theme-pulse-color: #64748b;
+  --theme-glow-color: rgba(148, 163, 184, 0.5);
+  --theme-grid-pattern: linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px);
+  --theme-background-pattern: radial-gradient(circle at 25% 25%, rgba(148, 163, 184, 0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(148, 163, 184, 0.1) 0%, transparent 50%);
+  --theme-heading-gradient: linear-gradient(to right, #0f172a, #64748b);
+}
+
+/* Ocean Deep Theme */
+.theme-ocean-deep {
+  --theme-bg-main: radial-gradient(ellipse 1400px 900px at 50% -20%, rgba(59,130,246,0.08), transparent 60%), radial-gradient(ellipse 1200px 800px at 20% 100%, rgba(37,99,235,0.06), transparent 50%), linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  --theme-accent-primary: #3b82f6;
+  --theme-accent-secondary: #2563eb;
+  --theme-accent-tertiary: #1d4ed8;
+  --theme-text-accent: #3b82f6;
+  --theme-border-accent: rgba(59, 130, 246, 0.3);
+  --theme-shadow-accent: rgba(59, 130, 246, 0.1);
+  --theme-pulse-color: #3b82f6;
+  --theme-glow-color: rgba(59, 130, 246, 0.5);
+  --theme-grid-pattern: linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
+  --theme-background-pattern: radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+  --theme-heading-gradient: linear-gradient(to right, #ffffff, #dbeafe);
+}
+
+/* Sunset Pro Theme */
+.theme-sunset-pro {
+  --theme-bg-main: radial-gradient(ellipse 1400px 900px at 50% -20%, rgba(251,146,60,0.08), transparent 60%), radial-gradient(ellipse 1200px 800px at 20% 100%, rgba(245,158,11,0.06), transparent 50%), linear-gradient(180deg, #1c1917 0%, #292524 50%, #44403c 100%);
+  --theme-accent-primary: #f97316;
+  --theme-accent-secondary: #ea580c;
+  --theme-accent-tertiary: #c2410c;
+  --theme-text-accent: #f97316;
+  --theme-border-accent: rgba(251, 146, 60, 0.3);
+  --theme-shadow-accent: rgba(251, 146, 60, 0.1);
+  --theme-pulse-color: #f97316;
+  --theme-glow-color: rgba(251, 146, 60, 0.5);
+  --theme-grid-pattern: linear-gradient(rgba(251, 146, 60, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(251, 146, 60, 0.1) 1px, transparent 1px);
+  --theme-background-pattern: radial-gradient(circle at 25% 25%, rgba(251, 146, 60, 0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(251, 146, 60, 0.1) 0%, transparent 50%);
+  --theme-heading-gradient: linear-gradient(to right, #ffffff, #fed7aa);
+}
+
+/* Cosmic Purple Theme */
+.theme-cosmic-purple {
+  --theme-bg-main: radial-gradient(ellipse 1400px 900px at 50% -20%, rgba(139,92,246,0.08), transparent 60%), radial-gradient(ellipse 1200px 800px at 20% 100%, rgba(124,58,237,0.06), transparent 50%), linear-gradient(180deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
+  --theme-accent-primary: #8b5cf6;
+  --theme-accent-secondary: #7c3aed;
+  --theme-accent-tertiary: #6d28d9;
+  --theme-text-accent: #8b5cf6;
+  --theme-border-accent: rgba(139, 92, 246, 0.3);
+  --theme-shadow-accent: rgba(139, 92, 246, 0.1);
+  --theme-pulse-color: #8b5cf6;
+  --theme-glow-color: rgba(139, 92, 246, 0.5);
+  --theme-grid-pattern: linear-gradient(rgba(139, 92, 246, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(139, 92, 246, 0.1) 1px, transparent 1px);
+  --theme-background-pattern: radial-gradient(circle at 25% 25%, rgba(139, 92, 246, 0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+  --theme-heading-gradient: linear-gradient(to right, #ffffff, #ddd6fe);
+}
+
+/* === THEME UTILITIES === */
+
+/* Animated pulse effect using theme colors */
+@keyframes theme-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.theme-pulse {
+  animation: theme-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background-color: var(--theme-pulse-color);
+}
+
+/* Glow effect using theme colors */
+.theme-glow {
+  box-shadow: 0 0 20px var(--theme-glow-color);
+}
+
+/* Gradient text using theme colors */
+.theme-gradient-text {
+  background: var(--theme-heading-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Theme-aware hover transitions */
+.theme-hover-transition {
+  transition: var(--theme-hover-transition);
+}
+
+.theme-hover-transition:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--theme-shadow-accent);
+}
+
+/* === RESPONSIVE THEME SUPPORT === */
+@media (max-width: 768px) {
+  :root {
+    --theme-grid-pattern: none; /* Disable grid on mobile for performance */
+  }
+}
+
+/* === ACCESSIBILITY SUPPORT === */
+@media (prefers-reduced-motion: reduce) {
+  .theme-pulse {
+    animation: none;
+  }
+  
+  .theme-hover-transition {
+    transition: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --theme-border-accent: var(--theme-accent-primary);
+    --theme-text-accent: var(--theme-accent-primary);
+  }
+}
