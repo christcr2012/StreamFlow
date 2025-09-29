@@ -194,6 +194,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         return res.status(200).json({
           ok: true,
           user: {
+            id: `dev-user-${email.toLowerCase()}`, // Generate consistent dev user ID
             email: email.toLowerCase(),
             name: devUserName,
             baseRole: devRole as "OWNER" | "MANAGER" | "STAFF" | "PROVIDER" | "ACCOUNTANT" | "VIEWER",
@@ -266,6 +267,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return res.status(200).json({
       ok: true,
       user: {
+        id: user.id, // User ID from database
         email: user.email,
         name: user.name,
         baseRole: (user.role || "VIEWER") as "OWNER" | "MANAGER" | "STAFF" | "PROVIDER" | "ACCOUNTANT" | "VIEWER",

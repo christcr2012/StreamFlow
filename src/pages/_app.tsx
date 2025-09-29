@@ -2,6 +2,7 @@
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import AppNav from "@/components/AppNav";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import "@/styles/theme.css";
 import "@/styles/globals.css";
 
@@ -36,6 +37,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           </div>
         </div>
       </main>
+      {/* PWA Install Prompt - only show on client pages */}
+      <PWAInstallPrompt />
     </div>
   );
 }

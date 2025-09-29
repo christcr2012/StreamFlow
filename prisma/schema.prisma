@@ -478,6 +478,7 @@ model Org {
   tenantRegistrations TenantRegistration[]
   leadSourceConfigs   LeadSourceConfig[]
   jobTemplates        JobTemplate[]
+  idempotencyKeys     IdempotencyKey[]
 
   /// brandConfig stores white-label brand settings such as name, colors, and logo URL.
   /// It is JSON to allow arbitrary keys like { name: "Mountain Vista", color: "#123456", logoUrl: "https://..." }
@@ -3085,4 +3086,24 @@ model JobTemplate {
   @@unique([orgId, name])
   @@index([orgId])
   @@index([active])
+}
+
+/// IdempotencyKey tracks processed operations to prevent duplicates during offline sync
+model IdempotencyKey {
+  id         String   @id @default(cuid())
+  key        String   @unique
+  entityType String
+  entityId   String
+  response   String?  // JSON response stored as string
+  orgId      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+
+  // Relations
+  org Org @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([key])
+  @@index([entityType, entityId])
+  @@index([expiresAt])
+  @@index([orgId])
 }

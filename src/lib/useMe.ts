@@ -7,6 +7,7 @@ import type { MeResponse, OrgShape } from "@/lib/types/me";
  * We keep the shape stable so pages can rely on it.
  */
 export interface CurrentUser {
+  id: string;            // User ID for database operations
   email: string;
   name: string | null;
   // Back-compat alias; we surface "role" as the server's "baseRole"
@@ -48,6 +49,7 @@ export function useMe() {
       const u = (j as any).user;
 
       const me: CurrentUser = {
+        id: u.id,                    // User ID from server
         email: u.email,
         name: u.name ?? null,
         role: u.baseRole,            // alias baseRole → role

@@ -25,6 +25,7 @@ export type MeResponse =
   | {
       ok: true;
       user: {
+        id: string;            // User ID for database operations
         email: string;
         name: string | null;
         baseRole:
