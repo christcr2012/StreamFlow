@@ -660,6 +660,70 @@ model UserTwoFactor {
   @@index([userId])
 }
 
+/// ProviderSettings stores encrypted provider authentication and configuration data
+/// This table supports dual-layer authentication: primary DB-backed + break-glass env fallback
+model ProviderSettings {
+  id                String   @id @default(cuid())
+
+  // Authentication fields (encrypted)
+  email             String   @unique  // Provider email (encrypted)
+  passwordHash      String   // bcrypt/argon2 hash (encrypted)
+  totpSecret        String?  // Base32 TOTP secret (encrypted)
+
+  // Configuration fields (encrypted)
+  displayName       String?  // Provider display name (encrypted)
+  permissions       String[] // Provider permissions array (encrypted)
+
+  // Security & audit fields
+  isActive          Boolean  @default(true)
+  lastLoginAt       DateTime?
+  lastLoginIp       String?
+  failedLoginCount  Int      @default(0)
+  lockedUntil       DateTime?
+
+  // Audit trail
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  createdBy         String?  // Who created this provider account
+  updatedBy         String?  // Who last updated this account
+
+  // Audit log relationship
+  auditLogs         ProviderAuditLog[]
+
+  @@index([email])
+  @@index([isActive])
+  @@index([lastLoginAt])
+}
+
+/// ProviderAuditLog tracks all provider authentication and configuration changes
+model ProviderAuditLog {
+  id              String   @id @default(cuid())
+  providerId      String
+
+  // Action details
+  action          String   // LOGIN, LOGOUT, UPDATE_PASSWORD, UPDATE_TOTP, etc.
+  details         Json?    // Additional action details
+
+  // Context
+  ipAddress       String?
+  userAgent       String?
+  sessionId       String?
+
+  // Recovery mode tracking
+  isRecoveryMode  Boolean  @default(false)
+
+  // Audit metadata
+  timestamp       DateTime @default(now())
+
+  // Relationships
+  provider        ProviderSettings @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@index([providerId])
+  @@index([action])
+  @@index([timestamp])
+  @@index([isRecoveryMode])
+}
+
 /*
 === ENTERPRISE ROADMAP: LEAD DATA MODEL ===
 

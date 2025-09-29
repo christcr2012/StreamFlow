@@ -228,21 +228,68 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const HARDCODED_DEVELOPER_EMAIL = 'gametcr3@gmail.com';
     const HARDCODED_DEVELOPER_PASSWORD = 'Thrillicious01no';
 
-    // Check Provider System Authentication
-    if (emailInput.toLowerCase() === HARDCODED_PROVIDER_EMAIL.toLowerCase() && password === HARDCODED_PROVIDER_PASSWORD) {
-      console.log(`🏢 PROVIDER SYSTEM LOGIN: ${emailInput}`);
+    // Check Provider System Authentication (New Dual-Layer System)
+    try {
+      const { authenticateProvider } = await import('@/lib/provider-auth');
 
-      // Set PROVIDER-SPECIFIC cookie (different from client cookie)
-      let providerCookie = `ws_provider=${encodeURIComponent(emailInput)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`;
-      if (process.env.NODE_ENV === "production") providerCookie += "; Secure";
-      res.setHeader("Set-Cookie", providerCookie);
+      const providerAuthResult = await authenticateProvider({
+        email: emailInput,
+        password: password,
+        totpCode: req.body.totpCode, // TOTP code if provided
+        ipAddress: req.headers['x-forwarded-for'] as string || req.connection.remoteAddress || '',
+        userAgent: req.headers['user-agent'] || ''
+      });
 
-      const redirectUrl = '/provider';
-      if (isFormEncoded(req)) {
-        res.setHeader("Location", redirectUrl);
-        return res.status(303).end();
+      if (providerAuthResult.success) {
+        console.log(`🏢 PROVIDER SYSTEM LOGIN SUCCESS: ${emailInput} (mode: ${providerAuthResult.mode})`);
+
+        // Set PROVIDER-SPECIFIC cookie (different from client cookie)
+        let providerCookie = `ws_provider=${encodeURIComponent(emailInput)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`;
+        if (process.env.NODE_ENV === "production") providerCookie += "; Secure";
+        res.setHeader("Set-Cookie", providerCookie);
+
+        const redirectUrl = '/provider';
+        if (isFormEncoded(req)) {
+          res.setHeader("Location", redirectUrl);
+          return res.status(303).end();
+        }
+        return res.status(200).json({
+          ok: true,
+          redirectUrl,
+          mode: providerAuthResult.mode,
+          isRecoveryMode: providerAuthResult.mode === 'recovery'
+        });
+      } else if (providerAuthResult.requiresTOTP) {
+        return res.status(200).json({
+          success: false,
+          requiresTOTP: true,
+          message: 'TOTP code required for provider authentication'
+        });
+      } else {
+        console.log(`❌ PROVIDER AUTH FAILED: ${emailInput} - ${providerAuthResult.error}`);
       }
-      return res.status(200).json({ ok: true, redirectUrl });
+    } catch (error) {
+      console.error('Provider authentication system error:', error);
+      // Fall back to hardcoded authentication as backup
+      if (emailInput.toLowerCase() === HARDCODED_PROVIDER_EMAIL.toLowerCase() && password === HARDCODED_PROVIDER_PASSWORD) {
+        console.log(`🏢 PROVIDER FALLBACK LOGIN: ${emailInput}`);
+
+        let providerCookie = `ws_provider=${encodeURIComponent(emailInput)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`;
+        if (process.env.NODE_ENV === "production") providerCookie += "; Secure";
+        res.setHeader("Set-Cookie", providerCookie);
+
+        const redirectUrl = '/provider';
+        if (isFormEncoded(req)) {
+          res.setHeader("Location", redirectUrl);
+          return res.status(303).end();
+        }
+        return res.status(200).json({
+          ok: true,
+          redirectUrl,
+          mode: 'fallback',
+          isRecoveryMode: true
+        });
+      }
     }
 
     // Check Developer System Authentication

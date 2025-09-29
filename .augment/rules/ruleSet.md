@@ -25,3 +25,45 @@ AI Lead Scoring: Implement a hybrid AI scoring system. Classify leads (hot vs wa
 Secure Federation: Use HMAC-secured APIs for cross-tenant federation between client instances and the provider. Provide an impersonation feature in the Provider/Dev portals for support, with detailed audit logging.
 
 Modular Code: Keep code modular and decoupled by system. Do not mix codebases. Share only utility or library code if truly common (e.g. shared models), but segregate system-specific modules clearly.
+
+CRITICAL — Provider Auth Resilience (break-glass)
+
+Maintain a single emergency Provider admin backed by environment variables (email, password hash, optional TOTP).
+
+If the database is unreachable, the Provider portal automatically enters Recovery Mode and accepts only this emergency admin.
+
+Recovery Mode must:
+
+Be visibly indicated (banner + logs).
+
+Restrict capabilities to operational tasks (no tenant data mutations).
+
+Expire sessions quickly and force re-auth when DB returns.
+
+CRITICAL — Primary vs Secondary secrets
+
+Primary (mutable) Provider settings (emails, hashes, 2FA seeds, AI budgets, etc.) live in an encrypted DB table and are editable in the Provider UI (with audit logs).
+
+Secondary (immutable at runtime) break-glass creds live in Vercel env vars and are not editable from the UI. Rotation is an ops process (redeploy).
+
+Optional — External config mirror
+
+Keep a read-only mirror of minimal Provider allow-list/flags in an independent store (encrypted JSON in object storage or KV). Load at boot for degraded mode awareness; update via ops scripts only.
+
+Mandatory — Strong authentication
+
+Provider passwords are bcrypt/argon2 hashes, never plaintext.
+
+TOTP 2FA is required for break-glass logins.
+
+All recovery-mode logins and actions are audited.
+
+Why this works
+
+No DB dependency to get back in: break-glass creds are available even if Neon is down.
+
+No unsafe runtime env editing: you avoid trying to mutate Vercel env vars from inside the app.
+
+Clear guardrails: recovery mode is locked down, auditable, and temporary.
+
+Least privilege: normal operations stay DB-backed and fully auditable; the env path is only for emergencies.

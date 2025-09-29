@@ -14,9 +14,10 @@
  * - Federation control and settings
  */
 
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import RecoveryModeBanner from './RecoveryModeBanner';
 import {
   ChartBarIcon,
   CogIcon,
@@ -44,6 +45,7 @@ import {
 interface ProviderLayoutProps {
   children: ReactNode;
   title?: string;
+  isRecoveryMode?: boolean;
 }
 
 const navigationSections = [
@@ -116,8 +118,49 @@ const navigationSections = [
   }
 ];
 
-export default function ProviderLayout({ children, title = 'StreamCore Provider' }: ProviderLayoutProps) {
+export default function ProviderLayout({
+  children,
+  title = 'StreamCore Provider',
+  isRecoveryMode = false
+}: ProviderLayoutProps) {
   const router = useRouter();
+  const [systemStatus, setSystemStatus] = useState({
+    database: 'unavailable' as const,
+    api: 'limited' as const,
+    authentication: 'recovery' as const,
+    lastHealthCheck: new Date()
+  });
+
+  // Check system status periodically
+  useEffect(() => {
+    if (isRecoveryMode) {
+      const checkStatus = async () => {
+        try {
+          // This would normally call an API to check system health
+          // For now, we'll simulate the status
+          setSystemStatus(prev => ({
+            ...prev,
+            lastHealthCheck: new Date()
+          }));
+        } catch (error) {
+          console.error('Failed to check system status:', error);
+        }
+      };
+
+      checkStatus();
+      const interval = setInterval(checkStatus, 30000); // Check every 30 seconds
+      return () => clearInterval(interval);
+    }
+  }, [isRecoveryMode]);
+
+  const handleRefreshStatus = async () => {
+    // This would normally trigger a system health check
+    console.log('Refreshing system status...');
+    setSystemStatus(prev => ({
+      ...prev,
+      lastHealthCheck: new Date()
+    }));
+  };
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -197,8 +240,12 @@ export default function ProviderLayout({ children, title = 'StreamCore Provider'
                 </div>
               </div>
               <div className="flex items-center space-x-2 mt-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span className="text-xs text-slate-600">All systems operational</span>
+                <div className={`w-2 h-2 rounded-full ${
+                  isRecoveryMode ? 'bg-red-500 animate-pulse' : 'bg-green-500'
+                }`}></div>
+                <span className="text-xs text-slate-600">
+                  {isRecoveryMode ? 'Recovery mode active' : 'All systems operational'}
+                </span>
               </div>
             </div>
           </div>
@@ -207,11 +254,22 @@ export default function ProviderLayout({ children, title = 'StreamCore Provider'
         {/* Main Content */}
         <main className="flex-1 bg-slate-50">
           <div className="p-6">
+            {/* Recovery Mode Banner */}
+            <RecoveryModeBanner
+              isRecoveryMode={isRecoveryMode}
+              onRefresh={handleRefreshStatus}
+            />
+
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-slate-900">{title}</h2>
-              <p className="text-slate-600 mt-1">Cross-client management and revenue optimization</p>
+              <p className="text-slate-600 mt-1">
+                {isRecoveryMode
+                  ? 'Emergency operations mode - limited functionality available'
+                  : 'Cross-client management and revenue optimization'
+                }
+              </p>
             </div>
-            
+
             <div className="bg-white rounded-lg border border-slate-200 shadow-sm min-h-[600px]">
               {children}
             </div>
