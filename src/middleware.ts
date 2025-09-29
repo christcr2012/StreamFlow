@@ -132,6 +132,7 @@ export interface EnterpriseResponse extends NextResponse {
 import { NextResponse, type NextRequest } from "next/server";
 
 const PUBLIC_PATHS = new Set<string>([
+  "/",
   "/login",
   "/api/auth/login",
   "/api/auth/logout",
@@ -141,7 +142,13 @@ const PUBLIC_PATHS = new Set<string>([
 ]);
 
 // Anything here requires being signed in
-const PROTECTED_PREFIXES = ["/dashboard", "/leads", "/admin", "/reports", "/settings", "/profile"];
+const PROTECTED_PREFIXES = [
+  "/dashboard", "/leads", "/admin", "/reports", "/settings", "/profile",
+  "/owner", "/manager", "/staff", "/billing", "/analytics", "/jobs",
+  "/employees", "/clients", "/inventory", "/documents", "/calendar",
+  "/administration", "/ai-usage", "/invoices", "/operations", "/projects",
+  "/revenue", "/schedule", "/search", "/workforce", "/worker"
+];
 
 /**
  * 🔒 ENTERPRISE SECURITY MIDDLEWARE
@@ -167,8 +174,8 @@ export function middleware(req: NextRequest) {
 
   // Get user authentication from SEPARATE cookie systems
   const clientCookie = req.cookies.get("ws_user")?.value;
-  const providerCookie = req.cookies.get("ws_provider")?.value;
-  const developerCookie = req.cookies.get("ws_developer")?.value;
+  const providerCookie = decodeURIComponent(req.cookies.get("ws_provider")?.value || '');
+  const developerCookie = decodeURIComponent(req.cookies.get("ws_developer")?.value || '');
 
   // Define system boundaries
   const providerEmail = process.env.PROVIDER_EMAIL?.toLowerCase();
@@ -177,10 +184,10 @@ export function middleware(req: NextRequest) {
   // Determine user type based on WHICH cookie is present
   let userType: 'PROVIDER' | 'DEVELOPER' | 'CLIENT' | 'UNAUTHENTICATED' = 'UNAUTHENTICATED';
 
-  if (providerCookie && providerCookie.toLowerCase() === providerEmail) {
+  if (providerCookie && providerEmail && providerCookie.toLowerCase() === providerEmail) {
     userType = 'PROVIDER';
     console.log(`🏢 PROVIDER ACCESS: ${providerCookie}`);
-  } else if (developerCookie && developerCookie.toLowerCase() === developerEmail) {
+  } else if (developerCookie && developerEmail && developerCookie.toLowerCase() === developerEmail) {
     userType = 'DEVELOPER';
     console.log(`🔧 DEVELOPER ACCESS: ${developerCookie}`);
   } else if (clientCookie) {
@@ -226,6 +233,15 @@ export function middleware(req: NextRequest) {
       }
       return NextResponse.redirect(url);
     }
+  }
+
+  // SECURITY: If user is not authenticated and trying to access any non-public route, redirect to login
+  if (userType === 'UNAUTHENTICATED' && !PUBLIC_PATHS.has(pathname) && pathname !== '/') {
+    console.warn(`🚨 UNAUTHENTICATED ACCESS ATTEMPT: ${pathname}`);
+    const url = req.nextUrl.clone();
+    url.pathname = "/login";
+    url.searchParams.set("next", pathname);
+    return NextResponse.redirect(url);
   }
 
   // If no authentication required, allow

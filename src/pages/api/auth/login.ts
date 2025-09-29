@@ -273,7 +273,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       };
 
       for (const [role, devEmail] of Object.entries(DEV_USERS)) {
-        if (devEmail && emailInput === devEmail) {
+        if (devEmail && emailInput.toLowerCase() === devEmail) {
           console.log(`DEBUG: Dev test user login: ${emailInput} (${role}) - works with ANY password`);
           res.setHeader("Set-Cookie", buildCookie(emailInput));
 
