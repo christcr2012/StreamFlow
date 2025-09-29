@@ -469,13 +469,81 @@ export const cosmicPurpleTheme: ThemeConfig = {
   }
 };
 
+// Robinson Solutions Premium Theme
+const robinsonPremiumTheme: ThemeConfig = {
+  id: 'robinson-premium',
+  name: 'Robinson Premium',
+  description: 'Ultra-premium metallic blue design for Robinson Solutions enterprise platform',
+  category: 'premium',
+  colors: {
+    // Medium metallic blue color scheme
+    accentPrimary: '#4a90e2',      // Medium metallic blue
+    accentSecondary: '#357abd',     // Deeper metallic blue
+    accentTertiary: '#6ba3e8',     // Lighter metallic blue
+    accentSuccess: '#28a745',      // Success green
+    accentWarning: '#ffc107',      // Warning amber
+    accentError: '#dc3545',        // Error red
+    accentInfo: '#17a2b8',         // Info cyan
+
+    // Background gradients with metallic finish
+    bgMain: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f1419 100%)',
+    bgSecondary: 'linear-gradient(135deg, #16213e 0%, #1a1a2e 50%, #0f1419 100%)',
+    bgTertiary: 'linear-gradient(135deg, #0f1419 0%, #16213e 100%)',
+
+    // Surface colors with metallic sheen
+    surface1: 'rgba(74, 144, 226, 0.08)',
+    surface2: 'rgba(74, 144, 226, 0.12)',
+    surface3: 'rgba(74, 144, 226, 0.16)',
+
+    // Text colors optimized for metallic blue
+    textPrimary: '#ffffff',
+    textSecondary: '#e2e8f0',
+    textTertiary: '#94a3b8',
+    textAccent: '#4a90e2',
+    textMuted: '#64748b',
+
+    // Border colors with metallic effect
+    borderPrimary: 'rgba(74, 144, 226, 0.2)',
+    borderSecondary: 'rgba(74, 144, 226, 0.15)',
+    borderAccent: 'rgba(74, 144, 226, 0.4)',
+
+    // Shadow colors for depth
+    shadowPrimary: 'rgba(74, 144, 226, 0.25)',
+    shadowSecondary: 'rgba(74, 144, 226, 0.15)',
+    shadowAccent: 'rgba(74, 144, 226, 0.35)'
+  },
+  patterns: {
+    gridPattern: `
+      linear-gradient(rgba(74, 144, 226, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(74, 144, 226, 0.1) 1px, transparent 1px)
+    `,
+    dotPattern: `
+      radial-gradient(circle, rgba(74, 144, 226, 0.15) 1px, transparent 1px)
+    `,
+    hexPattern: `
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234a90e2' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")
+    `
+  },
+  animations: {
+    pulseColor: '#4a90e2',
+    glowColor: 'rgba(74, 144, 226, 0.5)',
+    hoverTransition: 'all 0.3s ease'
+  },
+  typography: {
+    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    headingGradient: 'linear-gradient(to right, #ffffff, #e2e8f0)',
+    accentFont: "'JetBrains Mono', 'Fira Code', monospace"
+  }
+};
+
 export const allThemes = {
   'futuristic-green': futuristicGreenTheme,
   'crimson-command': crimsonCommandTheme,
   'platinum-elite': platinumEliteTheme,
   'ocean-deep': oceanDeepTheme,
   'sunset-pro': sunsetProTheme,
-  'cosmic-purple': cosmicPurpleTheme
+  'cosmic-purple': cosmicPurpleTheme,
+  'robinson-premium': robinsonPremiumTheme
 };
 
 export type ThemeId = keyof typeof allThemes;

@@ -158,46 +158,81 @@ export default function ProviderThemesPage() {
           <div className="bg-slate-900/60 backdrop-blur-xl rounded-2xl border border-green-500/20 p-8">
             <h2 className="text-xl font-semibold text-white mb-6">Available Themes</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Object.entries(allThemes).map(([themeId, theme]) => (
-                <div
-                  key={themeId}
-                  className="bg-slate-800/50 rounded-xl border border-slate-700 p-6 hover:border-green-500/30 transition-all duration-300"
-                >
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div
-                      className="w-8 h-8 rounded-lg"
-                      style={{ backgroundColor: theme.colors.accentPrimary }}
-                    ></div>
-                    <div>
-                      <h3 className="font-semibold text-white">{theme.name}</h3>
-                      <p className="text-xs text-slate-400 capitalize">{theme.category}</p>
+              {Object.entries(allThemes).map(([themeId, theme]) => {
+                const isPremium = theme.category === 'premium';
+                const isRobinson = themeId === 'robinson-premium';
+                return (
+                  <div
+                    key={themeId}
+                    className={`bg-slate-800/50 rounded-xl border p-6 transition-all duration-300 ${
+                      isPremium
+                        ? 'border-blue-500/50 hover:border-blue-500/70 shadow-lg shadow-blue-500/20'
+                        : 'border-slate-700 hover:border-green-500/30'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div
+                          className="w-8 h-8 rounded-lg"
+                          style={{ backgroundColor: theme.colors.accentPrimary }}
+                        ></div>
+                        <div>
+                          <h3 className="font-semibold text-white">{theme.name}</h3>
+                          <p className="text-xs text-slate-400 capitalize">{theme.category}</p>
+                        </div>
+                      </div>
+                      {isPremium && (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                          ⭐ Premium
+                        </span>
+                      )}
+                      {isRobinson && (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                          🏢 Enterprise
+                        </span>
+                      )}
+                    </div>
+
+                    <p className="text-sm text-slate-300 mb-4">{theme.description}</p>
+
+                    {/* Color Palette Preview */}
+                    <div className="flex space-x-2 mb-4">
+                      <div
+                        className="w-4 h-4 rounded-full"
+                        style={{ backgroundColor: theme.colors.accentPrimary }}
+                      ></div>
+                      <div
+                        className="w-4 h-4 rounded-full"
+                        style={{ backgroundColor: theme.colors.accentSecondary }}
+                      ></div>
+                      <div
+                        className="w-4 h-4 rounded-full"
+                        style={{ backgroundColor: theme.colors.accentTertiary }}
+                      ></div>
+                      <div
+                        className="w-4 h-4 rounded-full"
+                        style={{ backgroundColor: theme.colors.textAccent }}
+                      ></div>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="text-xs text-slate-400">
+                        Used by {clients.filter(c => c.currentTheme === themeId).length} clients
+                      </div>
+                      <button
+                        onClick={() => applyThemeToAllClients(themeId)}
+                        className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                          isPremium
+                            ? 'bg-blue-500/20 text-blue-400 hover:bg-blue-500/30'
+                            : 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
+                        }`}
+                      >
+                        Apply
+                      </button>
                     </div>
                   </div>
-                  <p className="text-sm text-slate-300 mb-4">{theme.description}</p>
-                  
-                  {/* Color Palette Preview */}
-                  <div className="flex space-x-2 mb-4">
-                    <div
-                      className="w-4 h-4 rounded-full"
-                      style={{ backgroundColor: theme.colors.accentPrimary }}
-                    ></div>
-                    <div
-                      className="w-4 h-4 rounded-full"
-                      style={{ backgroundColor: theme.colors.accentSecondary }}
-                    ></div>
-                    <div
-                      className="w-4 h-4 rounded-full"
-                      style={{ backgroundColor: theme.colors.accentTertiary }}
-                    ></div>
-                    <div
-                      className="w-4 h-4 rounded-full"
-                      style={{ backgroundColor: theme.colors.textAccent }}
-                    ></div>
-                  </div>
-
-                  <div className="text-xs text-slate-400">
-                    Used by {clients.filter(c => c.currentTheme === themeId).length} clients
-                  </div>
+                );
+              })}
                 </div>
               ))}
             </div>
