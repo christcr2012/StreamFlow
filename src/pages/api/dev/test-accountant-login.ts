@@ -34,6 +34,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const testEmail = 'accountant@streamflow.com';
     const testPassword = 'Thrillicious01no';
 
+    // Test the full authentication condition
+    const authSuccess = accountantEmail && accountantPassword &&
+                       testEmail.toLowerCase() === accountantEmail &&
+                       testPassword === accountantPassword;
+
+    // Test middleware logic
+    const cookieValue = encodeURIComponent(testEmail);
+    const decodedCookieValue = decodeURIComponent(cookieValue);
+    const middlewareMatch = decodedCookieValue.toLowerCase() === accountantEmail;
+
     const testResults = {
       environment: {
         ACCOUNTANT_EMAIL: process.env.ACCOUNTANT_EMAIL,
@@ -56,29 +66,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         encoded: encodeURIComponent(testEmail),
         decoded: decodeURIComponent(encodeURIComponent(testEmail)),
         encodingWorks: testEmail === decodeURIComponent(encodeURIComponent(testEmail))
+      },
+      authenticationResult: {
+        success: authSuccess,
+        wouldRedirectTo: authSuccess ? '/accountant' : null
+      },
+      middlewareTest: {
+        cookieValue,
+        decodedCookieValue,
+        middlewareMatch,
+        wouldAllowAccess: middlewareMatch
       }
-    };
-
-    // Test the full authentication condition
-    const authSuccess = accountantEmail && accountantPassword && 
-                       testEmail.toLowerCase() === accountantEmail && 
-                       testPassword === accountantPassword;
-
-    testResults.authenticationResult = {
-      success: authSuccess,
-      wouldRedirectTo: authSuccess ? '/accountant' : null
-    };
-
-    // Test middleware logic
-    const cookieValue = encodeURIComponent(testEmail);
-    const decodedCookieValue = decodeURIComponent(cookieValue);
-    const middlewareMatch = decodedCookieValue.toLowerCase() === accountantEmail;
-
-    testResults.middlewareTest = {
-      cookieValue,
-      decodedCookieValue,
-      middlewareMatch,
-      wouldAllowAccess: middlewareMatch
     };
 
     console.log('🔍 ACCOUNTANT LOGIN TEST RESULTS:', JSON.stringify(testResults, null, 2));
