@@ -462,6 +462,12 @@ model Org {
   themeConfigs     ThemeConfig[]     @relation("OrgThemeConfigs")
   themeUsage       ThemeUsage[]      @relation("OrgThemeUsage")
 
+  // Security and Approval System Relations
+  approvalRequests ApprovalRequest[] @relation("OrgApprovalRequests")
+  securityIncidents SecurityIncident[] @relation("OrgSecurityIncidents")
+  deviceAccess     DeviceAccess[]    @relation("OrgDeviceAccess")
+  userLockouts     UserLockout[]     @relation("OrgUserLockouts")
+
   /// brandConfig stores white-label brand settings such as name, colors, and logo URL.
   /// It is JSON to allow arbitrary keys like { name: "Mountain Vista", color: "#123456", logoUrl: "https://..." }
   brandConfig Json? @default("{}")
@@ -619,7 +625,16 @@ model User {
 
   // Theme System Relations
   themeUsage          ThemeUsage[]      @relation("UserThemeUsage")
-  
+
+  // Security and Approval System Relations
+  approvalRequests    ApprovalRequest[] @relation("UserApprovalRequests")
+  approvals           ApprovalRequest[] @relation("UserApprovals")
+  securityIncidents   SecurityIncident[] @relation("UserSecurityIncidents")
+  assignedIncidents   SecurityIncident[] @relation("AssignedSecurityIncidents")
+  deviceAccess        DeviceAccess[]    @relation("UserDeviceAccess")
+  lockouts            UserLockout[]     @relation("UserLockouts")
+  unlockedUsers       UserLockout[]     @relation("UnlockedUsers")
+
   @@unique([orgId, id])  // Multi-tenant isolation
 
   // 🚀 PERFORMANCE INDEXES FOR USER QUERIES
@@ -2197,7 +2212,191 @@ model TrainingCompletion {
   @@index([expiresAt])
 }
 
+// ===== MISSING MODELS FOR COMPLETE FUNCTIONALITY =====
+
+/// ApprovalRequest manages workflow approval for sensitive actions
+model ApprovalRequest {
+  id              String   @id @default(cuid())
+  orgId           String   // Organization context
+
+  // Request Details
+  requestedBy     String   // User ID who requested approval
+  action          String   // Action requiring approval
+  entityType      String   // Type of entity being acted upon
+  entityId        String   // ID of entity being acted upon
+  reason          String?  // Optional reason for the request
+
+  // Approval Workflow
+  status          ApprovalStatus @default(PENDING)
+  approverRoles   String[] // Roles that can approve this request
+  approvedBy      String?  // User ID who approved/rejected
+  approvedAt      DateTime?
+  rejectedReason  String?  // Reason for rejection
+
+  // Timing and Escalation
+  requestedAt     DateTime @default(now())
+  expiresAt       DateTime // When request expires
+  escalationRules Json?    // Escalation configuration
+
+  // Relations
+  org             Org      @relation("OrgApprovalRequests", fields: [orgId], references: [id])
+  requester       User     @relation("UserApprovalRequests", fields: [requestedBy], references: [id])
+  approver        User?    @relation("UserApprovals", fields: [approvedBy], references: [id])
+
+  @@index([orgId, status])
+  @@index([requestedBy, status])
+  @@index([expiresAt])
+}
+
+/// SecurityIncident tracks security violations and anomalies
+model SecurityIncident {
+  id              String   @id @default(cuid())
+  orgId           String   // Organization context
+
+  // Incident Details
+  userId          String?  // User involved (if applicable)
+  incidentType    SecurityIncidentType
+  severity        SecuritySeverity @default(MEDIUM)
+  description     String   // Incident description
+
+  // Context and Evidence
+  ipAddress       String?  // IP address involved
+  userAgent       String?  // User agent string
+  requestPath     String?  // API path or page accessed
+  metadata        Json?    // Additional incident data
+
+  // Response and Resolution
+  status          IncidentStatus @default(OPEN)
+  assignedTo      String?  // Security team member assigned
+  resolvedAt      DateTime?
+  resolution      String?  // Resolution notes
+
+  // Timing
+  detectedAt      DateTime @default(now())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  org             Org      @relation("OrgSecurityIncidents", fields: [orgId], references: [id])
+  user            User?    @relation("UserSecurityIncidents", fields: [userId], references: [id])
+  assignee        User?    @relation("AssignedSecurityIncidents", fields: [assignedTo], references: [id])
+
+  @@index([orgId, incidentType, detectedAt])
+  @@index([userId, incidentType])
+  @@index([status, severity])
+}
+
+/// DeviceAccess tracks user device access for security monitoring
+model DeviceAccess {
+  id              String   @id @default(cuid())
+  orgId           String   // Organization context
+  userId          String   // User ID
+
+  // Device Information
+  userAgent       String   // Browser/device user agent
+  deviceType      DeviceType @default(UNKNOWN)
+  deviceName      String?  // Friendly device name
+  fingerprint     String?  // Device fingerprint hash
+
+  // Access Tracking
+  firstSeenAt     DateTime @default(now())
+  lastSeenAt      DateTime @default(now())
+  accessCount     Int      @default(1)
+  isBlocked       Boolean  @default(false)
+
+  // Location and Network
+  lastIpAddress   String?
+  lastLocation    String?  // Approximate location
+
+  // Relations
+  org             Org      @relation("OrgDeviceAccess", fields: [orgId], references: [id])
+  user            User     @relation("UserDeviceAccess", fields: [userId], references: [id])
+
+  @@unique([userId, userAgent])
+  @@index([orgId, userId])
+  @@index([lastSeenAt])
+  @@index([isBlocked])
+}
+
+/// UserLockout manages automatic user lockouts for security
+model UserLockout {
+  id              String   @id @default(cuid())
+  orgId           String   // Organization context
+  userId          String   // Locked user ID
+
+  // Lockout Details
+  reason          String   // Reason for lockout
+  lockoutType     LockoutType @default(SECURITY_VIOLATION)
+  severity        SecuritySeverity @default(MEDIUM)
+
+  // Timing
+  lockedAt        DateTime @default(now())
+  expiresAt       DateTime? // When lockout expires (null = manual unlock required)
+  unlockedAt      DateTime?
+  unlockedBy      String?  // User who unlocked
+
+  // Status
+  isActive        Boolean  @default(true)
+
+  // Relations
+  org             Org      @relation("OrgUserLockouts", fields: [orgId], references: [id])
+  user            User     @relation("UserLockouts", fields: [userId], references: [id])
+  unlocker        User?    @relation("UnlockedUsers", fields: [unlockedBy], references: [id])
+
+  @@index([orgId, userId, isActive])
+  @@index([expiresAt])
+  @@index([lockedAt])
+}
+
 // ===== ENUM DEFINITIONS FOR NEW MODELS =====
+
+enum ApprovalStatus {
+  PENDING     // Awaiting approval
+  APPROVED    // Request approved
+  REJECTED    // Request rejected
+  EXPIRED     // Request expired
+  CANCELLED   // Request cancelled
+}
+
+enum SecurityIncidentType {
+  CONSTRAINT_VIOLATION    // Business rule violation
+  SECURITY_VIOLATION     // Security policy violation
+  ANOMALY_DETECTION      // Unusual behavior detected
+  FAILED_AUTHENTICATION  // Authentication failure
+  UNAUTHORIZED_ACCESS    // Access to restricted resource
+  DATA_BREACH           // Potential data breach
+  SUSPICIOUS_ACTIVITY   // Suspicious user activity
+}
+
+enum SecuritySeverity {
+  LOW       // Minor security concern
+  MEDIUM    // Moderate security risk
+  HIGH      // Significant security risk
+  CRITICAL  // Critical security threat
+}
+
+enum IncidentStatus {
+  OPEN        // Incident is open
+  INVESTIGATING // Under investigation
+  RESOLVED    // Incident resolved
+  CLOSED      // Incident closed
+  FALSE_POSITIVE // False alarm
+}
+
+enum DeviceType {
+  DESKTOP     // Desktop computer
+  MOBILE      // Mobile device
+  TABLET      // Tablet device
+  UNKNOWN     // Unknown device type
+}
+
+enum LockoutType {
+  SECURITY_VIOLATION  // Security policy violation
+  FAILED_ATTEMPTS    // Too many failed attempts
+  SUSPICIOUS_ACTIVITY // Suspicious behavior
+  MANUAL_LOCKOUT     // Manual administrative lockout
+  COMPLIANCE_VIOLATION // Compliance rule violation
+}
 
 enum JobStatus {
   SCHEDULED   // Job scheduled but not started
