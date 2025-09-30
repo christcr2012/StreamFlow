@@ -40,6 +40,10 @@
     "node_modules",
     "**/ai-triage-agent*/**",
     "/tmp/**",
-    "attached_assets/**"
+    "attached_assets/**",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
   ]
 }

@@ -73,7 +73,7 @@ export function useOfflineTimeClock(options: UseOfflineTimeClockOptions = {}): U
   const [weekTimesheets, setWeekTimesheets] = useState<OfflineTimesheet[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [isOnline, setIsOnline] = useState(typeof window !== 'undefined' ? navigator.onLine : true);
   const [isSyncing, setIsSyncing] = useState(false);
   const [pendingCount, setPendingCount] = useState(0);
   const [sessionDuration, setSessionDuration] = useState(0);
@@ -175,7 +175,7 @@ export function useOfflineTimeClock(options: UseOfflineTimeClockOptions = {}): U
 
   // Get current location if enabled
   const getCurrentLocation = useCallback(async (): Promise<{ latitude: number; longitude: number; accuracy: number } | undefined> => {
-    if (!options.enableLocationTracking || !navigator.geolocation) {
+    if (typeof window === 'undefined' || !options.enableLocationTracking || !navigator.geolocation) {
       return undefined;
     }
 
@@ -207,16 +207,18 @@ export function useOfflineTimeClock(options: UseOfflineTimeClockOptions = {}): U
     updateSyncStatus();
     
     // Listen for online/offline events
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-    
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-    
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
+    if (typeof window !== 'undefined') {
+      const handleOnline = () => setIsOnline(true);
+      const handleOffline = () => setIsOnline(false);
+
+      window.addEventListener('online', handleOnline);
+      window.addEventListener('offline', handleOffline);
+
+      return () => {
+        window.removeEventListener('online', handleOnline);
+        window.removeEventListener('offline', handleOffline);
+      };
+    }
   }, [loadTimesheets, updateSyncStatus]);
 
   // Clock in

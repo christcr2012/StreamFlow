@@ -4,7 +4,7 @@ import { consolidatedAudit } from './consolidated-audit';
 
 /**
  * 🔄 OFFLINE SYNC ENGINE
- * 
+ *
  * This module handles synchronization between offline data and the server.
  * Features:
  * - Operation queuing for offline actions
@@ -46,7 +46,7 @@ export interface SyncOptions {
 // ===================================================================
 
 export class SyncEngine {
-  private isOnline: boolean = navigator.onLine;
+  private isOnline: boolean = typeof window !== 'undefined' ? navigator.onLine : true;
   private isSyncing: boolean = false;
   private syncInterval: NodeJS.Timeout | null = null;
   private retryTimeouts: Map<string, NodeJS.Timeout> = new Map();

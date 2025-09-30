@@ -154,12 +154,12 @@ export function requirePerm(permission: string) {
     
     // Check if user has the required permission
     if (!session.perms || !session.perms.includes(permission)) {
-      await auditAccessDenied(req, `Missing permission: ${permission}`, session.space, session.baseRole);
+      await auditAccessDenied(req, `Missing permission: ${permission}`, session.space, session.baseRole ?? null);
       return res.status(403).json({ error: `Forbidden - missing permission: ${permission}` });
     }
-    
+
     // Permission check passed
-    await auditAccessGranted(req, session.space, session.baseRole);
+    await auditAccessGranted(req, session.space, session.baseRole ?? null);
     await next();
   };
 }
@@ -206,14 +206,14 @@ async function auditAccessDenied(
 ) {
   try {
     const context = consolidatedAudit.extractContext(req as NextApiRequest);
-    
+
     await consolidatedAudit.logSecurity(
-      `Access denied: ${req.url} - ${reason}`,
+      'PERMISSION_DENIED',
       'system',
       space === 'provider' ? 'PROVIDER' :
       space === 'developer' ? 'DEVELOPER' :
       space === 'accountant' ? 'ACCOUNTANT' : 'CLIENT',
-      'ACCESS_DENIED',
+      `Access denied: ${req.url}`,
       context,
       {
         path: req.url,
