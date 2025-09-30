@@ -292,17 +292,149 @@ function HoursStep({ onNext, onBack, data }: StepProps) {
   );
 }
 
-// TODO: Implement remaining steps
 function TeamStep({ onNext, onBack }: StepProps) {
+  const [teamMembers, setTeamMembers] = useState<Array<{ email: string; name: string; role: string }>>([
+    { email: '', name: '', role: 'STAFF' }
+  ]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const addMember = () => {
+    setTeamMembers([...teamMembers, { email: '', name: '', role: 'STAFF' }]);
+  };
+
+  const removeMember = (index: number) => {
+    setTeamMembers(teamMembers.filter((_, i) => i !== index));
+  };
+
+  const updateMember = (index: number, field: string, value: string) => {
+    const updated = [...teamMembers];
+    updated[index] = { ...updated[index], [field]: value };
+    setTeamMembers(updated);
+  };
+
+  const handleSubmit = async () => {
+    // Filter out empty entries
+    const validMembers = teamMembers.filter(m => m.email && m.name);
+
+    if (validMembers.length === 0) {
+      // Skip if no members added
+      onNext({ teamMembers: [] });
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      // Create users via API
+      for (const member of validMembers) {
+        const response = await fetch('/api/admin/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: member.email,
+            name: member.name,
+            role: member.role,
+            sendInvite: true // Flag to send invitation email (stubbed for now)
+          })
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.error || 'Failed to create user');
+        }
+      }
+
+      onNext({ teamMembers: validMembers });
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
-      <p className="text-gray-600">Team invitation step - TODO</p>
+      <div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">Invite Your Team</h3>
+        <p className="text-gray-600">Add team members who will use StreamFlow. They'll receive an email with login instructions.</p>
+      </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+          {error}
+        </div>
+      )}
+
+      <div className="space-y-4">
+        {teamMembers.map((member, index) => (
+          <div key={index} className="flex gap-3 items-start">
+            <div className="flex-1 grid grid-cols-3 gap-3">
+              <input
+                type="text"
+                placeholder="Full Name"
+                value={member.name}
+                onChange={(e) => updateMember(index, 'name', e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <input
+                type="email"
+                placeholder="email@company.com"
+                value={member.email}
+                onChange={(e) => updateMember(index, 'email', e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <select
+                value={member.role}
+                onChange={(e) => updateMember(index, 'role', e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="MANAGER">Manager</option>
+                <option value="STAFF">Staff</option>
+                <option value="EMPLOYEE">Employee</option>
+              </select>
+            </div>
+            {teamMembers.length > 1 && (
+              <button
+                onClick={() => removeMember(index)}
+                className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg"
+              >
+                Remove
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <button
+        onClick={addMember}
+        className="text-blue-600 hover:text-blue-700 font-medium"
+      >
+        + Add Another Team Member
+      </button>
+
       <div className="flex space-x-4">
-        <button onClick={onBack} className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium">
+        <button
+          onClick={onBack}
+          disabled={isSubmitting}
+          className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium disabled:opacity-50"
+        >
           Back
         </button>
-        <button onClick={() => onNext({})} className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">
+        <button
+          onClick={() => onNext({ teamMembers: [] })}
+          disabled={isSubmitting}
+          className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium disabled:opacity-50"
+        >
           Skip for Now
+        </button>
+        <button
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+          className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50"
+        >
+          {isSubmitting ? 'Inviting...' : 'Invite Team'}
         </button>
       </div>
     </div>
@@ -310,15 +442,224 @@ function TeamStep({ onNext, onBack }: StepProps) {
 }
 
 function ModulesStep({ onNext, onBack }: StepProps) {
+  // Curated starter pack of essential features
+  const availableModules = [
+    {
+      key: 'ai_lead_scoring',
+      name: 'AI Lead Scoring',
+      description: 'Intelligent lead prioritization and scoring',
+      category: 'AI_ANALYTICS',
+      monthlyCost: 45,
+      recommended: true
+    },
+    {
+      key: 'mobile_app',
+      name: 'Mobile App Access',
+      description: 'iOS and Android apps for field workers',
+      category: 'MOBILE',
+      monthlyCost: 0,
+      recommended: true
+    },
+    {
+      key: 'api_access',
+      name: 'API Access',
+      description: 'RESTful API for integrations',
+      category: 'DEVELOPER_TOOLS',
+      monthlyCost: 25,
+      recommended: false
+    },
+    {
+      key: 'advanced_reporting',
+      name: 'Advanced Reporting',
+      description: 'Custom reports and analytics dashboards',
+      category: 'ANALYTICS',
+      monthlyCost: 35,
+      recommended: true
+    },
+    {
+      key: 'sms_notifications',
+      name: 'SMS Notifications',
+      description: 'Text message alerts and reminders',
+      category: 'COMMUNICATION',
+      monthlyCost: 15,
+      recommended: false
+    },
+    {
+      key: 'document_generation',
+      name: 'Document Generation',
+      description: 'Automated proposals and contracts',
+      category: 'AUTOMATION',
+      monthlyCost: 20,
+      recommended: true
+    },
+    {
+      key: 'scheduling_optimization',
+      name: 'Scheduling Optimization',
+      description: 'AI-powered job scheduling and routing',
+      category: 'AI_ANALYTICS',
+      monthlyCost: 40,
+      recommended: false
+    },
+    {
+      key: 'inventory_management',
+      name: 'Inventory Management',
+      description: 'Track materials and equipment',
+      category: 'OPERATIONS',
+      monthlyCost: 30,
+      recommended: false
+    }
+  ];
+
+  const [selectedModules, setSelectedModules] = useState<string[]>(
+    availableModules.filter(m => m.recommended).map(m => m.key)
+  );
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const toggleModule = (moduleKey: string) => {
+    setSelectedModules(prev =>
+      prev.includes(moduleKey)
+        ? prev.filter(k => k !== moduleKey)
+        : [...prev, moduleKey]
+    );
+  };
+
+  const totalMonthlyCost = availableModules
+    .filter(m => selectedModules.includes(m.key))
+    .reduce((sum, m) => sum + m.monthlyCost, 0);
+
+  const handleSubmit = async () => {
+    if (selectedModules.length === 0) {
+      setError('Please select at least one module');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      // Enable selected modules via API
+      for (const moduleKey of selectedModules) {
+        const module = availableModules.find(m => m.key === moduleKey);
+        if (!module) continue;
+
+        const response = await fetch('/api/admin/feature-modules', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            moduleKey: module.key,
+            name: module.name,
+            description: module.description,
+            category: module.category,
+            enabled: true,
+            monthlyBudget: module.monthlyCost * 100, // Convert to cents
+            config: {}
+          })
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          // Ignore "already exists" errors
+          if (!data.error?.includes('already exists')) {
+            throw new Error(data.error || 'Failed to enable module');
+          }
+        }
+      }
+
+      onNext({ selectedModules, totalMonthlyCost });
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
-      <p className="text-gray-600">Module selection step - TODO</p>
+      <div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">Choose Your Features</h3>
+        <p className="text-gray-600">Select the features you need. You can always add or remove features later.</p>
+      </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+          {error}
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {availableModules.map((module) => {
+          const isSelected = selectedModules.includes(module.key);
+          return (
+            <div
+              key={module.key}
+              onClick={() => toggleModule(module.key)}
+              className={`
+                relative p-4 border-2 rounded-lg cursor-pointer transition-all
+                ${isSelected
+                  ? 'border-blue-500 bg-blue-50'
+                  : 'border-gray-200 hover:border-gray-300 bg-white'
+                }
+              `}
+            >
+              {module.recommended && (
+                <span className="absolute top-2 right-2 px-2 py-1 text-xs font-semibold text-blue-600 bg-blue-100 rounded">
+                  Recommended
+                </span>
+              )}
+
+              <div className="flex items-start space-x-3">
+                <div className={`
+                  mt-1 w-5 h-5 rounded border-2 flex items-center justify-center
+                  ${isSelected ? 'bg-blue-600 border-blue-600' : 'border-gray-300'}
+                `}>
+                  {isSelected && (
+                    <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </div>
+
+                <div className="flex-1">
+                  <h4 className="font-semibold text-gray-900">{module.name}</h4>
+                  <p className="text-sm text-gray-600 mt-1">{module.description}</p>
+                  <p className="text-sm font-medium text-gray-900 mt-2">
+                    {module.monthlyCost === 0 ? 'Free' : `$${module.monthlyCost}/month`}
+                  </p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+        <div className="flex justify-between items-center">
+          <div>
+            <p className="text-sm text-gray-600">Selected Features</p>
+            <p className="text-lg font-semibold text-gray-900">{selectedModules.length} of {availableModules.length}</p>
+          </div>
+          <div className="text-right">
+            <p className="text-sm text-gray-600">Estimated Monthly Cost</p>
+            <p className="text-2xl font-bold text-blue-600">${totalMonthlyCost}</p>
+          </div>
+        </div>
+      </div>
+
       <div className="flex space-x-4">
-        <button onClick={onBack} className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium">
+        <button
+          onClick={onBack}
+          disabled={isSubmitting}
+          className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium disabled:opacity-50"
+        >
           Back
         </button>
-        <button onClick={() => onNext({})} className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">
-          Next
+        <button
+          onClick={handleSubmit}
+          disabled={isSubmitting || selectedModules.length === 0}
+          className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50"
+        >
+          {isSubmitting ? 'Saving...' : 'Continue'}
         </button>
       </div>
     </div>
