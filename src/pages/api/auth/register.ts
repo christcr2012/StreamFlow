@@ -2,6 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { authService, ServiceError } from '@/server/services/authService';
 import { withRateLimit, rateLimitPresets } from '@/middleware/rateLimit';
+import { withIdempotency } from '@/middleware/idempotency';
 import { z } from 'zod';
 
 // Email validation regex (RFC5322 simplified)
@@ -101,6 +102,9 @@ async function handler(
   }
 }
 
-// Export with rate limiting middleware
-export default withRateLimit(rateLimitPresets.auth, handler);
+// Export with rate limiting and idempotency middleware
+export default withRateLimit(
+  rateLimitPresets.auth,
+  withIdempotency({}, handler)
+);
 
