@@ -13,7 +13,7 @@ import { encryptStripeAccountId, decryptStripeAccountId } from '@/lib/crypto/aes
 import { consolidatedAudit } from '@/lib/consolidated-audit';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-11-20.acacia',
+  apiVersion: '2023-10-16',
 });
 
 const WEBHOOK_SECRET = process.env.STRIPE_CONNECT_WEBHOOK_SECRET!;
@@ -153,15 +153,16 @@ async function handleAccountUpdated(event: Stripe.Event) {
 
         await consolidatedAudit.logSystemAdmin(
           `Stripe Connect account updated: ${connectStatus}`,
-          connect.orgId,
+          'system',
           'CLIENT',
           'STRIPE_CONNECT_UPDATE',
-          { source: 'webhook' },
+          {},
           {
             accountId: account.id,
             status: connectStatus,
             chargesEnabled,
             payoutsEnabled,
+            source: 'webhook',
           }
         );
 
@@ -190,14 +191,16 @@ async function handlePaymentIntentSucceeded(event: Stripe.Event) {
 
   await consolidatedAudit.logSystemAdmin(
     `Payment succeeded: ${paymentIntent.amount / 100} ${paymentIntent.currency.toUpperCase()}`,
-    orgId,
+    'system',
     'CLIENT',
     'PAYMENT_SUCCESS',
-    { source: 'webhook' },
+    {},
     {
       paymentIntentId: paymentIntent.id,
       amount: paymentIntent.amount,
       currency: paymentIntent.currency,
+      source: 'webhook',
+      orgId,
     }
   );
 
@@ -220,15 +223,17 @@ async function handlePaymentIntentFailed(event: Stripe.Event) {
 
   await consolidatedAudit.logSystemAdmin(
     `Payment failed: ${paymentIntent.last_payment_error?.message || 'Unknown error'}`,
-    orgId,
+    'system',
     'CLIENT',
     'PAYMENT_FAILED',
-    { source: 'webhook' },
+    {},
     {
       paymentIntentId: paymentIntent.id,
       amount: paymentIntent.amount,
       currency: paymentIntent.currency,
       error: paymentIntent.last_payment_error?.message,
+      source: 'webhook',
+      orgId,
     }
   );
 

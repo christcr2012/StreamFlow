@@ -86,13 +86,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Audit log
     await consolidatedAudit.logSystemAdmin(
       'Onboarding completed',
-      orgId,
+      session.email,
       'CLIENT',
       'ONBOARDING_COMPLETE',
-      { userId: session.id },
+      {},
       {
         hasLogo: !!data.branding?.logo,
         hasHours: !!data.hours,
+        userId: session.id,
       }
     );
 

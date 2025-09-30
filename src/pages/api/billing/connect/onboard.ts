@@ -13,7 +13,7 @@ import { encryptStripeAccountId } from '@/lib/crypto/aes';
 import { consolidatedAudit } from '@/lib/consolidated-audit';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-11-20.acacia',
+  apiVersion: '2023-10-16',
 });
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
@@ -115,13 +115,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Audit log
     await consolidatedAudit.logSystemAdmin(
       'Stripe Connect account created',
-      orgId,
+      session.email,
       'CLIENT',
       'STRIPE_CONNECT_ONBOARD',
-      { userId: session.id, ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress },
+      { ipAddress: (req.headers['x-forwarded-for'] as string) || req.socket.remoteAddress },
       {
         accountId: account.id,
         status: 'pending',
+        userId: session.id,
       }
     );
 

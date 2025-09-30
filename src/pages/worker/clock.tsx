@@ -34,7 +34,7 @@ export default function WorkerClock() {
 
   // Redirect non-STAFF users
   useEffect(() => {
-    if (!loading && me && me.role !== "STAFF" && me.role !== "EMPLOYEE") {
+    if (!loading && me && me.role !== "STAFF") {
       router.push("/dashboard");
     }
   }, [me, loading, router]);
@@ -83,7 +83,7 @@ export default function WorkerClock() {
   return (
     <div className="min-h-screen bg-background">
       {/* Offline Indicator - Codex Phase 5 */}
-      <OfflineIndicator />
+      <OfflineIndicator orgId={me?.orgId || null} />
 
       {/* Header */}
       <div className="bg-gradient-to-r from-green-600 to-blue-600 text-white p-6">
