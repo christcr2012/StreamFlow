@@ -3,50 +3,34 @@ import { useMe } from "@/lib/useMe";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-// TODO: Re-enable offline time clock after fixing SSR issues with Dexie
-// import { useOfflineTimeClock } from "@/lib/hooks/useOfflineTimeClock";
+import { useOfflineTimeClockSafe } from "@/lib/hooks/useOfflineTimeClockSafe";
 import { OfflineIndicator } from "@/components/OfflineBanner";
 
 /**
  * Employee Time Clock with Geolocation
  * Mobile-first PWA design for field workers
  * Features: GPS-based clock in/out, real-time location tracking, shift timer
- * Codex Phase 5: Now uses offline-first time clock hook
- *
- * TEMPORARY: Offline features disabled due to SSR build issues with Dexie/IndexedDB
+ * Codex Phase 5: Now uses offline-first time clock hook with SSR-safe lazy loading
  */
 function WorkerClock() {
   const { me, loading, error } = useMe();
   const router = useRouter();
   const [currentTime, setCurrentTime] = useState(new Date());
 
-  // TODO: Re-enable offline time clock after fixing SSR issues
-  // Codex Phase 5: Use offline-first time clock hook
-  const currentSession: any = null;
-  const isClocked = false;
-  const sessionDuration = 0;
-  const totalHoursToday = 0;
-  const isOnline = true;
-  const isSyncing = false;
-  const pendingCount = 0;
-  const clockIn = async () => { console.log('Clock in - offline mode disabled'); };
-  const clockOut = async () => { console.log('Clock out - offline mode disabled'); };
-  const formatDuration = (m: number) => `${Math.floor(m / 60)}h ${m % 60}m`;
-  const clockError: string | null = null;
-
-  // const {
-  //   currentSession,
-  //   isClocked,
-  //   sessionDuration,
-  //   totalHoursToday,
-  //   isOnline,
-  //   isSyncing,
-  //   pendingCount,
-  //   clockIn,
-  //   clockOut,
-  //   formatDuration,
-  //   error: clockError,
-  // } = useOfflineTimeClock({ enableLocationTracking: true, autoSync: true });
+  // Codex Phase 5: Use SSR-safe offline-first time clock hook
+  const {
+    currentSession,
+    isClocked,
+    sessionDuration,
+    totalHoursToday,
+    isOnline,
+    isSyncing,
+    pendingCount,
+    clockIn,
+    clockOut,
+    formatDuration,
+    error: clockError,
+  } = useOfflineTimeClockSafe({ enableLocationTracking: true, autoSync: true });
 
   // Redirect non-STAFF users
   useEffect(() => {
