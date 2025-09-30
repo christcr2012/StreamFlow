@@ -295,5 +295,40 @@ APP_ENCRYPTION_KEY=pVBQEj+6CFmJmD5i4t1SZ6P7oLsZraN6Z6IVy92WqOs=
 
 ---
 
+## 01:30 - Fix Critical Issue #2: Stripe Price ID Field
+
+### Task: Add stripePriceId to PricingPlan model
+**Priority**: 🔴 CRITICAL
+
+### Actions Taken:
+1. ✅ Added `stripePriceId String?` field to PricingPlan model in schema.prisma
+2. ❌ Migration blocked - Database drift detected
+
+### Issue Discovered:
+- Database schema out of sync with migration history
+- Missing migration: `20250928152825_fix_audit_log_schema`
+- Database has many tables/indexes not in local migrations
+- Requires `prisma migrate reset` (drops all data)
+
+### Decision:
+- **DEFER** database migration until user is available
+- Schema change committed but not applied to database
+- Moving to non-database critical fixes
+
+**Status**: ⏸️ DEFERRED - Awaiting user decision on database reset
+
+---
+
+## 01:35 - Continuing with Non-Database Fixes
+
+### Next Critical Issues (No DB Required):
+1. ✅ Fix offline time clock SSR issue (4-6 hours)
+2. ✅ Complete onboarding wizard steps 4-5 (6-8 hours)
+3. ✅ Clean up debug logging (2-3 hours)
+
+**Status**: PROCEEDING with offline time clock fix
+
+---
+
 *Journal will be updated as work progresses*
 

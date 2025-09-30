@@ -1662,6 +1662,8 @@ model PricingPlan {
   tiersJson     Json?
   /// Number of prepaid leads included before billing starts
   includedUnits Int          @default(0)
+  /// Stripe Price ID for subscription billing (e.g. "price_1234...")
+  stripePriceId String?
 }
 
 /// PricingModel enumerates the possible billing models for lead invoices.  The default is
