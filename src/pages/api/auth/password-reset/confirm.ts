@@ -1,8 +1,6 @@
 // src/pages/api/auth/password-reset/confirm.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/lib/prisma';
-import bcrypt from 'bcryptjs';
-import crypto from 'crypto';
+import { authService, ServiceError } from '@/server/services/authService';
 import { z } from 'zod';
 
 // Password reset confirmation schema
@@ -40,7 +38,7 @@ export default async function handler(
   try {
     // Validate request body
     const validationResult = confirmSchema.safeParse(req.body);
-    
+
     if (!validationResult.success) {
       const errors = validationResult.error.flatten().fieldErrors;
       return res.status(422).json({
@@ -52,75 +50,35 @@ export default async function handler(
 
     const { token, password } = validationResult.data;
 
-    // Hash the token to match stored hash
-    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
-
-    // Find user with matching reset token
-    const user = await prisma.user.findFirst({
-      where: {
-        passwordResetToken: tokenHash,
-        passwordResetExpiry: {
-          gte: new Date(), // Token not expired
-        },
-      },
-      select: {
-        id: true,
-        orgId: true,
-        email: true,
-        name: true,
-      },
-    });
-
-    if (!user) {
-      return res.status(400).json({
-        error: 'InvalidToken',
-        message: 'Invalid or expired reset token',
-      });
-    }
-
-    // Hash new password
-    const passwordHash = await bcrypt.hash(password, 12);
-
-    // Update password and clear reset token
-    await prisma.user.update({
-      where: { id: user.id },
-      data: {
-        passwordHash,
-        passwordResetToken: null,
-        passwordResetExpiry: null,
-        mustChangePassword: false,
-        updatedAt: new Date(),
-      },
-    });
-
-    // Log the password reset in audit log
-    await prisma.auditLog.create({
-      data: {
-        orgId: user.orgId,
-        actorId: user.id,
-        action: 'user.password_reset_completed',
-        entityType: 'user',
-        entityId: user.id,
-        delta: {
-          email: user.email,
-          completedAt: new Date().toISOString(),
-        },
-      },
-    });
-
-    // Invalidate all existing sessions for security
-    await prisma.userSession.updateMany({
-      where: { userId: user.id },
-      data: { isActive: false },
-    });
+    // Call service layer
+    const result = await authService.confirmPasswordReset({ token, password });
 
     return res.status(200).json({
-      message: 'Password reset successful. Please log in with your new password.',
+      message: result.message,
     });
 
   } catch (error) {
     console.error('Password reset confirmation error:', error);
-    
+
+    // Handle service errors
+    if (error instanceof ServiceError) {
+      return res.status(error.statusCode).json({
+        error: error.code,
+        message: error.message,
+        details: error.details,
+      });
+    }
+
+    // Handle Zod validation errors
+    if (error instanceof z.ZodError) {
+      const errors = error.flatten().fieldErrors;
+      return res.status(422).json({
+        error: 'ValidationError',
+        message: 'Invalid password reset data',
+        details: errors as Record<string, string[]>,
+      });
+    }
+
     return res.status(500).json({
       error: 'Internal',
       message: 'Password reset failed. Please try again.',

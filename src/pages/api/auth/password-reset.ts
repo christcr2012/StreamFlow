@@ -1,7 +1,6 @@
 // src/pages/api/auth/password-reset.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/lib/prisma';
-import crypto from 'crypto';
+import { authService, ServiceError } from '@/server/services/authService';
 import { z } from 'zod';
 
 // Email validation regex (RFC5322 simplified)
@@ -68,7 +67,7 @@ export default async function handler(
   try {
     // Validate request body
     const validationResult = resetRequestSchema.safeParse(req.body);
-    
+
     if (!validationResult.success) {
       const errors = validationResult.error.flatten().fieldErrors;
       return res.status(422).json({
@@ -80,68 +79,36 @@ export default async function handler(
 
     const { email } = validationResult.data;
 
-    // Find user by email
-    const user = await prisma.user.findUnique({
-      where: { email: email.toLowerCase() },
-      select: { id: true, orgId: true, email: true, name: true },
-    });
+    // Call service layer
+    const result = await authService.requestPasswordReset({ email });
 
     // SECURITY: Always return 202 regardless of whether user exists
-    // This prevents email enumeration attacks
-    if (!user) {
-      // Log the attempt for security monitoring
-      console.log(`Password reset requested for non-existent email: ${email}`);
-      
-      return res.status(202).json({
-        message: 'If an account exists with this email, you will receive password reset instructions.',
-      });
-    }
-
-    // Generate secure reset token
-    const resetToken = crypto.randomBytes(32).toString('hex');
-    const resetTokenHash = crypto.createHash('sha256').update(resetToken).digest('hex');
-    const resetTokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-
-    // Store reset token in database
-    // TODO: Create PasswordResetToken model in schema
-    // For now, we'll use a simple approach with User model fields
-    // In production, use a separate PasswordResetToken table
-    
-    await prisma.$executeRaw`
-      UPDATE "User"
-      SET "passwordResetToken" = ${resetTokenHash},
-          "passwordResetExpiry" = ${resetTokenExpiry}
-      WHERE "id" = ${user.id}
-    `;
-
-    // Log the reset request in audit log
-    await prisma.auditLog.create({
-      data: {
-        orgId: user.orgId,
-        actorId: user.id,
-        action: 'user.password_reset_requested',
-        entityType: 'user',
-        entityId: user.id,
-        delta: {
-          email: user.email,
-          requestedAt: new Date().toISOString(),
-        },
-      },
-    });
-
-    // TODO: Send email with reset link
-    // For now, log the reset token (REMOVE IN PRODUCTION)
-    console.log(`Password reset token for ${email}: ${resetToken}`);
-    console.log(`Reset link: ${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/reset-password/${resetToken}`);
-
-    // SECURITY: Always return same response regardless of whether user exists
     return res.status(202).json({
-      message: 'If an account exists with this email, you will receive password reset instructions.',
+      message: result.message,
     });
 
   } catch (error) {
     console.error('Password reset error:', error);
-    
+
+    // Handle service errors
+    if (error instanceof ServiceError) {
+      return res.status(error.statusCode).json({
+        error: error.code,
+        message: error.message,
+        details: error.details,
+      });
+    }
+
+    // Handle Zod validation errors
+    if (error instanceof z.ZodError) {
+      const errors = error.flatten().fieldErrors;
+      return res.status(422).json({
+        error: 'ValidationError',
+        message: 'Invalid email address',
+        details: errors as Record<string, string[]>,
+      });
+    }
+
     return res.status(500).json({
       error: 'Internal',
       message: 'Password reset request failed. Please try again.',
