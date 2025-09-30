@@ -218,12 +218,64 @@ The existing StreamFlow codebase has **significant infrastructure already in pla
 
 ---
 
+## Phase 2 Requirements (NEW)
+
+### Monetization & Billing
+| Requirement | Current Status | Priority |
+|---|---|---|
+| Lead-based billing system | ❌ MISSING | HIGH |
+| Stripe integration | ⚠️ PARTIAL (models exist) | HIGH |
+| Invoice generation | ⚠️ PARTIAL (Invoice model exists) | HIGH |
+| Billing events tracking | ❌ MISSING (BillingEvent model needed) | HIGH |
+| Quota management | ❌ MISSING | HIGH |
+| Overage charges | ❌ MISSING | MEDIUM |
+
+### Operator Portal
+| Requirement | Current Status | Priority |
+|---|---|---|
+| Operator dashboards | ⚠️ PARTIAL (admin pages exist) | HIGH |
+| Audit exports (CSV/JSON) | ❌ MISSING | HIGH |
+| Support impersonation | ❌ MISSING | HIGH |
+| Feature flags per tenant | ✅ EXISTS (FeatureRegistry) | LOW |
+| OperatorActionLog model | ❌ MISSING | HIGH |
+
+### Advanced AI
+| Requirement | Current Status | Priority |
+|---|---|---|
+| Operator copilot | ❌ MISSING | MEDIUM |
+| Predictive metrics | ❌ MISSING | MEDIUM |
+| Anomaly detection | ❌ MISSING | MEDIUM |
+| AiForecast model | ❌ MISSING | MEDIUM |
+
+### Governance & Compliance
+| Requirement | Current Status | Priority |
+|---|---|---|
+| SOC 2 evidence collection | ❌ MISSING | HIGH |
+| GDPR/CCPA export | ❌ MISSING | HIGH |
+| GDPR/CCPA erasure | ❌ MISSING | HIGH |
+| Immutable audit pipeline | ⚠️ PARTIAL (audit exists) | HIGH |
+| ComplianceEvidence model | ❌ MISSING | HIGH |
+
+### Scalability
+| Requirement | Current Status | Priority |
+|---|---|---|
+| Multi-region awareness | ❌ MISSING | LOW |
+| Sharding strategy | ❌ MISSING | LOW |
+| OpenTelemetry tracing | ❌ MISSING | MEDIUM |
+| SLO dashboards | ❌ MISSING | MEDIUM |
+| Chaos testing | ❌ MISSING | LOW |
+
+---
+
 **Next Steps**:
-1. Create Contact model in Prisma schema
+1. ✅ Create Contact model in Prisma schema (DONE)
 2. Build registration flow
 3. Build password reset flow
 4. Refactor to service layer pattern
 5. Add rate limiting and idempotency middleware
+6. (Phase 2) Implement billing system
+7. (Phase 2) Build operator portal enhancements
+8. (Phase 2) Add compliance workflows
 
-**Session Status**: Gap analysis complete, ready to begin implementation
+**Session Status**: Gap analysis complete (Phase 1 + Phase 2), Contact model implemented, ready to continue
 

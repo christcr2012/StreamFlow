@@ -33,7 +33,7 @@ This document tracks the implementation of the comprehensive handover binder spe
 
 **Estimated Time**: 20-30 hours
 
-### Phase 2: Core CRM
+### Phase 1.5: Core CRM (from Phase 1 Binder)
 **Goal**: Leads/Orgs/Contacts/Opps/Tasks CRUD, search, import, notes, assignment
 
 **Done When**:
@@ -45,7 +45,7 @@ This document tracks the implementation of the comprehensive handover binder spe
 
 **Estimated Time**: 40-50 hours
 
-### Phase 3: AI Differentiators
+### Phase 1.75: AI Differentiators (from Phase 1 Binder)
 **Goal**: Assistant, enrichment, summarization; metrics & cost capping
 
 **Done When**:
@@ -55,7 +55,7 @@ This document tracks the implementation of the comprehensive handover binder spe
 
 **Estimated Time**: 30-40 hours
 
-### Phase 4: Enterprise Polish
+### Phase 1.9: Enterprise Polish (from Phase 1 Binder)
 **Goal**: SOC 2 controls, SSO, webhooks, SDKs, load tests
 
 **Done When**:
@@ -65,7 +65,50 @@ This document tracks the implementation of the comprehensive handover binder spe
 
 **Estimated Time**: 30-40 hours
 
-**Total Estimated Time**: 120-160 hours
+### Phase 2: Monetization & Advanced Features (NEW - from Phase 2 Binder)
+**Goal**: Billing, operator portal, advanced AI, compliance, scalability
+
+**Components**:
+1. **Monetization & Billing Layer** (15-20 hours)
+   - Lead-based billing (quotas, overages)
+   - Stripe integration
+   - Invoice generation & PDF delivery
+   - Billing events tracking
+
+2. **Operator/Admin Enhancements** (10-15 hours)
+   - Operator portal dashboards
+   - Audit exports (CSV/JSON)
+   - Support impersonation with audit trail
+   - Feature flags per tenant
+
+3. **Advanced AI Expansion** (20-25 hours)
+   - Operator copilot (AI assistant for ops)
+   - Predictive metrics (pipeline velocity, churn risk)
+   - Anomaly detection (unusual activity alerts)
+
+4. **Governance & Compliance** (15-20 hours)
+   - SOC 2 evidence collection
+   - GDPR/CCPA workflows (export/erasure)
+   - Immutable audit log pipeline
+   - 7-year retention for financial data
+
+5. **Scalability & Ops** (20-25 hours)
+   - Multi-region awareness
+   - Sharding strategy planning
+   - OpenTelemetry tracing
+   - SLO dashboards
+   - Chaos testing
+
+**Done When**:
+- [ ] Tenants billed correctly per lead usage
+- [ ] Operators can manage/support tenants safely
+- [ ] AI empowers operators & predicts trends
+- [ ] Compliance audits pass with evidence
+- [ ] System scales beyond single-region
+
+**Estimated Time**: 80-105 hours
+
+**Total Estimated Time (All Phases)**: 200-265 hours
 
 ---
 
