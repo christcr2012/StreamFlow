@@ -3,38 +3,38 @@ import { useMe } from "@/lib/useMe";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
-interface GeolocationData {
-  latitude: number;
-  longitude: number;
-  accuracy: number;
-  timestamp: number;
-}
-
-interface ClockStatus {
-  isClockedIn: boolean;
-  clockInTime?: Date;
-  currentShiftHours?: number;
-  location?: GeolocationData;
-}
+import { useOfflineTimeClock } from "@/lib/hooks/useOfflineTimeClock";
+import { OfflineIndicator } from "@/components/OfflineBanner";
 
 /**
  * Employee Time Clock with Geolocation
  * Mobile-first PWA design for field workers
  * Features: GPS-based clock in/out, real-time location tracking, shift timer
+ * Codex Phase 5: Now uses offline-first time clock hook
  */
 export default function WorkerClock() {
   const { me, loading, error } = useMe();
   const router = useRouter();
-  const [clockStatus, setClockStatus] = useState<ClockStatus>({ isClockedIn: false });
-  const [location, setLocation] = useState<GeolocationData | null>(null);
-  const [locationError, setLocationError] = useState<string | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
+
+  // Codex Phase 5: Use offline-first time clock hook
+  const {
+    currentSession,
+    isClocked,
+    sessionDuration,
+    totalHoursToday,
+    isOnline,
+    isSyncing,
+    pendingCount,
+    clockIn,
+    clockOut,
+    formatDuration,
+    error: clockError,
+  } = useOfflineTimeClock({ enableLocationTracking: true, autoSync: true });
 
   // Redirect non-STAFF users
   useEffect(() => {
-    if (!loading && me && me.role !== "STAFF") {
+    if (!loading && me && me.role !== "STAFF" && me.role !== "EMPLOYEE") {
       router.push("/dashboard");
     }
   }, [me, loading, router]);
@@ -45,111 +45,17 @@ export default function WorkerClock() {
     return () => clearInterval(timer);
   }, []);
 
-  // Get current location
-  useEffect(() => {
-    if (me && me.role === "STAFF") {
-      getCurrentLocation();
-    }
-  }, [me]);
-
-  // TODO: Load current clock status from API
-  useEffect(() => {
-    if (me) {
-      // Mock data for now - will integrate with actual API later
-      setClockStatus({
-        isClockedIn: false, // This should come from API
-        clockInTime: undefined,
-        currentShiftHours: 0
-      });
-    }
-  }, [me]);
-
-  const getCurrentLocation = () => {
-    if (!navigator.geolocation) {
-      setLocationError("Geolocation is not supported by this device");
-      return;
-    }
-
-    setLocationError(null);
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const geoData: GeolocationData = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          accuracy: position.coords.accuracy,
-          timestamp: Date.now()
-        };
-        setLocation(geoData);
-      },
-      (error) => {
-        switch (error.code) {
-          case error.PERMISSION_DENIED:
-            setLocationError("Location access denied. Please enable location services.");
-            break;
-          case error.POSITION_UNAVAILABLE:
-            setLocationError("Location information unavailable.");
-            break;
-          case error.TIMEOUT:
-            setLocationError("Location request timed out.");
-            break;
-          default:
-            setLocationError("An unknown error occurred.");
-            break;
-        }
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 300000 // 5 minutes
-      }
-    );
-  };
-
+  // Codex Phase 5: Handle clock in/out with offline support
   const handleClockAction = async () => {
-    if (!location && !locationError) {
-      setLocationError("Getting location...");
-      getCurrentLocation();
-      return;
-    }
-
-    setIsProcessing(true);
-    
     try {
-      // TODO: Implement actual API call
-      // const response = await fetch('/api/worker/timeclock', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({
-      //     action: clockStatus.isClockedIn ? 'clock_out' : 'clock_in',
-      //     location: location,
-      //     timestamp: new Date().toISOString()
-      //   })
-      // });
-
-      // Mock API response for now
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      if (clockStatus.isClockedIn) {
-        // Clock out
-        setClockStatus({
-          isClockedIn: false,
-          clockInTime: undefined,
-          currentShiftHours: 0
-        });
+      if (isClocked) {
+        await clockOut();
       } else {
-        // Clock in
-        setClockStatus({
-          isClockedIn: true,
-          clockInTime: new Date(),
-          currentShiftHours: 0,
-          location: location || undefined
-        });
+        await clockIn();
       }
     } catch (error) {
       console.error('Clock action failed:', error);
-      setLocationError('Failed to process clock action. Please try again.');
-    } finally {
-      setIsProcessing(false);
+      alert(clockError || 'Failed to process clock action. Please try again.');
     }
   };
 
@@ -176,106 +82,107 @@ export default function WorkerClock() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Offline Indicator - Codex Phase 5 */}
+      <OfflineIndicator />
+
       {/* Header */}
       <div className="bg-gradient-to-r from-green-600 to-blue-600 text-white p-6">
         <div className="max-w-md mx-auto">
           <h1 className="text-2xl font-bold mb-2">Time Clock</h1>
           <p className="text-green-100 text-lg font-semibold">
-            {currentTime.toLocaleTimeString('en-US', { 
-              hour: 'numeric', 
+            {currentTime.toLocaleTimeString('en-US', {
+              hour: 'numeric',
               minute: '2-digit',
               second: '2-digit',
-              hour12: true 
+              hour12: true
             })}
           </p>
           <p className="text-green-100 text-sm">
-            {currentTime.toLocaleDateString('en-US', { 
-              weekday: 'long', 
-              month: 'long', 
-              day: 'numeric' 
+            {currentTime.toLocaleDateString('en-US', {
+              weekday: 'long',
+              month: 'long',
+              day: 'numeric'
             })}
           </p>
+          {/* Offline/Sync Status */}
+          {!isOnline && (
+            <div className="mt-2 bg-yellow-500 text-yellow-900 px-3 py-1 rounded text-sm">
+              ⚠️ Offline - Changes will sync when online
+            </div>
+          )}
+          {isSyncing && (
+            <div className="mt-2 bg-blue-500 text-white px-3 py-1 rounded text-sm">
+              🔄 Syncing {pendingCount} changes...
+            </div>
+          )}
         </div>
       </div>
 
       <div className="px-4 py-6">
         <div className="max-w-md mx-auto">
-          
+
           {/* Clock Status Card */}
           <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
             <div className="text-center">
-              <div className={`text-6xl mb-4 ${clockStatus.isClockedIn ? 'text-green-500' : 'text-gray-400'}`}>
-                {clockStatus.isClockedIn ? '🟢' : '⭕'}
+              <div className={`text-6xl mb-4 ${isClocked ? 'text-green-500' : 'text-gray-400'}`}>
+                {isClocked ? '🟢' : '⭕'}
               </div>
               <h2 className="text-2xl font-bold mb-2">
-                {clockStatus.isClockedIn ? 'Clocked In' : 'Clocked Out'}
+                {isClocked ? 'Clocked In' : 'Clocked Out'}
               </h2>
-              {clockStatus.isClockedIn && clockStatus.clockInTime && (
+              {isClocked && currentSession && (
                 <div className="text-gray-600">
-                  <p>Started at {clockStatus.clockInTime.toLocaleTimeString('en-US', { 
-                    hour: 'numeric', 
+                  <p>Started at {new Date(currentSession.clockIn).toLocaleTimeString('en-US', {
+                    hour: 'numeric',
                     minute: '2-digit',
-                    hour12: true 
+                    hour12: true
                   })}</p>
                   <p className="text-lg font-semibold text-green-600">
-                    {Math.floor((Date.now() - clockStatus.clockInTime.getTime()) / 1000 / 60)} minutes
+                    {formatDuration(sessionDuration)}
                   </p>
+                  {currentSession.location && (
+                    <p className="text-xs text-gray-400 mt-2">
+                      📍 {currentSession.location.latitude.toFixed(4)}, {currentSession.location.longitude.toFixed(4)}
+                    </p>
+                  )}
                 </div>
               )}
             </div>
           </div>
 
-          {/* Location Status */}
+          {/* Today's Hours */}
           <div className="bg-white rounded-lg shadow-lg p-4 mb-6">
-            <h3 className="font-semibold mb-3 flex items-center">
-              📍 Location Status
-            </h3>
-            {locationError ? (
-              <div className="text-red-500 text-sm">
-                <p>{locationError}</p>
-                <button
-                  onClick={getCurrentLocation}
-                  className="mt-2 text-blue-500 underline"
-                >
-                  Try Again
-                </button>
-              </div>
-            ) : location ? (
-              <div className="text-sm text-gray-600">
-                <p>✅ Location verified</p>
-                <p>Accuracy: ±{Math.round(location.accuracy)}m</p>
-                <p className="text-xs text-gray-400 mt-1">
-                  {location.latitude.toFixed(6)}, {location.longitude.toFixed(6)}
-                </p>
-              </div>
-            ) : (
-              <div className="text-sm text-gray-500">
-                <p>📡 Getting location...</p>
-              </div>
-            )}
+            <h3 className="font-semibold mb-2">Today's Hours</h3>
+            <p className="text-2xl font-bold text-blue-600">
+              {formatDuration(totalHoursToday)}
+            </p>
           </div>
 
           {/* Clock Action Button */}
           <button
             onClick={handleClockAction}
-            disabled={isProcessing || (!location && !locationError)}
+            disabled={isSyncing}
             className={`w-full py-4 px-6 rounded-lg font-bold text-xl transition-all ${
-              clockStatus.isClockedIn
+              isClocked
                 ? 'bg-red-500 hover:bg-red-600 text-white'
                 : 'bg-green-500 hover:bg-green-600 text-white'
             } ${
-              (isProcessing || (!location && !locationError))
-                ? 'opacity-50 cursor-not-allowed'
-                : ''
+              isSyncing ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           >
-            {isProcessing
-              ? 'Processing...'
-              : clockStatus.isClockedIn
+            {isSyncing
+              ? 'Syncing...'
+              : isClocked
               ? 'Clock Out'
               : 'Clock In'
             }
           </button>
+
+          {clockError && (
+            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+              {clockError}
+            </div>
+          )}
 
           {/* Navigation */}
           <div className="mt-6 text-center">
