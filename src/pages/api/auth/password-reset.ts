@@ -1,6 +1,7 @@
 // src/pages/api/auth/password-reset.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { authService, ServiceError } from '@/server/services/authService';
+import { withRateLimit, rateLimitPresets } from '@/middleware/rateLimit';
 import { z } from 'zod';
 
 // Email validation regex (RFC5322 simplified)
@@ -15,35 +16,14 @@ interface ErrorResponse {
   error: string;
   message: string;
   details?: Record<string, string[]>;
+  retryAfter?: number;
 }
 
 interface SuccessResponse {
   message: string;
 }
 
-// Simple in-memory rate limiting (TODO: Move to Redis for production)
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
-const RATE_LIMIT_MAX = 3; // 3 attempts per window
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const record = rateLimitMap.get(ip);
-
-  if (!record || now > record.resetAt) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW });
-    return true;
-  }
-
-  if (record.count >= RATE_LIMIT_MAX) {
-    return false;
-  }
-
-  record.count++;
-  return true;
-}
-
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse<SuccessResponse | ErrorResponse>
 ) {
@@ -52,15 +32,6 @@ export default async function handler(
     return res.status(405).json({
       error: 'MethodNotAllowed',
       message: 'Method not allowed',
-    });
-  }
-
-  // Rate limiting
-  const ip = (req.headers['x-forwarded-for'] as string) || req.socket.remoteAddress || 'unknown';
-  if (!checkRateLimit(ip)) {
-    return res.status(429).json({
-      error: 'TooManyRequests',
-      message: 'Too many password reset attempts. Please try again later.',
     });
   }
 
@@ -115,4 +86,7 @@ export default async function handler(
     });
   }
 }
+
+// Export with rate limiting middleware
+export default withRateLimit(rateLimitPresets.auth, handler);
 

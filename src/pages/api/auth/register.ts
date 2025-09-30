@@ -1,6 +1,7 @@
 // src/pages/api/auth/register.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { authService, ServiceError } from '@/server/services/authService';
+import { withRateLimit, rateLimitPresets } from '@/middleware/rateLimit';
 import { z } from 'zod';
 
 // Email validation regex (RFC5322 simplified)
@@ -22,6 +23,7 @@ interface ErrorResponse {
   error: string;
   message: string;
   details?: Record<string, string[]>;
+  retryAfter?: number;
 }
 
 interface SuccessResponse {
@@ -29,7 +31,7 @@ interface SuccessResponse {
   message: string;
 }
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse<SuccessResponse | ErrorResponse>
 ) {
@@ -98,4 +100,7 @@ export default async function handler(
     });
   }
 }
+
+// Export with rate limiting middleware
+export default withRateLimit(rateLimitPresets.auth, handler);
 
