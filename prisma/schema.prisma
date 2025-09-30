@@ -480,6 +480,9 @@ model Org {
   jobTemplates        JobTemplate[]
   idempotencyKeys     IdempotencyKey[]
 
+  // Stripe Connect Relations (Codex Phase 8)
+  stripeConnect       TenantStripeConnect?
+
   /// brandConfig stores white-label brand settings such as name, colors, and logo URL.
   /// It is JSON to allow arbitrary keys like { name: "Mountain Vista", color: "#123456", logoUrl: "https://..." }
   brandConfig Json? @default("{}")
@@ -3106,4 +3109,33 @@ model IdempotencyKey {
   @@index([entityType, entityId])
   @@index([expiresAt])
   @@index([orgId])
+}
+
+/// StripeEvent tracks processed Stripe webhook events for idempotency
+/// Codex Phase 8.6 - Webhook event deduplication
+model StripeEvent {
+  id         String   @id // Stripe event ID (evt_xxx)
+  source     String   // 'provider' | 'connect'
+  receivedAt DateTime @default(now())
+
+  @@index([source])
+  @@index([receivedAt])
+}
+
+/// TenantStripeConnect stores encrypted Stripe Connect account info per tenant
+/// Codex Phase 8.2 - Client billing via Stripe Connect
+model TenantStripeConnect {
+  orgId                     String   @id
+  stripeConnectedAccountId  String   // AES-GCM encrypted at app layer
+  connectStatus             String   @default("pending") // pending|complete|restricted
+  chargesEnabled            Boolean  @default(false)
+  payoutsEnabled            Boolean  @default(false)
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+
+  // Relations
+  org Org @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+  @@index([connectStatus])
 }
