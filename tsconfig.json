@@ -39,6 +39,7 @@
   "exclude": [
     "node_modules",
     "**/ai-triage-agent*/**",
-    "/tmp/**"
+    "/tmp/**",
+    "attached_assets/**"
   ]
 }

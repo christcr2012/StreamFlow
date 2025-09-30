@@ -1,10 +1,15 @@
 // src/pages/_app.tsx
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
 import AppNav from "@/components/AppNav";
-import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import "@/styles/theme.css";
 import "@/styles/globals.css";
+
+// PWA Install Prompt is client-only (uses browser APIs)
+const PWAInstallPrompt = dynamic(() => import("@/components/PWAInstallPrompt"), {
+  ssr: false,
+});
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();

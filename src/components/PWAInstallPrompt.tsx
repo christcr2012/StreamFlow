@@ -28,15 +28,23 @@ export default function PWAInstallPrompt({ className = '' }: PWAInstallPromptPro
   const [showPrompt, setShowPrompt] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
   const [platform, setPlatform] = useState<'ios' | 'android' | 'desktop' | 'unknown'>('unknown');
+  const [isClient, setIsClient] = useState(false);
+
+  // Ensure we're on the client before accessing browser APIs
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
+    if (!isClient) return;
+
     // Check if app is already installed
     const checkIfInstalled = () => {
       // Check for display-mode: standalone
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
       // Check for iOS standalone mode
       const isIOSStandalone = (window.navigator as any).standalone === true;
-      
+
       setIsInstalled(isStandalone || isIOSStandalone);
     };
 
@@ -82,7 +90,12 @@ export default function PWAInstallPrompt({ className = '' }: PWAInstallPromptPro
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
       window.removeEventListener('appinstalled', handleAppInstalled);
     };
-  }, [isInstalled]);
+  }, [isClient, isInstalled]);
+
+  // Don't render anything on server or until client is ready
+  if (!isClient) {
+    return null;
+  }
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) return;
@@ -111,11 +124,23 @@ export default function PWAInstallPrompt({ className = '' }: PWAInstallPromptPro
   const handleDismiss = () => {
     setShowPrompt(false);
     // Don't show again for this session
-    sessionStorage.setItem('pwa-prompt-dismissed', 'true');
+    try {
+      sessionStorage.setItem('pwa-prompt-dismissed', 'true');
+    } catch (e) {
+      // Ignore sessionStorage errors
+    }
   };
 
   // Don't show if already installed or dismissed this session
-  if (isInstalled || sessionStorage.getItem('pwa-prompt-dismissed')) {
+  const isDismissed = (() => {
+    try {
+      return sessionStorage.getItem('pwa-prompt-dismissed') === 'true';
+    } catch (e) {
+      return false;
+    }
+  })();
+
+  if (isInstalled || isDismissed) {
     return null;
   }
 
