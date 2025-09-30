@@ -179,9 +179,14 @@ export async function createSubscription(
     throw new Error(`Pricing plan not found: ${pricingPlanId}`);
   }
 
+  // Validate that stripePriceId is set
+  if (!plan.stripePriceId) {
+    throw new Error(`Pricing plan ${pricingPlanId} does not have a Stripe price ID configured`);
+  }
+
   const subscriptionParams: Stripe.SubscriptionCreateParams = {
     customer: customerId,
-    items: [{ price: `price_${plan.orgId}` }], // TODO: Add stripePriceId field to PricingPlan model
+    items: [{ price: plan.stripePriceId }],
     metadata: {
       orgId,
       pricingPlanId,
@@ -223,10 +228,15 @@ export async function updateSubscription(
     throw new Error(`Pricing plan not found: ${newPricingPlanId}`);
   }
 
+  // Validate that stripePriceId is set
+  if (!newPlan.stripePriceId) {
+    throw new Error(`Pricing plan ${newPricingPlanId} does not have a Stripe price ID configured`);
+  }
+
   const updatedSubscription = await stripe.subscriptions.update(subscriptionId, {
     items: [{
       id: subscription.items.data[0].id,
-      price: `price_${newPlan.orgId}`, // TODO: Add stripePriceId field to PricingPlan model
+      price: newPlan.stripePriceId,
     }],
     proration_behavior: prorationBehavior,
     metadata: {
