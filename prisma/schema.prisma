@@ -415,7 +415,8 @@ model Org {
   aiMonthlySummaries AiMonthlySummary[] @relation("OrgAiMonthlySummaries")
   leadActivities LeadActivity[]  @relation("OrgLeadActivities")
   leadTasks     LeadTask[]      @relation("OrgLeadTasks")
-  
+  contacts      Contact[]       @relation("OrgContacts")
+
   // Multi-Portal Business OS Relations
   employeeProfiles EmployeeProfile[] @relation("OrgEmployeeProfiles")
   workOrders      WorkOrder[]       @relation("OrgWorkOrders")
@@ -618,7 +619,8 @@ model User {
   leadActivities  LeadActivity[] @relation("UserLeadActivities")
   assignedTasks   LeadTask[]     @relation("AssignedLeadTasks")
   createdTasks    LeadTask[]     @relation("CreatedLeadTasks")
-  
+  ownedContacts   Contact[]      @relation("OwnedContacts")
+
   // Employee Portal Relations
   employeeProfile EmployeeProfile? @relation("UserEmployeeProfile")
   
@@ -1038,7 +1040,8 @@ model Customer {
   jobs          Job[]
   workOrders    WorkOrder[]   @relation("CustomerWorkOrders")
   opportunities Opportunity[]
-  
+  contacts      Contact[]     @relation("CustomerContacts")
+
   @@unique([orgId, id])  // Multi-tenant isolation
 }
 
@@ -1057,6 +1060,68 @@ model Opportunity {
 
   customer Customer @relation(fields: [orgId, customerId], references: [orgId, id])
   org      Org      @relation(fields: [orgId], references: [id])
+}
+
+/// Contact represents individual people associated with organizations
+/// Implements handover binder requirement for Contact entity with full CRM capabilities
+model Contact {
+  id            String    @id @default(cuid())
+  orgId         String    // Multi-tenant isolation
+
+  // Basic Information
+  name          String    // Full name
+  email         String?   // Email address
+  phone         String?   // Phone number
+  title         String?   // Job title
+  department    String?   // Department
+
+  // Organization Association
+  organizationId String?  // Optional link to Organization/Customer
+  isPrimary     Boolean   @default(false) // Primary contact for organization
+
+  // Contact Details
+  mobilePhone   String?   // Mobile phone
+  workPhone     String?   // Work phone
+  fax           String?   // Fax number
+  website       String?   // Personal or professional website
+
+  // Address Information
+  address       Json?     // Structured address: { street, city, state, zip, country }
+
+  // Social & Professional
+  linkedIn      String?   // LinkedIn profile URL
+  twitter       String?   // Twitter handle
+
+  // Relationship Management
+  ownerId       String?   // User who owns this contact
+  source        String?   // How contact was acquired
+  status        String    @default("active") // active, inactive, archived
+
+  // Notes & Tags
+  notes         String?   // General notes about contact
+  tags          Json      @default("[]") // Array of tags for categorization
+
+  // Custom Fields
+  customFields  Json      @default("{}") // Flexible custom field storage
+
+  // Metadata
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastContactedAt DateTime? // Last time contact was reached out to
+
+  // Relations
+  org           Org       @relation("OrgContacts", fields: [orgId], references: [id], onDelete: Cascade)
+  organization  Customer? @relation("CustomerContacts", fields: [orgId, organizationId], references: [orgId, id])
+  owner         User?     @relation("OwnedContacts", fields: [orgId, ownerId], references: [orgId, id])
+
+  // Indexes for performance
+  @@unique([orgId, id])                    // Multi-tenant isolation
+  @@index([orgId, email])                  // Email lookup
+  @@index([orgId, organizationId])         // Organization contacts
+  @@index([orgId, ownerId])                // Owner's contacts
+  @@index([orgId, status])                 // Status filtering
+  @@index([orgId, createdAt])              // Timeline queries
+  @@index([orgId, lastContactedAt])        // Recent contact queries
 }
 
 model Invoice {
