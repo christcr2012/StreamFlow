@@ -110,7 +110,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const conversionRevenue = (conversionRevenueResult._sum.totalCents || 0) / 100;
 
     // Calculate Provider costs (period-based AI usage)
-    const providerCostsResult = await prisma.aiMeter.aggregate({
+    const providerCostsResult = await prisma.aiUsageEvent.aggregate({
       where: {
         createdAt: {
           gte: startDate

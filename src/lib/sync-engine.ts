@@ -52,13 +52,16 @@ export class SyncEngine {
   private retryTimeouts: Map<string, NodeJS.Timeout> = new Map();
 
   constructor() {
-    // Listen for online/offline events
-    window.addEventListener('online', this.handleOnline.bind(this));
-    window.addEventListener('offline', this.handleOffline.bind(this));
-    
-    // Start periodic sync when online
-    if (this.isOnline) {
-      this.startPeriodicSync();
+    // Only initialize in browser environment
+    if (typeof window !== 'undefined') {
+      // Listen for online/offline events
+      window.addEventListener('online', this.handleOnline.bind(this));
+      window.addEventListener('offline', this.handleOffline.bind(this));
+
+      // Start periodic sync when online
+      if (this.isOnline) {
+        this.startPeriodicSync();
+      }
     }
   }
 
