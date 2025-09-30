@@ -1230,3 +1230,34 @@ Implement core CRM functionality with CRUD operations for:
 
 **Next**: Opportunities CRUD
 
+---
+
+## 11:30 - Opportunities CRUD Implementation
+
+### Task: Implement Opportunities CRUD
+**Priority**: 🟡 HIGH - Phase 1.5 Core CRM (3/7 tasks)
+
+**Implementation**:
+
+1. Created Opportunity Service:
+   - Full CRUD with customer validation
+   - Decimal handling for estValue
+   - Pipeline stage management
+   - ValueType enum (RELATIONSHIP, JOB)
+   - Filter by customer, stage, owner
+
+2. Created API Routes:
+   - GET /api/opportunities - List with filters
+   - POST /api/opportunities - Create
+   - GET /api/opportunities/[id] - Get by ID
+   - PUT /api/opportunities/[id] - Update
+   - DELETE /api/opportunities/[id] - Delete
+
+**Testing**:
+- ✅ TypeScript compilation: PASS
+- ✅ Build verification: PASS
+
+**Status**: ✅ COMPLETE - Opportunities CRUD implemented
+
+**Next**: Tasks CRUD (need to check if Task model exists)
+
