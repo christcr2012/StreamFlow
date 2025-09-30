@@ -602,17 +602,19 @@ model IndustryCapability {
 }
 
 model User {
-  id                 String   @id @default(cuid())
-  orgId              String
-  email              String   @unique
-  name               String?
-  role               Role     @default(STAFF)
-  passwordHash       String?  @db.VarChar(255)
-  mustChangePassword Boolean  @default(false)
-  emailVerified      Boolean  @default(false)
-  status             String   @default("active")
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  id                   String    @id @default(cuid())
+  orgId                String
+  email                String    @unique
+  name                 String?
+  role                 Role      @default(STAFF)
+  passwordHash         String?   @db.VarChar(255)
+  mustChangePassword   Boolean   @default(false)
+  emailVerified        Boolean   @default(false)
+  status               String    @default("active")
+  passwordResetToken   String?   // SHA-256 hash of reset token
+  passwordResetExpiry  DateTime? // Token expiration time
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
 
   org             Org            @relation(fields: [orgId], references: [id])
   rbacUserRoles   RbacUserRole[] @relation("UserRbacUserRoles")
