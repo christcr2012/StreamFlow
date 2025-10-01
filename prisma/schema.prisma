@@ -3543,3 +3543,69 @@ model SystemNotice {
   @@index([active, startAt, endAt])
   @@index([type, priority])
 }
+
+// AI Golden Dataset (for evaluation)
+model AiGoldenDataset {
+  id String @id @default(cuid())
+
+  // Agent/Action
+  agentType  String
+  actionType String
+
+  // Test Data
+  input          Json
+  expectedOutput String
+
+  // Metadata
+  metadata Json @default("{}")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([agentType, actionType])
+}
+
+// AI Evaluation Results
+model AiEvaluation {
+  id String @id @default(cuid())
+
+  // Agent/Action
+  agentType  String
+  actionType String
+
+  // Model Version
+  modelVersion String
+
+  // Test Data
+  input          Json
+  actualOutput   String
+  expectedOutput String?
+
+  // Metrics (ROUGE, BLEU, precision, recall, etc.)
+  metrics Json @default("{}")
+
+  createdAt DateTime @default(now())
+
+  @@index([agentType, modelVersion])
+  @@index([createdAt])
+}
+
+// AI Model Versions (for A/B testing)
+model AiModelVersion {
+  id String @id @default(cuid())
+
+  // Model Info
+  agentType String
+  version   String
+  modelName String
+  config    Json @default("{}")
+
+  // Status: shadow (testing), canary (small %), active (default), deprecated
+  status String @default("shadow")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([agentType, version])
+  @@index([agentType, status])
+}
