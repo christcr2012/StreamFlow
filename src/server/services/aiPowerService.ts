@@ -3,6 +3,7 @@
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { ServiceError } from './authService';
+import { cache, CacheKeys, CacheTTL } from '@/lib/cache';
 
 export { ServiceError };
 
@@ -39,9 +40,14 @@ export class AiPowerService {
   };
 
   /**
-   * Get or create power profile for org
+   * Get or create power profile for org (cached)
    */
   async getProfile(orgId: string) {
+    // Try cache first
+    const cacheKey = CacheKeys.aiPowerProfile(orgId);
+    const cached = await cache.get<any>(cacheKey);
+    if (cached) return cached as any;
+
     let profile = await prisma.aiPowerProfile.findUnique({
       where: { orgId },
     });
@@ -62,6 +68,9 @@ export class AiPowerService {
         },
       });
     }
+
+    // Cache for 1 hour
+    await cache.set(cacheKey, profile, CacheTTL.LONG);
 
     return profile;
   }
@@ -90,6 +99,9 @@ export class AiPowerService {
         roleCeilings: validated.roleCeilings as any,
       },
     });
+
+    // Invalidate cache
+    await cache.delete(CacheKeys.aiPowerProfile(orgId));
 
     // Audit log
     await prisma.auditLog.create({

@@ -3,6 +3,7 @@
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { ServiceError } from './authService';
+import { cache, CacheKeys, CacheTTL } from '@/lib/cache';
 
 export { ServiceError };
 
@@ -42,15 +43,20 @@ export interface InsufficientCreditsError {
 
 export class CreditService {
   /**
-   * Get current balance for org
+   * Get current balance for org (cached for 5 minutes)
    */
   async getBalance(orgId: string): Promise<BalanceResult> {
+    // Try cache first (short TTL since balance changes frequently)
+    const cacheKey = CacheKeys.creditBalance(orgId);
+    const cached = await cache.get<BalanceResult>(cacheKey);
+    if (cached) return cached;
+
     const lastTx = await prisma.creditLedger.findFirst({
       where: { orgId },
       orderBy: { createdAt: 'desc' },
     });
 
-    return {
+    const result = {
       balanceCents: lastTx?.balanceAfter || 0,
       lastTransaction: lastTx
         ? {
@@ -61,6 +67,11 @@ export class CreditService {
           }
         : undefined,
     };
+
+    // Cache for 5 minutes
+    await cache.set(cacheKey, result, CacheTTL.SHORT);
+
+    return result;
   }
 
   /**
@@ -116,6 +127,9 @@ export class CreditService {
       },
     });
 
+    // Invalidate balance cache
+    await cache.delete(CacheKeys.creditBalance(orgId));
+
     return {
       balanceCents: tx.balanceAfter,
       lastTransaction: {
@@ -150,6 +164,9 @@ export class CreditService {
         metadata,
       },
     });
+
+    // Invalidate balance cache
+    await cache.delete(CacheKeys.creditBalance(orgId));
 
     return {
       balanceCents: tx.balanceAfter,

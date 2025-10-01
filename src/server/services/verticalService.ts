@@ -3,6 +3,7 @@
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { ServiceError } from './authService';
+import { cache, CacheKeys, CacheTTL } from '@/lib/cache';
 
 export { ServiceError };
 
@@ -46,9 +47,14 @@ export const VerticalConfigSchema = z.object({
 
 export class VerticalService {
   /**
-   * Get or create vertical config
+   * Get or create vertical config (cached)
    */
   async getConfig(orgId: string) {
+    // Try cache first
+    const cacheKey = CacheKeys.verticalConfig(orgId);
+    const cached = await cache.get<any>(cacheKey);
+    if (cached) return cached as any;
+
     let config = await prisma.verticalConfig.findUnique({
       where: { orgId },
     });
@@ -65,6 +71,9 @@ export class VerticalService {
         },
       });
     }
+
+    // Cache for 1 hour
+    await cache.set(cacheKey, config, CacheTTL.LONG);
 
     return config;
   }
@@ -91,6 +100,9 @@ export class VerticalService {
         enabledAiTasks: this.getDefaultAiTasks(vertical),
       },
     });
+
+    // Invalidate cache
+    await cache.delete(CacheKeys.verticalConfig(orgId));
 
     // Audit log
     await prisma.auditLog.create({
