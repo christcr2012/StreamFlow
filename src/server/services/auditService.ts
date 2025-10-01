@@ -252,3 +252,31 @@ export class AuditService {
 // Export singleton instance
 export const auditService = new AuditService();
 
+/**
+ * Simple helper function to create an audit log entry
+ * Used throughout the application for quick audit logging
+ */
+export async function auditLog(params: {
+  orgId: string;
+  actorId: string;
+  action: string;
+  entityType: string;
+  entityId: string;
+  delta: any;
+}): Promise<void> {
+  try {
+    await prisma.auditLog.create({
+      data: {
+        orgId: params.orgId,
+        actorId: params.actorId,
+        action: params.action,
+        entityType: params.entityType,
+        entityId: params.entityId,
+        delta: params.delta,
+      },
+    });
+  } catch (error) {
+    // Log error but don't throw - audit failures shouldn't break the main operation
+    console.error('Failed to create audit log:', error);
+  }
+}
