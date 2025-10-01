@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
 import { conversionService, ConvertLeadSchema } from '@/server/services/bridge/conversionService';
+import { withAudience, AUDIENCE, getUserInfo } from '@/middleware/withAudience';
 
 // Error envelope helper
 function errorResponse(res: NextApiResponse, status: number, error: string, message: string, details?: any) {
@@ -11,10 +12,9 @@ function errorResponse(res: NextApiResponse, status: number, error: string, mess
   });
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // TODO: Add withAudience middleware (Task 3)
-  const orgId = req.headers['x-org-id'] as string || 'org_test';
-  const userId = req.headers['x-user-id'] as string || 'user_test';
+async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { orgId, email } = getUserInfo(req);
+  const userId = email || 'user_test';
   const { id } = req.query;
 
   if (typeof id !== 'string') {
@@ -30,7 +30,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 }
 
-async function handlePost(req: NextApiRequest, res: NextApiResponse, orgId: string, userId: string, leadId: string) {
+async function handlePost(req: NextApiRequest, res: NextApiResponse, orgId: string | null, userId: string, leadId: string) {
+  if (!orgId) {
+    return errorResponse(res, 400, 'BadRequest', 'Organization ID required');
+  }
   try {
     // Validate request body
     const bodySchema = ConvertLeadSchema.omit({ leadId: true });
@@ -81,7 +84,10 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, orgId: stri
   }
 }
 
-async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: string, leadId: string) {
+async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: string | null, leadId: string) {
+  if (!orgId) {
+    return errorResponse(res, 400, 'BadRequest', 'Organization ID required');
+  }
   try {
     // Get conversion history
     const history = await conversionService.getLeadConversionHistory(orgId, leadId);
@@ -96,4 +102,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: strin
     return errorResponse(res, 500, 'Internal', 'Failed to fetch conversion history');
   }
 }
+
+// Export with withAudience middleware
+export default withAudience(AUDIENCE.CLIENT_ONLY, handler);
 
