@@ -484,6 +484,14 @@ model Org {
   // Stripe Connect Relations (Codex Phase 8)
   stripeConnect       TenantStripeConnect?
 
+  // AI Monetization Relations
+  aiPowerProfile      AiPowerProfile?
+  aiTasks             AiTask[]
+  creditLedger        CreditLedger[]
+  usageMeters         UsageMeter[]
+  verticalConfig      VerticalConfig?
+  trialConfig         TrialConfig?
+
   /// brandConfig stores white-label brand settings such as name, colors, and logo URL.
   /// It is JSON to allow arbitrary keys like { name: "Mountain Vista", color: "#123456", logoUrl: "https://..." }
   brandConfig Json? @default("{}")
@@ -622,6 +630,7 @@ model User {
   assignedTasks   LeadTask[]     @relation("AssignedLeadTasks")
   createdTasks    LeadTask[]     @relation("CreatedLeadTasks")
   ownedContacts   Contact[]      @relation("OwnedContacts")
+  aiTasks         AiTask[]       // AI tasks triggered by this user
 
   // Employee Portal Relations
   employeeProfile EmployeeProfile? @relation("UserEmployeeProfile")
@@ -3207,4 +3216,127 @@ model TenantStripeConnect {
 
   @@index([orgId])
   @@index([connectStatus])
+}
+
+// ===== AI MONETIZATION MODELS =====
+
+/// AiPowerProfile stores tenant's AI power level configuration
+/// Controls cost vs quality tradeoff for AI tasks
+model AiPowerProfile {
+  id              String   @id @default(cuid())
+  orgId           String   @unique
+  globalDefault   String   @default("ECO") // ECO, STANDARD, MAX
+  overrides       Json     @default("{}") // feature/agent/channel overrides
+  roleCeilings    Json     @default("{}") // employee: STANDARD, owner: MAX
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  org Org @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+}
+
+/// AiTask logs every AI execution for billing and analytics
+/// Tracks tokens, cost, and pricing per task
+model AiTask {
+  id            String   @id @default(cuid())
+  orgId         String
+  userId        String?  // User who triggered (nullable for system tasks)
+  agentType     String   // inbox, estimate, scheduling, collections, etc.
+  actionType    String   // inbound_parse, reply_draft, route_optimize, etc.
+  role          String?  // User role at execution time
+  powerLevel    String   // ECO, STANDARD, MAX
+  tokensIn      Int
+  tokensOut     Int
+  rawCostCents  Int      // Actual API cost
+  priceCents    Int      // What we charge tenant
+  status        String   // success, error, timeout
+  errorCode     String?
+  metadata      Json     @default("{}")
+  createdAt     DateTime @default(now())
+
+  org  Org   @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [orgId, userId], references: [orgId, id])
+
+  @@index([orgId, createdAt])
+  @@index([orgId, agentType])
+  @@index([orgId, status])
+  @@index([userId, createdAt])
+}
+
+/// CreditLedger tracks prepaid credits for usage-based billing
+/// All debits happen before execution (402 gating)
+model CreditLedger {
+  id            String   @id @default(cuid())
+  orgId         String
+  amountCents   Int      // Positive for purchase, negative for debit
+  type          String   // PURCHASE, DEBIT, REFUND, TRIAL, REFERRAL
+  description   String
+  balanceBefore Int      // Balance before this transaction
+  balanceAfter  Int      // Balance after this transaction
+  relatedId     String?  // AiTask.id, Invoice.id, etc.
+  metadata      Json     @default("{}")
+  createdAt     DateTime @default(now())
+
+  org Org @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, createdAt])
+  @@index([orgId, type])
+}
+
+/// UsageMeter tracks consumption for ULAP billing
+/// Meters: ai_tokens_light/medium/heavy, email_count, sms_count, etc.
+model UsageMeter {
+  id          String   @id @default(cuid())
+  orgId       String
+  meterType   String   // ai_tokens_light, email_count, sms_count, etc.
+  value       Int      // Cumulative or delta depending on meter
+  periodStart DateTime
+  periodEnd   DateTime
+  metadata    Json     @default("{}")
+  createdAt   DateTime @default(now())
+
+  org Org @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, meterType, periodStart])
+  @@index([orgId, periodEnd])
+}
+
+/// VerticalConfig stores industry-specific settings
+/// Enables vertical AI packs and custom fields
+model VerticalConfig {
+  id            String   @id @default(cuid())
+  orgId         String   @unique
+  vertical      String   // cleaning, hvac, trucking, portajohn, etc.
+  enabledAiTasks Json    @default("[]") // Array of enabled AI task IDs
+  customFields  Json     @default("{}")
+  settings      Json     @default("{}")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  org Org @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+  @@index([vertical])
+}
+
+/// TrialConfig manages trial periods and entitlements
+/// Marketing trials (short, no card) vs Operational trials (longer, card required)
+model TrialConfig {
+  id            String   @id @default(cuid())
+  orgId         String   @unique
+  trialType     String   // MARKETING, OPERATIONAL
+  trialEndsAt   DateTime
+  aiCreditsCents Int     @default(1000) // Trial AI credits
+  features      Json     @default("[]") // Enabled features during trial
+  status        String   @default("active") // active, expired, converted
+  convertedAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  org Org @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+  @@index([trialEndsAt])
+  @@index([status])
 }
