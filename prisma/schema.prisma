@@ -492,6 +492,9 @@ model Org {
   verticalConfig      VerticalConfig?
   trialConfig         TrialConfig?
 
+  // Work Orders Relations
+  jobTickets          JobTicket[]
+
   /// brandConfig stores white-label brand settings such as name, colors, and logo URL.
   /// It is JSON to allow arbitrary keys like { name: "Mountain Vista", color: "#123456", logoUrl: "https://..." }
   brandConfig Json? @default("{}")
@@ -631,6 +634,7 @@ model User {
   createdTasks    LeadTask[]     @relation("CreatedLeadTasks")
   ownedContacts   Contact[]      @relation("OwnedContacts")
   aiTasks         AiTask[]       // AI tasks triggered by this user
+  assignedJobTickets JobTicket[] @relation("JobTicketCrew") // Job tickets assigned to this user
 
   // Employee Portal Relations
   employeeProfile EmployeeProfile? @relation("UserEmployeeProfile")
@@ -1052,6 +1056,7 @@ model Customer {
   workOrders    WorkOrder[]   @relation("CustomerWorkOrders")
   opportunities Opportunity[]
   contacts      Contact[]     @relation("CustomerContacts")
+  jobTickets    JobTicket[]
 
   @@unique([orgId, id])  // Multi-tenant isolation
 }
@@ -3339,4 +3344,92 @@ model TrialConfig {
   @@index([orgId])
   @@index([trialEndsAt])
   @@index([status])
+}
+
+// ===== WORK ORDERS & JOB TICKETS =====
+
+/// JobTicket represents a mobile work order with offline capability
+/// Extends existing Job model with field-specific features
+model JobTicket {
+  id            String   @id @default(cuid())
+  orgId         String
+  customerId    String   // Customer.id
+  location      Json     // { address, lat, lng, notes }
+  crewId        String?  // User.id of assigned crew lead
+  serviceType   String
+  scheduledAt   DateTime?
+  status        String   @default("pending") // pending, assigned, in_progress, completed, cancelled
+  estimateId    String?  // Opportunity.id if from estimate
+  invoiceId     String?  // Invoice.id when billed
+  metadata      Json     @default("{}")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  org         Org              @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  customer    Customer         @relation(fields: [customerId], references: [id])
+  crew        User?            @relation("JobTicketCrew", fields: [orgId, crewId], references: [orgId, id])
+  logs        JobLog[]
+  completion  JobCompletion?
+  anomalies   JobAnomaly[]
+
+  @@index([orgId, status])
+  @@index([orgId, scheduledAt])
+  @@index([customerId])
+  @@index([crewId])
+}
+
+/// JobLog tracks all actions on a job ticket (offline-capable)
+/// Synced when connection restored
+model JobLog {
+  id            String   @id @default(cuid())
+  jobTicketId   String
+  actorId       String   // User.id who performed action
+  role          String   // User role at time of action
+  action        String   // arrived, started, paused, parts_used, photo_added, notes_added
+  notes         String?
+  photoUrl      String?  // S3/blob storage URL
+  partsUsed     Json     @default("[]") // [{ partId, quantity, cost }]
+  syncedAt      DateTime? // Null if offline, set when synced
+  createdAt     DateTime @default(now())
+
+  jobTicket JobTicket @relation(fields: [jobTicketId], references: [id], onDelete: Cascade)
+
+  @@index([jobTicketId, createdAt])
+  @@index([actorId])
+  @@index([syncedAt]) // Find unsynced logs
+}
+
+/// JobCompletion stores final job data with signature
+/// Triggers AI completion report generation
+model JobCompletion {
+  id            String   @id @default(cuid())
+  jobTicketId   String   @unique
+  completedAt   DateTime
+  signatureUrl  String?  // Customer signature image
+  aiReportUrl   String?  // AI-generated completion report PDF
+  aiReportText  String?  @db.Text // AI report text (≤300 words)
+  createdAt     DateTime @default(now())
+
+  jobTicket JobTicket @relation(fields: [jobTicketId], references: [id], onDelete: Cascade)
+
+  @@index([completedAt])
+}
+
+/// JobAnomaly stores AI-detected issues during job
+/// Reviewed by manager for follow-up
+model JobAnomaly {
+  id            String   @id @default(cuid())
+  jobTicketId   String
+  type          String   // time_overrun, parts_excess, quality_concern, safety_issue
+  severity      String   // low, medium, high, critical
+  aiNotes       String?  @db.Text // AI explanation
+  reviewedAt    DateTime?
+  reviewedBy    String?  // User.id
+  resolution    String?  @db.Text
+  createdAt     DateTime @default(now())
+
+  jobTicket JobTicket @relation(fields: [jobTicketId], references: [id], onDelete: Cascade)
+
+  @@index([jobTicketId, severity])
+  @@index([reviewedAt]) // Find unreviewed anomalies
 }
