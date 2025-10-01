@@ -1,0 +1,54 @@
+// src/pages/api/tenant/adoption/trends.ts
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { adoptionDiscountService, ServiceError } from '@/server/services/adoptionDiscountService';
+import { withRateLimit, rateLimitPresets } from '@/middleware/rateLimit';
+import { getEmailFromReq } from '@/lib/rbac';
+import { prisma } from '@/lib/prisma';
+
+async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'GET') {
+    res.status(405).json({ error: 'MethodNotAllowed', message: 'GET only' });
+    return;
+  }
+
+  const email = getEmailFromReq(req);
+  if (!email) {
+    res.status(401).json({ error: 'Unauthorized', message: 'Login required' });
+    return;
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { email },
+    select: { id: true, orgId: true },
+  });
+
+  if (!user || !user.orgId) {
+    res.status(401).json({ error: 'Unauthorized', message: 'Invalid session' });
+    return;
+  }
+
+  const { orgId } = user;
+  const months = parseInt(req.query.months as string) || 6;
+
+  try {
+    const trends = await adoptionDiscountService.getAdoptionTrends(orgId, months);
+    res.status(200).json({ trends });
+    return;
+  } catch (error) {
+    console.error('Adoption trends API error:', error);
+
+    if (error instanceof ServiceError) {
+      res.status(error.statusCode).json({
+        error: error.code,
+        message: error.message,
+        details: error.details,
+      });
+      return;
+    }
+
+    res.status(500).json({ error: 'Internal', message: 'Server error' });
+  }
+}
+
+export default withRateLimit(rateLimitPresets.api, handler);
+
