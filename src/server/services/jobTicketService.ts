@@ -20,6 +20,10 @@ export const CreateJobTicketSchema = z.object({
   scheduledAt: z.string().datetime().optional(),
   estimateId: z.string().optional(),
   metadata: z.record(z.any()).optional(),
+  // === CRM LINKS (Bridge System) ===
+  organizationId: z.string().optional(),
+  contactId: z.string().optional(),
+  opportunityId: z.string().optional(),
 });
 
 export const AssignJobSchema = z.object({
@@ -73,6 +77,10 @@ export class JobTicketService {
         estimateId: validated.estimateId,
         metadata: validated.metadata || {},
         status: 'pending',
+        // === CRM LINKS (Bridge System) ===
+        organizationId: validated.organizationId,
+        contactId: validated.contactId,
+        opportunityId: validated.opportunityId,
       },
     });
 
