@@ -495,6 +495,10 @@ model Org {
   // Work Orders Relations
   jobTickets          JobTicket[]
 
+  // Federation Relations
+  tenantDomain        TenantDomain?
+  profitability       TenantProfitability?
+
   /// brandConfig stores white-label brand settings such as name, colors, and logo URL.
   /// It is JSON to allow arbitrary keys like { name: "Mountain Vista", color: "#123456", logoUrl: "https://..." }
   brandConfig Json? @default("{}")
@@ -3432,4 +3436,110 @@ model JobAnomaly {
 
   @@index([jobTicketId, severity])
   @@index([reviewedAt]) // Find unreviewed anomalies
+}
+
+// ===== FEDERATION & PROVIDER MODELS =====
+
+// Custom domain configuration for tenants
+model TenantDomain {
+  id        String   @id @default(cuid())
+  orgId     String   @unique
+  domain    String   @unique // e.g., "acme.com"
+  subdomain String   @unique // e.g., "acme" (for acme.tenant.streamflow.com)
+
+  // Verification
+  txtRecord      String   // TXT record value for verification
+  verified       Boolean  @default(false)
+  verifiedAt     DateTime?
+
+  // DNS Configuration
+  cnameTarget    String   @default("tenant.streamflow.com") // CNAME target
+  sslEnabled     Boolean  @default(false)
+  sslIssuedAt    DateTime?
+
+  // Status
+  status         String   @default("pending") // pending, verified, active, suspended
+  activatedAt    DateTime?
+  suspendedAt    DateTime?
+  suspensionReason String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  org Org @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([domain])
+  @@index([subdomain])
+  @@index([status])
+}
+
+
+
+// Tenant profitability tracking
+model TenantProfitability {
+  id String @id @default(cuid())
+  orgId String @unique
+
+  // Revenue (current month)
+  monthlyRevenueCents Int @default(0)
+  creditsPurchased    Int @default(0)
+
+  // Costs (current month)
+  aiCostCents         Int @default(0)
+  infraCostCents      Int @default(0)
+  storageCostCents    Int @default(0)
+
+  // Metrics
+  marginPercent       Float @default(0)
+  adoptionRate        Float @default(0) // % of users using AI
+  avgCreditsPerUser   Float @default(0)
+
+  // AI Recommendations
+  aiRecommendations   Json? // Array of {type, action, impact}
+  lastAnalyzedAt      DateTime?
+
+  // Period
+  periodStart DateTime
+  periodEnd   DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  org Org @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, periodStart])
+  @@index([marginPercent])
+}
+
+// System-wide notices (visible to all tenants)
+model SystemNotice {
+  id String @id @default(cuid())
+
+  // Content
+  title       String
+  message     String
+  type        String // info, warning, critical, maintenance
+
+  // Targeting
+  targetAll   Boolean @default(true)
+  targetOrgs  Json? // Array of orgIds if not targetAll
+
+  // Display
+  dismissible Boolean @default(true)
+  priority    Int @default(0) // Higher = more important
+
+  // Scheduling
+  startAt     DateTime
+  endAt       DateTime?
+
+  // Status
+  active      Boolean @default(true)
+
+  // Audit
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([active, startAt, endAt])
+  @@index([type, priority])
 }
