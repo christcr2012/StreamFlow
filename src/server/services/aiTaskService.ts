@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { ServiceError } from './authService';
 import { aiPowerService, PowerLevelType } from './aiPowerService';
 import { creditService } from './creditService';
+import { usageMeterService } from './usageMeterService';
 
 export { ServiceError };
 
@@ -118,6 +119,18 @@ export class AiTaskService {
         metadata: validated.metadata || {},
       },
     });
+
+    // Record usage meter
+    await usageMeterService.recordAiTokens(
+      orgId,
+      executionResult.tokensIn + executionResult.tokensOut,
+      powerResult.effectivePower,
+      {
+        taskId: task.id,
+        agentType: validated.agentType,
+        actionType: validated.actionType,
+      }
+    );
 
     return {
       taskId: task.id,
