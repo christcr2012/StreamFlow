@@ -922,13 +922,24 @@ model Lead {
   publicId        String     @unique
   sourceType      LeadSource
   identityHash    String
-  
+
   // === BASIC CONTACT INFORMATION ===
   company         String?
   contactName     String?
   email           String?
   phoneE164       String?
   website         String?
+
+  // === CRM FIELDS (Binder1.md) ===
+  stage           String     @default("new")  // new, contacted, qualified, proposal, won, lost
+  ownerId         String?    // User who owns this lead
+  archived        Boolean    @default(false)
+
+  // === CONVERSION TRACKING (Bridge System) ===
+  convertedToCustomerId      String?
+  convertedToOrganizationId  String?
+  convertedToContactId       String?
+  conversionAuditId          String?
   
   // === ENTERPRISE FIELDS TO ADD ===
   // companySize     CompanySize?      // SMALL, MEDIUM, LARGE, ENTERPRISE
@@ -1078,8 +1089,16 @@ model Opportunity {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
+  // === CRM FIELDS (Binder1.md) ===
+  title          String?   // Opportunity name/title
+  probability    Int?      // Win probability (0-100)
+  closeDate      DateTime? // Expected close date
+  leadId         String?   // Source lead ID
+
   customer Customer @relation(fields: [orgId, customerId], references: [orgId, id])
   org      Org      @relation(fields: [orgId], references: [id])
+
+  @@index([leadId])
 }
 
 /// Contact represents individual people associated with organizations
@@ -3369,6 +3388,11 @@ model JobTicket {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
+  // === CRM LINKS (Bridge System) ===
+  organizationId String?  // CRM Organization link
+  contactId      String?  // CRM Contact link
+  opportunityId  String?  // CRM Opportunity link
+
   org         Org              @relation(fields: [orgId], references: [id], onDelete: Cascade)
   customer    Customer         @relation(fields: [customerId], references: [id])
   crew        User?            @relation("JobTicketCrew", fields: [orgId, crewId], references: [orgId, id])
@@ -3380,6 +3404,9 @@ model JobTicket {
   @@index([orgId, scheduledAt])
   @@index([customerId])
   @@index([crewId])
+  @@index([orgId, organizationId])
+  @@index([orgId, contactId])
+  @@index([orgId, opportunityId])
 }
 
 /// JobLog tracks all actions on a job ticket (offline-capable)
