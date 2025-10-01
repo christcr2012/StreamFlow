@@ -2,10 +2,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { tenantDomainService, ServiceError } from '@/server/services/tenantDomainService';
 import { withRateLimit, rateLimitPresets } from '@/middleware/rateLimit';
+import { withProviderAuth } from '@/middleware/providerAuth';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // TODO: Add provider authentication check
-  // For now, this is a placeholder for provider-only endpoints
 
   if (req.method === 'GET') {
     try {
@@ -38,5 +37,5 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withRateLimit(rateLimitPresets.api, handler);
+export default withRateLimit(rateLimitPresets.api, withProviderAuth(handler));
 

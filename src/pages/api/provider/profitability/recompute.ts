@@ -2,9 +2,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { providerProfitabilityService, ServiceError } from '@/server/services/providerProfitabilityService';
 import { withRateLimit, rateLimitPresets } from '@/middleware/rateLimit';
+import { withProviderAuth } from '@/middleware/providerAuth';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // TODO: Add provider authentication check
 
   if (req.method === 'POST') {
     try {
@@ -40,5 +40,5 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withRateLimit(rateLimitPresets.api, handler);
+export default withRateLimit(rateLimitPresets.api, withProviderAuth(handler));
 

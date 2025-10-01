@@ -2,11 +2,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { systemNoticeService, ServiceError } from '@/server/services/systemNoticeService';
 import { withRateLimit, rateLimitPresets } from '@/middleware/rateLimit';
+import { withProviderAuth, getProviderEmailFromReq } from '@/middleware/providerAuth';
 import { z } from 'zod';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // TODO: Add provider authentication check
-  const providerEmail = 'provider@streamflow.com'; // Placeholder
+  const providerEmail = getProviderEmailFromReq(req) || 'provider@streamflow.com';
 
   if (req.method === 'GET') {
     try {
@@ -67,5 +67,5 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withRateLimit(rateLimitPresets.api, handler);
+export default withRateLimit(rateLimitPresets.api, withProviderAuth(handler));
 
