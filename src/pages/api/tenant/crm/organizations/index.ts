@@ -67,10 +67,10 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: strin
     }
 
     // Get total count
-    const total = await prisma.organization.count({ where });
+    const total = await prisma.customer.count({ where });
 
     // Get paginated results
-    const organizations = await prisma.organization.findMany({
+    const organizations = await prisma.customer.findMany({
       where,
       skip: (query.page - 1) * query.pageSize,
       take: query.pageSize,
@@ -133,7 +133,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, orgId: stri
     const data = createOrganizationSchema.parse(req.body);
 
     // Create organization
-    const organization = await prisma.organization.create({
+    const organization = await prisma.customer.create({
       data: {
         orgId,
         name: data.name,

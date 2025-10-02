@@ -16,7 +16,7 @@ const updateOpportunitySchema = z.object({
 
 // Error envelope helper
 function errorResponse(res: NextApiResponse, status: number, error: string, message: string, details?: any) {
-  return res.status(status).json({
+  res.status(status).json({
     error,
     message,
     details,

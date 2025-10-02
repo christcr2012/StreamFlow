@@ -20,7 +20,7 @@ const updateOrganizationSchema = z.object({
 
 // Error envelope helper
 function errorResponse(res: NextApiResponse, status: number, error: string, message: string, details?: any) {
-  return res.status(status).json({
+  res.status(status).json({
     error,
     message,
     details,
@@ -49,7 +49,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
 async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: string, id: string) {
   try {
-    const organization = await prisma.organization.findFirst({
+    const organization = await prisma.customer.findFirst({
       where: {
         id,
         orgId,
@@ -166,7 +166,7 @@ async function handlePatch(req: NextApiRequest, res: NextApiResponse, orgId: str
     const data = updateOrganizationSchema.parse(req.body);
 
     // Check if organization exists
-    const existing = await prisma.organization.findFirst({
+    const existing = await prisma.customer.findFirst({
       where: {
         id,
         orgId,
@@ -178,7 +178,7 @@ async function handlePatch(req: NextApiRequest, res: NextApiResponse, orgId: str
     }
 
     // Update organization
-    const organization = await prisma.organization.update({
+    const organization = await prisma.customer.update({
       where: { id },
       data: {
         ...(data.name && { name: data.name }),
@@ -243,7 +243,7 @@ async function handlePatch(req: NextApiRequest, res: NextApiResponse, orgId: str
 async function handleDelete(req: NextApiRequest, res: NextApiResponse, orgId: string, userId: string, id: string) {
   try {
     // Check if organization exists
-    const existing = await prisma.organization.findFirst({
+    const existing = await prisma.customer.findFirst({
       where: {
         id,
         orgId,
@@ -255,7 +255,7 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse, orgId: st
     }
 
     // Soft delete (archive) instead of hard delete
-    await prisma.organization.update({
+    await prisma.customer.update({
       where: { id },
       data: { archived: true },
     });

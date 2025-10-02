@@ -3,6 +3,9 @@ import { checkAiBudget } from '@/lib/aiMeter';
 import { auditLog } from '@/server/services/auditService';
 import { withAudience, AUDIENCE, getUserInfo } from './withAudience';
 
+// Re-export AUDIENCE for convenience
+export { AUDIENCE };
+
 // Cost configurations for different operations (in credits)
 // 1 credit = $0.05 client-facing value
 export const COST_GUARD = {
@@ -46,7 +49,7 @@ export function withCostGuard(
       const userId = email || 'user_test';
 
       // Check AI budget
-      const budgetCheck = await checkAiBudget(orgId, costConfig.credits);
+      const budgetCheck = await checkAiBudget(orgId, costConfig.description, costConfig.credits);
 
       if (!budgetCheck.allowed) {
         // Audit the denial
@@ -58,7 +61,7 @@ export function withCostGuard(
           entityId: costConfig.description,
           delta: {
             credits: costConfig.credits,
-            balance: budgetCheck.balance,
+            creditsRemaining: budgetCheck.creditsRemaining,
             reason: budgetCheck.reason,
           },
         });
@@ -68,7 +71,7 @@ export function withCostGuard(
           message: budgetCheck.reason || 'Insufficient credits',
           details: {
             credits: costConfig.credits,
-            balance: budgetCheck.balance,
+            creditsRemaining: budgetCheck.creditsRemaining,
             description: costConfig.description,
           },
         });
@@ -83,7 +86,7 @@ export function withCostGuard(
         entityId: costConfig.description,
         delta: {
           credits: costConfig.credits,
-          balance: budgetCheck.balance,
+          creditsRemaining: budgetCheck.creditsRemaining,
         },
       });
 

@@ -3,10 +3,11 @@ import { z } from 'zod';
 import { withAudience, AUDIENCE, getUserInfo } from '@/middleware/withAudience';
 import { auditLog } from '@/server/services/auditService';
 import * as quoteService from '@/server/services/bridge/quoteService';
+import { UpdateQuoteSchema } from '@/server/services/bridge/quoteService';
 
 // Error envelope helper
 function errorResponse(res: NextApiResponse, status: number, error: string, message: string, details?: any) {
-  return res.status(status).json({
+  res.status(status).json({
     error,
     message,
     details,
@@ -35,7 +36,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
 async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: string, id: string) {
   try {
-    const quote = await quoteService.getById(orgId, id);
+    const quote = await quoteService.getQuoteById({ orgId, quoteId: id });
 
     // Transform response
     const response = {
@@ -77,7 +78,7 @@ async function handlePatch(req: NextApiRequest, res: NextApiResponse, orgId: str
     const data = UpdateQuoteSchema.parse(req.body);
 
     // Update quote
-    const quote = await quoteService.update(orgId, userId, id, data);
+    const quote = await quoteService.updateQuote({ orgId, userId, quoteId: id, data });
 
     // Transform response
     const response = {
@@ -123,7 +124,7 @@ async function handlePatch(req: NextApiRequest, res: NextApiResponse, orgId: str
 
 async function handleDelete(req: NextApiRequest, res: NextApiResponse, orgId: string, userId: string, id: string) {
   try {
-    await quoteService.delete(orgId, userId, id);
+    await quoteService.deleteQuote({ orgId, quoteId: id });
 
     return res.status(204).end();
   } catch (error) {
