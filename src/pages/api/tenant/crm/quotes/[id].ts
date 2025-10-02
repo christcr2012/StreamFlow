@@ -6,7 +6,7 @@ import * as quoteService from '@/server/services/bridge/quoteService';
 import { UpdateQuoteSchema } from '@/server/services/bridge/quoteService';
 
 // Error envelope helper
-function errorResponse(res: NextApiResponse, status: number, error: string, message: string, details?: any) {
+function errorResponse(res: NextApiResponse, status: number, error: string, message: string, details?: any): void {
   res.status(status).json({
     error,
     message,
@@ -20,7 +20,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
 
   if (typeof id !== 'string') {
-    return errorResponse(res, 400, 'BadRequest', 'Invalid quote ID');
+    errorResponse(res, 400, 'BadRequest', 'Invalid quote ID');
+    return;
   }
 
   if (req.method === 'GET') {
@@ -30,7 +31,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   } else if (req.method === 'DELETE') {
     return handleDelete(req, res, orgId, userId, id);
   } else {
-    return errorResponse(res, 405, 'MethodNotAllowed', 'Method not allowed');
+    errorResponse(res, 405, 'MethodNotAllowed', 'Method not allowed');
+    return;
   }
 }
 
@@ -69,11 +71,13 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: strin
     return res.status(200).json(response);
   } catch (error) {
     if (error instanceof Error && error.message === 'Quote not found') {
-      return errorResponse(res, 404, 'NotFound', 'Quote not found');
+      errorResponse(res, 404, 'NotFound', 'Quote not found');
+      return;
     }
 
     console.error('Error fetching quote:', error);
-    return errorResponse(res, 500, 'Internal', 'Failed to fetch quote');
+    errorResponse(res, 500, 'Internal', 'Failed to fetch quote');
+    return;
   }
 }
 
@@ -115,15 +119,18 @@ async function handlePatch(req: NextApiRequest, res: NextApiResponse, orgId: str
         }
         fieldErrors[field].push(err.message);
       });
-      return errorResponse(res, 422, 'UnprocessableEntity', 'Validation failed', fieldErrors);
+      errorResponse(res, 422, 'UnprocessableEntity', 'Validation failed', fieldErrors);
+      return;
     }
 
     if (error instanceof Error && error.message === 'Quote not found') {
-      return errorResponse(res, 404, 'NotFound', 'Quote not found');
+      errorResponse(res, 404, 'NotFound', 'Quote not found');
+      return;
     }
 
     console.error('Error updating quote:', error);
-    return errorResponse(res, 500, 'Internal', 'Failed to update quote');
+    errorResponse(res, 500, 'Internal', 'Failed to update quote');
+    return;
   }
 }
 
@@ -134,11 +141,13 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse, orgId: st
     return res.status(204).end();
   } catch (error) {
     if (error instanceof Error && error.message === 'Quote not found') {
-      return errorResponse(res, 404, 'NotFound', 'Quote not found');
+      errorResponse(res, 404, 'NotFound', 'Quote not found');
+      return;
     }
 
     console.error('Error deleting quote:', error);
-    return errorResponse(res, 500, 'Internal', 'Failed to delete quote');
+    errorResponse(res, 500, 'Internal', 'Failed to delete quote');
+    return;
   }
 }
 

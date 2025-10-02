@@ -22,7 +22,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
 
   if (typeof id !== 'string') {
-    return errorResponse(res, 400, 'BadRequest', 'Invalid organization ID');
+    errorResponse(res, 400, 'BadRequest', 'Invalid organization ID');
+    return;
   }
 
   if (req.method === 'GET') {
@@ -32,7 +33,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   } else if (req.method === 'DELETE') {
     return handleDelete(req, res, orgId, userId, id);
   } else {
-    return errorResponse(res, 405, 'MethodNotAllowed', 'Method not allowed');
+    errorResponse(res, 405, 'MethodNotAllowed', 'Method not allowed');
+    return;
   }
 }
 
@@ -44,7 +46,8 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: strin
     });
 
     if (!organization) {
-      return errorResponse(res, 404, 'NotFound', 'Organization not found');
+      errorResponse(res, 404, 'NotFound', 'Organization not found');
+      return;
     }
 
     // Transform response
@@ -82,7 +85,8 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: strin
     return res.status(200).json(response);
   } catch (error) {
     console.error('Error fetching organization:', error);
-    return errorResponse(res, 500, 'Internal', 'Failed to fetch organization');
+    errorResponse(res, 500, 'Internal', 'Failed to fetch organization');
+    return;
   }
 }
 
@@ -129,10 +133,12 @@ async function handlePatch(req: NextApiRequest, res: NextApiResponse, orgId: str
         }
         fieldErrors[field].push(err.message);
       });
-      return errorResponse(res, 422, 'UnprocessableEntity', 'Validation failed', fieldErrors);
+      errorResponse(res, 422, 'UnprocessableEntity', 'Validation failed', fieldErrors);
+      return;
     }
     console.error('Error updating organization:', error);
-    return errorResponse(res, 500, 'Internal', 'Failed to update organization');
+    errorResponse(res, 500, 'Internal', 'Failed to update organization');
+    return;
   }
 }
 
@@ -149,7 +155,8 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse, orgId: st
     return res.status(204).end();
   } catch (error) {
     console.error('Error deleting organization:', error);
-    return errorResponse(res, 500, 'Internal', 'Failed to delete organization');
+    errorResponse(res, 500, 'Internal', 'Failed to delete organization');
+    return;
   }
 }
 
