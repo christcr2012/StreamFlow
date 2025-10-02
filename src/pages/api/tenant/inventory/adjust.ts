@@ -1,5 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { withAudience, AUDIENCE } from '@/middleware/withAudience';
+import { withRateLimit, RATE_LIMIT_CONFIGS } from '@/middleware/withRateLimit';
+import { withIdempotency } from '@/middleware/withIdempotency';
 import { inventoryService } from '@/server/services/inventoryService';
 import { z } from 'zod';
 
@@ -57,5 +59,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withAudience(AUDIENCE.CLIENT_ONLY, handler);
+export default withRateLimit(
+  RATE_LIMIT_CONFIGS.DEFAULT,
+  withIdempotency(
+    withAudience(AUDIENCE.CLIENT_ONLY, handler)
+  )
+);
 
