@@ -3,8 +3,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { assertPermission, getOrgIdFromReq, PERMS } from "@/lib/rbac";
 import { generatePricingAdvice } from "@/lib/aiHelper";
+import { withAudienceAndCostGuard, AUDIENCE, COST_GUARD } from "@/middleware/withCostGuard";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -232,3 +233,6 @@ function generateKeyMessages(positioning: string, location: string, clientType: 
 
   return messages;
 }
+
+// Export with cost guard protection
+export default withAudienceAndCostGuard(AUDIENCE.CLIENT_ONLY, COST_GUARD.AI_ESTIMATE_DRAFT, handler);

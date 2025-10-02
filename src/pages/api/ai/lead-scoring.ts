@@ -5,10 +5,11 @@
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import { assertPermission, getOrgIdFromReq, getEmailFromReq, PERMS } from "@/lib/rbac";
+import { withAudienceAndCostGuard, AUDIENCE, COST_GUARD } from "@/middleware/withCostGuard";
 import { leadScoringService, LeadData } from "@/lib/leadScoringService";
 import { aiService } from "@/lib/aiService";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -124,6 +125,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   }
 }
+
+// Export with cost guard protection
+export default withAudienceAndCostGuard(AUDIENCE.CLIENT_ONLY, COST_GUARD.AI_LEAD_SCORING, handler);
 
 /**
  * Example request bodies:

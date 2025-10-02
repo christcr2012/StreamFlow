@@ -4,6 +4,7 @@ import { advancedAiAgentService, ServiceError } from '@/server/services/advanced
 import { withRateLimit, rateLimitPresets } from '@/middleware/rateLimit';
 import { getEmailFromReq } from '@/lib/rbac';
 import { prisma } from '@/lib/prisma';
+import { withAudienceAndCostGuard, AUDIENCE, COST_GUARD } from '@/middleware/withCostGuard';
 import { z } from 'zod';
 
 const EstimateSchema = z.object({
@@ -83,5 +84,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withRateLimit(rateLimitPresets.ai, handler);
+export default withAudienceAndCostGuard(
+  AUDIENCE.CLIENT_ONLY,
+  COST_GUARD.AI_ESTIMATE_DRAFT,
+  withRateLimit(rateLimitPresets.ai, handler)
+);
 
