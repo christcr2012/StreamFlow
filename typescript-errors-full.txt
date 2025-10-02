@@ -1,0 +1,63 @@
+src/pages/api/tenant/crm/contacts/[id].ts(262,51): error TS2345: Argument of type '(req: NextApiRequest, res: NextApiResponse) => Promise<void | NextApiResponse<any>>' is not assignable to parameter of type '(req: NextApiRequest, res: NextApiResponse) => void | Promise<void>'.
+  Type 'Promise<void | NextApiResponse<any>>' is not assignable to type 'void | Promise<void>'.
+    Type 'Promise<void | NextApiResponse<any>>' is not assignable to type 'Promise<void>'.
+      Type 'void | NextApiResponse<any>' is not assignable to type 'void'.
+        Type 'NextApiResponse<any>' is not assignable to type 'void'.
+src/pages/api/tenant/crm/opportunities/[id].ts(247,51): error TS2345: Argument of type '(req: NextApiRequest, res: NextApiResponse) => Promise<void | NextApiResponse<any>>' is not assignable to parameter of type '(req: NextApiRequest, res: NextApiResponse) => void | Promise<void>'.
+  Type 'Promise<void | NextApiResponse<any>>' is not assignable to type 'void | Promise<void>'.
+    Type 'Promise<void | NextApiResponse<any>>' is not assignable to type 'Promise<void>'.
+      Type 'void | NextApiResponse<any>' is not assignable to type 'void'.
+        Type 'NextApiResponse<any>' is not assignable to type 'void'.
+src/pages/api/tenant/crm/organizations/[id].ts(163,51): error TS2345: Argument of type '(req: NextApiRequest, res: NextApiResponse) => Promise<void | NextApiResponse<any>>' is not assignable to parameter of type '(req: NextApiRequest, res: NextApiResponse) => void | Promise<void>'.
+  Type 'Promise<void | NextApiResponse<any>>' is not assignable to type 'void | Promise<void>'.
+    Type 'Promise<void | NextApiResponse<any>>' is not assignable to type 'Promise<void>'.
+      Type 'void | NextApiResponse<any>' is not assignable to type 'void'.
+        Type 'NextApiResponse<any>' is not assignable to type 'void'.
+src/pages/api/tenant/crm/quotes/[id].ts(154,51): error TS2345: Argument of type '(req: NextApiRequest, res: NextApiResponse) => Promise<void | NextApiResponse<any>>' is not assignable to parameter of type '(req: NextApiRequest, res: NextApiResponse) => void | Promise<void>'.
+  Type 'Promise<void | NextApiResponse<any>>' is not assignable to type 'void | Promise<void>'.
+    Type 'Promise<void | NextApiResponse<any>>' is not assignable to type 'Promise<void>'.
+      Type 'void | NextApiResponse<any>' is not assignable to type 'void'.
+        Type 'NextApiResponse<any>' is not assignable to type 'void'.
+src/server/services/bridge/conversionService.ts(75,13): error TS2353: Object literal may only specify known properties, and 'name' does not exist in type 'Without<CustomerCreateInput, CustomerUncheckedCreateInput> & CustomerUncheckedCreateInput'.
+src/server/services/bridge/conversionService.ts(91,11): error TS2322: Type '{ orgId: string; name: string; email: string | undefined; phone: string | undefined; organizationId: string | undefined; isPrimary: true; source: $Enums.LeadSource; }' is not assignable to type '(Without<ContactCreateInput, ContactUncheckedCreateInput> & ContactUncheckedCreateInput) | (Without<...> & ContactCreateInput)'.
+  Types of property 'organizationId' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/server/services/bridge/conversionService.ts(147,30): error TS2304: Cannot find name 'conversionAudit'.
+src/server/services/bridge/conversionService.ts(156,18): error TS2304: Cannot find name 'conversionAudit'.
+src/server/services/bridge/conversionService.ts(227,23): error TS2339: Property 'id' does not exist on type 'never'.
+src/server/services/bridge/conversionService.ts(228,32): error TS2339: Property 'convertedBy' does not exist on type 'never'.
+src/server/services/bridge/conversionService.ts(229,35): error TS2339: Property 'conversionData' does not exist on type 'never'.
+src/server/services/bridge/conversionService.ts(230,30): error TS2339: Property 'createdAt' does not exist on type 'never'.
+src/server/services/contactService.ts(118,7): error TS2322: Type '{ orgId: string; name: string; email: string | undefined; phone: string | undefined; title: string | undefined; department: string | undefined; organizationId: string | undefined; ... 13 more ...; customFields: Record<...>; }' is not assignable to type '(Without<ContactCreateInput, ContactUncheckedCreateInput> & ContactUncheckedCreateInput) | (Without<...> & ContactCreateInput)'.
+  Types of property 'organizationId' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/server/services/crm/organizationService.ts(169,22): error TS2339: Property 'logEvent' does not exist on type 'AuditService'.
+src/server/services/crm/organizationService.ts(317,22): error TS2339: Property 'logEvent' does not exist on type 'AuditService'.
+src/server/services/crm/organizationService.ts(368,22): error TS2339: Property 'logEvent' does not exist on type 'AuditService'.
+src/server/services/importService.ts(188,15): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/server/services/opportunityService.ts(98,7): error TS2322: Type '{ orgId: string; customerId: string; valueType: "RELATIONSHIP" | "JOB"; estValue: Decimal | null; stage: string; ownerId: string | undefined; sourceLeadId: string | undefined; classification: Record<...>; }' is not assignable to type '(Without<OpportunityCreateInput, OpportunityUncheckedCreateInput> & OpportunityUncheckedCreateInput) | (Without<...> & OpportunityCreateInput)'.
+  Type '{ orgId: string; customerId: string; valueType: "RELATIONSHIP" | "JOB"; estValue: Decimal | null; stage: string; ownerId: string | undefined; sourceLeadId: string | undefined; classification: Record<...>; }' is not assignable to type 'Without<OpportunityCreateInput, OpportunityUncheckedCreateInput> & OpportunityUncheckedCreateInput'.
+    Property 'organizationId' is missing in type '{ orgId: string; customerId: string; valueType: "RELATIONSHIP" | "JOB"; estValue: Decimal | null; stage: string; ownerId: string | undefined; sourceLeadId: string | undefined; classification: Record<...>; }' but required in type 'OpportunityUncheckedCreateInput'.
+src/server/services/opportunityService.ts(126,5): error TS2322: Type '{ ownerId: string | null; id: string; createdAt: Date; updatedAt: Date; orgId: string; customerId: string | null; stage: string; organizationId: string; valueType: ValueType; ... 6 more ...; leadId: string | null; }' is not assignable to type 'OpportunityResult'.
+  Types of property 'customerId' are incompatible.
+    Type 'string | null' is not assignable to type 'string'.
+      Type 'null' is not assignable to type 'string'.
+src/server/services/opportunityService.ts(148,5): error TS2322: Type '{ ownerId: string | null; id: string; createdAt: Date; updatedAt: Date; orgId: string; customerId: string | null; stage: string; organizationId: string; valueType: ValueType; ... 6 more ...; leadId: string | null; }' is not assignable to type 'OpportunityResult'.
+  Types of property 'customerId' are incompatible.
+    Type 'string | null' is not assignable to type 'string'.
+      Type 'null' is not assignable to type 'string'.
+src/server/services/opportunityService.ts(187,7): error TS2322: Type '{ ownerId: string | null; id: string; createdAt: Date; updatedAt: Date; orgId: string; customerId: string | null; stage: string; organizationId: string; valueType: ValueType; ... 6 more ...; leadId: string | null; }[]' is not assignable to type 'OpportunityResult[]'.
+  Type '{ ownerId: string | null; id: string; createdAt: Date; updatedAt: Date; orgId: string; customerId: string | null; stage: string; organizationId: string; valueType: ValueType; ... 6 more ...; leadId: string | null; }' is not assignable to type 'OpportunityResult'.
+    Types of property 'customerId' are incompatible.
+      Type 'string | null' is not assignable to type 'string'.
+        Type 'null' is not assignable to type 'string'.
+src/server/services/opportunityService.ts(265,5): error TS2322: Type '{ ownerId: string | null; id: string; createdAt: Date; updatedAt: Date; orgId: string; customerId: string | null; stage: string; organizationId: string; valueType: ValueType; ... 6 more ...; leadId: string | null; }' is not assignable to type 'OpportunityResult'.
+  Types of property 'customerId' are incompatible.
+    Type 'string | null' is not assignable to type 'string'.
+      Type 'null' is not assignable to type 'string'.
+src/server/services/searchService.ts(168,21): error TS18047: 'opp.customer' is possibly 'null'.
+src/server/services/searchService.ts(168,45): error TS18047: 'opp.customer' is possibly 'null'.
+src/server/services/searchService.ts(172,13): error TS18047: 'opp.customer' is possibly 'null'.
