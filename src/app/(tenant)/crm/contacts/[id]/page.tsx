@@ -41,7 +41,11 @@ interface Contact {
 export default function ContactDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const contactId = params.id as string;
+  const contactId = params?.id as string;
+
+  if (!contactId) {
+    return <div>Invalid contact ID</div>;
+  }
 
   const [contact, setContact] = useState<Contact | null>(null);
   const [loading, setLoading] = useState(true);

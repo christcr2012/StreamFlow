@@ -44,7 +44,11 @@ interface Opportunity {
 export default function OpportunityDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const oppId = params.id as string;
+  const oppId = params?.id as string;
+
+  if (!oppId) {
+    return <div>Invalid opportunity ID</div>;
+  }
 
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
   const [loading, setLoading] = useState(true);

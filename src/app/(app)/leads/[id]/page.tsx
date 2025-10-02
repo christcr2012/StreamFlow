@@ -28,7 +28,11 @@ interface Lead {
 export default function LeadDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const leadId = params.id as string;
+  const leadId = params?.id as string;
+
+  if (!leadId) {
+    return <div>Invalid lead ID</div>;
+  }
 
   const [lead, setLead] = useState<Lead | null>(null);
   const [loading, setLoading] = useState(true);
