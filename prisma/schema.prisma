@@ -512,6 +512,10 @@ model Org {
   usageLedger             UsageLedgerEntry[]       @relation("OrgUsageLedger")
   auditLogs2              AuditLog2[]              @relation("OrgAuditLogs2")
 
+  // Binder4: CRM Enhancements
+  notes       Note[]       @relation("OrgNotes")
+  attachments Attachment[] @relation("OrgAttachments")
+
   // Work Orders Relations
   jobTickets JobTicket[]
 
@@ -942,6 +946,10 @@ model Lead {
   ownerId  String? // User who owns this lead
   archived Boolean @default(false)
 
+  // === BINDER4 ENHANCEMENTS ===
+  version Int     @default(1) // Optimistic locking
+  buId    String? // Business Unit assignment
+
   // === CONVERSION TRACKING (Bridge System) ===
   convertedToCustomerId     String?
   convertedToOrganizationId String?
@@ -1102,6 +1110,10 @@ model Opportunity {
   closeDate   DateTime? // Expected close date
   leadId      String? // Source lead ID
 
+  // === BINDER4 ENHANCEMENTS ===
+  version Int     @default(1) // Optimistic locking
+  buId    String? // Business Unit assignment
+
   organization Organization @relation("OrganizationOpportunities", fields: [organizationId], references: [id], onDelete: Cascade)
   customer     Customer?    @relation(fields: [orgId, customerId], references: [orgId, id])
   org          Org          @relation(fields: [orgId], references: [id])
@@ -1183,6 +1195,10 @@ model Contact {
 
   // Custom Fields
   customFields Json @default("{}") // Flexible custom field storage
+
+  // Binder4 Enhancements
+  version Int     @default(1) // Optimistic locking
+  buId    String? // Business Unit assignment
 
   // Metadata
   createdAt       DateTime  @default(now())
@@ -1310,6 +1326,10 @@ model Organization {
   // Ownership & Status
   ownerId  String? // User who owns this organization
   archived Boolean @default(false) // Soft delete flag
+
+  // Binder4 Enhancements
+  version Int     @default(1) // Optimistic locking
+  buId    String? // Business Unit assignment
 
   // Timestamps
   createdAt DateTime @default(now())
@@ -4130,4 +4150,51 @@ model AuditLog2 {
   @@index([orgId, createdAt])
   @@index([orgId, userId])
   @@index([orgId, resource])
+}
+
+// =============================================================================
+// BINDER4 CRM ENHANCEMENTS
+// =============================================================================
+
+/// Note - Polymorphic notes for any entity (Lead, Contact, Organization, Opportunity, WorkOrder, etc.)
+model Note {
+  id         String   @id @default(cuid())
+  orgId      String
+  entityType String // 'lead', 'contact', 'organization', 'opportunity', 'workorder', etc.
+  entityId   String
+  userId     String // User who created the note
+  body       String
+  isPinned   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  org Org @relation("OrgNotes", fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, entityType, entityId])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([isPinned])
+}
+
+/// Attachment - Polymorphic file attachments for any entity
+model Attachment {
+  id         String   @id @default(cuid())
+  orgId      String
+  entityType String // 'lead', 'contact', 'organization', 'opportunity', 'workorder', etc.
+  entityId   String
+  userId     String // User who uploaded the file
+  fileName   String
+  fileSize   Int // Size in bytes
+  mimeType   String
+  storageKey String // S3/storage key
+  url        String? // Public URL if applicable
+  createdAt  DateTime @default(now())
+
+  // Relations
+  org Org @relation("OrgAttachments", fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, entityType, entityId])
+  @@index([userId])
+  @@index([createdAt])
 }
