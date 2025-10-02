@@ -2,6 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { jobTicketService, ServiceError } from '@/server/services/jobTicketService';
 import { withRateLimit, rateLimitPresets } from '@/middleware/rateLimit';
+import { withAudience, AUDIENCE } from '@/middleware/withAudience';
 import { getEmailFromReq } from '@/lib/rbac';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
@@ -65,5 +66,5 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withRateLimit(rateLimitPresets.api, handler);
+export default withAudience(AUDIENCE.CLIENT_ONLY, withRateLimit(rateLimitPresets.api, handler));
 
