@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { auditLog } from '@/server/services/auditService';
 import { withAudience, AUDIENCE, getUserInfo } from '@/middleware/withAudience';
+import { withIdempotency } from '@/middleware/withIdempotency';
+import { withRateLimit, RATE_LIMIT_CONFIGS } from '@/middleware/withRateLimit';
 
 // Validation schemas
 const createContactSchema = z.object({
@@ -236,5 +238,10 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, orgId: stri
   }
 }
 
-export default withAudience(AUDIENCE.CLIENT_ONLY, handler);
+export default withRateLimit(
+  RATE_LIMIT_CONFIGS.DEFAULT,
+  withIdempotency(
+    withAudience(AUDIENCE.CLIENT_ONLY, handler)
+  )
+);
 

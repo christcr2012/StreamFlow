@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
 import { withAudience, AUDIENCE, getUserInfo } from '@/middleware/withAudience';
+import { withIdempotency } from '@/middleware/withIdempotency';
+import { withRateLimit, RATE_LIMIT_CONFIGS } from '@/middleware/withRateLimit';
 import {
   createOrganization,
   listOrganizations,
@@ -142,5 +144,10 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, orgId: stri
   }
 }
 
-export default withAudience(AUDIENCE.CLIENT_ONLY, handler);
+export default withRateLimit(
+  RATE_LIMIT_CONFIGS.DEFAULT,
+  withIdempotency(
+    withAudience(AUDIENCE.CLIENT_ONLY, handler)
+  )
+);
 
