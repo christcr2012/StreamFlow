@@ -4,6 +4,7 @@ import { adoptionDiscountService, ServiceError } from '@/server/services/adoptio
 import { withRateLimit, rateLimitPresets } from '@/middleware/rateLimit';
 import { getEmailFromReq } from '@/lib/rbac';
 import { prisma } from '@/lib/prisma';
+import { withAudience, AUDIENCE } from '@/middleware/withAudience';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
@@ -49,5 +50,5 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withRateLimit(rateLimitPresets.api, handler);
+export default withAudience(AUDIENCE.CLIENT_ONLY, withRateLimit(rateLimitPresets.api, handler));
 

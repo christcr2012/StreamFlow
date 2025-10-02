@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { verifyProviderAuth, setProviderSessionCookie } from '@/middleware/providerAuth';
 import { withRateLimit, rateLimitPresets } from '@/middleware/rateLimit';
 import { z } from 'zod';
+import { withAudience, AUDIENCE } from '@/middleware/withAudience';
 
 const LoginSchema = z.object({
   email: z.string().email(),
@@ -62,5 +63,5 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withRateLimit(rateLimitPresets.auth, handler);
+export default withAudience(AUDIENCE.PUBLIC, withRateLimit(rateLimitPresets.auth, handler));
 
