@@ -14,7 +14,7 @@
  */
 
 import { prisma } from '@/lib/prisma';
-import { auditService } from '@/server/services/auditService';
+import { auditLog } from '@/lib/audit/auditLog';
 import { z } from 'zod';
 
 // ============================================================================
@@ -166,13 +166,13 @@ export async function createOrganization(params: {
   });
 
   // Log audit event
-  await auditService.logEvent({
-    orgId,
+  await auditLog({
+    tenantId: orgId,
+    organizationId: organization.id,
     userId,
-    action: 'organization.created',
-    resource: 'organization',
-    resourceId: organization.id,
-    details: { name: organization.name },
+    action: 'create',
+    resource: `organization:${organization.id}`,
+    meta: { name: organization.name, payloadShape: 'OrgCreateV1' },
   });
 
   return organization;
@@ -314,13 +314,13 @@ export async function updateOrganization(params: {
   });
 
   // Log audit event
-  await auditService.logEvent({
-    orgId,
+  await auditLog({
+    tenantId: orgId,
+    organizationId: organization.id,
     userId,
-    action: 'organization.updated',
-    resource: 'organization',
-    resourceId: organization.id,
-    details: { changes: validated },
+    action: 'update',
+    resource: `organization:${organization.id}`,
+    meta: { changes: validated, payloadShape: 'OrgUpdateV1' },
   });
 
   return organization;
@@ -365,13 +365,13 @@ export async function deleteOrganization(params: {
   });
 
   // Log audit event
-  await auditService.logEvent({
-    orgId,
+  await auditLog({
+    tenantId: orgId,
+    organizationId,
     userId,
-    action: hard ? 'organization.deleted' : 'organization.archived',
-    resource: 'organization',
-    resourceId: organizationId,
-    details: { hard },
+    action: 'delete',
+    resource: `organization:${organizationId}`,
+    meta: { hard, payloadShape: 'OrgDeleteV1' },
   });
 
   return { success: true };

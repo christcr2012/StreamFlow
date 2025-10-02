@@ -10,7 +10,8 @@ export { ServiceError };
 // ===== TYPES & SCHEMAS =====
 
 export const CreateOpportunitySchema = z.object({
-  customerId: z.string().min(1, 'Customer ID is required'),
+  organizationId: z.string().optional(), // Optional - will auto-create Unassigned if not provided
+  customerId: z.string().optional(), // Optional for Option C architecture
   valueType: z.enum(['RELATIONSHIP', 'JOB']).default('RELATIONSHIP'),
   estValue: z.number().optional(),
   stage: z.string().default('new'),
@@ -46,7 +47,8 @@ export type ListOpportunitiesInput = z.infer<typeof ListOpportunitiesSchema>;
 export interface OpportunityResult {
   id: string;
   orgId: string;
-  customerId: string;
+  customerId: string | null; // Nullable for Option C architecture
+  organizationId: string; // Required for Option C architecture
   valueType: string;
   estValue: Decimal | null;
   stage: string;
@@ -75,29 +77,53 @@ export class OpportunityService {
     // Validate input
     const validated = CreateOpportunitySchema.parse(input);
 
-    // Verify customer exists
-    const customer = await prisma.customer.findUnique({
-      where: {
-        orgId_id: {
-          orgId,
-          id: validated.customerId,
+    // Get or create organization
+    let organizationId = validated.organizationId;
+    if (!organizationId) {
+      // Auto-create "Unassigned" organization
+      const unassignedOrg = await prisma.organization.upsert({
+        where: {
+          orgId_name: {
+            orgId,
+            name: 'Unassigned',
+          },
         },
-      },
-    });
+        update: {},
+        create: {
+          orgId,
+          name: 'Unassigned',
+          archived: false,
+        },
+      });
+      organizationId = unassignedOrg.id;
+    }
 
-    if (!customer) {
-      throw new ServiceError(
-        'Customer not found',
-        'NOT_FOUND',
-        404
-      );
+    // Optionally verify customer if provided
+    if (validated.customerId) {
+      const customer = await prisma.customer.findUnique({
+        where: {
+          orgId_id: {
+            orgId,
+            id: validated.customerId,
+          },
+        },
+      });
+
+      if (!customer) {
+        throw new ServiceError(
+          'Customer not found',
+          'NOT_FOUND',
+          404
+        );
+      }
     }
 
     // Create opportunity
     const opportunity = await prisma.opportunity.create({
       data: {
         orgId,
-        customerId: validated.customerId,
+        organizationId,
+        customerId: validated.customerId || null,
         valueType: validated.valueType,
         estValue: validated.estValue ? new Decimal(validated.estValue) : null,
         stage: validated.stage,

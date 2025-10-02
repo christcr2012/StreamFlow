@@ -1302,9 +1302,10 @@ model Organization {
   updatedAt DateTime @updatedAt
 
   // Relations
-  org           Org           @relation("OrgOrganizations", fields: [orgId], references: [id], onDelete: Cascade)
-  contacts      Contact[]     @relation("OrganizationContacts")
-  opportunities Opportunity[] @relation("OrganizationOpportunities")
+  org              Org                 @relation("OrgOrganizations", fields: [orgId], references: [id], onDelete: Cascade)
+  contacts         Contact[]           @relation("OrganizationContacts")
+  opportunities    Opportunity[]       @relation("OrganizationOpportunities")
+  conversionAudits ConversionAudit[]   @relation("OrganizationConversionAudits")
 
   // Indexes for performance and uniqueness
   @@unique([orgId, name]) // Unique name per tenant (case-sensitive in DB, enforce case-insensitive in code)
@@ -1315,29 +1316,29 @@ model Organization {
 }
 
 // ============================================================================
-// CONVERSION AUDIT MODEL (Binder2 - Option C)
+// CONVERSION AUDIT MODEL (Binder2 - Option C - Authoritative)
 // ============================================================================
 // Tracks all CRM entity conversions and mutations for compliance
 model ConversionAudit {
-  id     String @id @default(cuid())
-  orgId  String // Tenant ID (tenantId in binder2 spec)
-  userId String // User who performed the action
-
-  // Action Details
-  action   String // Action type: 'create', 'update', 'delete', 'convert'
-  resource String // Resource type: 'organization', 'contact', 'opportunity', 'lead'
-  meta     Json? // Additional metadata (before/after values, etc.)
-
-  // Timestamp
-  createdAt DateTime @default(now())
+  id             String   @id @default(uuid())
+  tenantId       String   // Tenant ID (orgId in our system)
+  organizationId String?  // CRM Organization ID (nullable)
+  userId         String?  // User who performed the action (nullable)
+  action         String   // e.g., "create", "update", "delete", "merge", "convert"
+  resource       String   // e.g., "organization:123", "contact:abc"
+  meta           Json?    // Additional metadata (before/after values, etc.)
+  ip             String?  // Captured from request if available
+  userAgent      String?  // User agent string
+  createdAt      DateTime @default(now())
 
   // Relations
-  org Org @relation("OrgConversionAudits", fields: [orgId], references: [id], onDelete: Cascade)
+  organization Organization? @relation("OrganizationConversionAudits", fields: [organizationId], references: [id], onDelete: SetNull)
+  tenant       Org           @relation("OrgConversionAudits", fields: [tenantId], references: [id], onDelete: Cascade)
 
   // Indexes for querying
-  @@index([orgId, createdAt]) // Audit timeline
-  @@index([orgId, userId]) // User's actions
-  @@index([orgId, resource, action]) // Resource-specific audits
+  @@index([tenantId, createdAt], map: "ix_conv_audit_tenant_created")
+  @@index([tenantId, resource], map: "ix_conv_audit_tenant_resource")
+  @@index([tenantId, organizationId], map: "ix_conv_audit_tenant_org")
 }
 
 model Invoice {

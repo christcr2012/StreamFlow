@@ -93,18 +93,34 @@ export class ContactService {
     // Validate input
     const validated = CreateContactSchema.parse(input);
 
-    // If organizationId provided, verify it exists
-    if (validated.organizationId) {
-      const org = await prisma.customer.findUnique({
+    // Get or create organization
+    let organizationId = validated.organizationId;
+    if (!organizationId) {
+      // Auto-create "Unassigned" organization
+      const unassignedOrg = await prisma.organization.upsert({
         where: {
-          orgId_id: {
+          orgId_name: {
             orgId,
-            id: validated.organizationId,
+            name: 'Unassigned',
           },
+        },
+        update: {},
+        create: {
+          orgId,
+          name: 'Unassigned',
+          archived: false,
+        },
+      });
+      organizationId = unassignedOrg.id;
+    } else {
+      // Verify organization exists
+      const org = await prisma.organization.findUnique({
+        where: {
+          id: organizationId,
         },
       });
 
-      if (!org) {
+      if (!org || org.orgId !== orgId) {
         throw new ServiceError(
           'Organization not found',
           'NOT_FOUND',
@@ -122,7 +138,7 @@ export class ContactService {
         phone: validated.phone,
         title: validated.title,
         department: validated.department,
-        organizationId: validated.organizationId,
+        organizationId,
         isPrimary: validated.isPrimary,
         mobilePhone: validated.mobilePhone,
         workPhone: validated.workPhone,
