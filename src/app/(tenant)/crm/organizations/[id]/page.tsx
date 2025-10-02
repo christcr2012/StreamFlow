@@ -45,7 +45,11 @@ interface Organization {
 export default function OrganizationDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const orgId = params.id as string;
+  const orgId = params?.id as string;
+
+  if (!orgId) {
+    return <div>Invalid organization ID</div>;
+  }
 
   const [organization, setOrganization] = useState<Organization | null>(null);
   const [loading, setLoading] = useState(true);
