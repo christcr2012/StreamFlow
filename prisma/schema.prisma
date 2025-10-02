@@ -498,6 +498,20 @@ model Org {
   verticalConfig VerticalConfig?
   trialConfig    TrialConfig?
 
+  // Binder3: Multi-Location, Fleet, Vendor Roles, ULAP, Integrations
+  businessUnits           BusinessUnit[]           @relation("OrgBusinessUnits")
+  linesOfBusiness         LineOfBusiness[]         @relation("OrgLinesOfBusiness")
+  fleetVehicles           FleetVehicle[]           @relation("OrgFleetVehicles")
+  fleetMaintenanceTickets FleetMaintenanceTicket[] @relation("OrgFleetMaintenanceTickets")
+  integrationConfigs      IntegrationConfig[]      @relation("OrgIntegrationConfigs")
+  geotabDvirLogs          GeotabDvirLog[]          @relation("OrgGeotabDvirLogs")
+  holmanFuelTransactions  HolmanFuelTransaction[]  @relation("OrgHolmanFuelTransactions")
+  pricingCatalogItems     PricingCatalogItem[]     @relation("OrgPricingCatalogItems")
+  tenantEntitlements      TenantEntitlement[]      @relation("OrgTenantEntitlements")
+  creditsLedger           CreditsLedgerEntry[]     @relation("OrgCreditsLedger")
+  usageLedger             UsageLedgerEntry[]       @relation("OrgUsageLedger")
+  auditLogs2              AuditLog2[]              @relation("OrgAuditLogs2")
+
   // Work Orders Relations
   jobTickets JobTicket[]
 
@@ -1302,10 +1316,10 @@ model Organization {
   updatedAt DateTime @updatedAt
 
   // Relations
-  org              Org                 @relation("OrgOrganizations", fields: [orgId], references: [id], onDelete: Cascade)
-  contacts         Contact[]           @relation("OrganizationContacts")
-  opportunities    Opportunity[]       @relation("OrganizationOpportunities")
-  conversionAudits ConversionAudit[]   @relation("OrganizationConversionAudits")
+  org              Org               @relation("OrgOrganizations", fields: [orgId], references: [id], onDelete: Cascade)
+  contacts         Contact[]         @relation("OrganizationContacts")
+  opportunities    Opportunity[]     @relation("OrganizationOpportunities")
+  conversionAudits ConversionAudit[] @relation("OrganizationConversionAudits")
 
   // Indexes for performance and uniqueness
   @@unique([orgId, name]) // Unique name per tenant (case-sensitive in DB, enforce case-insensitive in code)
@@ -1321,14 +1335,14 @@ model Organization {
 // Tracks all CRM entity conversions and mutations for compliance
 model ConversionAudit {
   id             String   @id @default(uuid())
-  tenantId       String   // Tenant ID (orgId in our system)
-  organizationId String?  // CRM Organization ID (nullable)
-  userId         String?  // User who performed the action (nullable)
-  action         String   // e.g., "create", "update", "delete", "merge", "convert"
-  resource       String   // e.g., "organization:123", "contact:abc"
-  meta           Json?    // Additional metadata (before/after values, etc.)
-  ip             String?  // Captured from request if available
-  userAgent      String?  // User agent string
+  tenantId       String // Tenant ID (orgId in our system)
+  organizationId String? // CRM Organization ID (nullable)
+  userId         String? // User who performed the action (nullable)
+  action         String // e.g., "create", "update", "delete", "merge", "convert"
+  resource       String // e.g., "organization:123", "contact:abc"
+  meta           Json? // Additional metadata (before/after values, etc.)
+  ip             String? // Captured from request if available
+  userAgent      String? // User agent string
   createdAt      DateTime @default(now())
 
   // Relations
@@ -3809,4 +3823,311 @@ model AiModelVersion {
 
   @@unique([agentType, version])
   @@index([agentType, status])
+}
+
+// =============================================================================
+// BINDER3: MULTI-LOCATION, FLEET, VENDOR ROLES, ULAP, INTEGRATIONS
+// =============================================================================
+// Generated: 2025-10-02
+// Spec: binder3.md - StreamFlow Legacy Expansion
+// Architecture: Multi-location (BU→LoB), Fleet/Assets, Scoped Vendor Roles,
+//               Migration Framework, ULAP Monetization, Integrations
+
+// =============================================================================
+// BUSINESS UNITS & LINES OF BUSINESS (Multi-Location)
+// =============================================================================
+
+/// BusinessUnit represents a physical location or operational unit within a tenant
+/// Examples: "Main Office", "North Branch", "Warehouse 3"
+model BusinessUnit {
+  id       String @id @default(cuid())
+  orgId    String // Tenant ID
+  name     String // Business unit name (e.g., "Main Office")
+  timezone String @default("UTC") // Timezone for this location
+  address  Json   @default("{}") // Address object: {street, city, state, zip, country}
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  org             Org              @relation("OrgBusinessUnits", fields: [orgId], references: [id], onDelete: Cascade)
+  linesOfBusiness LineOfBusiness[] @relation("BusinessUnitLinesOfBusiness")
+  fleetVehicles   FleetVehicle[]   @relation("BusinessUnitFleetVehicles")
+
+  @@unique([orgId, name]) // Unique name per tenant
+  @@index([orgId])
+  @@index([orgId, createdAt])
+}
+
+/// LineOfBusiness represents a vertical/industry pack enabled for a tenant
+/// Examples: "cleaning", "hvac", "fencing", "rolloff", "porta_john"
+model LineOfBusiness {
+  id      String  @id @default(cuid())
+  orgId   String // Tenant ID
+  buId    String? // Optional: scoped to specific business unit
+  key     String // Vertical key: "cleaning", "hvac", "fencing", etc.
+  enabled Boolean @default(false) // Is this vertical enabled?
+  config  Json    @default("{}") // Vertical-specific configuration
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  org          Org           @relation("OrgLinesOfBusiness", fields: [orgId], references: [id], onDelete: Cascade)
+  businessUnit BusinessUnit? @relation("BusinessUnitLinesOfBusiness", fields: [buId], references: [id], onDelete: SetNull)
+
+  @@unique([orgId, key, buId]) // Unique vertical per tenant+BU
+  @@index([orgId, enabled])
+  @@index([orgId, key])
+}
+
+// =============================================================================
+// VENDOR ROLES (Scoped Access)
+// =============================================================================
+
+/// VendorRole defines scoped vendor access types
+/// Examples: tenant_accountant, tenant_it_vendor, tenant_auditor, tenant_consultant
+model VendorRole {
+  id          String  @id @default(cuid())
+  key         String  @unique // Role key: "tenant_accountant", "tenant_it_vendor", etc.
+  description String? // Human-readable description
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// =============================================================================
+// FLEET & ASSETS
+// =============================================================================
+
+/// FleetVehicle represents a vehicle, trailer, or equipment asset
+model FleetVehicle {
+  id        String  @id @default(cuid())
+  orgId     String // Tenant ID
+  buId      String? // Business unit (location)
+  assetTag  String? // Internal asset tag
+  vin       String? // Vehicle Identification Number
+  plate     String? // License plate
+  make      String? // Manufacturer
+  model     String? // Model name
+  year      Int? // Model year
+  dotNumber String? // DOT number (for commercial vehicles)
+  odometer  BigInt  @default(0) // Current odometer reading
+  status    String  @default("active") // active, maintenance, retired
+  metadata  Json    @default("{}") // Additional metadata
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  org                Org                      @relation("OrgFleetVehicles", fields: [orgId], references: [id], onDelete: Cascade)
+  businessUnit       BusinessUnit?            @relation("BusinessUnitFleetVehicles", fields: [buId], references: [id], onDelete: SetNull)
+  maintenanceTickets FleetMaintenanceTicket[] @relation("VehicleMaintenanceTickets")
+  geotabDvirLogs     GeotabDvirLog[]          @relation("VehicleDvirLogs")
+  holmanFuelTxns     HolmanFuelTransaction[]  @relation("VehicleFuelTransactions")
+
+  @@unique([orgId, assetTag]) // Unique asset tag per tenant
+  @@index([orgId, buId])
+  @@index([orgId, status])
+  @@index([orgId, vin])
+  @@index([orgId, plate])
+}
+
+/// FleetMaintenanceTicket tracks vehicle maintenance issues
+model FleetMaintenanceTicket {
+  id          String  @id @default(cuid())
+  orgId       String // Tenant ID
+  vehicleId   String // FK to FleetVehicle
+  openedBy    String? // User who opened ticket
+  assignedTo  String? // User assigned to ticket
+  title       String // Ticket title
+  description String? @db.Text // Detailed description
+  severity    String? // low, medium, high, critical
+  status      String  @default("open") // open, in_progress, waiting_parts, done, canceled
+  dvirRef     String? // Reference to DVIR log ID
+
+  openedAt  DateTime  @default(now())
+  closedAt  DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Relations
+  org     Org          @relation("OrgFleetMaintenanceTickets", fields: [orgId], references: [id], onDelete: Cascade)
+  vehicle FleetVehicle @relation("VehicleMaintenanceTickets", fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, vehicleId])
+  @@index([orgId, status])
+  @@index([orgId, openedAt])
+  @@index([vehicleId, status])
+}
+
+// =============================================================================
+// INTEGRATIONS
+// =============================================================================
+
+/// IntegrationConfig stores integration credentials and status
+/// Types: paylocity (HR), geotab (telematics), holman (fuel)
+model IntegrationConfig {
+  id     String @id @default(cuid())
+  orgId  String // Tenant ID
+  type   String // Integration type: "paylocity", "geotab", "holman"
+  status String @default("disconnected") // disconnected, pending, connected, error
+  config Json   @default("{}") // Encrypted credentials and config
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  org Org @relation("OrgIntegrationConfigs", fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, type]) // One integration per type per tenant
+  @@index([orgId, status])
+}
+
+/// GeotabDvirLog stores DVIR (Driver Vehicle Inspection Report) logs from Geotab
+model GeotabDvirLog {
+  id          String    @id @default(cuid())
+  orgId       String // Tenant ID
+  deviceId    String? // Geotab device ID
+  driverId    String? // Geotab driver ID
+  vehicleRef  String? // FK to FleetVehicle
+  defects     Json? // Array of defects found
+  certifiedAt DateTime? // When DVIR was certified
+  status      String    @default("new") // new, processed, ignored
+  raw         Json? // Raw Geotab data
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  org     Org           @relation("OrgGeotabDvirLogs", fields: [orgId], references: [id], onDelete: Cascade)
+  vehicle FleetVehicle? @relation("VehicleDvirLogs", fields: [vehicleRef], references: [id], onDelete: SetNull)
+
+  @@index([orgId, status])
+  @@index([orgId, certifiedAt])
+  @@index([vehicleRef, certifiedAt])
+}
+
+/// HolmanFuelTransaction stores fuel purchase data from Holman
+model HolmanFuelTransaction {
+  id             String    @id @default(cuid())
+  orgId          String // Tenant ID
+  vehicleRef     String? // FK to FleetVehicle
+  driverPin      String? // Driver PIN used
+  gallons        Decimal?  @db.Decimal(12, 3) // Gallons purchased
+  pricePerGallon Decimal?  @db.Decimal(12, 4) // Price per gallon
+  totalCents     BigInt? // Total cost in cents
+  odometer       BigInt? // Odometer reading at purchase
+  vendor         String? // Fuel vendor name
+  purchasedAt    DateTime? // Purchase timestamp
+  raw            Json? // Raw Holman data
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  org     Org           @relation("OrgHolmanFuelTransactions", fields: [orgId], references: [id], onDelete: Cascade)
+  vehicle FleetVehicle? @relation("VehicleFuelTransactions", fields: [vehicleRef], references: [id], onDelete: SetNull)
+
+  @@index([orgId, purchasedAt])
+  @@index([vehicleRef, purchasedAt])
+  @@index([orgId, vehicleRef, purchasedAt])
+}
+
+// =============================================================================
+// ULAP (USAGE-BASED LICENSING & PRICING)
+// =============================================================================
+
+/// PricingCatalogItem defines pricing for metered features
+/// Examples: ai_tokens, maps_calls, email_count, integration_geotab
+model PricingCatalogItem {
+  id                       String  @id @default(cuid())
+  orgId                    String? // Optional: org-specific pricing override
+  key                      String // Meter key: "ai_tokens", "maps_calls", etc.
+  listPriceCents           BigInt // List price in cents
+  adoptionDiscountEligible Boolean @default(false) // Can this get adoption discounts?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  org Org? @relation("OrgPricingCatalogItems", fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([key]) // Global pricing catalog
+  @@index([orgId, key])
+}
+
+/// TenantEntitlement defines what features/limits a tenant has access to
+model TenantEntitlement {
+  id      String  @id @default(cuid())
+  orgId   String // Tenant ID
+  key     String // Feature/limit key
+  enabled Boolean @default(false) // Is this feature enabled?
+  quota   BigInt? // Usage quota (null = unlimited)
+  meta    Json    @default("{}") // Additional metadata
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  org Org @relation("OrgTenantEntitlements", fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, key]) // One entitlement per key per tenant
+  @@index([orgId, enabled])
+}
+
+/// CreditsLedgerEntry tracks credit additions/deductions
+model CreditsLedgerEntry {
+  id         String  @id @default(cuid())
+  orgId      String // Tenant ID
+  key        String // Meter key
+  deltaCents BigInt // Credit change in cents (positive = add, negative = deduct)
+  reason     String? // Reason for credit change
+
+  createdAt DateTime @default(now())
+
+  // Relations
+  org Org @relation("OrgCreditsLedger", fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, key])
+  @@index([orgId, createdAt])
+}
+
+/// UsageLedgerEntry tracks actual usage of metered features
+model UsageLedgerEntry {
+  id        String @id @default(cuid())
+  orgId     String // Tenant ID
+  key       String // Meter key
+  quantity  BigInt // Usage quantity
+  costCents BigInt // Cost in cents
+  context   Json? // Additional context (user, action, etc.)
+
+  createdAt DateTime @default(now())
+
+  // Relations
+  org Org @relation("OrgUsageLedger", fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, key, createdAt])
+  @@index([orgId, createdAt])
+}
+
+/// AuditLog2 is the new audit log for binder3 (separate from legacy AuditLog)
+/// Tracks all mutations with tenant, user, role, action, resource
+model AuditLog2 {
+  id       String  @id @default(cuid())
+  orgId    String // Tenant ID
+  userId   String? // User who performed action
+  role     String? // User role at time of action
+  action   String // Action performed: create, update, delete, etc.
+  resource String // Resource affected: "vehicle:123", "ticket:abc"
+  meta     Json? // Additional metadata
+
+  createdAt DateTime @default(now())
+
+  // Relations
+  org Org @relation("OrgAuditLogs2", fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, createdAt])
+  @@index([orgId, userId])
+  @@index([orgId, resource])
 }
