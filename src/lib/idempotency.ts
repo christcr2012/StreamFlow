@@ -58,6 +58,7 @@ export class IdempotencyService {
    */
   async handleIdempotency(
     req: NextApiRequest,
+    orgId: string,
     entityType: string,
     entityId?: string,
     clientUpdatedAt?: string
@@ -83,22 +84,21 @@ export class IdempotencyService {
     try {
       // Check for existing idempotency record
       const existingRecord = await this.prisma.idempotencyKey.findUnique({
-        where: { key: idempotencyKey }
+        where: {
+          orgId_key: {
+            orgId,
+            key: idempotencyKey
+          }
+        }
       });
 
       if (existingRecord) {
-        // Request has been processed before
-        if (existingRecord.entityId === entityId) {
-          // Same entity - return cached response
-          return {
-            isIdempotent: true,
-            existingResponse: existingRecord.response ? JSON.parse(existingRecord.response) : null,
-            shouldProceed: false
-          };
-        } else {
-          // Different entity with same key - this shouldn't happen with proper key generation
-          throw new Error('Idempotency key collision detected');
-        }
+        // Request has been processed before - return cached response
+        return {
+          isIdempotent: true,
+          existingResponse: existingRecord.responseBody,
+          shouldProceed: false
+        };
       }
 
       // Check for conflicts if entity exists and conflict detection is enabled
@@ -139,12 +139,12 @@ export class IdempotencyService {
       await this.prisma.idempotencyKey.create({
         data: {
           key: idempotencyKey,
-          entityType,
-          entityId,
-          response: JSON.stringify(response),
+          endpoint: entityType,
+          requestHash: entityId,
+          responseStatus: 200,
+          responseBody: response as any,
           orgId,
           expiresAt,
-          createdAt: new Date()
         }
       });
     } catch (error) {
@@ -256,14 +256,14 @@ export class IdempotencyService {
           where: { expiresAt: { lt: new Date() } }
         }),
         this.prisma.idempotencyKey.groupBy({
-          by: ['entityType'],
-          _count: { entityType: true }
+          by: ['endpoint'],
+          _count: { endpoint: true }
         })
       ]);
 
       const recordsByEntityType: Record<string, number> = {};
       recordsByType.forEach((group: any) => {
-        recordsByEntityType[group.entityType] = group._count.entityType;
+        recordsByEntityType[group.endpoint] = group._count.endpoint;
       });
 
       return {
@@ -304,7 +304,8 @@ export function withIdempotency(
     clientUpdatedAt?: string
   ) {
     try {
-      const result = await service.handleIdempotency(req, entityType, entityId, clientUpdatedAt);
+      const orgId = req.headers['x-org-id'] as string || 'org_test';
+      const result = await service.handleIdempotency(req, orgId, entityType, entityId, clientUpdatedAt);
 
       if (result.conflictInfo) {
         // Return 409 Conflict with details

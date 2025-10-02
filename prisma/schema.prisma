@@ -3424,22 +3424,23 @@ model JobTemplate {
   @@index([active])
 }
 
-/// IdempotencyKey tracks processed operations to prevent duplicates during offline sync
+/// IdempotencyKey tracks processed operations to prevent duplicates
+/// Binder1: Idempotency enforcement for all POST routes
 model IdempotencyKey {
-  id         String   @id @default(cuid())
-  key        String   @unique
-  entityType String
-  entityId   String
-  response   String? // JSON response stored as string
-  orgId      String
-  expiresAt  DateTime
-  createdAt  DateTime @default(now())
+  id             String   @id @default(cuid())
+  orgId          String
+  key            String
+  endpoint       String
+  requestHash    String
+  responseStatus Int
+  responseBody   Json
+  expiresAt      DateTime
+  createdAt      DateTime @default(now())
 
   // Relations
   org Org @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
-  @@index([key])
-  @@index([entityType, entityId])
+  @@unique([orgId, key])
   @@index([expiresAt])
   @@index([orgId])
 }
