@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
 import { withAudience, AUDIENCE, getUserInfo } from '@/middleware/withAudience';
+import { auditLog } from '@/server/services/auditService';
+import * as quoteService from '@/server/services/bridge/quoteService';
 
 // Error envelope helper
 function errorResponse(res: NextApiResponse, status: number, error: string, message: string, details?: any) {

@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
 import { withAudience, AUDIENCE, getUserInfo } from '@/middleware/withAudience';
+import { auditLog } from '@/server/services/auditService';
+import * as quoteService from '@/server/services/bridge/quoteService';
 
 // Error envelope helper
 function errorResponse(res: NextApiResponse, status: number, error: string, message: string, details?: any) {
@@ -26,54 +28,41 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
 async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: string) {
   try {
-    const { opportunityId, customerId, status, page, limit } = req.query;
+    const { opportunityId, customerId, status, limit, offset } = req.query;
 
-    // Validate query parameters
-    const pageNum = page ? parseInt(page as string) : 1;
     const limitNum = limit ? parseInt(limit as string) : 20;
-
-    if (isNaN(pageNum) || pageNum < 1) {
-      return errorResponse(res, 400, 'BadRequest', 'Invalid page number');
-    }
+    const offsetNum = offset ? parseInt(offset as string) : 0;
 
     if (isNaN(limitNum) || limitNum < 1 || limitNum > 100) {
       return errorResponse(res, 400, 'BadRequest', 'Invalid limit (must be 1-100)');
     }
 
+    if (isNaN(offsetNum) || offsetNum < 0) {
+      return errorResponse(res, 400, 'BadRequest', 'Invalid offset');
+    }
+
     // Get quotes
-    const result = await quoteService.list(orgId, {
+    const result = await quoteService.listQuotes({
+      orgId,
       opportunityId: opportunityId as string,
       customerId: customerId as string,
       status: status as string,
-      page: pageNum,
       limit: limitNum,
+      offset: offsetNum,
     });
 
-    // Transform response
-    const response = {
-      quotes: result.quotes.map((q) => ({
-        id: q.id,
-        opportunityId: q.opportunityId,
-        customerId: q.customerId,
-        customerName: q.customer.company || q.customer.primaryName,
-        opportunityTitle: q.opportunity?.title,
-        title: q.title,
-        description: q.description,
-        subtotal: Number(q.subtotal),
-        tax: Number(q.tax),
-        total: Number(q.total),
-        status: q.status,
-        validUntil: q.validUntil?.toISOString(),
-        acceptedAt: q.acceptedAt?.toISOString(),
-        rejectedAt: q.rejectedAt?.toISOString(),
-        createdAt: q.createdAt.toISOString(),
-      })),
-      total: result.total,
-      page: result.page,
-      limit: result.limit,
-    };
-
-    return res.status(200).json(response);
+    return res.status(200).json({
+      ok: true,
+      data: {
+        quotes: result.quotes,
+        pagination: {
+          total: result.total,
+          limit: limitNum,
+          offset: offsetNum,
+          hasMore: offsetNum + limitNum < result.total,
+        },
+      },
+    });
   } catch (error) {
     console.error('Error fetching quotes:', error);
     return errorResponse(res, 500, 'Internal', 'Failed to fetch quotes');
@@ -83,53 +72,37 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: strin
 async function handlePost(req: NextApiRequest, res: NextApiResponse, orgId: string, userId: string) {
   try {
     // Validate request body
-    const data = CreateQuoteSchema.parse(req.body);
+    const validation = quoteService.CreateQuoteSchema.safeParse(req.body);
+    if (!validation.success) {
+      return errorResponse(res, 422, 'ValidationError', 'Invalid request body', validation.error.errors);
+    }
 
     // Create quote
-    const quote = await quoteService.create(orgId, userId, data);
+    const quote = await quoteService.createQuote({
+      orgId,
+      userId,
+      data: validation.data,
+    });
 
-    // Transform response
-    const response = {
-      id: quote.id,
-      opportunityId: quote.opportunityId,
-      customerId: quote.customerId,
-      title: quote.title,
-      description: quote.description,
-      items: quote.items,
-      subtotal: Number(quote.subtotal),
-      tax: Number(quote.tax),
-      total: Number(quote.total),
-      status: quote.status,
-      validUntil: quote.validUntil?.toISOString(),
-      createdAt: quote.createdAt.toISOString(),
-      updatedAt: quote.updatedAt.toISOString(),
-    };
+    // Audit log
+    await auditLog({
+      orgId,
+      actorId: userId,
+      action: 'create',
+      entityType: 'quote',
+      entityId: quote.id,
+      delta: { title: quote.title, customerId: quote.customerId, opportunityId: quote.opportunityId },
+    });
 
-    return res.status(201).json(response);
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      const fieldErrors: Record<string, string[]> = {};
-      error.errors.forEach((err) => {
-        const field = err.path[0]?.toString() || 'unknown';
-        if (!fieldErrors[field]) {
-          fieldErrors[field] = [];
-        }
-        fieldErrors[field].push(err.message);
-      });
-      return errorResponse(res, 422, 'UnprocessableEntity', 'Validation failed', fieldErrors);
-    }
-
-    if (error instanceof Error) {
-      if (error.message === 'Customer not found') {
-        return errorResponse(res, 404, 'NotFound', 'Customer not found');
-      }
-      if (error.message === 'Opportunity not found') {
-        return errorResponse(res, 404, 'NotFound', 'Opportunity not found');
-      }
-      return errorResponse(res, 500, 'Internal', error.message);
-    }
-
+    return res.status(201).json({
+      ok: true,
+      data: quote,
+    });
+  } catch (error: any) {
     console.error('Error creating quote:', error);
+    if (error.message === 'Customer not found' || error.message === 'Opportunity not found') {
+      return errorResponse(res, 404, 'NotFound', error.message);
+    }
     return errorResponse(res, 500, 'Internal', 'Failed to create quote');
   }
 }
