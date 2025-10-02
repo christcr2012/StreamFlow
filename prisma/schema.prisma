@@ -2753,6 +2753,7 @@ enum JobStatus {
   SCHEDULED // Job scheduled but not started
   IN_PROGRESS // Job currently being worked
   ON_HOLD // Job temporarily paused
+  PAUSED // Job paused (Binder5)
   COMPLETED // Job finished successfully
   CANCELLED // Job cancelled before completion
 }
