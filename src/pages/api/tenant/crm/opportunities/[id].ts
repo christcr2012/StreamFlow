@@ -15,7 +15,7 @@ const updateOpportunitySchema = z.object({
 });
 
 // Error envelope helper
-function errorResponse(res: NextApiResponse, status: number, error: string, message: string, details?: any) {
+function errorResponse(res: NextApiResponse, status: number, error: string, message: string, details?: any): void {
   res.status(status).json({
     error,
     message,
@@ -88,7 +88,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: strin
       id: opportunity.id,
       title: opportunity.title,
       customerId: opportunity.customerId,
-      customerName: opportunity.customer.company || opportunity.customer.primaryName,
+      customerName: opportunity.customer ? (opportunity.customer.company || opportunity.customer.primaryName) : undefined,
       valueType: opportunity.valueType,
       estValue: opportunity.estValue ? Number(opportunity.estValue) : undefined,
       stage: opportunity.stage,
@@ -169,7 +169,7 @@ async function handlePatch(req: NextApiRequest, res: NextApiResponse, orgId: str
       id: opportunity.id,
       title: opportunity.title,
       customerId: opportunity.customerId,
-      customerName: opportunity.customer.company || opportunity.customer.primaryName,
+      customerName: opportunity.customer ? (opportunity.customer.company || opportunity.customer.primaryName) : undefined,
       valueType: opportunity.valueType,
       estValue: opportunity.estValue ? Number(opportunity.estValue) : undefined,
       stage: opportunity.stage,

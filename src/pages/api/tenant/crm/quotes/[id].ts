@@ -38,6 +38,11 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: strin
   try {
     const quote = await quoteService.getQuoteById({ orgId, quoteId: id });
 
+    if (!quote) {
+      errorResponse(res, 404, 'NotFound', 'Quote not found');
+      return;
+    }
+
     // Transform response
     const response = {
       id: quote.id,

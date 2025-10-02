@@ -22,7 +22,7 @@ const updateContactSchema = z.object({
 });
 
 // Error envelope helper
-function errorResponse(res: NextApiResponse, status: number, error: string, message: string, details?: any) {
+function errorResponse(res: NextApiResponse, status: number, error: string, message: string, details?: any): void {
   res.status(status).json({
     error,
     message,
@@ -36,7 +36,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
 
   if (typeof id !== 'string') {
-    return errorResponse(res, 400, 'BadRequest', 'Invalid contact ID');
+    errorResponse(res, 400, 'BadRequest', 'Invalid contact ID');
+    return;
   }
 
   if (req.method === 'GET') {
@@ -46,7 +47,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   } else if (req.method === 'DELETE') {
     return handleDelete(req, res, orgId, userId, id);
   } else {
-    return errorResponse(res, 405, 'MethodNotAllowed', 'Method not allowed');
+    errorResponse(res, 405, 'MethodNotAllowed', 'Method not allowed');
+    return;
   }
 }
 
@@ -60,7 +62,8 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: strin
     });
 
     if (!contact) {
-      return errorResponse(res, 404, 'NotFound', 'Contact not found');
+      errorResponse(res, 404, 'NotFound', 'Contact not found');
+      return;
     }
 
     // Get related jobs (Bridge System)
@@ -113,7 +116,8 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: strin
     return res.status(200).json(response);
   } catch (error) {
     console.error('Error fetching contact:', error);
-    return errorResponse(res, 500, 'Internal', 'Failed to fetch contact');
+    errorResponse(res, 500, 'Internal', 'Failed to fetch contact');
+    return;
   }
 }
 
@@ -131,7 +135,19 @@ async function handlePatch(req: NextApiRequest, res: NextApiResponse, orgId: str
     });
 
     if (!existing) {
-      return errorResponse(res, 404, 'NotFound', 'Contact not found');
+      errorResponse(res, 404, 'NotFound', 'Contact not found');
+      return;
+    }
+
+    // If organizationId is being updated, verify it exists
+    if (data.organizationId) {
+      const organization = await prisma.organization.findFirst({
+        where: { id: data.organizationId, orgId },
+      });
+      if (!organization) {
+        errorResponse(res, 404, 'NotFound', 'Organization not found');
+        return;
+      }
     }
 
     // Update contact
@@ -145,7 +161,7 @@ async function handlePatch(req: NextApiRequest, res: NextApiResponse, orgId: str
         ...(data.workPhone !== undefined && { workPhone: data.workPhone || null }),
         ...(data.title !== undefined && { title: data.title || null }),
         ...(data.department !== undefined && { department: data.department || null }),
-        ...(data.organizationId !== undefined && { organizationId: data.organizationId || null }),
+        ...(data.organizationId && { organizationId: data.organizationId }), // Only update if provided (required field)
         ...(data.isPrimary !== undefined && { isPrimary: data.isPrimary }),
         ...(data.linkedIn !== undefined && { linkedIn: data.linkedIn || null }),
         ...(data.twitter !== undefined && { twitter: data.twitter || null }),
@@ -196,10 +212,12 @@ async function handlePatch(req: NextApiRequest, res: NextApiResponse, orgId: str
         }
         fieldErrors[field].push(err.message);
       });
-      return errorResponse(res, 422, 'UnprocessableEntity', 'Validation failed', fieldErrors);
+      errorResponse(res, 422, 'UnprocessableEntity', 'Validation failed', fieldErrors);
+      return;
     }
     console.error('Error updating contact:', error);
-    return errorResponse(res, 500, 'Internal', 'Failed to update contact');
+    errorResponse(res, 500, 'Internal', 'Failed to update contact');
+    return;
   }
 }
 
@@ -214,7 +232,8 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse, orgId: st
     });
 
     if (!existing) {
-      return errorResponse(res, 404, 'NotFound', 'Contact not found');
+      errorResponse(res, 404, 'NotFound', 'Contact not found');
+      return;
     }
 
     // Delete contact
@@ -235,7 +254,8 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse, orgId: st
     return res.status(204).end();
   } catch (error) {
     console.error('Error deleting contact:', error);
-    return errorResponse(res, 500, 'Internal', 'Failed to delete contact');
+    errorResponse(res, 500, 'Internal', 'Failed to delete contact');
+    return;
   }
 }
 

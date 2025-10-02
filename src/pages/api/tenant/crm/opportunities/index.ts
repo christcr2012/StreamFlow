@@ -7,7 +7,8 @@ import { withAudience, AUDIENCE, getUserInfo } from '@/middleware/withAudience';
 // Validation schemas
 const createOpportunitySchema = z.object({
   title: z.string().min(1, 'Title is required'),
-  customerId: z.string().min(1, 'Customer is required'),
+  organizationId: z.string().optional(), // Optional - will auto-create "Unassigned" if not provided
+  customerId: z.string().optional(), // Optional for legacy FSM compatibility
   estValue: z.number().min(0).optional(),
   probability: z.number().min(0).max(100).optional(),
   closeDate: z.string().datetime().optional(),
@@ -94,7 +95,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: strin
       id: opp.id,
       title: opp.title,
       customerId: opp.customerId,
-      customerName: opp.customer.company || opp.customer.primaryName,
+      customerName: opp.customer ? (opp.customer.company || opp.customer.primaryName) : undefined,
       valueType: opp.valueType,
       estValue: opp.estValue ? Number(opp.estValue) : undefined,
       stage: opp.stage,
@@ -133,23 +134,60 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, orgId: stri
     // Validate request body
     const data = createOpportunitySchema.parse(req.body);
 
-    // Verify customer exists and belongs to org
-    const customer = await prisma.customer.findFirst({
-      where: {
-        id: data.customerId,
-        orgId,
-      },
-    });
+    // Get or create organization
+    let organizationId = data.organizationId;
 
-    if (!customer) {
-      return errorResponse(res, 404, 'NotFound', 'Customer not found');
+    if (organizationId) {
+      // Verify organization exists
+      const organization = await prisma.organization.findFirst({
+        where: {
+          id: organizationId,
+          orgId,
+        },
+      });
+
+      if (!organization) {
+        return errorResponse(res, 404, 'NotFound', 'Organization not found');
+      }
+    } else {
+      // Auto-create "Unassigned" organization for this tenant
+      const unassignedOrg = await prisma.organization.upsert({
+        where: {
+          orgId_name: {
+            orgId,
+            name: 'Unassigned',
+          },
+        },
+        update: {},
+        create: {
+          orgId,
+          name: 'Unassigned',
+          archived: false,
+        },
+      });
+      organizationId = unassignedOrg.id;
+    }
+
+    // Optionally verify customer if provided (legacy FSM compatibility)
+    if (data.customerId) {
+      const customer = await prisma.customer.findFirst({
+        where: {
+          id: data.customerId,
+          orgId,
+        },
+      });
+
+      if (!customer) {
+        return errorResponse(res, 404, 'NotFound', 'Customer not found');
+      }
     }
 
     // Create opportunity
     const opportunity = await prisma.opportunity.create({
       data: {
         orgId,
-        customerId: data.customerId,
+        organizationId,
+        customerId: data.customerId || undefined,
         title: data.title,
         estValue: data.estValue,
         probability: data.probability,
@@ -189,8 +227,9 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, orgId: stri
     const response = {
       id: opportunity.id,
       title: opportunity.title,
+      organizationId: opportunity.organizationId,
       customerId: opportunity.customerId,
-      customerName: opportunity.customer.company || opportunity.customer.primaryName,
+      customerName: opportunity.customer ? (opportunity.customer.company || opportunity.customer.primaryName) : undefined,
       valueType: opportunity.valueType,
       estValue: opportunity.estValue ? Number(opportunity.estValue) : undefined,
       stage: opportunity.stage,

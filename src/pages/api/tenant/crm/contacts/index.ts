@@ -13,7 +13,7 @@ const createContactSchema = z.object({
   workPhone: z.string().optional(),
   title: z.string().optional(),
   department: z.string().optional(),
-  organizationId: z.string().optional(),
+  organizationId: z.string().optional(), // Optional - will auto-create "Unassigned" if not provided
   isPrimary: z.boolean().default(false),
   linkedIn: z.string().url('Invalid URL').optional().or(z.literal('')),
   twitter: z.string().url('Invalid URL').optional().or(z.literal('')),
@@ -132,10 +132,35 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, orgId: stri
     // Validate request body
     const data = createContactSchema.parse(req.body);
 
-    // If organizationId provided, verify it exists
-    if (data.organizationId) {
-      // TODO: Verify organization exists when Organization model is ready
-      // For now, skip verification
+    // Get or create organization
+    let organizationId = data.organizationId;
+
+    if (organizationId) {
+      // Verify organization exists
+      const organization = await prisma.organization.findFirst({
+        where: { id: organizationId, orgId },
+      });
+
+      if (!organization) {
+        return errorResponse(res, 404, 'NotFound', 'Organization not found');
+      }
+    } else {
+      // Auto-create "Unassigned" organization for this tenant
+      const unassignedOrg = await prisma.organization.upsert({
+        where: {
+          orgId_name: {
+            orgId,
+            name: 'Unassigned',
+          },
+        },
+        update: {},
+        create: {
+          orgId,
+          name: 'Unassigned',
+          archived: false,
+        },
+      });
+      organizationId = unassignedOrg.id;
     }
 
     // Create contact
@@ -149,7 +174,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, orgId: stri
         workPhone: data.workPhone || undefined,
         title: data.title || undefined,
         department: data.department || undefined,
-        organizationId: data.organizationId || undefined,
+        organizationId,
         isPrimary: data.isPrimary,
         linkedIn: data.linkedIn || undefined,
         twitter: data.twitter || undefined,

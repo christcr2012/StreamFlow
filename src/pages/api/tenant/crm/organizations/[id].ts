@@ -9,7 +9,7 @@ import {
 } from '@/server/services/crm/organizationService';
 
 // Error envelope helper
-function errorResponse(res: NextApiResponse, status: number, error: string, message: string, details?: any) {
+function errorResponse(res: NextApiResponse, status: number, error: string, message: string, details?: any): void {
   res.status(status).json({
     ok: false,
     error: { code: error, message, details },

@@ -106,7 +106,7 @@ export function withAudience(
       const email = req.headers['x-user-email'] as string || req.headers['x-user-id'] as string;
 
       // Check if user type is allowed
-      if (!audienceConfig.allowed.includes(userType as any)) {
+      if (!(audienceConfig.allowed as readonly string[]).includes(userType)) {
         // Audit the denial
         await auditLog({
           orgId,
