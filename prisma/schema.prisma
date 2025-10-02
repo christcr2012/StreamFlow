@@ -118,7 +118,7 @@ generator client {
   // - Query engine optimization for complex joins
   // - Extended type safety for business logic
   // - Query logging for performance monitoring
-  log      = ["query", "info", "warn", "error"]
+  log = ["query", "info", "warn", "error"]
 
   // TODO: Add after upgrading to Prisma 6.x
   // output   = "./generated/client"
@@ -128,7 +128,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  
+
   // 🚀 ENTERPRISE ENHANCEMENT: Connection and performance configuration
   // These should be set at the connection string level for production:
   // 
@@ -370,114 +370,116 @@ model Org {
   updatedAt    DateTime @updatedAt
 
   // 🏭 MULTI-INDUSTRY VERTICALIZATION FRAMEWORK
-  industryType      String?  // Primary industry: "cleaning", "hvac", "fencing", "electrical"
-  naicsCode         String?  // Official NAICS industry code for compliance
-  sicCode           String?  // SIC code for legacy systems integration
-  industryConfig    Json     @default("{}")  // Industry-specific configuration
-  activeCapabilities Json    @default("[]")  // Enabled capabilities for this org
+  industryType       String? // Primary industry: "cleaning", "hvac", "fencing", "electrical"
+  naicsCode          String? // Official NAICS industry code for compliance
+  sicCode            String? // SIC code for legacy systems integration
+  industryConfig     Json    @default("{}") // Industry-specific configuration
+  activeCapabilities Json    @default("[]") // Enabled capabilities for this org
 
   // Tenant Registration Fields
-  plan              String?  // STARTER, PROFESSIONAL, ENTERPRISE
-  industry          String?  // Industry type for tenant registration
+  plan               String? // STARTER, PROFESSIONAL, ENTERPRISE
+  industry           String? // Industry type for tenant registration
   externalCustomerId String? // External customer ID for integration
-  settings          Json     @default("{}")  // Organization settings
+  settings           Json    @default("{}") // Organization settings
 
   // AI Cost Control & Monetization - PROVIDER MODEL
-  aiMonthlyBudgetCents Int      @default(5000)  // $50 provider cost limit  
-  aiCreditBalance     Int      @default(1000)   // 1k credits = $50 worth (1 credit = $0.05 client-facing)
-  aiPlan              AiPlan   @default(BASE)   // Client subscription tier
-  aiAlerts            Json     @default("{}")   // Usage alert thresholds
+  aiMonthlyBudgetCents Int    @default(5000) // $50 provider cost limit  
+  aiCreditBalance      Int    @default(1000) // 1k credits = $50 worth (1 credit = $0.05 client-facing)
+  aiPlan               AiPlan @default(BASE) // Client subscription tier
+  aiAlerts             Json   @default("{}") // Usage alert thresholds
 
   // Stripe Subscription Management
-  stripeCustomerId      String?   // Stripe customer ID for billing
-  stripeSubscriptionId  String?   // Current active subscription ID
-  subscriptionStatus    String?   // active, past_due, canceled, etc
+  stripeCustomerId      String? // Stripe customer ID for billing
+  stripeSubscriptionId  String? // Current active subscription ID
+  subscriptionStatus    String? // active, past_due, canceled, etc
   subscriptionStartDate DateTime? // When subscription started
   subscriptionEndDate   DateTime? // When subscription ends/ended
 
   // Back-relations
-  auditLogs     AuditLog[]
-  ledger        BillingLedger[]
-  customers     Customer[]
-  invoices      Invoice[]
-  jobs          Job[]
-  leads         Lead[]
-  opportunities Opportunity[]
-  payments      Payment[]
-  referrals     Referral[]
-  rfps          Rfp[]
-  users         User[]
-  rbacRoles     RbacRole[]      @relation("OrgRbacRoles")
-  rbacUserRoles RbacUserRole[]  @relation("OrgRbacUserRoles")
-  leadInvoices  LeadInvoice[]   @relation("OrgLeadInvoices")
-  pricingPlan   PricingPlan?    @relation("OrgPricingPlan")
-  aiUsageEvents AiUsageEvent[]  @relation("OrgAiUsageEvents")
+  auditLogs          AuditLog[]
+  ledger             BillingLedger[]
+  customers          Customer[]
+  invoices           Invoice[]
+  jobs               Job[]
+  leads              Lead[]
+  opportunities      Opportunity[]
+  payments           Payment[]
+  referrals          Referral[]
+  rfps               Rfp[]
+  users              User[]
+  rbacRoles          RbacRole[]         @relation("OrgRbacRoles")
+  rbacUserRoles      RbacUserRole[]     @relation("OrgRbacUserRoles")
+  leadInvoices       LeadInvoice[]      @relation("OrgLeadInvoices")
+  pricingPlan        PricingPlan?       @relation("OrgPricingPlan")
+  aiUsageEvents      AiUsageEvent[]     @relation("OrgAiUsageEvents")
   aiMonthlySummaries AiMonthlySummary[] @relation("OrgAiMonthlySummaries")
-  leadActivities LeadActivity[]  @relation("OrgLeadActivities")
-  leadTasks     LeadTask[]      @relation("OrgLeadTasks")
-  contacts      Contact[]       @relation("OrgContacts")
-  quotes        Quote[]         // Bridge System: Quotes for this org
-  crmTasks      CrmTask[]       @relation("OrgCrmTasks")
-  crmNotes      CrmNote[]       @relation("OrgCrmNotes")
-  crmFiles      CrmFile[]       @relation("OrgCrmFiles")
+  leadActivities     LeadActivity[]     @relation("OrgLeadActivities")
+  leadTasks          LeadTask[]         @relation("OrgLeadTasks")
+  contacts           Contact[]          @relation("OrgContacts")
+  quotes             Quote[] // Bridge System: Quotes for this org
+  crmTasks           CrmTask[]          @relation("OrgCrmTasks")
+  crmNotes           CrmNote[]          @relation("OrgCrmNotes")
+  crmFiles           CrmFile[]          @relation("OrgCrmFiles")
+  organizations      Organization[]     @relation("OrgOrganizations")
+  conversionAudits   ConversionAudit[]  @relation("OrgConversionAudits")
 
   // Multi-Portal Business OS Relations
-  employeeProfiles EmployeeProfile[] @relation("OrgEmployeeProfiles")
-  workOrders      WorkOrder[]       @relation("OrgWorkOrders")
-  jobSites        JobSite[]         @relation("OrgJobSites")
-  jobAssignments  JobAssignment[]   @relation("OrgJobAssignments")
-  timesheets      TimesheetEntry[]  @relation("OrgTimesheets")
-  jobChecklists   JobChecklistItem[] @relation("OrgJobChecklists")
-  issueReports    IssueReport[]     @relation("OrgIssueReports")
-  mediaAssets     MediaAsset[]      @relation("OrgMediaAssets")
-  trainingModules TrainingModule[]  @relation("OrgTrainingModules")
+  employeeProfiles    EmployeeProfile[]    @relation("OrgEmployeeProfiles")
+  workOrders          WorkOrder[]          @relation("OrgWorkOrders")
+  jobSites            JobSite[]            @relation("OrgJobSites")
+  jobAssignments      JobAssignment[]      @relation("OrgJobAssignments")
+  timesheets          TimesheetEntry[]     @relation("OrgTimesheets")
+  jobChecklists       JobChecklistItem[]   @relation("OrgJobChecklists")
+  issueReports        IssueReport[]        @relation("OrgIssueReports")
+  mediaAssets         MediaAsset[]         @relation("OrgMediaAssets")
+  trainingModules     TrainingModule[]     @relation("OrgTrainingModules")
   trainingCompletions TrainingCompletion[] @relation("OrgTrainingCompletions")
-  
+
   // Enterprise Governance & Feature Control Relations
-  securityPolicies SecurityPolicy[]   @relation("OrgSecurityPolicies")
-  featureModules   FeatureModule[]    @relation("OrgFeatureModules")
-  featureUsage     FeatureUsage[]     @relation("OrgFeatureUsage")
+  securityPolicies SecurityPolicy[]    @relation("OrgSecurityPolicies")
+  featureModules   FeatureModule[]     @relation("OrgFeatureModules")
+  featureUsage     FeatureUsage[]      @relation("OrgFeatureUsage")
   budget           OrganizationBudget? @relation("OrgBudget")
-  integrations     Integration[]      @relation("OrgIntegrations")
-  supportSessions  SupportSession[]   @relation("OrgSupportSessions")
-  auditEvents      AuditEvent[]       @relation("OrgAuditEvents")
-  
+  integrations     Integration[]       @relation("OrgIntegrations")
+  supportSessions  SupportSession[]    @relation("OrgSupportSessions")
+  auditEvents      AuditEvent[]        @relation("OrgAuditEvents")
+
   // Advanced Role Management Relations
-  roleVersions       RoleVersion[]      @relation("OrgRoleVersions")
-  roleTemplates      RoleTemplate[]     @relation("OrgRoleTemplates")
-  permissionBundles  PermissionBundle[] @relation("OrgPermissionBundles")
-  roleScopes         RoleScope[]        @relation("OrgRoleScopes")
-  roleReviews        RoleReview[]       @relation("OrgRoleReviews")
-  provisioningFlows  ProvisioningFlow[] @relation("OrgProvisioningFlows")
-  
+  roleVersions      RoleVersion[]      @relation("OrgRoleVersions")
+  roleTemplates     RoleTemplate[]     @relation("OrgRoleTemplates")
+  permissionBundles PermissionBundle[] @relation("OrgPermissionBundles")
+  roleScopes        RoleScope[]        @relation("OrgRoleScopes")
+  roleReviews       RoleReview[]       @relation("OrgRoleReviews")
+  provisioningFlows ProvisioningFlow[] @relation("OrgProvisioningFlows")
+
   // Temporary Elevation System
   temporaryElevations TemporaryElevation[] @relation("OrgTemporaryElevations")
 
   // AI-Powered Feature Management Relations
-  appEvents       AppEvent[]        @relation("OrgAppEvents")
-  featureStates   OrgFeatureState[] @relation("OrgFeatureStates")
+  appEvents        AppEvent[]        @relation("OrgAppEvents")
+  featureStates    OrgFeatureState[] @relation("OrgFeatureStates")
   delegationGrants DelegationGrant[] @relation("OrgDelegationGrants")
-  aiActionLogs    AiActionLog[]     @relation("OrgAiActionLogs")
+  aiActionLogs     AiActionLog[]     @relation("OrgAiActionLogs")
 
   // Webhook System Relations
   webhookEndpoints WebhookEndpoint[] @relation("OrgWebhooks")
   webhookEvents    WebhookEvent[]    @relation("OrgWebhookEvents")
 
   // Encryption System Relations
-  encryptionKeys   EncryptionKey[]   @relation("OrgEncryptionKeys")
+  encryptionKeys EncryptionKey[] @relation("OrgEncryptionKeys")
 
   // Backup System Relations
-  backups          Backup[]          @relation("OrgBackups")
+  backups Backup[] @relation("OrgBackups")
 
   // Theme System Relations
-  themeConfigs     ThemeConfig[]     @relation("OrgThemeConfigs")
-  themeUsage       ThemeUsage[]      @relation("OrgThemeUsage")
+  themeConfigs ThemeConfig[] @relation("OrgThemeConfigs")
+  themeUsage   ThemeUsage[]  @relation("OrgThemeUsage")
 
   // Security and Approval System Relations
-  approvalRequests ApprovalRequest[] @relation("OrgApprovalRequests")
+  approvalRequests  ApprovalRequest[]  @relation("OrgApprovalRequests")
   securityIncidents SecurityIncident[] @relation("OrgSecurityIncidents")
-  deviceAccess     DeviceAccess[]    @relation("OrgDeviceAccess")
-  userLockouts     UserLockout[]     @relation("OrgUserLockouts")
+  deviceAccess      DeviceAccess[]     @relation("OrgDeviceAccess")
+  userLockouts      UserLockout[]      @relation("OrgUserLockouts")
 
   // Tenant Registration Relations
   tenantRegistrations TenantRegistration[]
@@ -486,22 +488,22 @@ model Org {
   idempotencyKeys     IdempotencyKey[]
 
   // Stripe Connect Relations (Codex Phase 8)
-  stripeConnect       TenantStripeConnect?
+  stripeConnect TenantStripeConnect?
 
   // AI Monetization Relations
-  aiPowerProfile      AiPowerProfile?
-  aiTasks             AiTask[]
-  creditLedger        CreditLedger[]
-  usageMeters         UsageMeter[]
-  verticalConfig      VerticalConfig?
-  trialConfig         TrialConfig?
+  aiPowerProfile AiPowerProfile?
+  aiTasks        AiTask[]
+  creditLedger   CreditLedger[]
+  usageMeters    UsageMeter[]
+  verticalConfig VerticalConfig?
+  trialConfig    TrialConfig?
 
   // Work Orders Relations
-  jobTickets          JobTicket[]
+  jobTickets JobTicket[]
 
   // Federation Relations
-  tenantDomain        TenantDomain?
-  profitability       TenantProfitability?
+  tenantDomain  TenantDomain?
+  profitability TenantProfitability?
 
   /// brandConfig stores white-label brand settings such as name, colors, and logo URL.
   /// It is JSON to allow arbitrary keys like { name: "Mountain Vista", color: "#123456", logoUrl: "https://..." }
@@ -522,37 +524,37 @@ model Org {
 /// IndustryPack defines industry-specific configurations, templates, and capabilities
 /// This enables WorkStream to adapt to different service industries (cleaning, HVAC, fencing, etc.)
 model IndustryPack {
-  id            String   @id @default(cuid())
-  industryCode  String   @unique  // "cleaning", "hvac", "fencing", "electrical"
-  displayName   String              // "Professional Cleaning Services"
-  description   String?             // Industry description
-  naicsRanges   Json     @default("[]")  // Supported NAICS codes ["562910", "561720"]
-  sicRanges     Json     @default("[]")   // Supported SIC codes 
-  
+  id           String  @id @default(cuid())
+  industryCode String  @unique // "cleaning", "hvac", "fencing", "electrical"
+  displayName  String // "Professional Cleaning Services"
+  description  String? // Industry description
+  naicsRanges  Json    @default("[]") // Supported NAICS codes ["562910", "561720"]
+  sicRanges    Json    @default("[]") // Supported SIC codes 
+
   // Industry-Specific Configuration
-  leadFields    Json     @default("{}")   // Custom lead intake fields
-  workflowSteps Json     @default("[]")   // Standard workflow templates
-  catalogItems  Json     @default("[]")   // Default inventory/service catalog
-  contractTemplates Json @default("[]")   // Contract templates and clauses
-  complianceReqs Json    @default("{}")   // Industry compliance requirements
-  
+  leadFields        Json @default("{}") // Custom lead intake fields
+  workflowSteps     Json @default("[]") // Standard workflow templates
+  catalogItems      Json @default("[]") // Default inventory/service catalog
+  contractTemplates Json @default("[]") // Contract templates and clauses
+  complianceReqs    Json @default("{}") // Industry compliance requirements
+
   // Estimation & Bidding Configuration
-  rateCards     Json     @default("[]")   // Labor, material, equipment rates
-  formulaSet    Json     @default("{}")   // Pricing formula DSL
-  measurementUnits Json  @default("[]")   // Industry-specific units (sq ft, linear ft)
-  
+  rateCards        Json @default("[]") // Labor, material, equipment rates
+  formulaSet       Json @default("{}") // Pricing formula DSL
+  measurementUnits Json @default("[]") // Industry-specific units (sq ft, linear ft)
+
   // Feature & Capability Configuration
   requiredCapabilities Json @default("[]") // Must-have capabilities for this industry
   optionalCapabilities Json @default("[]") // Nice-to-have capabilities
   hiddenCapabilities   Json @default("[]") // Capabilities to hide for this industry
-  
-  isActive      Boolean  @default(true)
-  version       String   @default("1.0")
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  
+
+  isActive  Boolean  @default(true)
+  version   String   @default("1.0")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
-  organizations Org[]    @relation("OrgIndustryPack")
+  organizations Org[]                @relation("OrgIndustryPack")
   capabilities  IndustryCapability[] @relation("IndustryPackCapabilities")
 
   @@index([industryCode])
@@ -562,29 +564,29 @@ model IndustryPack {
 /// Capability defines a business feature that can be enabled/disabled per organization
 /// This allows fine-grained control over features based on industry needs and subscription tier
 model Capability {
-  id            String   @id @default(cuid())
-  code          String   @unique         // "inventory_management", "contract_esign", "mobile_app"
-  displayName   String                   // "Inventory Management"
-  description   String?                  // Feature description
-  category      String                   // "operations", "sales", "billing", "compliance"
-  
+  id          String  @id @default(cuid())
+  code        String  @unique // "inventory_management", "contract_esign", "mobile_app"
+  displayName String // "Inventory Management"
+  description String? // Feature description
+  category    String // "operations", "sales", "billing", "compliance"
+
   // Feature Control
-  isCore        Boolean  @default(false) // Core capabilities always enabled
+  isCore               Boolean @default(false) // Core capabilities always enabled
   requiresSubscription Boolean @default(false) // Premium feature flag
-  minimumPlan   String?                  // "BASIC", "PROFESSIONAL", "ENTERPRISE"
-  
+  minimumPlan          String? // "BASIC", "PROFESSIONAL", "ENTERPRISE"
+
   // Technical Configuration
-  apiEndpoints  Json     @default("[]")  // API routes this capability controls
-  uiComponents  Json     @default("[]")  // UI components this capability shows/hides
-  permissions   Json     @default("[]")  // RBAC permissions related to this capability
-  dependencies  Json     @default("[]")  // Other capabilities this one depends on
-  
-  isActive      Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  
+  apiEndpoints Json @default("[]") // API routes this capability controls
+  uiComponents Json @default("[]") // UI components this capability shows/hides
+  permissions  Json @default("[]") // RBAC permissions related to this capability
+  dependencies Json @default("[]") // Other capabilities this one depends on
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
-  industries    IndustryCapability[] @relation("CapabilityIndustries")
+  industries IndustryCapability[] @relation("CapabilityIndustries")
 
   @@index([code])
   @@index([category])
@@ -594,116 +596,115 @@ model Capability {
 /// IndustryCapability links industries to their supported capabilities
 /// This determines which features are available for each industry type
 model IndustryCapability {
-  id             String   @id @default(cuid())
+  id             String @id @default(cuid())
   industryPackId String
   capabilityId   String
-  
+
   // Capability Configuration for this Industry
-  isRequired     Boolean  @default(false) // Must be enabled for this industry
-  isRecommended  Boolean  @default(false) // Recommended for this industry
-  isHidden       Boolean  @default(false) // Hidden from this industry
-  defaultEnabled Boolean  @default(false) // Enabled by default for new orgs
-  
+  isRequired     Boolean @default(false) // Must be enabled for this industry
+  isRecommended  Boolean @default(false) // Recommended for this industry
+  isHidden       Boolean @default(false) // Hidden from this industry
+  defaultEnabled Boolean @default(false) // Enabled by default for new orgs
+
   // Industry-Specific Customization
-  industryConfig Json     @default("{}")  // Industry-specific settings for this capability
-  displayOrder   Int?                     // Order in capability list
-  
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  
+  industryConfig Json @default("{}") // Industry-specific settings for this capability
+  displayOrder   Int? // Order in capability list
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
-  industryPack   IndustryPack @relation("IndustryPackCapabilities", fields: [industryPackId], references: [id])
-  capability     Capability   @relation("CapabilityIndustries", fields: [capabilityId], references: [id])
-  
+  industryPack IndustryPack @relation("IndustryPackCapabilities", fields: [industryPackId], references: [id])
+  capability   Capability   @relation("CapabilityIndustries", fields: [capabilityId], references: [id])
+
   @@unique([industryPackId, capabilityId])
   @@index([industryPackId])
   @@index([capabilityId])
 }
 
 model User {
-  id                   String    @id @default(cuid())
-  orgId                String
-  email                String    @unique
-  name                 String?
-  role                 Role      @default(STAFF)
-  passwordHash         String?   @db.VarChar(255)
-  mustChangePassword   Boolean   @default(false)
-  emailVerified        Boolean   @default(false)
-  status               String    @default("active")
-  passwordResetToken   String?   // SHA-256 hash of reset token
-  passwordResetExpiry  DateTime? // Token expiration time
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @updatedAt
+  id                  String    @id @default(cuid())
+  orgId               String
+  email               String    @unique
+  name                String?
+  role                Role      @default(STAFF)
+  passwordHash        String?   @db.VarChar(255)
+  mustChangePassword  Boolean   @default(false)
+  emailVerified       Boolean   @default(false)
+  status              String    @default("active")
+  passwordResetToken  String? // SHA-256 hash of reset token
+  passwordResetExpiry DateTime? // Token expiration time
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
 
-  org             Org            @relation(fields: [orgId], references: [id])
-  rbacUserRoles   RbacUserRole[] @relation("UserRbacUserRoles")
-  leadActivities  LeadActivity[] @relation("UserLeadActivities")
-  assignedTasks   LeadTask[]     @relation("AssignedLeadTasks")
-  createdTasks    LeadTask[]     @relation("CreatedLeadTasks")
-  ownedContacts   Contact[]      @relation("OwnedContacts")
-  aiTasks         AiTask[]       // AI tasks triggered by this user
-  assignedJobTickets JobTicket[] @relation("JobTicketCrew") // Job tickets assigned to this user
+  org                Org            @relation(fields: [orgId], references: [id])
+  rbacUserRoles      RbacUserRole[] @relation("UserRbacUserRoles")
+  leadActivities     LeadActivity[] @relation("UserLeadActivities")
+  assignedTasks      LeadTask[]     @relation("AssignedLeadTasks")
+  createdTasks       LeadTask[]     @relation("CreatedLeadTasks")
+  ownedContacts      Contact[]      @relation("OwnedContacts")
+  aiTasks            AiTask[] // AI tasks triggered by this user
+  assignedJobTickets JobTicket[]    @relation("JobTicketCrew") // Job tickets assigned to this user
 
   // Employee Portal Relations
   employeeProfile EmployeeProfile? @relation("UserEmployeeProfile")
-  
+
   // Temporary Elevation Relations
   temporaryElevations TemporaryElevation[] @relation("UserTemporaryElevations")
-  
+
   // User Session Relations
   sessions UserSession[] @relation("UserSessions")
-  
+
   // Two-Factor Authentication Relations
   twoFactor UserTwoFactor[] @relation("UserTwoFactor")
-  
+
   // AI-Powered Feature Management Relations
-  appEvents           AppEvent[]        @relation("UserAppEvents")
-  enabledFeatures     OrgFeatureState[] @relation("UserEnabledFeatures")
-  delegationGrants    DelegationGrant[] @relation("UserDelegationGrants")
-  grantedDelegations  DelegationGrant[] @relation("UserGrantedDelegations")
-  aiActionRequests    AiActionLog[]     @relation("UserAiActionRequests")
-  aiActionApprovals   AiActionLog[]     @relation("UserAiActionApprovals")
+  appEvents          AppEvent[]        @relation("UserAppEvents")
+  enabledFeatures    OrgFeatureState[] @relation("UserEnabledFeatures")
+  delegationGrants   DelegationGrant[] @relation("UserDelegationGrants")
+  grantedDelegations DelegationGrant[] @relation("UserGrantedDelegations")
+  aiActionRequests   AiActionLog[]     @relation("UserAiActionRequests")
+  aiActionApprovals  AiActionLog[]     @relation("UserAiActionApprovals")
 
   // Theme System Relations
-  themeUsage          ThemeUsage[]      @relation("UserThemeUsage")
+  themeUsage ThemeUsage[] @relation("UserThemeUsage")
 
   // Security and Approval System Relations
-  approvalRequests    ApprovalRequest[] @relation("UserApprovalRequests")
-  approvals           ApprovalRequest[] @relation("UserApprovals")
-  securityIncidents   SecurityIncident[] @relation("UserSecurityIncidents")
-  assignedIncidents   SecurityIncident[] @relation("AssignedSecurityIncidents")
-  deviceAccess        DeviceAccess[]    @relation("UserDeviceAccess")
-  lockouts            UserLockout[]     @relation("UserLockouts")
-  unlockedUsers       UserLockout[]     @relation("UnlockedUsers")
+  approvalRequests  ApprovalRequest[]  @relation("UserApprovalRequests")
+  approvals         ApprovalRequest[]  @relation("UserApprovals")
+  securityIncidents SecurityIncident[] @relation("UserSecurityIncidents")
+  assignedIncidents SecurityIncident[] @relation("AssignedSecurityIncidents")
+  deviceAccess      DeviceAccess[]     @relation("UserDeviceAccess")
+  lockouts          UserLockout[]      @relation("UserLockouts")
+  unlockedUsers     UserLockout[]      @relation("UnlockedUsers")
 
   // Tenant Registration Relations
   tenantRegistrations TenantRegistration[]
 
-  @@unique([orgId, id])  // Multi-tenant isolation
-
+  @@unique([orgId, id]) // Multi-tenant isolation
   // 🚀 PERFORMANCE INDEXES FOR USER QUERIES
-  @@index([email])                   // Login performance (already unique, but explicit)
-  @@index([orgId, role])             // Permission checks & role filtering
-  @@index([orgId, status])           // Active user queries
-  @@index([orgId, createdAt])        // User management queries
+  @@index([email]) // Login performance (already unique, but explicit)
+  @@index([orgId, role]) // Permission checks & role filtering
+  @@index([orgId, status]) // Active user queries
+  @@index([orgId, createdAt]) // User management queries
 }
 
 /// UserSession tracks active user login sessions for security and session management
 model UserSession {
-  id          String   @id @default(cuid())
-  userId      String
-  sessionId   String   @unique  // Session identifier stored in cookie
-  ipAddress   String?  // IP address when session was created
-  userAgent   String?  // Browser/client user agent
-  deviceInfo  String?  // Parsed device information (OS, browser)
-  location    String?  // Geographic location (city, country)
-  isActive    Boolean  @default(true)
-  lastSeenAt  DateTime @default(now())
-  expiresAt   DateTime // Session expiration time
-  createdAt   DateTime @default(now())
-  
+  id         String   @id @default(cuid())
+  userId     String
+  sessionId  String   @unique // Session identifier stored in cookie
+  ipAddress  String? // IP address when session was created
+  userAgent  String? // Browser/client user agent
+  deviceInfo String? // Parsed device information (OS, browser)
+  location   String? // Geographic location (city, country)
+  isActive   Boolean  @default(true)
+  lastSeenAt DateTime @default(now())
+  expiresAt  DateTime // Session expiration time
+  createdAt  DateTime @default(now())
+
   user User @relation("UserSessions", fields: [userId], references: [id], onDelete: Cascade)
-  
+
   @@index([userId])
   @@index([sessionId])
   @@index([isActive])
@@ -711,50 +712,50 @@ model UserSession {
 
 /// UserTwoFactor stores two-factor authentication data for users
 model UserTwoFactor {
-  id            String   @id @default(cuid())
-  userId        String   @unique  // One 2FA config per user
-  isEnabled     Boolean  @default(false)
-  totpSecret    String?  // Base32 encoded TOTP secret
-  backupCodes   String[] // Array of backup codes (hashed)
-  phoneNumber   String?  // Phone for SMS backup (E.164 format)
-  verifiedAt    DateTime? // When 2FA was last verified/setup
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  
+  id          String    @id @default(cuid())
+  userId      String    @unique // One 2FA config per user
+  isEnabled   Boolean   @default(false)
+  totpSecret  String? // Base32 encoded TOTP secret
+  backupCodes String[] // Array of backup codes (hashed)
+  phoneNumber String? // Phone for SMS backup (E.164 format)
+  verifiedAt  DateTime? // When 2FA was last verified/setup
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
   user User @relation("UserTwoFactor", fields: [userId], references: [id], onDelete: Cascade)
-  
+
   @@index([userId])
 }
 
 /// ProviderSettings stores encrypted provider authentication and configuration data
 /// This table supports dual-layer authentication: primary DB-backed + break-glass env fallback
 model ProviderSettings {
-  id                String   @id @default(cuid())
+  id String @id @default(cuid())
 
   // Authentication fields (encrypted)
-  email             String   @unique  // Provider email (encrypted)
-  passwordHash      String   // bcrypt/argon2 hash (encrypted)
-  totpSecret        String?  // Base32 TOTP secret (encrypted)
+  email        String  @unique // Provider email (encrypted)
+  passwordHash String // bcrypt/argon2 hash (encrypted)
+  totpSecret   String? // Base32 TOTP secret (encrypted)
 
   // Configuration fields (encrypted)
-  displayName       String?  // Provider display name (encrypted)
-  permissions       String[] // Provider permissions array (encrypted)
+  displayName String? // Provider display name (encrypted)
+  permissions String[] // Provider permissions array (encrypted)
 
   // Security & audit fields
-  isActive          Boolean  @default(true)
-  lastLoginAt       DateTime?
-  lastLoginIp       String?
-  failedLoginCount  Int      @default(0)
-  lockedUntil       DateTime?
+  isActive         Boolean   @default(true)
+  lastLoginAt      DateTime?
+  lastLoginIp      String?
+  failedLoginCount Int       @default(0)
+  lockedUntil      DateTime?
 
   // Audit trail
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  createdBy         String?  // Who created this provider account
-  updatedBy         String?  // Who last updated this account
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String? // Who created this provider account
+  updatedBy String? // Who last updated this account
 
   // Audit log relationship
-  auditLogs         ProviderAuditLog[]
+  auditLogs ProviderAuditLog[]
 
   @@index([email])
   @@index([isActive])
@@ -763,26 +764,26 @@ model ProviderSettings {
 
 /// ProviderAuditLog tracks all provider authentication and configuration changes
 model ProviderAuditLog {
-  id              String   @id @default(cuid())
-  providerId      String
+  id         String @id @default(cuid())
+  providerId String
 
   // Action details
-  action          String   // LOGIN, LOGOUT, UPDATE_PASSWORD, UPDATE_TOTP, etc.
-  details         Json?    // Additional action details
+  action  String // LOGIN, LOGOUT, UPDATE_PASSWORD, UPDATE_TOTP, etc.
+  details Json? // Additional action details
 
   // Context
-  ipAddress       String?
-  userAgent       String?
-  sessionId       String?
+  ipAddress String?
+  userAgent String?
+  sessionId String?
 
   // Recovery mode tracking
-  isRecoveryMode  Boolean  @default(false)
+  isRecoveryMode Boolean @default(false)
 
   // Audit metadata
-  timestamp       DateTime @default(now())
+  timestamp DateTime @default(now())
 
   // Relationships
-  provider        ProviderSettings @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  provider ProviderSettings @relation(fields: [providerId], references: [id], onDelete: Cascade)
 
   @@index([providerId])
   @@index([action])
@@ -790,161 +791,149 @@ model ProviderAuditLog {
   @@index([isRecoveryMode])
 }
 
-/*
-=== ENTERPRISE THEME SYSTEM ===
-
-Theme configuration and customization system for the StreamFlow platform.
-Supports 6 cutting-edge themes with provider-level management and owner-only client customization.
-
-FEATURES:
-- Real-time theme switching
-- Provider-level theme management
-- Owner-only client customization
-- Brand asset integration
-- Theme inheritance and overrides
-*/
+/**
+ * === ENTERPRISE THEME SYSTEM ===
+ * Theme configuration and customization system for the StreamFlow platform.
+ * Supports 6 cutting-edge themes with provider-level management and owner-only client customization.
+ * FEATURES:
+ * - Real-time theme switching
+ * - Provider-level theme management
+ * - Owner-only client customization
+ * - Brand asset integration
+ * - Theme inheritance and overrides
+ */
 
 // Theme Configuration Model
 model ThemeConfig {
-  id              String   @id @default(cuid())
+  id String @id @default(cuid())
 
   // Theme Identity
-  themeId         String   // References theme-definitions.ts theme IDs
-  name            String
-  description     String?
-  category        String   // futuristic, professional, luxury, tactical, cosmic
+  themeId     String // References theme-definitions.ts theme IDs
+  name        String
+  description String?
+  category    String // futuristic, professional, luxury, tactical, cosmic
 
   // Ownership and Scope
-  orgId           String?  // If set, this is an org-specific theme override
-  isGlobal        Boolean  @default(false) // Provider-managed global themes
-  isActive        Boolean  @default(true)
+  orgId    String? // If set, this is an org-specific theme override
+  isGlobal Boolean @default(false) // Provider-managed global themes
+  isActive Boolean @default(true)
 
   // Theme Customization
-  customColors    Json?    // Override specific colors from base theme
-  customPatterns  Json?    // Override patterns
-  customTypography Json?   // Override typography settings
-  brandAssets     Json?    // Logo URLs, brand colors, etc.
+  customColors     Json? // Override specific colors from base theme
+  customPatterns   Json? // Override patterns
+  customTypography Json? // Override typography settings
+  brandAssets      Json? // Logo URLs, brand colors, etc.
 
   // Metadata
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  createdBy       String?  // User ID who created this theme config
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String? // User ID who created this theme config
 
   // Relationships
-  org             Org?     @relation("OrgThemeConfigs", fields: [orgId], references: [id], onDelete: Cascade)
+  org Org? @relation("OrgThemeConfigs", fields: [orgId], references: [id], onDelete: Cascade)
 
+  @@unique([orgId, themeId]) // One theme config per org per theme
   @@index([orgId])
   @@index([themeId])
   @@index([isGlobal])
   @@index([isActive])
-  @@unique([orgId, themeId]) // One theme config per org per theme
 }
 
 // Theme Usage Tracking
 model ThemeUsage {
-  id              String   @id @default(cuid())
+  id String @id @default(cuid())
 
   // Usage Context
-  orgId           String
-  themeId         String
-  userId          String?  // User who applied the theme
+  orgId   String
+  themeId String
+  userId  String? // User who applied the theme
 
   // Usage Details
-  appliedAt       DateTime @default(now())
-  sessionId       String?
-  userAgent       String?
+  appliedAt DateTime @default(now())
+  sessionId String?
+  userAgent String?
 
   // Relationships
-  org             Org      @relation("OrgThemeUsage", fields: [orgId], references: [id], onDelete: Cascade)
-  user            User?    @relation("UserThemeUsage", fields: [userId], references: [id], onDelete: SetNull)
+  org  Org   @relation("OrgThemeUsage", fields: [orgId], references: [id], onDelete: Cascade)
+  user User? @relation("UserThemeUsage", fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([orgId])
   @@index([themeId])
   @@index([appliedAt])
 }
 
-/*
-=== ENTERPRISE ROADMAP: LEAD DATA MODEL ===
-
-CURRENT STATE vs ENTERPRISE STANDARDS:
-- Basic lead fields with limited contact information
-- Simple JSON enrichment storage without schema validation
-- Basic scoring with single aiScore field
-- Limited pipeline management with simple status enum
-
-ENTERPRISE CRM COMPARISON (Salesforce, HubSpot, Dynamics Lead Object):
-1. Comprehensive Contact Management:
-   - Multiple contact persons per lead/account
-   - Contact roles and decision-maker hierarchy
-   - Contact preferences and communication history
-   - Social media profiles and professional networks
-
-2. Advanced Lead Intelligence:
-   - Company firmographics (employee count, revenue, industry)
-   - Technographics (technology stack, software usage)
-   - Intent data and buying signals
-   - Competitive landscape and win/loss history
-
-3. Pipeline and Lifecycle Management:
-   - Multi-stage opportunity pipeline with custom stages
-   - Stage-specific probability weights and requirements
-   - Sales velocity tracking and forecasting
-   - Automated workflow triggers and actions
-
-IMPLEMENTATION ROADMAP:
-
-Phase 1: Enhanced Lead Data Model (2-3 weeks)
-- Add company enrichment fields (employees, revenue, industry)
-- Create separate Contact model with lead relationships
-- Add lead source attribution and campaign tracking
-- Implement custom field support with type validation
-
-Phase 2: Advanced Scoring and Intelligence (1-2 months)
-- Add multi-dimensional scoring (conversion, value, urgency)
-- Create Lead Intelligence model for enrichment data
-- Add Intent Data model for buying signal tracking
-- Implement lead health and engagement scoring
-
-Phase 3: Pipeline and Workflow Management (2-3 months)
-- Create Opportunity model with multi-stage pipeline
-- Add Stage and Pipeline configuration models
-- Implement Workflow and Trigger models for automation
-- Add comprehensive activity and interaction tracking
-
-Phase 4: Enterprise Integration (1-2 months)
-- Add external system integration tracking
-- Create audit trail for all lead data changes
-- Implement data governance and compliance features
-- Add performance optimization for high-volume processing
-
-ENTERPRISE FEATURES TO ADD:
-*/
+/**
+ * === ENTERPRISE ROADMAP: LEAD DATA MODEL ===
+ * CURRENT STATE vs ENTERPRISE STANDARDS:
+ * - Basic lead fields with limited contact information
+ * - Simple JSON enrichment storage without schema validation
+ * - Basic scoring with single aiScore field
+ * - Limited pipeline management with simple status enum
+ * ENTERPRISE CRM COMPARISON (Salesforce, HubSpot, Dynamics Lead Object):
+ * 1. Comprehensive Contact Management:
+ * - Multiple contact persons per lead/account
+ * - Contact roles and decision-maker hierarchy
+ * - Contact preferences and communication history
+ * - Social media profiles and professional networks
+ * 2. Advanced Lead Intelligence:
+ * - Company firmographics (employee count, revenue, industry)
+ * - Technographics (technology stack, software usage)
+ * - Intent data and buying signals
+ * - Competitive landscape and win/loss history
+ * 3. Pipeline and Lifecycle Management:
+ * - Multi-stage opportunity pipeline with custom stages
+ * - Stage-specific probability weights and requirements
+ * - Sales velocity tracking and forecasting
+ * - Automated workflow triggers and actions
+ * IMPLEMENTATION ROADMAP:
+ * Phase 1: Enhanced Lead Data Model (2-3 weeks)
+ * - Add company enrichment fields (employees, revenue, industry)
+ * - Create separate Contact model with lead relationships
+ * - Add lead source attribution and campaign tracking
+ * - Implement custom field support with type validation
+ * Phase 2: Advanced Scoring and Intelligence (1-2 months)
+ * - Add multi-dimensional scoring (conversion, value, urgency)
+ * - Create Lead Intelligence model for enrichment data
+ * - Add Intent Data model for buying signal tracking
+ * - Implement lead health and engagement scoring
+ * Phase 3: Pipeline and Workflow Management (2-3 months)
+ * - Create Opportunity model with multi-stage pipeline
+ * - Add Stage and Pipeline configuration models
+ * - Implement Workflow and Trigger models for automation
+ * - Add comprehensive activity and interaction tracking
+ * Phase 4: Enterprise Integration (1-2 months)
+ * - Add external system integration tracking
+ * - Create audit trail for all lead data changes
+ * - Implement data governance and compliance features
+ * - Add performance optimization for high-volume processing
+ * ENTERPRISE FEATURES TO ADD:
+ */
 
 model Lead {
-  id              String     @id @default(cuid())
-  orgId           String
-  publicId        String     @unique
-  sourceType      LeadSource
-  identityHash    String
+  id           String     @id @default(cuid())
+  orgId        String
+  publicId     String     @unique
+  sourceType   LeadSource
+  identityHash String
 
   // === BASIC CONTACT INFORMATION ===
-  company         String?
-  contactName     String?
-  email           String?
-  phoneE164       String?
-  website         String?
+  company     String?
+  contactName String?
+  email       String?
+  phoneE164   String?
+  website     String?
 
   // === CRM FIELDS (Binder1.md) ===
-  stage           String     @default("new")  // new, contacted, qualified, proposal, won, lost
-  ownerId         String?    // User who owns this lead
-  archived        Boolean    @default(false)
+  stage    String  @default("new") // new, contacted, qualified, proposal, won, lost
+  ownerId  String? // User who owns this lead
+  archived Boolean @default(false)
 
   // === CONVERSION TRACKING (Bridge System) ===
-  convertedToCustomerId      String?
-  convertedToOrganizationId  String?
-  convertedToContactId       String?
-  conversionAuditId          String?
-  
+  convertedToCustomerId     String?
+  convertedToOrganizationId String?
+  convertedToContactId      String?
+  conversionAuditId         String?
+
   // === ENTERPRISE FIELDS TO ADD ===
   // companySize     CompanySize?      // SMALL, MEDIUM, LARGE, ENTERPRISE
   // annualRevenue   Decimal?          // Company annual revenue
@@ -954,45 +943,45 @@ model Lead {
   // decisionMaker   Boolean?          // Is primary decision maker
   // budget          Decimal?          // Available budget
   // timeline        Timeline?         // Purchase timeline (IMMEDIATE, QUARTER, YEAR)
-  
+
   // === MULTI-INDUSTRY SERVICE & GEOGRAPHIC INFO ===
-  industryType    String?     // Industry: "cleaning", "hvac", "fencing", etc.
-  leadType        String      @default("job")  // "relationship", "job", "permit", "government"  
-  naicsCode       String?     // Industry classification
-  sicCode         String?     // Legacy industry code
-  serviceCode     String?     // Industry-specific service type code
-  
+  industryType String? // Industry: "cleaning", "hvac", "fencing", etc.
+  leadType     String  @default("job") // "relationship", "job", "permit", "government"  
+  naicsCode    String? // Industry classification
+  sicCode      String? // Legacy industry code
+  serviceCode  String? // Industry-specific service type code
+
   // Address information  
-  zip             String?
-  city            String?
-  state           String?
-  postalCode      String?    @db.VarChar(20)
-  address         String?
-  addressLine1    String?
-  addressLine2    String?
-  country         String?
-  
+  zip          String?
+  city         String?
+  state        String?
+  postalCode   String? @db.VarChar(20)
+  address      String?
+  addressLine1 String?
+  addressLine2 String?
+  country      String?
+
   // 🏭 INDUSTRY-SPECIFIC CUSTOM FIELDS
-  customFields    Json        @default("{}")  // Industry-specific fields from IndustryPack.leadFields
-  
+  customFields Json @default("{}") // Industry-specific fields from IndustryPack.leadFields
+
   // === LEAD INTELLIGENCE ===
-  enrichmentJson  Json       @default("{}")  // LEGACY: Migrate to structured models
-  aiScore         Int        @default(0)     // LEGACY: Expand to multi-dimensional scoring
-  scoreFactors    Json       @default("{}")  // LEGACY: Move to structured scoring model
-  
+  enrichmentJson Json @default("{}") // LEGACY: Migrate to structured models
+  aiScore        Int  @default(0) // LEGACY: Expand to multi-dimensional scoring
+  scoreFactors   Json @default("{}") // LEGACY: Move to structured scoring model
+
   // === ENTERPRISE SCORING TO ADD ===
   // conversionScore    Int?           // ML-predicted conversion probability (0-100)
   // valueScore         Int?           // Predicted deal value score (0-100)
   // urgencyScore       Int?           // Purchase urgency score (0-100)
   // engagementScore    Int?           // Lead engagement score (0-100)
   // dataQualityScore   Int?           // Data completeness score (0-100)
-  
+
   // === LIFECYCLE AND PIPELINE ===
   systemGenerated Boolean    @default(false)
   convertedAt     DateTime?
-  rfp             Json?      // MIGRATE: Move to structured RFP model
-  status          LeadStatus @default(NEW)   // EXPAND: Multi-stage pipeline
-  
+  rfp             Json? // MIGRATE: Move to structured RFP model
+  status          LeadStatus @default(NEW) // EXPAND: Multi-stage pipeline
+
   // === ENTERPRISE PIPELINE TO ADD ===
   // currentStage       String?        // Current pipeline stage
   // stageEnteredAt     DateTime?      // When entered current stage
@@ -1001,13 +990,13 @@ model Lead {
   // actualCloseDate    DateTime?      // Actual close date
   // lostReason         String?        // Reason if lost
   // competitorLost     String?        // Competitor who won
-  
+
   // === AUDIT AND TRACKING ===
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
-  notes           String?
-  sourceDetail    String?
-  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  notes        String?
+  sourceDetail String?
+
   // === ENTERPRISE ATTRIBUTION TO ADD ===
   // campaign           String?        // Marketing campaign attribution
   // medium             String?        // Traffic medium (organic, paid, referral)
@@ -1015,13 +1004,13 @@ model Lead {
   // firstTouchDate     DateTime?      // First interaction timestamp
   // lastTouchDate      DateTime?      // Last interaction timestamp
   // touchpointCount    Int?           // Number of touchpoints
-  
+
   // === RELATIONSHIPS ===
   org             Org               @relation(fields: [orgId], references: [id])
   LeadInvoiceLine LeadInvoiceLine[]
   activities      LeadActivity[]    @relation("LeadActivities")
   tasks           LeadTask[]        @relation("LeadTasks")
-  
+
   // === ENTERPRISE RELATIONSHIPS TO ADD ===
   // contacts        Contact[]         // Multiple contacts per lead
   // opportunity     Opportunity?      // Associated opportunity
@@ -1029,22 +1018,7 @@ model Lead {
   // enrichments     LeadEnrichment[]  // External data enrichments
   // scoringHistory  LeadScore[]       // Score history over time
   // duplicates      LeadDuplicate[]   // Duplicate detection results
-  
-  @@unique([orgId, id])  // Multi-tenant isolation
 
-  // 🚀 PERFORMANCE INDEXES FOR ENTERPRISE SCALE
-  @@index([orgId, createdAt])        // Dashboard queries (existing)
-  @@index([orgId, status])           // Fast lead filtering by status
-  @@index([orgId, status, createdAt]) // Combined status + time queries
-  @@index([email])                   // Duplicate detection & email lookups
-  @@index([phoneE164])               // Phone number lookups
-  @@index([orgId, industryType])     // Industry-specific queries
-  @@index([orgId, aiScore])          // Lead scoring queries
-  @@index([identityHash])            // Duplicate detection
-  @@index([publicId])                // Public API lookups (already unique, but explicit)
-  @@index([orgId, convertedAt])      // Conversion tracking
-  @@index([orgId, sourceType])       // Source analysis
-  
   // === ENTERPRISE INDEXES TO ADD ===
   // @@index([orgId, conversionScore])
   // @@index([orgId, currentStage])
@@ -1055,6 +1029,20 @@ model Lead {
   // @@index([email])                    // Cross-org email lookup
   // @@index([phoneE164])               // Cross-org phone lookup
   // @@index([website])                 // Company website lookup
+
+  @@unique([orgId, id]) // Multi-tenant isolation
+  // 🚀 PERFORMANCE INDEXES FOR ENTERPRISE SCALE
+  @@index([orgId, createdAt]) // Dashboard queries (existing)
+  @@index([orgId, status]) // Fast lead filtering by status
+  @@index([orgId, status, createdAt]) // Combined status + time queries
+  @@index([email]) // Duplicate detection & email lookups
+  @@index([phoneE164]) // Phone number lookups
+  @@index([orgId, industryType]) // Industry-specific queries
+  @@index([orgId, aiScore]) // Lead scoring queries
+  @@index([identityHash]) // Duplicate detection
+  @@index([publicId]) // Public API lookups (already unique, but explicit)
+  @@index([orgId, convertedAt]) // Conversion tracking
+  @@index([orgId, sourceType]) // Source analysis
 }
 
 model Customer {
@@ -1074,17 +1062,17 @@ model Customer {
   jobs          Job[]
   workOrders    WorkOrder[]   @relation("CustomerWorkOrders")
   opportunities Opportunity[]
-  contacts      Contact[]     @relation("CustomerContacts")
   jobTickets    JobTicket[]
-  quotes        Quote[]       // Bridge System: Quotes for this customer
+  quotes        Quote[] // Bridge System: Quotes for this customer
 
-  @@unique([orgId, id])  // Multi-tenant isolation
+  @@unique([orgId, id]) // Multi-tenant isolation
 }
 
 model Opportunity {
   id             String    @id @default(cuid())
   orgId          String
-  customerId     String
+  organizationId String // Required link to Organization (NOT NULL after migration)
+  customerId     String? // Optional legacy link to Customer (for FSM compatibility)
   valueType      ValueType @default(RELATIONSHIP)
   estValue       Decimal?  @db.Decimal(12, 2)
   stage          String    @default("new")
@@ -1095,23 +1083,25 @@ model Opportunity {
   updatedAt      DateTime  @updatedAt
 
   // === CRM FIELDS (Binder1.md) ===
-  title          String?   // Opportunity name/title
-  probability    Int?      // Win probability (0-100)
-  closeDate      DateTime? // Expected close date
-  leadId         String?   // Source lead ID
+  title       String? // Opportunity name/title
+  probability Int? // Win probability (0-100)
+  closeDate   DateTime? // Expected close date
+  leadId      String? // Source lead ID
 
-  customer Customer @relation(fields: [orgId, customerId], references: [orgId, id])
-  org      Org      @relation(fields: [orgId], references: [id])
-  quotes   Quote[]  // Bridge System: Quotes linked to this opportunity
+  organization Organization @relation("OrganizationOpportunities", fields: [organizationId], references: [id], onDelete: Cascade)
+  customer     Customer?    @relation(fields: [orgId, customerId], references: [orgId, id])
+  org          Org          @relation(fields: [orgId], references: [id])
+  quotes       Quote[] // Bridge System: Quotes linked to this opportunity
 
   @@index([leadId])
+  @@index([orgId, organizationId]) // Organization opportunities
 }
 
 // Quote/Estimate model (Bridge System)
 model Quote {
   id            String    @id @default(cuid())
   orgId         String
-  opportunityId String?   // Link to CRM Opportunity
+  opportunityId String? // Link to CRM Opportunity
   customerId    String
   title         String
   description   String?
@@ -1127,9 +1117,9 @@ model Quote {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  org          Org          @relation(fields: [orgId], references: [id])
-  customer     Customer     @relation(fields: [customerId], references: [id])
-  opportunity  Opportunity? @relation(fields: [opportunityId], references: [id])
+  org         Org          @relation(fields: [orgId], references: [id])
+  customer    Customer     @relation(fields: [customerId], references: [id])
+  opportunity Opportunity? @relation(fields: [opportunityId], references: [id])
 
   @@unique([orgId, id])
   @@index([orgId])
@@ -1141,148 +1131,213 @@ model Quote {
 /// Contact represents individual people associated with organizations
 /// Implements handover binder requirement for Contact entity with full CRM capabilities
 model Contact {
-  id            String    @id @default(cuid())
-  orgId         String    // Multi-tenant isolation
+  id    String @id @default(cuid())
+  orgId String // Multi-tenant isolation
 
   // Basic Information
-  name          String    // Full name
-  email         String?   // Email address
-  phone         String?   // Phone number
-  title         String?   // Job title
-  department    String?   // Department
+  name       String // Full name
+  email      String? // Email address
+  phone      String? // Phone number
+  title      String? // Job title
+  department String? // Department
 
   // Organization Association
-  organizationId String?  // Optional link to Organization/Customer
-  isPrimary     Boolean   @default(false) // Primary contact for organization
+  organizationId String // Required link to Organization (NOT NULL after migration)
+  isPrimary      Boolean @default(false) // Primary contact for organization
 
   // Contact Details
-  mobilePhone   String?   // Mobile phone
-  workPhone     String?   // Work phone
-  fax           String?   // Fax number
-  website       String?   // Personal or professional website
+  mobilePhone String? // Mobile phone
+  workPhone   String? // Work phone
+  fax         String? // Fax number
+  website     String? // Personal or professional website
 
   // Address Information
-  address       Json?     // Structured address: { street, city, state, zip, country }
+  address Json? // Structured address: { street, city, state, zip, country }
 
   // Social & Professional
-  linkedIn      String?   // LinkedIn profile URL
-  twitter       String?   // Twitter handle
+  linkedIn String? // LinkedIn profile URL
+  twitter  String? // Twitter handle
 
   // Relationship Management
-  ownerId       String?   // User who owns this contact
-  source        String?   // How contact was acquired
-  status        String    @default("active") // active, inactive, archived
+  ownerId String? // User who owns this contact
+  source  String? // How contact was acquired
+  status  String  @default("active") // active, inactive, archived
 
   // Notes & Tags
-  notes         String?   // General notes about contact
-  tags          Json      @default("[]") // Array of tags for categorization
+  notes String? // General notes about contact
+  tags  Json    @default("[]") // Array of tags for categorization
 
   // Custom Fields
-  customFields  Json      @default("{}") // Flexible custom field storage
+  customFields Json @default("{}") // Flexible custom field storage
 
   // Metadata
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
   lastContactedAt DateTime? // Last time contact was reached out to
 
   // Relations
-  org           Org       @relation("OrgContacts", fields: [orgId], references: [id], onDelete: Cascade)
-  organization  Customer? @relation("CustomerContacts", fields: [orgId, organizationId], references: [orgId, id])
-  owner         User?     @relation("OwnedContacts", fields: [orgId, ownerId], references: [orgId, id])
+  org          Org          @relation("OrgContacts", fields: [orgId], references: [id], onDelete: Cascade)
+  organization Organization @relation("OrganizationContacts", fields: [organizationId], references: [id], onDelete: Cascade)
+  owner        User?        @relation("OwnedContacts", fields: [orgId, ownerId], references: [orgId, id])
 
   // Indexes for performance
-  @@unique([orgId, id])                    // Multi-tenant isolation
-  @@index([orgId, email])                  // Email lookup
-  @@index([orgId, organizationId])         // Organization contacts
-  @@index([orgId, ownerId])                // Owner's contacts
-  @@index([orgId, status])                 // Status filtering
-  @@index([orgId, createdAt])              // Timeline queries
-  @@index([orgId, lastContactedAt])        // Recent contact queries
+  @@unique([orgId, id]) // Multi-tenant isolation
+  @@index([orgId, email]) // Email lookup
+  @@index([orgId, organizationId]) // Organization contacts
+  @@index([orgId, ownerId]) // Owner's contacts
+  @@index([orgId, status]) // Status filtering
+  @@index([orgId, createdAt]) // Timeline queries
+  @@index([orgId, lastContactedAt]) // Recent contact queries
 }
 
 /// CrmTask manages tasks attached to CRM entities (opportunities, organizations, contacts)
 /// Implements binder2 requirement for task management with full CRUD capabilities
 model CrmTask {
-  id          String   @id @default(cuid())
-  orgId       String   // Multi-tenant isolation (tenant_id in binder2)
+  id    String @id @default(cuid())
+  orgId String // Multi-tenant isolation (tenant_id in binder2)
 
   // Entity attachment
-  entityType  String   // enum: 'opportunity', 'organization', 'contact'
-  entityId    String   // ID of the attached entity
+  entityType String // enum: 'opportunity', 'organization', 'contact'
+  entityId   String // ID of the attached entity
 
   // Task details
-  title       String
-  dueAt       DateTime?
+  title          String
+  dueAt          DateTime?
   assigneeUserId String?
-  status      String   @default("open") // enum: 'open', 'in_progress', 'done', 'cancelled'
+  status         String    @default("open") // enum: 'open', 'in_progress', 'done', 'cancelled'
 
   // Metadata
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  org         Org      @relation("OrgCrmTasks", fields: [orgId], references: [id], onDelete: Cascade)
+  org Org @relation("OrgCrmTasks", fields: [orgId], references: [id], onDelete: Cascade)
 
   // Indexes for performance (binder2 requirements)
-  @@index([orgId, entityType, entityId])       // Entity tasks lookup
-  @@index([orgId, assigneeUserId, status])     // Assignee's tasks
-  @@index([orgId, dueAt])                      // Due date queries
-  @@index([orgId, updatedAt])                  // Recent updates
+  @@index([orgId, entityType, entityId]) // Entity tasks lookup
+  @@index([orgId, assigneeUserId, status]) // Assignee's tasks
+  @@index([orgId, dueAt]) // Due date queries
+  @@index([orgId, updatedAt]) // Recent updates
 }
 
 /// CrmNote manages notes attached to CRM entities
 /// Implements binder2 requirement for note management with audit trail
 model CrmNote {
-  id          String   @id @default(cuid())
-  orgId       String   // Multi-tenant isolation (tenant_id in binder2)
+  id    String @id @default(cuid())
+  orgId String // Multi-tenant isolation (tenant_id in binder2)
 
   // Entity attachment
-  entityType  String   // enum: 'opportunity', 'organization', 'contact'
-  entityId    String   // ID of the attached entity
+  entityType String // enum: 'opportunity', 'organization', 'contact'
+  entityId   String // ID of the attached entity
 
   // Note content
-  body        String   @db.Text
-  createdBy   String   // User who created the note
+  body      String @db.Text
+  createdBy String // User who created the note
 
   // Metadata
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  org         Org      @relation("OrgCrmNotes", fields: [orgId], references: [id], onDelete: Cascade)
+  org Org @relation("OrgCrmNotes", fields: [orgId], references: [id], onDelete: Cascade)
 
   // Indexes for performance (binder2 requirements)
   @@index([orgId, entityType, entityId, createdAt]) // Entity notes timeline
-  @@index([orgId, createdBy])                       // User's notes
-  @@index([orgId, updatedAt])                       // Recent updates
+  @@index([orgId, createdBy]) // User's notes
+  @@index([orgId, updatedAt]) // Recent updates
 }
 
 /// CrmFile manages file attachments for CRM entities
 /// Implements binder2 requirement for file management with AV scanning
 model CrmFile {
-  id          String   @id @default(cuid())
-  orgId       String   // Multi-tenant isolation (tenant_id in binder2)
+  id    String @id @default(cuid())
+  orgId String // Multi-tenant isolation (tenant_id in binder2)
 
   // Entity attachment
-  entityType  String   // enum: 'opportunity', 'organization', 'contact'
-  entityId    String   // ID of the attached entity
+  entityType String // enum: 'opportunity', 'organization', 'contact'
+  entityId   String // ID of the attached entity
 
   // File details
-  filename    String
-  mimeType    String
-  sizeBytes   Int
-  storageKey  String   // S3/storage key
+  filename   String
+  mimeType   String
+  sizeBytes  Int
+  storageKey String // S3/storage key
 
   // Metadata
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
 
   // Relations
-  org         Org      @relation("OrgCrmFiles", fields: [orgId], references: [id], onDelete: Cascade)
+  org Org @relation("OrgCrmFiles", fields: [orgId], references: [id], onDelete: Cascade)
 
   // Indexes for performance (binder2 requirements)
   @@index([orgId, entityType, entityId, createdAt]) // Entity files timeline
-  @@index([orgId, storageKey])                      // Storage key lookup
-  @@index([orgId, createdAt])                       // Recent uploads
+  @@index([orgId, storageKey]) // Storage key lookup
+  @@index([orgId, createdAt]) // Recent uploads
+}
+
+// ============================================================================
+// CRM ORGANIZATION MODEL (Binder2 - Option C)
+// ============================================================================
+// Proper CRM Organization model - replaces Customer misuse in CRM routes
+// Separate from FSM Customer model for clean architecture
+model Organization {
+  id    String @id @default(cuid())
+  orgId String // Tenant ID (tenantId in binder2 spec)
+
+  // Core Information
+  name          String // Organization name (required)
+  domain        String? // Primary domain (e.g., "acme.com")
+  industry      String? // Industry/vertical
+  size          Int? // Company size (employee count)
+  annualRevenue Int? // Annual revenue in cents
+  website       String? // Website URL
+  phone         String? // Primary phone (E.164 format)
+
+  // Ownership & Status
+  ownerId  String? // User who owns this organization
+  archived Boolean @default(false) // Soft delete flag
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  org           Org           @relation("OrgOrganizations", fields: [orgId], references: [id], onDelete: Cascade)
+  contacts      Contact[]     @relation("OrganizationContacts")
+  opportunities Opportunity[] @relation("OrganizationOpportunities")
+
+  // Indexes for performance and uniqueness
+  @@unique([orgId, name]) // Unique name per tenant (case-sensitive in DB, enforce case-insensitive in code)
+  @@index([orgId, domain]) // Domain lookup
+  @@index([orgId, archived]) // Active organizations
+  @@index([orgId, ownerId]) // Owner's organizations
+  @@index([orgId, updatedAt]) // Recent updates
+}
+
+// ============================================================================
+// CONVERSION AUDIT MODEL (Binder2 - Option C)
+// ============================================================================
+// Tracks all CRM entity conversions and mutations for compliance
+model ConversionAudit {
+  id     String @id @default(cuid())
+  orgId  String // Tenant ID (tenantId in binder2 spec)
+  userId String // User who performed the action
+
+  // Action Details
+  action   String // Action type: 'create', 'update', 'delete', 'convert'
+  resource String // Resource type: 'organization', 'contact', 'opportunity', 'lead'
+  meta     Json? // Additional metadata (before/after values, etc.)
+
+  // Timestamp
+  createdAt DateTime @default(now())
+
+  // Relations
+  org Org @relation("OrgConversionAudits", fields: [orgId], references: [id], onDelete: Cascade)
+
+  // Indexes for querying
+  @@index([orgId, createdAt]) // Audit timeline
+  @@index([orgId, userId]) // User's actions
+  @@index([orgId, resource, action]) // Resource-specific audits
 }
 
 model Invoice {
@@ -1297,13 +1352,12 @@ model Invoice {
   customer Customer? @relation(fields: [orgId, customerId], references: [orgId, id])
   org      Org       @relation(fields: [orgId], references: [id])
   payments Payment[]
-  
-  @@unique([orgId, id])  // Multi-tenant isolation
 
+  @@unique([orgId, id]) // Multi-tenant isolation
   // 🚀 PERFORMANCE INDEXES FOR INVOICE QUERIES
-  @@index([orgId, status])           // Invoice status filtering
-  @@index([orgId, issuedAt])         // Invoice timeline queries
-  @@index([orgId, customerId])       // Customer invoice history
+  @@index([orgId, status]) // Invoice status filtering
+  @@index([orgId, issuedAt]) // Invoice timeline queries
+  @@index([orgId, customerId]) // Customer invoice history
   @@index([orgId, status, issuedAt]) // Combined status + time queries
 }
 
@@ -1318,13 +1372,12 @@ model Payment {
 
   invoice Invoice? @relation(fields: [orgId, invoiceId], references: [orgId, id])
   org     Org      @relation(fields: [orgId], references: [id])
-  
-  @@unique([orgId, id])  // Multi-tenant isolation
 
+  @@unique([orgId, id]) // Multi-tenant isolation
   // 🚀 PERFORMANCE INDEXES FOR PAYMENT QUERIES
-  @@index([orgId, receivedAt])       // Payment timeline queries
-  @@index([orgId, method])           // Payment method analysis
-  @@index([invoiceId])               // Invoice payment lookup
+  @@index([orgId, receivedAt]) // Payment timeline queries
+  @@index([orgId, method]) // Payment method analysis
+  @@index([invoiceId]) // Invoice payment lookup
 }
 
 model Rfp {
@@ -1342,8 +1395,8 @@ model Rfp {
 
   jobs Job[]
   org  Org   @relation(fields: [orgId], references: [id])
-  
-  @@unique([orgId, id])  // Multi-tenant isolation
+
+  @@unique([orgId, id]) // Multi-tenant isolation
 }
 
 model Job {
@@ -1361,8 +1414,8 @@ model Job {
   customer Customer? @relation(fields: [orgId, customerId], references: [orgId, id])
   org      Org       @relation(fields: [orgId], references: [id])
   rfp      Rfp?      @relation(fields: [orgId, rfpId], references: [orgId, id])
-  
-  @@unique([orgId, id])  // Multi-tenant isolation
+
+  @@unique([orgId, id]) // Multi-tenant isolation
 }
 
 model Referral {
@@ -1398,7 +1451,7 @@ model BillingLedger {
 /// includes metadata to support billing and optional Stripe integration.
 model LeadInvoice {
   id              String   @id @default(cuid())
-  orgId           String   // Made required for multi-tenant isolation
+  orgId           String // Made required for multi-tenant isolation
   org             Org      @relation("OrgLeadInvoices", fields: [orgId], references: [id])
   number          String   @unique
   periodFrom      DateTime
@@ -1415,15 +1468,15 @@ model LeadInvoice {
   leadCount       Int      @default(0)
 
   lines LeadInvoiceLine[]
-  
-  @@unique([orgId, id])  // Multi-tenant isolation
+
+  @@unique([orgId, id]) // Multi-tenant isolation
 }
 
 /// LeadInvoiceLine represents an individual line item on a LeadInvoice. Each line is typically
 /// associated with a converted lead, but generic fee/credit lines are also supported.
 model LeadInvoiceLine {
   id        String      @id @default(cuid())
-  orgId     String      // Added for multi-tenant isolation
+  orgId     String // Added for multi-tenant isolation
   invoiceId String
   invoice   LeadInvoice @relation(fields: [orgId, invoiceId], references: [orgId, id])
 
@@ -1445,23 +1498,23 @@ model LeadInvoiceLine {
 }
 
 model AuditLog {
-  id          String   @id @default(cuid())
-  orgId       String
-  actorId     String?  // Changed from actorUserId to match migration and usage
-  action      String   // Action performed (create, update, delete, etc.)
-  entityType  String   // What was acted upon (lead, invoice, etc.)
-  entityId    String?  // ID of the target entity
-  delta       Json     @default("{}") // Changes made (JSON format)
-  createdAt   DateTime @default(now())
+  id         String   @id @default(cuid())
+  orgId      String
+  actorId    String? // Changed from actorUserId to match migration and usage
+  action     String // Action performed (create, update, delete, etc.)
+  entityType String // What was acted upon (lead, invoice, etc.)
+  entityId   String? // ID of the target entity
+  delta      Json     @default("{}") // Changes made (JSON format)
+  createdAt  DateTime @default(now())
 
   org Org @relation(fields: [orgId], references: [id])
 
   // 🚀 PERFORMANCE INDEXES FOR AUDIT QUERIES
-  @@index([orgId, createdAt])        // Audit timeline queries
-  @@index([actorId, createdAt])      // User activity tracking
-  @@index([orgId, entityType])       // Entity-specific audit logs
-  @@index([orgId, action])           // Action-specific queries
-  @@index([entityType, entityId])    // Entity audit history
+  @@index([orgId, createdAt]) // Audit timeline queries
+  @@index([actorId, createdAt]) // User activity tracking
+  @@index([orgId, entityType]) // Entity-specific audit logs
+  @@index([orgId, action]) // Action-specific queries
+  @@index([entityType, entityId]) // Entity audit history
 }
 
 enum Role {
@@ -1523,23 +1576,23 @@ model RbacRole {
 
   rolePerms RbacRolePermission[]
   userRoles RbacUserRole[]
-  
-  // Advanced Role Management Relations
-  versions  RoleVersion[] @relation("RoleVersions")
-  scopes    RoleScope[]   @relation("RoleScopes")
-  reviews   RoleReview[]  @relation("RoleReviews")
 
-  @@unique([orgId, slug])             // Unique role identification per org
-  
+  // Advanced Role Management Relations
+  versions RoleVersion[] @relation("RoleVersions")
+  scopes   RoleScope[]   @relation("RoleScopes")
+  reviews  RoleReview[]  @relation("RoleReviews")
+
   // === 🚀 ENTERPRISE RBAC PERFORMANCE INDEXING ===
   // Critical for permission checking performance at scale (millions of permission checks/day)
   // TODO: Add advanced indexes for RBAC operations:
   // @@index([orgId, isSystem, name])               // System vs custom role differentiation
   // @@index([slug, isSystem])                      // Cross-tenant role template queries
   // @@index([orgId, createdAt, isSystem])          // Role management and audit queries
-  
+
   // Note: RbacUserRole and RbacRolePermission junction tables need careful indexing
   // for optimal permission resolution performance
+
+  @@unique([orgId, slug]) // Unique role identification per org
 }
 
 model RbacRolePermission {
@@ -1570,30 +1623,30 @@ model RbacUserRole {
 
 /// RoleVersion provides enterprise-grade role versioning and rollback capabilities
 model RoleVersion {
-  id          String   @id @default(cuid())
-  roleId      String   
+  id          String  @id @default(cuid())
+  roleId      String
   orgId       String
-  version     Int      // Version number (1, 2, 3, etc.)
-  name        String   // Role name at this version
-  description String?  
-  
+  version     Int // Version number (1, 2, 3, etc.)
+  name        String // Role name at this version
+  description String?
+
   // Version metadata
-  changeReason String?  // Why this version was created
-  changedBy   String   // User ID who made the change
-  isActive    Boolean  @default(false) // Is this the active version?
-  
+  changeReason String? // Why this version was created
+  changedBy    String // User ID who made the change
+  isActive     Boolean @default(false) // Is this the active version?
+
   // Snapshot of permissions at this version
-  permissions Json     // Array of permission codes at time of version
-  config      Json     @default("{}") // Role configuration snapshot
-  
+  permissions Json // Array of permission codes at time of version
+  config      Json @default("{}") // Role configuration snapshot
+
   // Scoping information snapshot
-  scopeConfig Json     @default("{}") // Scoping rules at time of version
-  
-  createdAt   DateTime @default(now())
-  
+  scopeConfig Json @default("{}") // Scoping rules at time of version
+
+  createdAt DateTime @default(now())
+
   role RbacRole @relation("RoleVersions", fields: [roleId], references: [id], onDelete: Cascade)
   org  Org      @relation("OrgRoleVersions", fields: [orgId], references: [id])
-  
+
   @@unique([roleId, version])
   @@index([orgId, roleId])
   @@index([isActive])
@@ -1601,33 +1654,33 @@ model RoleVersion {
 
 /// RoleTemplate provides industry-standard role templates and cloning capabilities
 model RoleTemplate {
-  id           String   @id @default(cuid())
-  orgId        String?  // NULL for system-wide templates
-  name         String   
-  description  String?
-  industry     String?  // e.g., "healthcare", "finance", "manufacturing"
-  category     String?  // e.g., "management", "operations", "support"
-  
+  id          String  @id @default(cuid())
+  orgId       String? // NULL for system-wide templates
+  name        String
+  description String?
+  industry    String? // e.g., "healthcare", "finance", "manufacturing"
+  category    String? // e.g., "management", "operations", "support"
+
   // Template configuration
   isSystemTemplate Boolean @default(false) // System vs custom template
-  isPublic     Boolean  @default(false) // Can other orgs use this template?
-  usageCount   Int      @default(0)     // How many times cloned
-  
+  isPublic         Boolean @default(false) // Can other orgs use this template?
+  usageCount       Int     @default(0) // How many times cloned
+
   // Template permissions and configuration
-  permissions  Json     // Array of permission codes
-  config       Json     @default("{}") // Default role configuration
-  scopeConfig  Json     @default("{}") // Default scoping rules
-  
+  permissions Json // Array of permission codes
+  config      Json @default("{}") // Default role configuration
+  scopeConfig Json @default("{}") // Default scoping rules
+
   // Metadata
-  tags         String[] @default([])    // Searchable tags
-  complexity   String   @default("BASIC") // BASIC, INTERMEDIATE, ADVANCED
-  
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  createdBy    String?  // User ID who created this template
-  
+  tags       String[] @default([]) // Searchable tags
+  complexity String   @default("BASIC") // BASIC, INTERMEDIATE, ADVANCED
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String? // User ID who created this template
+
   org Org? @relation("OrgRoleTemplates", fields: [orgId], references: [id])
-  
+
   @@index([orgId, industry])
   @@index([isSystemTemplate, isPublic])
   @@index([industry, category])
@@ -1635,30 +1688,30 @@ model RoleTemplate {
 
 /// PermissionBundle creates reusable permission sets (e.g., "Supervisor Pack")
 model PermissionBundle {
-  id          String   @id @default(cuid())
+  id          String  @id @default(cuid())
   orgId       String
-  name        String   // e.g., "Supervisor Pack", "Finance Access"
+  name        String // e.g., "Supervisor Pack", "Finance Access"
   description String?
-  
+
   // Bundle configuration
-  permissions Json     // Array of permission codes in this bundle
-  category    String?  // e.g., "management", "finance", "operations"
-  isReusable  Boolean  @default(true)
-  
+  permissions Json // Array of permission codes in this bundle
+  category    String? // e.g., "management", "finance", "operations"
+  isReusable  Boolean @default(true)
+
   // Usage tracking
-  usageCount  Int      @default(0)
-  
+  usageCount Int @default(0)
+
   // Metadata
-  tags        String[] @default([])
-  color       String?  // For UI categorization
-  icon        String?  // Icon identifier
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  createdBy   String   // User ID who created this bundle
-  
+  tags  String[] @default([])
+  color String? // For UI categorization
+  icon  String? // Icon identifier
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String // User ID who created this bundle
+
   org Org @relation("OrgPermissionBundles", fields: [orgId], references: [id])
-  
+
   @@unique([orgId, name])
   @@index([orgId, category])
   @@index([isReusable])
@@ -1666,35 +1719,35 @@ model PermissionBundle {
 
 /// RoleScope provides granular permission scoping by project, team, geography, etc.
 model RoleScope {
-  id        String   @id @default(cuid())
-  roleId    String
-  orgId     String
-  
+  id     String @id @default(cuid())
+  roleId String
+  orgId  String
+
   // Scope definition
-  scopeType String   // "project", "team", "geography", "department", "custom"
-  scopeKey  String   // Identifier for the scope (project ID, team ID, etc.)
-  scopeName String   // Human-readable name
-  
+  scopeType String // "project", "team", "geography", "department", "custom"
+  scopeKey  String // Identifier for the scope (project ID, team ID, etc.)
+  scopeName String // Human-readable name
+
   // Scope configuration
-  permissions Json   // Permissions that apply to this scope
-  restrictions Json  @default("{}") // Additional restrictions
-  
+  permissions  Json // Permissions that apply to this scope
+  restrictions Json @default("{}") // Additional restrictions
+
   // Time-based scoping
   startDate DateTime?
   endDate   DateTime?
-  timeZone  String?   // For geographic scoping
-  
+  timeZone  String? // For geographic scoping
+
   // Metadata
-  isActive  Boolean  @default(true)
-  priority  Int      @default(0) // For resolving conflicts
-  
+  isActive Boolean @default(true)
+  priority Int     @default(0) // For resolving conflicts
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  createdBy String   // User ID who created this scope
-  
+  createdBy String // User ID who created this scope
+
   role RbacRole @relation("RoleScopes", fields: [roleId], references: [id], onDelete: Cascade)
   org  Org      @relation("OrgRoleScopes", fields: [orgId], references: [id])
-  
+
   @@unique([roleId, scopeType, scopeKey])
   @@index([orgId, scopeType])
   @@index([isActive, startDate, endDate])
@@ -1702,39 +1755,39 @@ model RoleScope {
 
 /// RoleReview manages periodic role review workflows for compliance
 model RoleReview {
-  id           String   @id @default(cuid())
-  orgId        String
-  roleId       String?  // NULL for org-wide reviews
-  
+  id     String  @id @default(cuid())
+  orgId  String
+  roleId String? // NULL for org-wide reviews
+
   // Review details
-  reviewType   String   // "periodic", "access_change", "compliance", "incident"
-  status       String   @default("pending") // pending, in_progress, completed, overdue
-  
+  reviewType String // "periodic", "access_change", "compliance", "incident"
+  status     String @default("pending") // pending, in_progress, completed, overdue
+
   // Review configuration
   reviewFrequency String? // "monthly", "quarterly", "annually"
   nextReviewDate  DateTime?
   lastReviewDate  DateTime?
-  
+
   // Review participants
-  reviewerId   String   // Primary reviewer (User ID)
-  approvers    String[] @default([]) // Additional approvers
-  
+  reviewerId String // Primary reviewer (User ID)
+  approvers  String[] @default([]) // Additional approvers
+
   // Review findings
-  findings     Json     @default("{}") // Review findings and recommendations
-  actions      Json     @default("{}") // Actions taken
-  riskLevel    String   @default("low") // low, medium, high, critical
-  
+  findings  Json   @default("{}") // Review findings and recommendations
+  actions   Json   @default("{}") // Actions taken
+  riskLevel String @default("low") // low, medium, high, critical
+
   // Compliance tracking
   complianceFramework String[] @default([]) // SOC2, GDPR, HIPAA, etc.
-  exceptions   Json     @default("{}") // Documented exceptions
-  
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  completedAt  DateTime?
-  
+  exceptions          Json     @default("{}") // Documented exceptions
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  completedAt DateTime?
+
   org  Org       @relation("OrgRoleReviews", fields: [orgId], references: [id])
   role RbacRole? @relation("RoleReviews", fields: [roleId], references: [id])
-  
+
   @@index([orgId, status])
   @@index([nextReviewDate])
   @@index([reviewType, status])
@@ -1742,48 +1795,48 @@ model RoleReview {
 
 /// ProvisioningFlow manages automated user provisioning with SCIM/SSO integration
 model ProvisioningFlow {
-  id          String   @id @default(cuid())
+  id          String  @id @default(cuid())
   orgId       String
-  name        String   // e.g., "New Employee Onboarding", "Contractor Access"
+  name        String // e.g., "New Employee Onboarding", "Contractor Access"
   description String?
-  
+
   // Flow configuration
-  isActive    Boolean  @default(true)
-  trigger     String   // "scim_create", "sso_login", "manual", "api"
-  
+  isActive Boolean @default(true)
+  trigger  String // "scim_create", "sso_login", "manual", "api"
+
   // Role assignment rules
-  defaultRoles    String[] @default([]) // Default role IDs to assign
-  conditionalRoles Json    @default("{}") // Conditional role assignment rules
-  
+  defaultRoles     String[] @default([]) // Default role IDs to assign
+  conditionalRoles Json     @default("{}") // Conditional role assignment rules
+
   // Integration settings
-  scimMapping     Json    @default("{}") // SCIM attribute mapping
-  ssoGroupMapping Json    @default("{}") // SSO group to role mapping
-  
+  scimMapping     Json @default("{}") // SCIM attribute mapping
+  ssoGroupMapping Json @default("{}") // SSO group to role mapping
+
   // Workflow steps
-  steps           Json    @default("{}") // Provisioning workflow steps
-  approvalRequired Boolean @default(false)
-  approvers       String[] @default([])
-  
+  steps            Json     @default("{}") // Provisioning workflow steps
+  approvalRequired Boolean  @default(false)
+  approvers        String[] @default([])
+
   // Notification settings
-  notifyUsers     Boolean @default(true)
-  notifyManagers  Boolean @default(true)
-  emailTemplate   String?
-  
+  notifyUsers    Boolean @default(true)
+  notifyManagers Boolean @default(true)
+  emailTemplate  String?
+
   // Security settings
-  requireMFA      Boolean @default(false)
+  requireMFA      Boolean  @default(false)
   ipRestrictions  String[] @default([])
-  sessionDuration Int?    // Session duration in minutes
-  
+  sessionDuration Int? // Session duration in minutes
+
   // Usage tracking
-  usageCount      Int     @default(0)
-  successRate     Decimal @default(0) @db.Decimal(5, 2)
-  
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  createdBy       String   // User ID who created this flow
-  
+  usageCount  Int     @default(0)
+  successRate Decimal @default(0) @db.Decimal(5, 2)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String // User ID who created this flow
+
   org Org @relation("OrgProvisioningFlows", fields: [orgId], references: [id])
-  
+
   @@unique([orgId, name])
   @@index([orgId, isActive])
   @@index([trigger])
@@ -1791,54 +1844,54 @@ model ProvisioningFlow {
 
 /// TemporaryElevation provides just-in-time privilege elevation with auto-expiry and audit trails
 model TemporaryElevation {
-  id          String   @id @default(cuid())
+  id          String  @id @default(cuid())
   orgId       String
-  userId      String   // User requesting elevation
-  requestedBy String   // User ID who requested (could be self or manager)
-  approvedBy  String?  // User ID who approved the elevation
-  
+  userId      String // User requesting elevation
+  requestedBy String // User ID who requested (could be self or manager)
+  approvedBy  String? // User ID who approved the elevation
+
   // Elevation details
-  targetRole       String   // Role to temporarily elevate to
-  currentRole      String   // User's current role
-  reason           String   // Business justification for elevation
-  requestedDuration Int     // Requested duration in minutes
-  actualDuration   Int?     // Actual granted duration in minutes
-  
+  targetRole        String // Role to temporarily elevate to
+  currentRole       String // User's current role
+  reason            String // Business justification for elevation
+  requestedDuration Int // Requested duration in minutes
+  actualDuration    Int? // Actual granted duration in minutes
+
   // Status and lifecycle
-  status          ElevationStatus @default(PENDING)
-  requestedAt     DateTime       @default(now())
-  approvedAt      DateTime?      // When elevation was approved
-  activatedAt     DateTime?      // When elevation became active
-  expiresAt       DateTime?      // When elevation expires
-  terminatedAt    DateTime?      // If manually terminated early
-  
+  status       ElevationStatus @default(PENDING)
+  requestedAt  DateTime        @default(now())
+  approvedAt   DateTime? // When elevation was approved
+  activatedAt  DateTime? // When elevation became active
+  expiresAt    DateTime? // When elevation expires
+  terminatedAt DateTime? // If manually terminated early
+
   // Security and audit
   approvalRequired Boolean @default(true)
-  autoApproved    Boolean @default(false)
-  emergencyAccess Boolean @default(false) // Emergency bypass flag
-  ipAddress       String? // IP where request originated
-  userAgent       String? // Browser/client info
-  
+  autoApproved     Boolean @default(false)
+  emergencyAccess  Boolean @default(false) // Emergency bypass flag
+  ipAddress        String? // IP where request originated
+  userAgent        String? // Browser/client info
+
   // Permissions snapshot
-  grantedPermissions Json @default("{}") // Permissions granted during elevation
+  grantedPermissions  Json @default("{}") // Permissions granted during elevation
   previousPermissions Json @default("{}") // User's permissions before elevation
-  
+
   // Monitoring and alerts
-  usageTracked    Boolean @default(true)
-  alertsSent      String[] @default([]) // Alert types sent
-  reviewRequired  Boolean @default(false) // Post-elevation review needed
-  
+  usageTracked   Boolean  @default(true)
+  alertsSent     String[] @default([]) // Alert types sent
+  reviewRequired Boolean  @default(false) // Post-elevation review needed
+
   // Termination details
   terminationReason String? // Why elevation was terminated
-  terminatedBy     String? // Who terminated the elevation
-  
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  
+  terminatedBy      String? // Who terminated the elevation
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
   org  Org  @relation("OrgTemporaryElevations", fields: [orgId], references: [id])
   user User @relation("UserTemporaryElevations", fields: [userId], references: [id])
-  
+
   @@index([orgId, userId])
   @@index([status])
   @@index([expiresAt])
@@ -1847,13 +1900,13 @@ model TemporaryElevation {
 
 /// ElevationStatus tracks the lifecycle of temporary privilege elevation requests
 enum ElevationStatus {
-  PENDING     // Awaiting approval
-  APPROVED    // Approved but not yet active
-  ACTIVE      // Currently elevated
-  EXPIRED     // Elevation period ended
-  TERMINATED  // Manually terminated before expiry
-  REJECTED    // Request was denied
-  CANCELLED   // Cancelled by requester
+  PENDING // Awaiting approval
+  APPROVED // Approved but not yet active
+  ACTIVE // Currently elevated
+  EXPIRED // Elevation period ended
+  TERMINATED // Manually terminated before expiry
+  REJECTED // Request was denied
+  CANCELLED // Cancelled by requester
 }
 
 /// ProviderConfig holds provider-level secrets and configuration separate from any organization.
@@ -1905,119 +1958,119 @@ enum PricingModel {
 /// LeadStatus defines the possible states of a lead in the CRM pipeline.
 /// Tracks the complete journey from initial contact to final outcome.
 enum LeadStatus {
-  NEW                 // Initial lead, no contact made
-  CONTACTED          // Initial contact made (call, email, etc.)
-  QUALIFIED          // Lead shows interest and has budget/authority/need/timeline
-  MEETING_SCHEDULED  // Meeting or call scheduled
-  PROPOSAL_SENT      // Proposal or quote sent to prospect
-  NEGOTIATION        // In negotiations, discussing terms
-  WON                // Lead converted to customer (billable)
-  CONVERTED          // Legacy status - equivalent to WON (backward compatibility)
-  LOST               // Lead didn't convert, deal closed unsuccessfully
-  NURTURING          // Lead not ready now but staying in touch for future
-  FOLLOW_UP          // Requires follow-up action
-  ON_HOLD            // Lead temporarily paused
-  UNRESPONSIVE       // Lead not responding to communications
+  NEW // Initial lead, no contact made
+  CONTACTED // Initial contact made (call, email, etc.)
+  QUALIFIED // Lead shows interest and has budget/authority/need/timeline
+  MEETING_SCHEDULED // Meeting or call scheduled
+  PROPOSAL_SENT // Proposal or quote sent to prospect
+  NEGOTIATION // In negotiations, discussing terms
+  WON // Lead converted to customer (billable)
+  CONVERTED // Legacy status - equivalent to WON (backward compatibility)
+  LOST // Lead didn't convert, deal closed unsuccessfully
+  NURTURING // Lead not ready now but staying in touch for future
+  FOLLOW_UP // Requires follow-up action
+  ON_HOLD // Lead temporarily paused
+  UNRESPONSIVE // Lead not responding to communications
 }
 
 /// ActivityType defines the different types of interactions and communications
 /// that can be logged for lead management and CRM tracking.
 enum ActivityType {
-  CALL_OUTBOUND      // Outbound phone call
-  CALL_INBOUND       // Inbound phone call received  
-  EMAIL_SENT         // Email sent to lead
-  EMAIL_RECEIVED     // Email received from lead
-  MEETING_SCHEDULED  // Meeting or appointment scheduled
-  MEETING_COMPLETED  // Meeting or appointment completed
-  PROPOSAL_SENT      // Proposal or quote sent
-  CONTRACT_SENT      // Contract sent for signature
-  FOLLOW_UP          // General follow-up activity
-  NOTE               // Internal note or comment
-  TASK_CREATED       // Task created for lead
-  TASK_COMPLETED     // Task completed for lead
-  STATUS_CHANGED     // Lead status changed
-  DOCUMENT_SHARED    // Document or file shared
-  PAYMENT_RECEIVED   // Payment received from customer
+  CALL_OUTBOUND // Outbound phone call
+  CALL_INBOUND // Inbound phone call received  
+  EMAIL_SENT // Email sent to lead
+  EMAIL_RECEIVED // Email received from lead
+  MEETING_SCHEDULED // Meeting or appointment scheduled
+  MEETING_COMPLETED // Meeting or appointment completed
+  PROPOSAL_SENT // Proposal or quote sent
+  CONTRACT_SENT // Contract sent for signature
+  FOLLOW_UP // General follow-up activity
+  NOTE // Internal note or comment
+  TASK_CREATED // Task created for lead
+  TASK_COMPLETED // Task completed for lead
+  STATUS_CHANGED // Lead status changed
+  DOCUMENT_SHARED // Document or file shared
+  PAYMENT_RECEIVED // Payment received from customer
 }
 
 /// LeadActivity tracks all interactions, communications, and events
 /// related to a specific lead for complete CRM functionality.
 model LeadActivity {
-  id          String       @id @default(cuid())
-  leadId      String
-  orgId       String
-  userId      String       // User who performed the activity
-  
+  id     String @id @default(cuid())
+  leadId String
+  orgId  String
+  userId String // User who performed the activity
+
   type        ActivityType
-  title       String       // Brief title/summary of activity
-  description String?      // Detailed description or notes
-  
+  title       String // Brief title/summary of activity
+  description String? // Detailed description or notes
+
   // Scheduling fields for meetings and calls
-  scheduledAt DateTime?    // When the activity is scheduled
-  completedAt DateTime?    // When the activity was completed
-  
+  scheduledAt DateTime? // When the activity is scheduled
+  completedAt DateTime? // When the activity was completed
+
   // Contact information for calls/emails
-  contactMethod String?    // Phone, email, in-person, etc.
-  duration      Int?       // Duration in minutes for calls/meetings
-  
+  contactMethod String? // Phone, email, in-person, etc.
+  duration      Int? // Duration in minutes for calls/meetings
+
   // File attachments and links
-  attachments   Json?      // Array of file references or URLs
-  
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  
+  attachments Json? // Array of file references or URLs
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
-  lead        Lead         @relation("LeadActivities", fields: [orgId, leadId], references: [orgId, id], onDelete: Cascade)
-  org         Org          @relation("OrgLeadActivities", fields: [orgId], references: [id])
-  user        User         @relation("UserLeadActivities", fields: [orgId, userId], references: [orgId, id])
-  
-  @@index([leadId, createdAt])        // Lead timeline queries
-  @@index([orgId, type])              // Activity type filtering 
-  @@index([userId, createdAt])        // User activity history
-  
+  lead Lead @relation("LeadActivities", fields: [orgId, leadId], references: [orgId, id], onDelete: Cascade)
+  org  Org  @relation("OrgLeadActivities", fields: [orgId], references: [id])
+  user User @relation("UserLeadActivities", fields: [orgId, userId], references: [orgId, id])
+
   // === 🚀 ENTERPRISE ADVANCED INDEXING for CRM Performance ===
   // TODO: Add composite indexes for complex CRM queries:
   // @@index([leadId, type, createdAt])              // Lead activity timeline with type filtering
   // @@index([orgId, type, completedAt])             // Completed activities by type (productivity metrics)
   // @@index([userId, type, scheduledAt])            // User task scheduling and calendar integration
   // @@index([orgId, createdAt, duration])           // Activity duration analysis for time tracking
-  
+
   // PARTIAL INDEXES for high-performance CRM queries:
   // TODO: Implement with raw SQL:
   // CREATE INDEX CONCURRENTLY idx_activities_calls ON "LeadActivity" ("orgId", "leadId", "createdAt") WHERE "type" IN ('CALL_OUTBOUND', 'CALL_INBOUND');
   // CREATE INDEX CONCURRENTLY idx_activities_meetings ON "LeadActivity" ("orgId", "scheduledAt") WHERE "type" IN ('MEETING_SCHEDULED', 'MEETING_COMPLETED');
+
+  @@index([leadId, createdAt]) // Lead timeline queries
+  @@index([orgId, type]) // Activity type filtering 
+  @@index([userId, createdAt]) // User activity history
 }
 
 /// LeadTask manages scheduled tasks, reminders, and follow-ups
 /// for lead management and CRM workflow automation.
 model LeadTask {
-  id          String       @id @default(cuid())
-  leadId      String
-  orgId       String
-  assignedTo  String       // User assigned to complete the task
-  createdBy   String       // User who created the task
-  
-  title       String       // Task title
-  description String?      // Task description or notes
+  id         String @id @default(cuid())
+  leadId     String
+  orgId      String
+  assignedTo String // User assigned to complete the task
+  createdBy  String // User who created the task
+
+  title       String // Task title
+  description String? // Task description or notes
   priority    TaskPriority @default(MEDIUM)
   status      TaskStatus   @default(PENDING)
-  
+
   // Scheduling
-  dueDate     DateTime?    // When task is due
-  completedAt DateTime?    // When task was completed
-  
+  dueDate     DateTime? // When task is due
+  completedAt DateTime? // When task was completed
+
   // Reminders
-  reminderAt  DateTime?    // When to send reminder
-  
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  
+  reminderAt DateTime? // When to send reminder
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
-  lead        Lead         @relation("LeadTasks", fields: [orgId, leadId], references: [orgId, id], onDelete: Cascade)
-  org         Org          @relation("OrgLeadTasks", fields: [orgId], references: [id])
-  assignee    User         @relation("AssignedLeadTasks", fields: [orgId, assignedTo], references: [orgId, id])
-  creator     User         @relation("CreatedLeadTasks", fields: [orgId, createdBy], references: [orgId, id])
-  
+  lead     Lead @relation("LeadTasks", fields: [orgId, leadId], references: [orgId, id], onDelete: Cascade)
+  org      Org  @relation("OrgLeadTasks", fields: [orgId], references: [id])
+  assignee User @relation("AssignedLeadTasks", fields: [orgId, assignedTo], references: [orgId, id])
+  creator  User @relation("CreatedLeadTasks", fields: [orgId, createdBy], references: [orgId, id])
+
   @@index([leadId, status])
   @@index([assignedTo, dueDate])
   @@index([orgId, status])
@@ -2033,39 +2086,36 @@ enum TaskPriority {
 
 /// TaskStatus tracks the completion state of lead tasks
 enum TaskStatus {
-  PENDING     // Task not yet started
+  PENDING // Task not yet started
   IN_PROGRESS // Task currently being worked on
-  COMPLETED   // Task finished successfully
-  CANCELLED   // Task cancelled or no longer needed
-  OVERDUE     // Task past due date
+  COMPLETED // Task finished successfully
+  CANCELLED // Task cancelled or no longer needed
+  OVERDUE // Task past due date
 }
 
 // AI Plan Tiers for Monetization - CLIENT SUBSCRIPTION TIERS
 enum AiPlan {
-  BASE    // MVP: Free lead generation, $100/conversion only
-  PRO     // $97/month: Advanced AI, unlimited leads, priority support  
-  ELITE   // $297/month: Market intelligence, priority RFPs, dedicated support
+  BASE // MVP: Free lead generation, $100/conversion only
+  PRO // $97/month: Advanced AI, unlimited leads, priority support  
+  ELITE // $297/month: Market intelligence, priority RFPs, dedicated support
 }
 
 // Individual AI API call tracking for cost monitoring and analytics
 model AiUsageEvent {
   id          String   @id @default(cuid())
   orgId       String
-  userId      String?  // Optional user who triggered the call
-  feature     String   // 'lead_analysis', 'rfp_strategy', 'pricing', 'response_gen'
-  model       String   // 'gpt-4o-mini', etc
-  tokensIn    Int      // Input tokens consumed
-  tokensOut   Int      // Output tokens generated
-  costUsd     Decimal  @db.Decimal(8, 6)  // Actual cost in USD (precise to $0.000001)
-  creditsUsed Int      // Credits deducted from user's balance
-  requestId   String?  // For request correlation and debugging
+  userId      String? // Optional user who triggered the call
+  feature     String // 'lead_analysis', 'rfp_strategy', 'pricing', 'response_gen'
+  model       String // 'gpt-4o-mini', etc
+  tokensIn    Int // Input tokens consumed
+  tokensOut   Int // Output tokens generated
+  costUsd     Decimal  @db.Decimal(8, 6) // Actual cost in USD (precise to $0.000001)
+  creditsUsed Int // Credits deducted from user's balance
+  requestId   String? // For request correlation and debugging
   createdAt   DateTime @default(now())
 
   org Org @relation("OrgAiUsageEvents", fields: [orgId], references: [id])
 
-  @@index([orgId, createdAt])         // Time-based usage queries
-  @@index([orgId, feature])           // Feature usage analysis
-  
   // === 🚀 ENTERPRISE AI COST OPTIMIZATION INDEXING ===
   // Critical for AI usage monitoring and cost control at scale
   // TODO: Add advanced indexes for AI cost analytics:
@@ -2073,21 +2123,24 @@ model AiUsageEvent {
   // @@index([orgId, model, createdAt])             // Model usage analysis
   // @@index([orgId, costUsd, createdAt])           // Cost trend analysis
   // @@index([userId, feature, createdAt])          // Per-user AI usage tracking
-  
+
   // PARTIAL INDEXES for high-cost event monitoring:
   // TODO: Implement with raw SQL:
   // CREATE INDEX CONCURRENTLY idx_ai_high_cost ON "AiUsageEvent" ("orgId", "createdAt", "costUsd") WHERE "costUsd" > 1.00;
   // CREATE INDEX CONCURRENTLY idx_ai_high_token ON "AiUsageEvent" ("orgId", "feature", "tokensIn") WHERE "tokensIn" > 10000;
+
+  @@index([orgId, createdAt]) // Time-based usage queries
+  @@index([orgId, feature]) // Feature usage analysis
 }
 
 // Monthly AI usage rollups for dashboard and billing
 model AiMonthlySummary {
-  id          String   @id @default(cuid()) 
+  id          String   @id @default(cuid())
   orgId       String
-  monthKey    String   // Format: "2025-01" for January 2025
+  monthKey    String // Format: "2025-01" for January 2025
   tokensIn    Int      @default(0)
   tokensOut   Int      @default(0)
-  costUsd     Decimal  @db.Decimal(8, 2)  @default(0)
+  costUsd     Decimal  @default(0) @db.Decimal(8, 2)
   creditsUsed Int      @default(0)
   callCount   Int      @default(0)
   createdAt   DateTime @default(now())
@@ -2103,76 +2156,76 @@ model AiMonthlySummary {
 
 /// EmployeeProfile extends User model with employee-specific data and ADP integration
 model EmployeeProfile {
-  id          String   @id @default(cuid())
-  orgId       String
-  userId      String   @unique // One-to-one with User
-  
+  id     String @id @default(cuid())
+  orgId  String
+  userId String @unique // One-to-one with User
+
   // ADP Integration
-  adpWorkerId String?  // ADP employee ID for payroll integration
-  managerId   String?  // Reports to (User.id)
-  
+  adpWorkerId String? // ADP employee ID for payroll integration
+  managerId   String? // Reports to (User.id)
+
   // Mobile & Field Settings
-  mobilePrefs Json     @default("{}")  // Mobile app preferences
-  
+  mobilePrefs Json @default("{}") // Mobile app preferences
+
   // Contact & Emergency Info
   emergencyContact Json? // Emergency contact information
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
-  org         Org           @relation("OrgEmployeeProfiles", fields: [orgId], references: [id])
-  user        User          @relation("UserEmployeeProfile", fields: [orgId, userId], references: [orgId, id])
-  timesheets  TimesheetEntry[] @relation("EmployeeTimesheets")
-  jobAssignments JobAssignment[] @relation("EmployeeAssignments")
-  issueReports IssueReport[] @relation("EmployeeIssueReports")
+  org                 Org                  @relation("OrgEmployeeProfiles", fields: [orgId], references: [id])
+  user                User                 @relation("UserEmployeeProfile", fields: [orgId, userId], references: [orgId, id])
+  timesheets          TimesheetEntry[]     @relation("EmployeeTimesheets")
+  jobAssignments      JobAssignment[]      @relation("EmployeeAssignments")
+  issueReports        IssueReport[]        @relation("EmployeeIssueReports")
   trainingCompletions TrainingCompletion[] @relation("EmployeeTrainingCompletions")
-  
-  @@unique([orgId, id])  // Multi-tenant isolation
-  @@unique([orgId, userId])  // One-to-one relation constraint
+
+  @@unique([orgId, id]) // Multi-tenant isolation
+  @@unique([orgId, userId]) // One-to-one relation constraint
   @@index([orgId, adpWorkerId])
   @@index([userId])
 }
 
 /// WorkOrder represents enhanced work orders and customer projects (extended Job functionality)
 model WorkOrder {
-  id          String   @id @default(cuid())
-  orgId       String
-  customerId  String?
-  
+  id         String  @id @default(cuid())
+  orgId      String
+  customerId String?
+
   // Work Order Details
   title       String
   description String?
-  status      JobStatus @default(SCHEDULED)
+  status      JobStatus   @default(SCHEDULED)
   priority    JobPriority @default(MEDIUM)
-  
+
   // Scheduling
   scheduledStartAt DateTime?
   scheduledEndAt   DateTime?
   actualStartAt    DateTime?
   actualEndAt      DateTime?
-  
+
   // Location & Site Info
-  jobSiteId   String?
-  
+  jobSiteId String?
+
   // Financial
   estimatedValue Decimal? @db.Decimal(12, 2)
   actualCost     Decimal? @db.Decimal(12, 2)
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
-  org           Org             @relation("OrgWorkOrders", fields: [orgId], references: [id])
-  customer      Customer?       @relation("CustomerWorkOrders", fields: [orgId, customerId], references: [orgId, id])
-  jobSite       JobSite?        @relation("JobSiteWorkOrders", fields: [orgId, jobSiteId], references: [orgId, id])
-  assignments   JobAssignment[] @relation("WorkOrderAssignments")
-  checklists    JobChecklistItem[] @relation("WorkOrderChecklists")
-  timesheets    TimesheetEntry[] @relation("WorkOrderTimesheets")
-  issueReports  IssueReport[]   @relation("WorkOrderIssueReports")
-  mediaAssets   MediaAsset[]    @relation("WorkOrderMedia")
-  
-  @@unique([orgId, id])  // Multi-tenant isolation
+  org          Org                @relation("OrgWorkOrders", fields: [orgId], references: [id])
+  customer     Customer?          @relation("CustomerWorkOrders", fields: [orgId, customerId], references: [orgId, id])
+  jobSite      JobSite?           @relation("JobSiteWorkOrders", fields: [orgId, jobSiteId], references: [orgId, id])
+  assignments  JobAssignment[]    @relation("WorkOrderAssignments")
+  checklists   JobChecklistItem[] @relation("WorkOrderChecklists")
+  timesheets   TimesheetEntry[]   @relation("WorkOrderTimesheets")
+  issueReports IssueReport[]      @relation("WorkOrderIssueReports")
+  mediaAssets  MediaAsset[]       @relation("WorkOrderMedia")
+
+  @@unique([orgId, id]) // Multi-tenant isolation
   @@index([orgId, status])
   @@index([customerId])
   @@index([scheduledStartAt])
@@ -2180,54 +2233,54 @@ model WorkOrder {
 
 /// JobSite defines geographic locations for geofenced time tracking
 model JobSite {
-  id          String   @id @default(cuid())
-  orgId       String
-  
+  id    String @id @default(cuid())
+  orgId String
+
   // Location Info
-  name        String
-  address     String
-  city        String?
-  state       String?
-  zipCode     String?
-  
+  name    String
+  address String
+  city    String?
+  state   String?
+  zipCode String?
+
   // Geofencing for time tracking
-  latitude    Decimal? @db.Decimal(10, 8)  // GPS coordinates
-  longitude   Decimal? @db.Decimal(11, 8)
-  radiusMeters Int     @default(100)       // Geofence radius
-  
+  latitude     Decimal? @db.Decimal(10, 8) // GPS coordinates
+  longitude    Decimal? @db.Decimal(11, 8)
+  radiusMeters Int      @default(100) // Geofence radius
+
   // Site Details
   accessInstructions String?
-  emergencyContacts  Json?    @default("[]")
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+  emergencyContacts  Json?   @default("[]")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
-  org         Org      @relation("OrgJobSites", fields: [orgId], references: [id])
-  workOrders  WorkOrder[] @relation("JobSiteWorkOrders")
-  timesheets  TimesheetEntry[] @relation("JobSiteTimesheets")
-  
-  @@unique([orgId, id])  // Multi-tenant isolation
+  org        Org              @relation("OrgJobSites", fields: [orgId], references: [id])
+  workOrders WorkOrder[]      @relation("JobSiteWorkOrders")
+  timesheets TimesheetEntry[] @relation("JobSiteTimesheets")
+
+  @@unique([orgId, id]) // Multi-tenant isolation
   @@index([orgId])
   @@index([latitude, longitude])
 }
 
 /// JobAssignment links employees to specific jobs with roles
 model JobAssignment {
-  id          String   @id @default(cuid())
-  orgId       String
-  jobId       String
-  employeeId  String   // EmployeeProfile.id
-  
-  role        String   @default("worker")  // "lead", "worker", "supervisor"
-  assignedAt  DateTime @default(now())
+  id         String @id @default(cuid())
+  orgId      String
+  jobId      String
+  employeeId String // EmployeeProfile.id
+
+  role         String    @default("worker") // "lead", "worker", "supervisor"
+  assignedAt   DateTime  @default(now())
   unassignedAt DateTime?
-  
+
   // Relations
-  org         Org             @relation("OrgJobAssignments", fields: [orgId], references: [id])
-  workOrder   WorkOrder       @relation("WorkOrderAssignments", fields: [orgId, jobId], references: [orgId, id])
-  employee    EmployeeProfile @relation("EmployeeAssignments", fields: [orgId, employeeId], references: [orgId, id])
-  
+  org       Org             @relation("OrgJobAssignments", fields: [orgId], references: [id])
+  workOrder WorkOrder       @relation("WorkOrderAssignments", fields: [orgId, jobId], references: [orgId, id])
+  employee  EmployeeProfile @relation("EmployeeAssignments", fields: [orgId, employeeId], references: [orgId, id])
+
   @@unique([jobId, employeeId])
   @@index([orgId, employeeId])
   @@index([jobId])
@@ -2235,41 +2288,41 @@ model JobAssignment {
 
 /// TimesheetEntry tracks employee time with geolocation for job costing
 model TimesheetEntry {
-  id          String   @id @default(cuid())
-  orgId       String
-  employeeId  String   // EmployeeProfile.id
-  jobId       String?  // Optional job association
-  jobSiteId   String?  // Optional site association
-  
+  id         String  @id @default(cuid())
+  orgId      String
+  employeeId String // EmployeeProfile.id
+  jobId      String? // Optional job association
+  jobSiteId  String? // Optional site association
+
   // Time Tracking
-  clockInAt   DateTime
-  clockOutAt  DateTime?
-  breakMinutes Int     @default(0)
-  
+  clockInAt    DateTime
+  clockOutAt   DateTime?
+  breakMinutes Int       @default(0)
+
   // Geolocation Data
   clockInLat  Decimal? @db.Decimal(10, 8)
   clockInLng  Decimal? @db.Decimal(11, 8)
   clockOutLat Decimal? @db.Decimal(10, 8)
   clockOutLng Decimal? @db.Decimal(11, 8)
-  
+
   // Device & Verification
-  deviceInfo  Json?    // Device fingerprint for fraud prevention
-  notes       String?
-  status      TimesheetStatus @default(ACTIVE)
-  
+  deviceInfo Json? // Device fingerprint for fraud prevention
+  notes      String?
+  status     TimesheetStatus @default(ACTIVE)
+
   // Approval Workflow
-  approvedBy  String?  // User.id who approved
-  approvedAt  DateTime?
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+  approvedBy String? // User.id who approved
+  approvedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
-  org         Org             @relation("OrgTimesheets", fields: [orgId], references: [id])
-  employee    EmployeeProfile @relation("EmployeeTimesheets", fields: [orgId, employeeId], references: [orgId, id])
-  workOrder   WorkOrder?      @relation("WorkOrderTimesheets", fields: [orgId, jobId], references: [orgId, id])
-  jobSite     JobSite?        @relation("JobSiteTimesheets", fields: [orgId, jobSiteId], references: [orgId, id])
-  
+  org       Org             @relation("OrgTimesheets", fields: [orgId], references: [id])
+  employee  EmployeeProfile @relation("EmployeeTimesheets", fields: [orgId, employeeId], references: [orgId, id])
+  workOrder WorkOrder?      @relation("WorkOrderTimesheets", fields: [orgId, jobId], references: [orgId, id])
+  jobSite   JobSite?        @relation("JobSiteTimesheets", fields: [orgId, jobSiteId], references: [orgId, id])
+
   @@index([orgId, employeeId, clockInAt])
   @@index([jobId])
   @@index([clockInAt])
@@ -2277,69 +2330,69 @@ model TimesheetEntry {
 
 /// JobChecklistItem tracks completion of job tasks with photo documentation
 model JobChecklistItem {
-  id          String   @id @default(cuid())
-  orgId       String
-  jobId       String
-  
+  id    String @id @default(cuid())
+  orgId String
+  jobId String
+
   // Checklist Item
   title       String
   description String?
-  required    Boolean  @default(false)
-  sortOrder   Int      @default(0)
-  
+  required    Boolean @default(false)
+  sortOrder   Int     @default(0)
+
   // Completion Tracking
   status      ChecklistStatus @default(PENDING)
-  completedBy String?  // EmployeeProfile.id
+  completedBy String? // EmployeeProfile.id
   completedAt DateTime?
   notes       String?
-  photosCount Int      @default(0)  // Number of associated photos
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+  photosCount Int             @default(0) // Number of associated photos
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
   org         Org          @relation("OrgJobChecklists", fields: [orgId], references: [id])
   workOrder   WorkOrder    @relation("WorkOrderChecklists", fields: [orgId, jobId], references: [orgId, id])
   mediaAssets MediaAsset[] @relation("ChecklistMedia")
-  
-  @@unique([orgId, id])  // Multi-tenant isolation
+
+  @@unique([orgId, id]) // Multi-tenant isolation
   @@index([orgId, jobId])
   @@index([status])
 }
 
 /// IssueReport tracks field problems and obstacles with photo documentation
 model IssueReport {
-  id          String      @id @default(cuid())
-  orgId       String
-  jobId       String?     // Optional job association
-  reportedBy  String      // EmployeeProfile.id
-  
+  id         String  @id @default(cuid())
+  orgId      String
+  jobId      String? // Optional job association
+  reportedBy String // EmployeeProfile.id
+
   // Issue Details
   title       String
   description String
   severity    IssueSeverity @default(MEDIUM)
-  category    String?     // "equipment", "site_access", "weather", etc.
-  
+  category    String? // "equipment", "site_access", "weather", etc.
+
   // Resolution Tracking
-  status      IssueStatus @default(OPEN)
-  resolvedBy  String?     // User.id who resolved
-  resolvedAt  DateTime?
-  resolution  String?
-  
+  status     IssueStatus @default(OPEN)
+  resolvedBy String? // User.id who resolved
+  resolvedAt DateTime?
+  resolution String?
+
   // Location Context
-  latitude    Decimal?    @db.Decimal(10, 8)
-  longitude   Decimal?    @db.Decimal(11, 8)
-  
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  
+  latitude  Decimal? @db.Decimal(10, 8)
+  longitude Decimal? @db.Decimal(11, 8)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
   org         Org             @relation("OrgIssueReports", fields: [orgId], references: [id])
   workOrder   WorkOrder?      @relation("WorkOrderIssueReports", fields: [orgId, jobId], references: [orgId, id])
   reporter    EmployeeProfile @relation("EmployeeIssueReports", fields: [orgId, reportedBy], references: [orgId, id])
   mediaAssets MediaAsset[]    @relation("IssueMedia")
-  
-  @@unique([orgId, id])  // Multi-tenant isolation
+
+  @@unique([orgId, id]) // Multi-tenant isolation
   @@index([orgId, status])
   @@index([jobId])
   @@index([reportedBy])
@@ -2347,44 +2400,44 @@ model IssueReport {
 
 /// MediaAsset stores photos, videos, and documents with metadata
 model MediaAsset {
-  id          String    @id @default(cuid())
-  orgId       String
-  uploadedBy  String    // User.id
-  
+  id         String @id @default(cuid())
+  orgId      String
+  uploadedBy String // User.id
+
   // File Information
-  filename    String
+  filename     String
   originalName String
-  contentType String
-  fileSize    Int       // Bytes
-  url         String    // S3/R2 URL
-  thumbnailUrl String?  // Thumbnail URL for images
-  
+  contentType  String
+  fileSize     Int // Bytes
+  url          String // S3/R2 URL
+  thumbnailUrl String? // Thumbnail URL for images
+
   // Asset Context (explicit foreign keys instead of polymorphic)
-  assetType   MediaType
-  workOrderId String?   // Optional WorkOrder reference
-  issueReportId String? // Optional IssueReport reference
-  checklistItemId String? // Optional JobChecklistItem reference
+  assetType        MediaType
+  workOrderId      String? // Optional WorkOrder reference
+  issueReportId    String? // Optional IssueReport reference
+  checklistItemId  String? // Optional JobChecklistItem reference
   trainingModuleId String? // Optional TrainingModule reference
-  
+
   // Metadata
-  exifJson    Json?     @default("{}")  // EXIF data for photos
+  exifJson    Json?    @default("{}") // EXIF data for photos
   description String?
-  tags        String[]  @default([])
-  
+  tags        String[] @default([])
+
   // Geolocation (if available)
-  latitude    Decimal?  @db.Decimal(10, 8)
-  longitude   Decimal?  @db.Decimal(11, 8)
-  
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  
+  latitude  Decimal? @db.Decimal(10, 8)
+  longitude Decimal? @db.Decimal(11, 8)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations (explicit FKs instead of polymorphic)
-  org         Org                @relation("OrgMediaAssets", fields: [orgId], references: [id])
-  workOrder   WorkOrder?         @relation("WorkOrderMedia", fields: [orgId, workOrderId], references: [orgId, id])
-  issueReport IssueReport?       @relation("IssueMedia", fields: [orgId, issueReportId], references: [orgId, id])
-  checklistItem JobChecklistItem? @relation("ChecklistMedia", fields: [orgId, checklistItemId], references: [orgId, id])
-  trainingModule TrainingModule?  @relation("TrainingMedia", fields: [orgId, trainingModuleId], references: [orgId, id])
-  
+  org            Org               @relation("OrgMediaAssets", fields: [orgId], references: [id])
+  workOrder      WorkOrder?        @relation("WorkOrderMedia", fields: [orgId, workOrderId], references: [orgId, id])
+  issueReport    IssueReport?      @relation("IssueMedia", fields: [orgId, issueReportId], references: [orgId, id])
+  checklistItem  JobChecklistItem? @relation("ChecklistMedia", fields: [orgId, checklistItemId], references: [orgId, id])
+  trainingModule TrainingModule?   @relation("TrainingMedia", fields: [orgId, trainingModuleId], references: [orgId, id])
+
   @@index([orgId, workOrderId])
   @@index([orgId, issueReportId])
   @@index([orgId, checklistItemId])
@@ -2395,65 +2448,65 @@ model MediaAsset {
 
 /// TrainingModule defines HR training requirements and content
 model TrainingModule {
-  id            String   @id @default(cuid())
-  orgId         String
-  
+  id    String @id @default(cuid())
+  orgId String
+
   // Module Information
-  title         String
-  description   String?
-  content       String?  // Training content/instructions
-  
+  title       String
+  description String?
+  content     String? // Training content/instructions
+
   // Requirements
-  requiredForRoles String[] @default([])  // Array of Role enum values
-  isActive      Boolean  @default(true)
-  version       String   @default("1.0")
-  
+  requiredForRoles String[] @default([]) // Array of Role enum values
+  isActive         Boolean  @default(true)
+  version          String   @default("1.0")
+
   // Completion Settings
-  requiresQuiz  Boolean  @default(false)
-  passingScore  Int?     // Minimum score to pass (if quiz required)
-  validityDays  Int?     // Days before retraining required
-  
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  
+  requiresQuiz Boolean @default(false)
+  passingScore Int? // Minimum score to pass (if quiz required)
+  validityDays Int? // Days before retraining required
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
-  org           Org                @relation("OrgTrainingModules", fields: [orgId], references: [id])
-  completions   TrainingCompletion[] @relation("ModuleCompletions")
-  mediaAssets   MediaAsset[]       @relation("TrainingMedia")
-  
-  @@unique([orgId, id])  // Multi-tenant isolation
+  org         Org                  @relation("OrgTrainingModules", fields: [orgId], references: [id])
+  completions TrainingCompletion[] @relation("ModuleCompletions")
+  mediaAssets MediaAsset[]         @relation("TrainingMedia")
+
+  @@unique([orgId, id]) // Multi-tenant isolation
   @@index([orgId, isActive])
   @@index([requiredForRoles])
 }
 
 /// TrainingCompletion tracks employee training completion and compliance
 model TrainingCompletion {
-  id          String   @id @default(cuid())
-  orgId       String
-  employeeId  String   // EmployeeProfile.id
-  moduleId    String
-  
+  id         String @id @default(cuid())
+  orgId      String
+  employeeId String // EmployeeProfile.id
+  moduleId   String
+
   // Completion Data
   completedAt DateTime @default(now())
-  score       Int?     // Quiz score (if applicable)
+  score       Int? // Quiz score (if applicable)
   passed      Boolean  @default(true)
-  
+
   // Validity
-  expiresAt   DateTime? // When retraining is required
-  isValid     Boolean  @default(true)
-  
+  expiresAt DateTime? // When retraining is required
+  isValid   Boolean   @default(true)
+
   // Metadata
   timeSpentMinutes Int? // Time spent on training
-  notes       String?
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+  notes            String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
-  org         Org             @relation("OrgTrainingCompletions", fields: [orgId], references: [id])
-  employee    EmployeeProfile @relation("EmployeeTrainingCompletions", fields: [orgId, employeeId], references: [orgId, id])
-  module      TrainingModule  @relation("ModuleCompletions", fields: [orgId, moduleId], references: [orgId, id])
-  
+  org      Org             @relation("OrgTrainingCompletions", fields: [orgId], references: [id])
+  employee EmployeeProfile @relation("EmployeeTrainingCompletions", fields: [orgId, employeeId], references: [orgId, id])
+  module   TrainingModule  @relation("ModuleCompletions", fields: [orgId, moduleId], references: [orgId, id])
+
   @@unique([employeeId, moduleId]) // One completion per employee per module
   @@index([orgId, isValid])
   @@index([expiresAt])
@@ -2463,32 +2516,32 @@ model TrainingCompletion {
 
 /// ApprovalRequest manages workflow approval for sensitive actions
 model ApprovalRequest {
-  id              String   @id @default(cuid())
-  orgId           String   // Organization context
+  id    String @id @default(cuid())
+  orgId String // Organization context
 
   // Request Details
-  requestedBy     String   // User ID who requested approval
-  action          String   // Action requiring approval
-  entityType      String   // Type of entity being acted upon
-  entityId        String   // ID of entity being acted upon
-  reason          String?  // Optional reason for the request
+  requestedBy String // User ID who requested approval
+  action      String // Action requiring approval
+  entityType  String // Type of entity being acted upon
+  entityId    String // ID of entity being acted upon
+  reason      String? // Optional reason for the request
 
   // Approval Workflow
-  status          ApprovalStatus @default(PENDING)
-  approverRoles   String[] // Roles that can approve this request
-  approvedBy      String?  // User ID who approved/rejected
-  approvedAt      DateTime?
-  rejectedReason  String?  // Reason for rejection
+  status         ApprovalStatus @default(PENDING)
+  approverRoles  String[] // Roles that can approve this request
+  approvedBy     String? // User ID who approved/rejected
+  approvedAt     DateTime?
+  rejectedReason String? // Reason for rejection
 
   // Timing and Escalation
   requestedAt     DateTime @default(now())
   expiresAt       DateTime // When request expires
-  escalationRules Json?    // Escalation configuration
+  escalationRules Json? // Escalation configuration
 
   // Relations
-  org             Org      @relation("OrgApprovalRequests", fields: [orgId], references: [id])
-  requester       User     @relation("UserApprovalRequests", fields: [requestedBy], references: [id])
-  approver        User?    @relation("UserApprovals", fields: [approvedBy], references: [id])
+  org       Org   @relation("OrgApprovalRequests", fields: [orgId], references: [id])
+  requester User  @relation("UserApprovalRequests", fields: [requestedBy], references: [id])
+  approver  User? @relation("UserApprovals", fields: [approvedBy], references: [id])
 
   @@index([orgId, status])
   @@index([requestedBy, status])
@@ -2497,36 +2550,36 @@ model ApprovalRequest {
 
 /// SecurityIncident tracks security violations and anomalies
 model SecurityIncident {
-  id              String   @id @default(cuid())
-  orgId           String   // Organization context
+  id    String @id @default(cuid())
+  orgId String // Organization context
 
   // Incident Details
-  userId          String?  // User involved (if applicable)
-  incidentType    SecurityIncidentType
-  severity        SecuritySeverity @default(MEDIUM)
-  description     String   // Incident description
+  userId       String? // User involved (if applicable)
+  incidentType SecurityIncidentType
+  severity     SecuritySeverity     @default(MEDIUM)
+  description  String // Incident description
 
   // Context and Evidence
-  ipAddress       String?  // IP address involved
-  userAgent       String?  // User agent string
-  requestPath     String?  // API path or page accessed
-  metadata        Json?    // Additional incident data
+  ipAddress   String? // IP address involved
+  userAgent   String? // User agent string
+  requestPath String? // API path or page accessed
+  metadata    Json? // Additional incident data
 
   // Response and Resolution
-  status          IncidentStatus @default(OPEN)
-  assignedTo      String?  // Security team member assigned
-  resolvedAt      DateTime?
-  resolution      String?  // Resolution notes
+  status     IncidentStatus @default(OPEN)
+  assignedTo String? // Security team member assigned
+  resolvedAt DateTime?
+  resolution String? // Resolution notes
 
   // Timing
-  detectedAt      DateTime @default(now())
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  detectedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   // Relations
-  org             Org      @relation("OrgSecurityIncidents", fields: [orgId], references: [id])
-  user            User?    @relation("UserSecurityIncidents", fields: [userId], references: [id])
-  assignee        User?    @relation("AssignedSecurityIncidents", fields: [assignedTo], references: [id])
+  org      Org   @relation("OrgSecurityIncidents", fields: [orgId], references: [id])
+  user     User? @relation("UserSecurityIncidents", fields: [userId], references: [id])
+  assignee User? @relation("AssignedSecurityIncidents", fields: [assignedTo], references: [id])
 
   @@index([orgId, incidentType, detectedAt])
   @@index([userId, incidentType])
@@ -2535,29 +2588,29 @@ model SecurityIncident {
 
 /// DeviceAccess tracks user device access for security monitoring
 model DeviceAccess {
-  id              String   @id @default(cuid())
-  orgId           String   // Organization context
-  userId          String   // User ID
+  id     String @id @default(cuid())
+  orgId  String // Organization context
+  userId String // User ID
 
   // Device Information
-  userAgent       String   // Browser/device user agent
-  deviceType      DeviceType @default(UNKNOWN)
-  deviceName      String?  // Friendly device name
-  fingerprint     String?  // Device fingerprint hash
+  userAgent   String // Browser/device user agent
+  deviceType  DeviceType @default(UNKNOWN)
+  deviceName  String? // Friendly device name
+  fingerprint String? // Device fingerprint hash
 
   // Access Tracking
-  firstSeenAt     DateTime @default(now())
-  lastSeenAt      DateTime @default(now())
-  accessCount     Int      @default(1)
-  isBlocked       Boolean  @default(false)
+  firstSeenAt DateTime @default(now())
+  lastSeenAt  DateTime @default(now())
+  accessCount Int      @default(1)
+  isBlocked   Boolean  @default(false)
 
   // Location and Network
-  lastIpAddress   String?
-  lastLocation    String?  // Approximate location
+  lastIpAddress String?
+  lastLocation  String? // Approximate location
 
   // Relations
-  org             Org      @relation("OrgDeviceAccess", fields: [orgId], references: [id])
-  user            User     @relation("UserDeviceAccess", fields: [userId], references: [id])
+  org  Org  @relation("OrgDeviceAccess", fields: [orgId], references: [id])
+  user User @relation("UserDeviceAccess", fields: [userId], references: [id])
 
   @@unique([userId, userAgent])
   @@index([orgId, userId])
@@ -2567,28 +2620,28 @@ model DeviceAccess {
 
 /// UserLockout manages automatic user lockouts for security
 model UserLockout {
-  id              String   @id @default(cuid())
-  orgId           String   // Organization context
-  userId          String   // Locked user ID
+  id     String @id @default(cuid())
+  orgId  String // Organization context
+  userId String // Locked user ID
 
   // Lockout Details
-  reason          String   // Reason for lockout
-  lockoutType     LockoutType @default(SECURITY_VIOLATION)
-  severity        SecuritySeverity @default(MEDIUM)
+  reason      String // Reason for lockout
+  lockoutType LockoutType      @default(SECURITY_VIOLATION)
+  severity    SecuritySeverity @default(MEDIUM)
 
   // Timing
-  lockedAt        DateTime @default(now())
-  expiresAt       DateTime? // When lockout expires (null = manual unlock required)
-  unlockedAt      DateTime?
-  unlockedBy      String?  // User who unlocked
+  lockedAt   DateTime  @default(now())
+  expiresAt  DateTime? // When lockout expires (null = manual unlock required)
+  unlockedAt DateTime?
+  unlockedBy String? // User who unlocked
 
   // Status
-  isActive        Boolean  @default(true)
+  isActive Boolean @default(true)
 
   // Relations
-  org             Org      @relation("OrgUserLockouts", fields: [orgId], references: [id])
-  user            User     @relation("UserLockouts", fields: [userId], references: [id])
-  unlocker        User?    @relation("UnlockedUsers", fields: [unlockedBy], references: [id])
+  org      Org   @relation("OrgUserLockouts", fields: [orgId], references: [id])
+  user     User  @relation("UserLockouts", fields: [userId], references: [id])
+  unlocker User? @relation("UnlockedUsers", fields: [unlockedBy], references: [id])
 
   @@index([orgId, userId, isActive])
   @@index([expiresAt])
@@ -2598,59 +2651,59 @@ model UserLockout {
 // ===== ENUM DEFINITIONS FOR NEW MODELS =====
 
 enum ApprovalStatus {
-  PENDING     // Awaiting approval
-  APPROVED    // Request approved
-  REJECTED    // Request rejected
-  EXPIRED     // Request expired
-  CANCELLED   // Request cancelled
+  PENDING // Awaiting approval
+  APPROVED // Request approved
+  REJECTED // Request rejected
+  EXPIRED // Request expired
+  CANCELLED // Request cancelled
 }
 
 enum SecurityIncidentType {
-  CONSTRAINT_VIOLATION    // Business rule violation
-  SECURITY_VIOLATION     // Security policy violation
-  ANOMALY_DETECTION      // Unusual behavior detected
-  FAILED_AUTHENTICATION  // Authentication failure
-  UNAUTHORIZED_ACCESS    // Access to restricted resource
-  DATA_BREACH           // Potential data breach
-  SUSPICIOUS_ACTIVITY   // Suspicious user activity
+  CONSTRAINT_VIOLATION // Business rule violation
+  SECURITY_VIOLATION // Security policy violation
+  ANOMALY_DETECTION // Unusual behavior detected
+  FAILED_AUTHENTICATION // Authentication failure
+  UNAUTHORIZED_ACCESS // Access to restricted resource
+  DATA_BREACH // Potential data breach
+  SUSPICIOUS_ACTIVITY // Suspicious user activity
 }
 
 enum SecuritySeverity {
-  LOW       // Minor security concern
-  MEDIUM    // Moderate security risk
-  HIGH      // Significant security risk
-  CRITICAL  // Critical security threat
+  LOW // Minor security concern
+  MEDIUM // Moderate security risk
+  HIGH // Significant security risk
+  CRITICAL // Critical security threat
 }
 
 enum IncidentStatus {
-  OPEN        // Incident is open
+  OPEN // Incident is open
   INVESTIGATING // Under investigation
-  RESOLVED    // Incident resolved
-  CLOSED      // Incident closed
+  RESOLVED // Incident resolved
+  CLOSED // Incident closed
   FALSE_POSITIVE // False alarm
 }
 
 enum DeviceType {
-  DESKTOP     // Desktop computer
-  MOBILE      // Mobile device
-  TABLET      // Tablet device
-  UNKNOWN     // Unknown device type
+  DESKTOP // Desktop computer
+  MOBILE // Mobile device
+  TABLET // Tablet device
+  UNKNOWN // Unknown device type
 }
 
 enum LockoutType {
-  SECURITY_VIOLATION  // Security policy violation
-  FAILED_ATTEMPTS    // Too many failed attempts
+  SECURITY_VIOLATION // Security policy violation
+  FAILED_ATTEMPTS // Too many failed attempts
   SUSPICIOUS_ACTIVITY // Suspicious behavior
-  MANUAL_LOCKOUT     // Manual administrative lockout
+  MANUAL_LOCKOUT // Manual administrative lockout
   COMPLIANCE_VIOLATION // Compliance rule violation
 }
 
 enum JobStatus {
-  SCHEDULED   // Job scheduled but not started
+  SCHEDULED // Job scheduled but not started
   IN_PROGRESS // Job currently being worked
-  ON_HOLD     // Job temporarily paused
-  COMPLETED   // Job finished successfully
-  CANCELLED   // Job cancelled before completion
+  ON_HOLD // Job temporarily paused
+  COMPLETED // Job finished successfully
+  CANCELLED // Job cancelled before completion
 }
 
 enum JobPriority {
@@ -2661,82 +2714,82 @@ enum JobPriority {
 }
 
 enum TimesheetStatus {
-  ACTIVE      // Currently clocked in
-  COMPLETED   // Clocked out
-  PENDING     // Awaiting approval
-  APPROVED    // Approved by manager
-  REJECTED    // Rejected for correction
+  ACTIVE // Currently clocked in
+  COMPLETED // Clocked out
+  PENDING // Awaiting approval
+  APPROVED // Approved by manager
+  REJECTED // Rejected for correction
 }
 
 enum ChecklistStatus {
-  PENDING     // Not yet completed
+  PENDING // Not yet completed
   IN_PROGRESS // Partially completed
-  COMPLETED   // Fully completed
-  SKIPPED     // Marked as not applicable
+  COMPLETED // Fully completed
+  SKIPPED // Marked as not applicable
 }
 
 enum IssueSeverity {
-  LOW         // Minor issue, doesn't block work
-  MEDIUM      // Moderate issue, may impact schedule
-  HIGH        // Major issue, blocks current work
-  CRITICAL    // Safety or emergency issue
+  LOW // Minor issue, doesn't block work
+  MEDIUM // Moderate issue, may impact schedule
+  HIGH // Major issue, blocks current work
+  CRITICAL // Safety or emergency issue
 }
 
 enum IssueStatus {
-  OPEN        // Issue reported, needs attention
+  OPEN // Issue reported, needs attention
   IN_PROGRESS // Being worked on
-  RESOLVED    // Issue fixed
-  CLOSED      // Issue closed without resolution
+  RESOLVED // Issue fixed
+  CLOSED // Issue closed without resolution
 }
 
 enum MediaType {
-  PHOTO       // Images (JPEG, PNG, etc.)
-  VIDEO       // Video files
-  DOCUMENT    // PDFs, Word docs, etc.
-  AUDIO       // Audio recordings
-  OTHER       // Other file types
+  PHOTO // Images (JPEG, PNG, etc.)
+  VIDEO // Video files
+  DOCUMENT // PDFs, Word docs, etc.
+  AUDIO // Audio recordings
+  OTHER // Other file types
 }
 
 // ===== ENTERPRISE GOVERNANCE & POLICY MODELS =====
 
 /// SecurityPolicy stores enterprise governance policies with SOC 2 compliance
 model SecurityPolicy {
-  id          String   @id @default(cuid())
-  orgId       String
-  category    PolicyCategory
-  name        String   // e.g. "Password Policy", "MFA Policy"
-  enabled     Boolean  @default(true)
-  config      Json     // Policy configuration settings
-  version     Int      @default(1)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String         @id @default(cuid())
+  orgId         String
+  category      PolicyCategory
+  name          String // e.g. "Password Policy", "MFA Policy"
+  enabled       Boolean        @default(true)
+  config        Json // Policy configuration settings
+  version       Int            @default(1)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   lastUpdatedBy String? // User ID who last updated the policy
-  
+
   org Org @relation("OrgSecurityPolicies", fields: [orgId], references: [id])
-  
+
   @@unique([orgId, category, name])
   @@index([orgId, enabled])
 }
 
 /// FeatureModule tracks enabled platform features with usage and cost monitoring
 model FeatureModule {
-  id              String   @id @default(cuid())
-  orgId           String
-  moduleKey       String   // Unique identifier like 'ai_lead_scoring', 'sms_notifications'
-  name            String   // Display name
-  description     String?
-  category        FeatureCategory
-  enabled         Boolean  @default(false)
-  usageLimit      Int?     // Usage limit (API calls, messages, etc.)
-  costPerUnit     Decimal? @db.Decimal(8, 4) // Cost per usage unit in USD
-  monthlyBudget   Int?     // Monthly budget limit in cents
-  config          Json     @default("{}")  // Module-specific configuration
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  
+  id            String          @id @default(cuid())
+  orgId         String
+  moduleKey     String // Unique identifier like 'ai_lead_scoring', 'sms_notifications'
+  name          String // Display name
+  description   String?
+  category      FeatureCategory
+  enabled       Boolean         @default(false)
+  usageLimit    Int? // Usage limit (API calls, messages, etc.)
+  costPerUnit   Decimal?        @db.Decimal(8, 4) // Cost per usage unit in USD
+  monthlyBudget Int? // Monthly budget limit in cents
+  config        Json            @default("{}") // Module-specific configuration
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
   org         Org            @relation("OrgFeatureModules", fields: [orgId], references: [id])
   usageEvents FeatureUsage[] @relation("ModuleUsageEvents")
-  
+
   @@unique([orgId, moduleKey])
   @@index([orgId, enabled])
   @@index([enabled, category])
@@ -2744,53 +2797,53 @@ model FeatureModule {
 
 /// FeatureUsage tracks individual usage events for billing and monitoring
 model FeatureUsage {
-  id          String   @id @default(cuid())
-  orgId       String
-  moduleId    String
-  userId      String?  // User who triggered the usage
-  amount      Int      // Usage amount (API calls, messages, etc.)
-  costCents   Int      // Cost in cents
-  metadata    Json?    // Additional usage metadata
-  createdAt   DateTime @default(now())
-  
+  id        String   @id @default(cuid())
+  orgId     String
+  moduleId  String
+  userId    String? // User who triggered the usage
+  amount    Int // Usage amount (API calls, messages, etc.)
+  costCents Int // Cost in cents
+  metadata  Json? // Additional usage metadata
+  createdAt DateTime @default(now())
+
   org    Org           @relation("OrgFeatureUsage", fields: [orgId], references: [id])
   module FeatureModule @relation("ModuleUsageEvents", fields: [moduleId], references: [id])
-  
+
   @@index([orgId, moduleId, createdAt])
   @@index([createdAt])
 }
 
 /// OrganizationBudget manages feature usage budgets and alerts
 model OrganizationBudget {
-  id                 String   @id @default(cuid())
-  orgId              String   @unique
-  monthlyLimitCents  Int      @default(50000) // $500 default monthly limit
-  alertThreshold     Int      @default(80)    // Alert at 80% usage
-  autoDisable        Boolean  @default(false) // Auto-disable features when limit reached
-  notifyOwners       Boolean  @default(true)  // Send email notifications
-  currentSpendCents  Int      @default(0)     // Current month spending
-  lastResetAt        DateTime @default(now()) // Last monthly reset
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-  
+  id                String   @id @default(cuid())
+  orgId             String   @unique
+  monthlyLimitCents Int      @default(50000) // $500 default monthly limit
+  alertThreshold    Int      @default(80) // Alert at 80% usage
+  autoDisable       Boolean  @default(false) // Auto-disable features when limit reached
+  notifyOwners      Boolean  @default(true) // Send email notifications
+  currentSpendCents Int      @default(0) // Current month spending
+  lastResetAt       DateTime @default(now()) // Last monthly reset
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
   org Org @relation("OrgBudget", fields: [orgId], references: [id])
 }
 
 /// Integration manages external service connections (SSO, SCIM, webhooks, etc.)
 model Integration {
-  id            String   @id @default(cuid())
-  orgId         String
-  type          IntegrationType
-  name          String   // Display name
-  enabled       Boolean  @default(false)
-  config        Json     @default("{}")  // Integration-specific config (encrypted secrets)
-  metadata      Json?    // Additional metadata
-  lastSyncAt    DateTime?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  
+  id         String          @id @default(cuid())
+  orgId      String
+  type       IntegrationType
+  name       String // Display name
+  enabled    Boolean         @default(false)
+  config     Json            @default("{}") // Integration-specific config (encrypted secrets)
+  metadata   Json? // Additional metadata
+  lastSyncAt DateTime?
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
   org Org @relation("OrgIntegrations", fields: [orgId], references: [id])
-  
+
   @@unique([orgId, type, name])
   @@index([orgId, enabled])
   @@index([type, enabled])
@@ -2798,22 +2851,22 @@ model Integration {
 
 /// SupportSession manages secure support access and impersonation
 model SupportSession {
-  id            String   @id @default(cuid())
+  id            String               @id @default(cuid())
   orgId         String
-  supportUserId String   // Provider support user ID
-  targetUserId  String?  // User being impersonated (if applicable)
+  supportUserId String // Provider support user ID
+  targetUserId  String? // User being impersonated (if applicable)
   sessionType   SupportSessionType
-  reason        String   // Justification for access
-  consentGiven  Boolean  @default(false)
+  reason        String // Justification for access
+  consentGiven  Boolean              @default(false)
   consentAt     DateTime?
-  startedAt     DateTime @default(now())
+  startedAt     DateTime             @default(now())
   expiresAt     DateTime // Auto-expiry time
   endedAt       DateTime?
   status        SupportSessionStatus @default(PENDING)
-  metadata      Json?    // Session metadata
-  
+  metadata      Json? // Session metadata
+
   org Org @relation("OrgSupportSessions", fields: [orgId], references: [id])
-  
+
   @@index([orgId, status])
   @@index([supportUserId, status])
   @@index([expiresAt])
@@ -2821,33 +2874,33 @@ model SupportSession {
 
 /// AuditEvent extends AuditLog with detailed enterprise audit requirements
 model AuditEvent {
-  id              String   @id @default(cuid())
-  orgId           String
-  userId          String?  // User who performed the action
-  sessionId       String?  // Session ID for tracking
-  action          String   // Action performed (login, create, update, delete, etc.)
-  target          String   // What was acted upon (user, lead, policy, etc.)
-  targetId        String?  // ID of the target entity
-  details         Json?    // Detailed event information
-  ipAddress       String?  // Source IP address
-  userAgent       String?  // Browser/client information
-  severity        AuditSeverity @default(INFO)
-  category        AuditCategory @default(GENERAL)
-  success         Boolean  @default(true)
-  errorMessage    String? // Error details if action failed
-  
+  id           String        @id @default(cuid())
+  orgId        String
+  userId       String? // User who performed the action
+  sessionId    String? // Session ID for tracking
+  action       String // Action performed (login, create, update, delete, etc.)
+  target       String // What was acted upon (user, lead, policy, etc.)
+  targetId     String? // ID of the target entity
+  details      Json? // Detailed event information
+  ipAddress    String? // Source IP address
+  userAgent    String? // Browser/client information
+  severity     AuditSeverity @default(INFO)
+  category     AuditCategory @default(GENERAL)
+  success      Boolean       @default(true)
+  errorMessage String? // Error details if action failed
+
   // Enterprise tamper-evidence fields
-  hash            String?  // SHA-256 hash for integrity verification
-  previousEventId String?  // ID of previous audit event for chain verification
-  previousHash    String?  // Hash of previous event for chain integrity
-  immutable       Boolean  @default(true) // Mark as immutable for compliance
-  
-  createdAt       DateTime @default(now())
-  
-  org Org @relation("OrgAuditEvents", fields: [orgId], references: [id])
-  previousEvent AuditEvent? @relation("AuditChain", fields: [previousEventId], references: [id])
+  hash            String? // SHA-256 hash for integrity verification
+  previousEventId String? // ID of previous audit event for chain verification
+  previousHash    String? // Hash of previous event for chain integrity
+  immutable       Boolean @default(true) // Mark as immutable for compliance
+
+  createdAt DateTime @default(now())
+
+  org           Org          @relation("OrgAuditEvents", fields: [orgId], references: [id])
+  previousEvent AuditEvent?  @relation("AuditChain", fields: [previousEventId], references: [id])
   nextEvents    AuditEvent[] @relation("AuditChain")
-  
+
   @@index([orgId, createdAt])
   @@index([orgId, action])
   @@index([orgId, userId])
@@ -2860,27 +2913,27 @@ model AuditEvent {
 
 /// AppEvent tracks user interactions for AI-powered feature recommendations
 model AppEvent {
-  id          String   @id @default(cuid())
-  orgId       String
-  userId      String?  // User who performed the action
-  sessionId   String?  // Browser session ID
-  
+  id        String  @id @default(cuid())
+  orgId     String
+  userId    String? // User who performed the action
+  sessionId String? // Browser session ID
+
   // Event Details
-  featureKey  String   // Feature identifier (e.g., "scheduling.board", "leads.create")
-  eventType   String   // Event type: "view", "click", "create", "update", "complete"
-  metadata    Json?    // Additional event context (page visited, button clicked, etc.)
-  
+  featureKey String // Feature identifier (e.g., "scheduling.board", "leads.create")
+  eventType  String // Event type: "view", "click", "create", "update", "complete"
+  metadata   Json? // Additional event context (page visited, button clicked, etc.)
+
   // Context
-  userAgent   String?  // Browser information
-  ipAddress   String?  // Source IP for usage pattern analysis
-  duration    Int?     // Time spent on feature (milliseconds)
-  
-  createdAt   DateTime @default(now())
-  
+  userAgent String? // Browser information
+  ipAddress String? // Source IP for usage pattern analysis
+  duration  Int? // Time spent on feature (milliseconds)
+
+  createdAt DateTime @default(now())
+
   // Relations
-  org         Org      @relation("OrgAppEvents", fields: [orgId], references: [id])
-  user        User?    @relation("UserAppEvents", fields: [orgId, userId], references: [orgId, id])
-  
+  org  Org   @relation("OrgAppEvents", fields: [orgId], references: [id])
+  user User? @relation("UserAppEvents", fields: [orgId, userId], references: [orgId, id])
+
   @@unique([orgId, id])
   @@index([orgId, featureKey, createdAt])
   @@index([orgId, userId, createdAt])
@@ -2890,72 +2943,72 @@ model AppEvent {
 
 /// FeatureRegistry defines all available features with dependencies and requirements
 model FeatureRegistry {
-  id              String          @id @default(cuid())
-  
+  id String @id @default(cuid())
+
   // Feature Definition
-  key             String          @unique  // Unique feature identifier
-  name            String          // Display name
-  description     String          // Feature description for users
-  category        FeatureCategory // AI_ANALYTICS, AUTOMATION, etc.
-  
+  key         String          @unique // Unique feature identifier
+  name        String // Display name
+  description String // Feature description for users
+  category    FeatureCategory // AI_ANALYTICS, AUTOMATION, etc.
+
   // Feature Configuration
-  defaultEnabled  Boolean         @default(false)  // Default state for new orgs
-  requiresPlan    String?         // Required subscription plan
-  dependencies    String[]        // Required features that must be enabled first
-  incompatible    String[]        // Features that cannot be enabled simultaneously
-  
+  defaultEnabled Boolean  @default(false) // Default state for new orgs
+  requiresPlan   String? // Required subscription plan
+  dependencies   String[] // Required features that must be enabled first
+  incompatible   String[] // Features that cannot be enabled simultaneously
+
   // Discovery & Recommendations
-  discoverability String          @default("STANDARD") // "HIDDEN", "STANDARD", "PROMOTED"
-  recommendWhen   Json?           // Conditions for AI recommendation
-  
+  discoverability String @default("STANDARD") // "HIDDEN", "STANDARD", "PROMOTED"
+  recommendWhen   Json? // Conditions for AI recommendation
+
   // Documentation
-  helpUrl         String?         // Link to feature documentation
-  demoVideoUrl    String?         // Feature demonstration video
-  
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  
+  helpUrl      String? // Link to feature documentation
+  demoVideoUrl String? // Feature demonstration video
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
-  orgFeatures     OrgFeatureState[] @relation("FeatureOrgStates")
-  actionLogs      AiActionLog[]   @relation("FeatureActionLogs")
-  
+  orgFeatures OrgFeatureState[] @relation("FeatureOrgStates")
+  actionLogs  AiActionLog[]     @relation("FeatureActionLogs")
+
   @@index([category, defaultEnabled])
   @@index([discoverability])
 }
 
 /// OrgFeatureState tracks which features are enabled per organization
 model OrgFeatureState {
-  id            String   @id @default(cuid())
-  orgId         String
-  featureId     String   // FeatureRegistry.id
-  
+  id        String @id @default(cuid())
+  orgId     String
+  featureId String // FeatureRegistry.id
+
   // State Management
-  enabled       Boolean  @default(false)
-  enabledAt     DateTime?
-  enabledBy     String?  // User.id who enabled the feature
-  
+  enabled   Boolean   @default(false)
+  enabledAt DateTime?
+  enabledBy String? // User.id who enabled the feature
+
   // Configuration
-  config        Json?    // Feature-specific configuration
-  
+  config Json? // Feature-specific configuration
+
   // Usage Tracking
-  firstUsedAt   DateTime?
-  lastUsedAt    DateTime?
-  usageCount    Int      @default(0)
-  
+  firstUsedAt DateTime?
+  lastUsedAt  DateTime?
+  usageCount  Int       @default(0)
+
   // AI Recommendations
-  recommended   Boolean  @default(false)
+  recommended   Boolean   @default(false)
   recommendedAt DateTime?
-  recommendedBy String?  // AI recommendation source
-  
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  
+  recommendedBy String? // AI recommendation source
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
   org           Org             @relation("OrgFeatureStates", fields: [orgId], references: [id])
   feature       FeatureRegistry @relation("FeatureOrgStates", fields: [featureId], references: [id])
   enabledByUser User?           @relation("UserEnabledFeatures", fields: [orgId, enabledBy], references: [orgId, id])
-  
-  @@unique([orgId, featureId])  // One state per feature per org
+
+  @@unique([orgId, featureId]) // One state per feature per org
   @@index([orgId, enabled])
   @@index([orgId, updatedAt])
   @@index([featureId, enabled])
@@ -2964,38 +3017,38 @@ model OrgFeatureState {
 
 /// DelegationGrant allows Owners to delegate specific AI control permissions to individual users
 model DelegationGrant {
-  id           String   @id @default(cuid())
-  orgId        String
-  
+  id    String @id @default(cuid())
+  orgId String
+
   // Delegation Details
-  granteeId    String   // User.id who receives the permission
-  granterId    String   // User.id (Owner) who grants the permission
-  
+  granteeId String // User.id who receives the permission
+  granterId String // User.id (Owner) who grants the permission
+
   // Permission Scope
-  toolId       String   // AI tool identifier (e.g., "enable_feature", "update_setting")
-  scope        Json?    // Specific scope limitations (feature categories, etc.)
-  
+  toolId String // AI tool identifier (e.g., "enable_feature", "update_setting")
+  scope  Json? // Specific scope limitations (feature categories, etc.)
+
   // Lifecycle
-  isActive     Boolean  @default(true)
-  expiresAt    DateTime?  // Optional expiration
-  revokedAt    DateTime?
-  revokedBy    String?    // User.id who revoked
-  
+  isActive  Boolean   @default(true)
+  expiresAt DateTime? // Optional expiration
+  revokedAt DateTime?
+  revokedBy String? // User.id who revoked
+
   // Usage Tracking
-  usedCount    Int      @default(0)
-  lastUsedAt   DateTime?
-  
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  
+  usedCount  Int       @default(0)
+  lastUsedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
-  org          Org      @relation("OrgDelegationGrants", fields: [orgId], references: [id])
-  grantee      User     @relation("UserDelegationGrants", fields: [orgId, granteeId], references: [orgId, id])
-  granter      User     @relation("UserGrantedDelegations", fields: [orgId, granterId], references: [orgId, id])
-  actionLogs   AiActionLog[] @relation("DelegationActionLogs")
-  
+  org        Org           @relation("OrgDelegationGrants", fields: [orgId], references: [id])
+  grantee    User          @relation("UserDelegationGrants", fields: [orgId, granteeId], references: [orgId, id])
+  granter    User          @relation("UserGrantedDelegations", fields: [orgId, granterId], references: [orgId, id])
+  actionLogs AiActionLog[] @relation("DelegationActionLogs")
+
   @@unique([orgId, id])
-  @@unique([orgId, granteeId, toolId, isActive])  // Prevent duplicate active grants
+  @@unique([orgId, granteeId, toolId, isActive]) // Prevent duplicate active grants
   @@index([orgId, granteeId, isActive])
   @@index([orgId, granterId, createdAt])
   @@index([toolId, isActive])
@@ -3004,41 +3057,41 @@ model DelegationGrant {
 
 /// AiActionLog provides comprehensive audit trail for all AI-controlled actions
 model AiActionLog {
-  id               String   @id @default(cuid())
-  orgId            String
-  
+  id    String @id @default(cuid())
+  orgId String
+
   // Action Details
-  toolId           String   // AI tool used (e.g., "enable_feature", "update_setting")
-  action           String   // Specific action performed
-  targetType       String   // What was acted upon (feature, setting, integration)
-  targetId         String?  // ID of the target entity
-  
+  toolId     String // AI tool used (e.g., "enable_feature", "update_setting")
+  action     String // Specific action performed
+  targetType String // What was acted upon (feature, setting, integration)
+  targetId   String? // ID of the target entity
+
   // Authorization
-  requestedBy      String   // User.id who requested the action
-  authorizedBy     String?  // User.id who authorized (Owner or delegate)
-  delegationId     String?  // DelegationGrant.id if via delegation
-  
+  requestedBy  String // User.id who requested the action
+  authorizedBy String? // User.id who authorized (Owner or delegate)
+  delegationId String? // DelegationGrant.id if via delegation
+
   // Execution
-  status           String   // "pending", "approved", "executed", "failed", "cancelled"
-  beforeState      Json?    // State before the action
-  afterState       Json?    // State after the action
-  errorMessage     String?  // Error details if failed
-  
+  status       String // "pending", "approved", "executed", "failed", "cancelled"
+  beforeState  Json? // State before the action
+  afterState   Json? // State after the action
+  errorMessage String? // Error details if failed
+
   // Context
-  requestContext   Json?    // AI request context and reasoning
-  approvalMethod   String?  // "owner_direct", "delegation", "just_in_time"
-  costCents        Int?     // AI cost in cents
-  
-  createdAt        DateTime @default(now())
-  executedAt       DateTime?
-  
+  requestContext Json? // AI request context and reasoning
+  approvalMethod String? // "owner_direct", "delegation", "just_in_time"
+  costCents      Int? // AI cost in cents
+
+  createdAt  DateTime  @default(now())
+  executedAt DateTime?
+
   // Relations
-  org              Org             @relation("OrgAiActionLogs", fields: [orgId], references: [id])
-  requester        User            @relation("UserAiActionRequests", fields: [orgId, requestedBy], references: [orgId, id])
-  authorizer       User?           @relation("UserAiActionApprovals", fields: [orgId, authorizedBy], references: [orgId, id])
-  delegation       DelegationGrant? @relation("DelegationActionLogs", fields: [delegationId], references: [id])
-  feature          FeatureRegistry? @relation("FeatureActionLogs", fields: [targetId], references: [id])
-  
+  org        Org              @relation("OrgAiActionLogs", fields: [orgId], references: [id])
+  requester  User             @relation("UserAiActionRequests", fields: [orgId, requestedBy], references: [orgId, id])
+  authorizer User?            @relation("UserAiActionApprovals", fields: [orgId, authorizedBy], references: [orgId, id])
+  delegation DelegationGrant? @relation("DelegationActionLogs", fields: [delegationId], references: [id])
+  feature    FeatureRegistry? @relation("FeatureActionLogs", fields: [targetId], references: [id])
+
   @@unique([orgId, id])
   @@index([orgId, createdAt])
   @@index([orgId, requestedBy, createdAt])
@@ -3050,30 +3103,30 @@ model AiActionLog {
 
 /// AiDocChunk stores knowledge base content for RAG (Retrieval Augmented Generation)
 model AiDocChunk {
-  id          String   @id @default(cuid())
-  
+  id String @id @default(cuid())
+
   // Content Details
-  title       String   // Document/section title
-  content     String   // Text content for RAG
-  contentType String   // "feature_doc", "how_to_guide", "api_reference", "changelog"
-  
+  title       String // Document/section title
+  content     String // Text content for RAG
+  contentType String // "feature_doc", "how_to_guide", "api_reference", "changelog"
+
   // Metadata
-  sourceUrl   String?  // Original source URL
-  featureKey  String?  // Associated feature key
-  tags        String[] // Tags for categorization
-  version     String?  // Content version for updates
-  
+  sourceUrl  String? // Original source URL
+  featureKey String? // Associated feature key
+  tags       String[] // Tags for categorization
+  version    String? // Content version for updates
+
   // Vector Search (for future embedding integration)
-  embedding   String?  // Serialized vector embedding
-  tokenCount  Int?     // Token count for cost estimation
-  
+  embedding  String? // Serialized vector embedding
+  tokenCount Int? // Token count for cost estimation
+
   // Lifecycle
-  isActive    Boolean  @default(true)
-  priority    Int      @default(0)  // Higher priority shown first
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+  isActive Boolean @default(true)
+  priority Int     @default(0) // Higher priority shown first
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([contentType, isActive])
   @@index([featureKey, isActive])
   @@index([priority, isActive])
@@ -3083,51 +3136,51 @@ model AiDocChunk {
 // ===== ENUMS FOR ENTERPRISE MODELS =====
 
 enum PolicyCategory {
-  AUTHENTICATION    // Password, MFA policies
-  SECURITY         // Session, IP access control
-  COMPLIANCE       // Data retention, residency
+  AUTHENTICATION // Password, MFA policies
+  SECURITY // Session, IP access control
+  COMPLIANCE // Data retention, residency
   NETWORK_SECURITY // IP allowlists, geo-blocking
-  EMERGENCY        // Break-glass access
+  EMERGENCY // Break-glass access
 }
 
 enum FeatureCategory {
-  AI_ANALYTICS     // AI features and analytics
-  AUTOMATION       // Workflow automation
-  COMMUNICATION    // SMS, email, notifications
-  INTEGRATION      // API access, webhooks
-  MOBILE           // Mobile app features
-  DEVELOPER_TOOLS  // API, SDKs
-  MARKETING        // Email marketing, campaigns
+  AI_ANALYTICS // AI features and analytics
+  AUTOMATION // Workflow automation
+  COMMUNICATION // SMS, email, notifications
+  INTEGRATION // API access, webhooks
+  MOBILE // Mobile app features
+  DEVELOPER_TOOLS // API, SDKs
+  MARKETING // Email marketing, campaigns
 }
 
 enum IntegrationType {
-  SSO_SAML         // SAML SSO integration
-  SSO_OIDC         // OpenID Connect SSO
-  SCIM             // SCIM user provisioning
-  WEBHOOK          // Webhook endpoints
-  OAUTH_APP        // OAuth application
-  API_INTEGRATION  // Third-party API integration
-  ACCOUNTING       // QuickBooks, Xero, etc.
-  COMMUNICATION    // Slack, Teams, etc.
+  SSO_SAML // SAML SSO integration
+  SSO_OIDC // OpenID Connect SSO
+  SCIM // SCIM user provisioning
+  WEBHOOK // Webhook endpoints
+  OAUTH_APP // OAuth application
+  API_INTEGRATION // Third-party API integration
+  ACCOUNTING // QuickBooks, Xero, etc.
+  COMMUNICATION // Slack, Teams, etc.
 }
 
 /// Webhook endpoint configuration for real-time event notifications
 model WebhookEndpoint {
-  id              String   @id @default(cuid())
-  orgId           String
-  url             String
-  secret          String   // HMAC secret for signature verification
-  events          String[] // Array of event types to subscribe to
-  active          Boolean  @default(true)
-  failureCount    Int      @default(0)
-  maxRetries      Int      @default(5)
-  lastDeliveryAt  DateTime?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id             String    @id @default(cuid())
+  orgId          String
+  url            String
+  secret         String // HMAC secret for signature verification
+  events         String[] // Array of event types to subscribe to
+  active         Boolean   @default(true)
+  failureCount   Int       @default(0)
+  maxRetries     Int       @default(5)
+  lastDeliveryAt DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   // Relations
-  org         Org               @relation("OrgWebhooks", fields: [orgId], references: [id])
-  deliveries  WebhookDelivery[]
+  org        Org               @relation("OrgWebhooks", fields: [orgId], references: [id])
+  deliveries WebhookDelivery[]
 
   @@map("webhook_endpoints")
 }
@@ -3135,30 +3188,30 @@ model WebhookEndpoint {
 /// Webhook event records for audit and replay
 model WebhookEvent {
   id        String   @id @default(cuid())
-  type      String   // Event type (e.g., "lead.created")
-  data      Json     // Event payload
+  type      String // Event type (e.g., "lead.created")
+  data      Json // Event payload
   orgId     String
   timestamp DateTime @default(now())
 
   // Relations
-  org         Org               @relation("OrgWebhookEvents", fields: [orgId], references: [id])
-  deliveries  WebhookDelivery[]
+  org        Org               @relation("OrgWebhookEvents", fields: [orgId], references: [id])
+  deliveries WebhookDelivery[]
 
   @@map("webhook_events")
 }
 
 /// Webhook delivery tracking with retry logic
 model WebhookDelivery {
-  id                String   @id @default(cuid())
+  id                String                @id @default(cuid())
   webhookEndpointId String
   eventId           String
   status            WebhookDeliveryStatus @default(PENDING)
   httpStatus        Int?
   responseBody      String?
-  attemptCount      Int      @default(0)
+  attemptCount      Int                   @default(0)
   nextRetryAt       DateTime?
   deliveredAt       DateTime?
-  createdAt         DateTime @default(now())
+  createdAt         DateTime              @default(now())
 
   // Relations
   webhookEndpoint WebhookEndpoint @relation(fields: [webhookEndpointId], references: [id])
@@ -3176,13 +3229,13 @@ enum WebhookDeliveryStatus {
 
 /// Encryption key management for data protection
 model EncryptionKey {
-  id          String   @id @default(cuid())
-  keyId       String   @unique // Key identifier for derivation
-  orgId       String
-  algorithm   String   @default("aes-256-gcm")
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  rotatedAt   DateTime?
+  id        String    @id @default(cuid())
+  keyId     String    @unique // Key identifier for derivation
+  orgId     String
+  algorithm String    @default("aes-256-gcm")
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  rotatedAt DateTime?
 
   // Relations
   org Org @relation("OrgEncryptionKeys", fields: [orgId], references: [id])
@@ -3192,17 +3245,17 @@ model EncryptionKey {
 
 /// Backup management for disaster recovery
 model Backup {
-  id           String   @id @default(cuid())
+  id           String       @id @default(cuid())
   orgId        String
-  type         BackupType @default(FULL)
+  type         BackupType   @default(FULL)
   status       BackupStatus @default(PENDING)
-  size         Int?     // Backup size in bytes
-  checksum     String?  // SHA-256 checksum for integrity
-  encrypted    Boolean  @default(true)
-  compressed   Boolean  @default(true)
+  size         Int? // Backup size in bytes
+  checksum     String? // SHA-256 checksum for integrity
+  encrypted    Boolean      @default(true)
+  compressed   Boolean      @default(true)
   destinations String[] // Storage destinations
-  errorMessage String?  // Error message if failed
-  createdAt    DateTime @default(now())
+  errorMessage String? // Error message if failed
+  createdAt    DateTime     @default(now())
 
   // Relations
   org Org @relation("OrgBackups", fields: [orgId], references: [id])
@@ -3224,55 +3277,55 @@ enum BackupStatus {
 }
 
 enum SupportSessionType {
-  READ_ONLY        // View-only access
-  IMPERSONATION    // Full user impersonation
-  BREAK_GLASS      // Emergency access
-  TROUBLESHOOTING  // Technical support
+  READ_ONLY // View-only access
+  IMPERSONATION // Full user impersonation
+  BREAK_GLASS // Emergency access
+  TROUBLESHOOTING // Technical support
 }
 
 enum SupportSessionStatus {
-  PENDING          // Awaiting consent/approval
-  ACTIVE           // Currently active
-  EXPIRED          // Session expired
-  ENDED            // Manually ended
-  CANCELLED        // Cancelled before start
+  PENDING // Awaiting consent/approval
+  ACTIVE // Currently active
+  EXPIRED // Session expired
+  ENDED // Manually ended
+  CANCELLED // Cancelled before start
 }
 
 enum AuditSeverity {
-  INFO             // Informational events
-  WARNING          // Warning events
-  ERROR            // Error events
-  CRITICAL         // Critical security events
+  INFO // Informational events
+  WARNING // Warning events
+  ERROR // Error events
+  CRITICAL // Critical security events
 }
 
 enum AuditCategory {
-  GENERAL          // General actions
-  AUTHENTICATION   // Login, logout, password changes
-  AUTHORIZATION    // Permission changes, role assignments
-  DATA_ACCESS      // Data read operations
+  GENERAL // General actions
+  AUTHENTICATION // Login, logout, password changes
+  AUTHORIZATION // Permission changes, role assignments
+  DATA_ACCESS // Data read operations
   DATA_MODIFICATION // Data create/update/delete
-  POLICY_CHANGE    // Security policy changes
-  ADMIN_ACTION     // Administrative actions
-  SECURITY_EVENT   // Security-related events
-  FINANCIAL        // Financial operations
-  SYSTEM           // System operations
-  COMPLIANCE       // Compliance-related events
-  AUTH             // Authentication events
-  DATA             // Data operations
-  SECURITY         // Security events
+  POLICY_CHANGE // Security policy changes
+  ADMIN_ACTION // Administrative actions
+  SECURITY_EVENT // Security-related events
+  FINANCIAL // Financial operations
+  SYSTEM // System operations
+  COMPLIANCE // Compliance-related events
+  AUTH // Authentication events
+  DATA // Data operations
+  SECURITY // Security events
 }
 
 /// TenantRegistration tracks tenant creation for idempotency and auditing
 model TenantRegistration {
-  id                  String   @id @default(cuid())
-  idempotencyKey      String   @unique
-  orgId               String
-  ownerUserId         String
-  plan                String   // STARTER, PROFESSIONAL, ENTERPRISE
-  industry            String
-  externalCustomerId  String?
-  welcomeEmailQueued  Boolean  @default(false)
-  createdAt           DateTime @default(now())
+  id                 String   @id @default(cuid())
+  idempotencyKey     String   @unique
+  orgId              String
+  ownerUserId        String
+  plan               String // STARTER, PROFESSIONAL, ENTERPRISE
+  industry           String
+  externalCustomerId String?
+  welcomeEmailQueued Boolean  @default(false)
+  createdAt          DateTime @default(now())
 
   // Relationships
   org       Org  @relation(fields: [orgId], references: [id], onDelete: Cascade)
@@ -3289,7 +3342,7 @@ model LeadSourceConfig {
   id        String   @id @default(cuid())
   orgId     String
   name      String
-  type      String   // REFERRAL, EVENT, DIGITAL, PARTNER, etc.
+  type      String // REFERRAL, EVENT, DIGITAL, PARTNER, etc.
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
 
@@ -3325,7 +3378,7 @@ model IdempotencyKey {
   key        String   @unique
   entityType String
   entityId   String
-  response   String?  // JSON response stored as string
+  response   String? // JSON response stored as string
   orgId      String
   expiresAt  DateTime
   createdAt  DateTime @default(now())
@@ -3343,7 +3396,7 @@ model IdempotencyKey {
 /// Codex Phase 8.6 - Webhook event deduplication
 model StripeEvent {
   id         String   @id // Stripe event ID (evt_xxx)
-  source     String   // 'provider' | 'connect'
+  source     String // 'provider' | 'connect'
   receivedAt DateTime @default(now())
 
   @@index([source])
@@ -3353,13 +3406,13 @@ model StripeEvent {
 /// TenantStripeConnect stores encrypted Stripe Connect account info per tenant
 /// Codex Phase 8.2 - Client billing via Stripe Connect
 model TenantStripeConnect {
-  orgId                     String   @id
-  stripeConnectedAccountId  String   // AES-GCM encrypted at app layer
-  connectStatus             String   @default("pending") // pending|complete|restricted
-  chargesEnabled            Boolean  @default(false)
-  payoutsEnabled            Boolean  @default(false)
-  createdAt                 DateTime @default(now())
-  updatedAt                 DateTime @updatedAt
+  orgId                    String   @id
+  stripeConnectedAccountId String // AES-GCM encrypted at app layer
+  connectStatus            String   @default("pending") // pending|complete|restricted
+  chargesEnabled           Boolean  @default(false)
+  payoutsEnabled           Boolean  @default(false)
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
 
   // Relations
   org Org @relation(fields: [orgId], references: [id], onDelete: Cascade)
@@ -3373,13 +3426,13 @@ model TenantStripeConnect {
 /// AiPowerProfile stores tenant's AI power level configuration
 /// Controls cost vs quality tradeoff for AI tasks
 model AiPowerProfile {
-  id              String   @id @default(cuid())
-  orgId           String   @unique
-  globalDefault   String   @default("ECO") // ECO, STANDARD, MAX
-  overrides       Json     @default("{}") // feature/agent/channel overrides
-  roleCeilings    Json     @default("{}") // employee: STANDARD, owner: MAX
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id            String   @id @default(cuid())
+  orgId         String   @unique
+  globalDefault String   @default("ECO") // ECO, STANDARD, MAX
+  overrides     Json     @default("{}") // feature/agent/channel overrides
+  roleCeilings  Json     @default("{}") // employee: STANDARD, owner: MAX
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   org Org @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
@@ -3389,21 +3442,21 @@ model AiPowerProfile {
 /// AiTask logs every AI execution for billing and analytics
 /// Tracks tokens, cost, and pricing per task
 model AiTask {
-  id            String   @id @default(cuid())
-  orgId         String
-  userId        String?  // User who triggered (nullable for system tasks)
-  agentType     String   // inbox, estimate, scheduling, collections, etc.
-  actionType    String   // inbound_parse, reply_draft, route_optimize, etc.
-  role          String?  // User role at execution time
-  powerLevel    String   // ECO, STANDARD, MAX
-  tokensIn      Int
-  tokensOut     Int
-  rawCostCents  Int      // Actual API cost
-  priceCents    Int      // What we charge tenant
-  status        String   // success, error, timeout
-  errorCode     String?
-  metadata      Json     @default("{}")
-  createdAt     DateTime @default(now())
+  id           String   @id @default(cuid())
+  orgId        String
+  userId       String? // User who triggered (nullable for system tasks)
+  agentType    String // inbox, estimate, scheduling, collections, etc.
+  actionType   String // inbound_parse, reply_draft, route_optimize, etc.
+  role         String? // User role at execution time
+  powerLevel   String // ECO, STANDARD, MAX
+  tokensIn     Int
+  tokensOut    Int
+  rawCostCents Int // Actual API cost
+  priceCents   Int // What we charge tenant
+  status       String // success, error, timeout
+  errorCode    String?
+  metadata     Json     @default("{}")
+  createdAt    DateTime @default(now())
 
   org  Org   @relation(fields: [orgId], references: [id], onDelete: Cascade)
   user User? @relation(fields: [orgId, userId], references: [orgId, id])
@@ -3419,12 +3472,12 @@ model AiTask {
 model CreditLedger {
   id            String   @id @default(cuid())
   orgId         String
-  amountCents   Int      // Positive for purchase, negative for debit
-  type          String   // PURCHASE, DEBIT, REFUND, TRIAL, REFERRAL
+  amountCents   Int // Positive for purchase, negative for debit
+  type          String // PURCHASE, DEBIT, REFUND, TRIAL, REFERRAL
   description   String
-  balanceBefore Int      // Balance before this transaction
-  balanceAfter  Int      // Balance after this transaction
-  relatedId     String?  // AiTask.id, Invoice.id, etc.
+  balanceBefore Int // Balance before this transaction
+  balanceAfter  Int // Balance after this transaction
+  relatedId     String? // AiTask.id, Invoice.id, etc.
   metadata      Json     @default("{}")
   createdAt     DateTime @default(now())
 
@@ -3439,8 +3492,8 @@ model CreditLedger {
 model UsageMeter {
   id          String   @id @default(cuid())
   orgId       String
-  meterType   String   // ai_tokens_light, email_count, sms_count, etc.
-  value       Int      // Cumulative or delta depending on meter
+  meterType   String // ai_tokens_light, email_count, sms_count, etc.
+  value       Int // Cumulative or delta depending on meter
   periodStart DateTime
   periodEnd   DateTime
   metadata    Json     @default("{}")
@@ -3455,14 +3508,14 @@ model UsageMeter {
 /// VerticalConfig stores industry-specific settings
 /// Enables vertical AI packs and custom fields
 model VerticalConfig {
-  id            String   @id @default(cuid())
-  orgId         String   @unique
-  vertical      String   // cleaning, hvac, trucking, portajohn, etc.
-  enabledAiTasks Json    @default("[]") // Array of enabled AI task IDs
-  customFields  Json     @default("{}")
-  settings      Json     @default("{}")
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id             String   @id @default(cuid())
+  orgId          String   @unique
+  vertical       String // cleaning, hvac, trucking, portajohn, etc.
+  enabledAiTasks Json     @default("[]") // Array of enabled AI task IDs
+  customFields   Json     @default("{}")
+  settings       Json     @default("{}")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   org Org @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
@@ -3473,16 +3526,16 @@ model VerticalConfig {
 /// TrialConfig manages trial periods and entitlements
 /// Marketing trials (short, no card) vs Operational trials (longer, card required)
 model TrialConfig {
-  id            String   @id @default(cuid())
-  orgId         String   @unique
-  trialType     String   // MARKETING, OPERATIONAL
-  trialEndsAt   DateTime
-  aiCreditsCents Int     @default(1000) // Trial AI credits
-  features      Json     @default("[]") // Enabled features during trial
-  status        String   @default("active") // active, expired, converted
-  convertedAt   DateTime?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id             String    @id @default(cuid())
+  orgId          String    @unique
+  trialType      String // MARKETING, OPERATIONAL
+  trialEndsAt    DateTime
+  aiCreditsCents Int       @default(1000) // Trial AI credits
+  features       Json      @default("[]") // Enabled features during trial
+  status         String    @default("active") // active, expired, converted
+  convertedAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   org Org @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
@@ -3496,31 +3549,31 @@ model TrialConfig {
 /// JobTicket represents a mobile work order with offline capability
 /// Extends existing Job model with field-specific features
 model JobTicket {
-  id            String   @id @default(cuid())
-  orgId         String
-  customerId    String   // Customer.id
-  location      Json     // { address, lat, lng, notes }
-  crewId        String?  // User.id of assigned crew lead
-  serviceType   String
-  scheduledAt   DateTime?
-  status        String   @default("pending") // pending, assigned, in_progress, completed, cancelled
-  estimateId    String?  // Opportunity.id if from estimate
-  invoiceId     String?  // Invoice.id when billed
-  metadata      Json     @default("{}")
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id          String    @id @default(cuid())
+  orgId       String
+  customerId  String // Customer.id
+  location    Json // { address, lat, lng, notes }
+  crewId      String? // User.id of assigned crew lead
+  serviceType String
+  scheduledAt DateTime?
+  status      String    @default("pending") // pending, assigned, in_progress, completed, cancelled
+  estimateId  String? // Opportunity.id if from estimate
+  invoiceId   String? // Invoice.id when billed
+  metadata    Json      @default("{}")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   // === CRM LINKS (Bridge System) ===
-  organizationId String?  // CRM Organization link
-  contactId      String?  // CRM Contact link
-  opportunityId  String?  // CRM Opportunity link
+  organizationId String? // CRM Organization link
+  contactId      String? // CRM Contact link
+  opportunityId  String? // CRM Opportunity link
 
-  org         Org              @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  customer    Customer         @relation(fields: [customerId], references: [id])
-  crew        User?            @relation("JobTicketCrew", fields: [orgId, crewId], references: [orgId, id])
-  logs        JobLog[]
-  completion  JobCompletion?
-  anomalies   JobAnomaly[]
+  org        Org            @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  customer   Customer       @relation(fields: [customerId], references: [id])
+  crew       User?          @relation("JobTicketCrew", fields: [orgId, crewId], references: [orgId, id])
+  logs       JobLog[]
+  completion JobCompletion?
+  anomalies  JobAnomaly[]
 
   @@index([orgId, status])
   @@index([orgId, scheduledAt])
@@ -3534,16 +3587,16 @@ model JobTicket {
 /// JobLog tracks all actions on a job ticket (offline-capable)
 /// Synced when connection restored
 model JobLog {
-  id            String   @id @default(cuid())
-  jobTicketId   String
-  actorId       String   // User.id who performed action
-  role          String   // User role at time of action
-  action        String   // arrived, started, paused, parts_used, photo_added, notes_added
-  notes         String?
-  photoUrl      String?  // S3/blob storage URL
-  partsUsed     Json     @default("[]") // [{ partId, quantity, cost }]
-  syncedAt      DateTime? // Null if offline, set when synced
-  createdAt     DateTime @default(now())
+  id          String    @id @default(cuid())
+  jobTicketId String
+  actorId     String // User.id who performed action
+  role        String // User role at time of action
+  action      String // arrived, started, paused, parts_used, photo_added, notes_added
+  notes       String?
+  photoUrl    String? // S3/blob storage URL
+  partsUsed   Json      @default("[]") // [{ partId, quantity, cost }]
+  syncedAt    DateTime? // Null if offline, set when synced
+  createdAt   DateTime  @default(now())
 
   jobTicket JobTicket @relation(fields: [jobTicketId], references: [id], onDelete: Cascade)
 
@@ -3555,13 +3608,13 @@ model JobLog {
 /// JobCompletion stores final job data with signature
 /// Triggers AI completion report generation
 model JobCompletion {
-  id            String   @id @default(cuid())
-  jobTicketId   String   @unique
-  completedAt   DateTime
-  signatureUrl  String?  // Customer signature image
-  aiReportUrl   String?  // AI-generated completion report PDF
-  aiReportText  String?  @db.Text // AI report text (≤300 words)
-  createdAt     DateTime @default(now())
+  id           String   @id @default(cuid())
+  jobTicketId  String   @unique
+  completedAt  DateTime
+  signatureUrl String? // Customer signature image
+  aiReportUrl  String? // AI-generated completion report PDF
+  aiReportText String?  @db.Text // AI report text (≤300 words)
+  createdAt    DateTime @default(now())
 
   jobTicket JobTicket @relation(fields: [jobTicketId], references: [id], onDelete: Cascade)
 
@@ -3571,15 +3624,15 @@ model JobCompletion {
 /// JobAnomaly stores AI-detected issues during job
 /// Reviewed by manager for follow-up
 model JobAnomaly {
-  id            String   @id @default(cuid())
-  jobTicketId   String
-  type          String   // time_overrun, parts_excess, quality_concern, safety_issue
-  severity      String   // low, medium, high, critical
-  aiNotes       String?  @db.Text // AI explanation
-  reviewedAt    DateTime?
-  reviewedBy    String?  // User.id
-  resolution    String?  @db.Text
-  createdAt     DateTime @default(now())
+  id          String    @id @default(cuid())
+  jobTicketId String
+  type        String // time_overrun, parts_excess, quality_concern, safety_issue
+  severity    String // low, medium, high, critical
+  aiNotes     String?   @db.Text // AI explanation
+  reviewedAt  DateTime?
+  reviewedBy  String? // User.id
+  resolution  String?   @db.Text
+  createdAt   DateTime  @default(now())
 
   jobTicket JobTicket @relation(fields: [jobTicketId], references: [id], onDelete: Cascade)
 
@@ -3591,25 +3644,25 @@ model JobAnomaly {
 
 // Custom domain configuration for tenants
 model TenantDomain {
-  id        String   @id @default(cuid())
-  orgId     String   @unique
-  domain    String   @unique // e.g., "acme.com"
-  subdomain String   @unique // e.g., "acme" (for acme.tenant.streamflow.com)
+  id        String @id @default(cuid())
+  orgId     String @unique
+  domain    String @unique // e.g., "acme.com"
+  subdomain String @unique // e.g., "acme" (for acme.tenant.streamflow.com)
 
   // Verification
-  txtRecord      String   // TXT record value for verification
-  verified       Boolean  @default(false)
-  verifiedAt     DateTime?
+  txtRecord  String // TXT record value for verification
+  verified   Boolean   @default(false)
+  verifiedAt DateTime?
 
   // DNS Configuration
-  cnameTarget    String   @default("tenant.streamflow.com") // CNAME target
-  sslEnabled     Boolean  @default(false)
-  sslIssuedAt    DateTime?
+  cnameTarget String    @default("tenant.streamflow.com") // CNAME target
+  sslEnabled  Boolean   @default(false)
+  sslIssuedAt DateTime?
 
   // Status
-  status         String   @default("pending") // pending, verified, active, suspended
-  activatedAt    DateTime?
-  suspendedAt    DateTime?
+  status           String    @default("pending") // pending, verified, active, suspended
+  activatedAt      DateTime?
+  suspendedAt      DateTime?
   suspensionReason String?
 
   createdAt DateTime @default(now())
@@ -3622,11 +3675,9 @@ model TenantDomain {
   @@index([status])
 }
 
-
-
 // Tenant profitability tracking
 model TenantProfitability {
-  id String @id @default(cuid())
+  id    String @id @default(cuid())
   orgId String @unique
 
   // Revenue (current month)
@@ -3634,18 +3685,18 @@ model TenantProfitability {
   creditsPurchased    Int @default(0)
 
   // Costs (current month)
-  aiCostCents         Int @default(0)
-  infraCostCents      Int @default(0)
-  storageCostCents    Int @default(0)
+  aiCostCents      Int @default(0)
+  infraCostCents   Int @default(0)
+  storageCostCents Int @default(0)
 
   // Metrics
-  marginPercent       Float @default(0)
-  adoptionRate        Float @default(0) // % of users using AI
-  avgCreditsPerUser   Float @default(0)
+  marginPercent     Float @default(0)
+  adoptionRate      Float @default(0) // % of users using AI
+  avgCreditsPerUser Float @default(0)
 
   // AI Recommendations
-  aiRecommendations   Json? // Array of {type, action, impact}
-  lastAnalyzedAt      DateTime?
+  aiRecommendations Json? // Array of {type, action, impact}
+  lastAnalyzedAt    DateTime?
 
   // Period
   periodStart DateTime
@@ -3665,29 +3716,29 @@ model SystemNotice {
   id String @id @default(cuid())
 
   // Content
-  title       String
-  message     String
-  type        String // info, warning, critical, maintenance
+  title   String
+  message String
+  type    String // info, warning, critical, maintenance
 
   // Targeting
-  targetAll   Boolean @default(true)
-  targetOrgs  Json? // Array of orgIds if not targetAll
+  targetAll  Boolean @default(true)
+  targetOrgs Json? // Array of orgIds if not targetAll
 
   // Display
   dismissible Boolean @default(true)
-  priority    Int @default(0) // Higher = more important
+  priority    Int     @default(0) // Higher = more important
 
   // Scheduling
-  startAt     DateTime
-  endAt       DateTime?
+  startAt DateTime
+  endAt   DateTime?
 
   // Status
-  active      Boolean @default(true)
+  active Boolean @default(true)
 
   // Audit
-  createdBy   String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([active, startAt, endAt])
   @@index([type, priority])
@@ -3747,7 +3798,7 @@ model AiModelVersion {
   agentType String
   version   String
   modelName String
-  config    Json @default("{}")
+  config    Json   @default("{}")
 
   // Status: shadow (testing), canary (small %), active (default), deprecated
   status String @default("shadow")

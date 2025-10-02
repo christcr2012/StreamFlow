@@ -1,35 +1,26 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
-import { prisma } from '@/lib/prisma';
-import { auditLog } from '@/server/services/auditService';
 import { withAudience, AUDIENCE, getUserInfo } from '@/middleware/withAudience';
-
-// Validation schemas
-const createOrganizationSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  domain: z.string().optional(),
-  industry: z.string().optional(),
-  size: z.enum(['small', 'medium', 'large', 'enterprise']).optional(),
-  annualRevenue: z.number().min(0).optional(),
-  website: z.string().url('Invalid URL').optional().or(z.literal('')),
-  phone: z.string().optional(),
-  email: z.string().email('Invalid email').optional().or(z.literal('')),
-  ownerId: z.string().optional(),
-});
+import {
+  createOrganization,
+  listOrganizations,
+  CreateOrganizationSchema,
+} from '@/server/services/crm/organizationService';
 
 const querySchema = z.object({
   page: z.string().transform(Number).default('1'),
   pageSize: z.string().transform(Number).default('20'),
-  query: z.string().optional(),
+  search: z.string().optional(),
   industry: z.string().optional(),
+  archived: z.string().transform((v) => v === 'true').optional(),
+  ownerId: z.string().optional(),
 });
 
 // Error envelope helper
 function errorResponse(res: NextApiResponse, status: number, error: string, message: string, details?: any) {
   return res.status(status).json({
-    error,
-    message,
-    details,
+    ok: false,
+    error: { code: error, message, details },
   });
 }
 
@@ -51,66 +42,41 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: strin
     // Validate query params
     const query = querySchema.parse(req.query);
 
-    // Build where clause
-    const where: any = { orgId, archived: false };
-
-    if (query.query) {
-      where.OR = [
-        { name: { contains: query.query, mode: 'insensitive' } },
-        { domain: { contains: query.query, mode: 'insensitive' } },
-        { email: { contains: query.query, mode: 'insensitive' } },
-      ];
-    }
-
-    if (query.industry) {
-      where.industry = query.industry;
-    }
-
-    // Get total count
-    const total = await prisma.customer.count({ where });
-
-    // Get paginated results
-    const organizations = await prisma.customer.findMany({
-      where,
-      skip: (query.page - 1) * query.pageSize,
-      take: query.pageSize,
-      orderBy: { createdAt: 'desc' },
-      select: {
-        id: true,
-        name: true,
-        domain: true,
-        industry: true,
-        size: true,
-        annualRevenue: true,
-        website: true,
-        phone: true,
-        email: true,
-        customerId: true,
-        archived: true,
-        createdAt: true,
-      },
+    // List organizations
+    const result = await listOrganizations({
+      orgId,
+      archived: query.archived,
+      ownerId: query.ownerId,
+      search: query.search,
+      limit: query.pageSize,
+      offset: (query.page - 1) * query.pageSize,
     });
 
-    const transformed = organizations.map((org) => ({
+    const transformed = result.organizations.map((org) => ({
       id: org.id,
       name: org.name,
       domain: org.domain,
       industry: org.industry,
       size: org.size,
-      annualRevenue: org.annualRevenue ? Number(org.annualRevenue) : undefined,
+      annualRevenue: org.annualRevenue,
       website: org.website,
       phone: org.phone,
-      email: org.email,
-      customerId: org.customerId,
+      ownerId: org.ownerId,
       archived: org.archived,
       createdAt: org.createdAt.toISOString(),
+      updatedAt: org.updatedAt.toISOString(),
+      contactCount: org._count.contacts,
+      opportunityCount: org._count.opportunities,
     }));
 
     return res.status(200).json({
-      organizations: transformed,
-      total,
-      page: query.page,
-      pageSize: query.pageSize,
+      ok: true,
+      data: {
+        organizations: transformed,
+        total: result.total,
+        page: query.page,
+        pageSize: query.pageSize,
+      },
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -130,55 +96,32 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, orgId: stri
     }
 
     // Validate request body
-    const data = createOrganizationSchema.parse(req.body);
+    const data = CreateOrganizationSchema.parse(req.body);
 
     // Create organization
-    const organization = await prisma.customer.create({
-      data: {
-        orgId,
-        name: data.name,
-        domain: data.domain || undefined,
-        industry: data.industry || undefined,
-        size: data.size || undefined,
-        annualRevenue: data.annualRevenue || undefined,
-        website: data.website || undefined,
-        phone: data.phone || undefined,
-        email: data.email || undefined,
-        ownerId: data.ownerId || undefined,
-        archived: false,
-      },
-    });
-
-    // Audit log
-    await auditLog({
+    const organization = await createOrganization({
       orgId,
-      actorId: userId,
-      action: 'create',
-      entityType: 'organization',
-      entityId: organization.id,
-      delta: {
-        name: data.name,
-        industry: data.industry,
-        size: data.size,
-      },
+      userId,
+      data,
     });
 
     // Transform response
     const response = {
-      id: organization.id,
-      name: organization.name,
-      domain: organization.domain,
-      industry: organization.industry,
-      size: organization.size,
-      annualRevenue: organization.annualRevenue ? Number(organization.annualRevenue) : undefined,
-      website: organization.website,
-      phone: organization.phone,
-      email: organization.email,
-      customerId: organization.customerId,
-      ownerId: organization.ownerId,
-      archived: organization.archived,
-      createdAt: organization.createdAt.toISOString(),
-      updatedAt: organization.updatedAt.toISOString(),
+      ok: true,
+      data: {
+        id: organization.id,
+        name: organization.name,
+        domain: organization.domain,
+        industry: organization.industry,
+        size: organization.size,
+        annualRevenue: organization.annualRevenue,
+        website: organization.website,
+        phone: organization.phone,
+        ownerId: organization.ownerId,
+        archived: organization.archived,
+        createdAt: organization.createdAt.toISOString(),
+        updatedAt: organization.updatedAt.toISOString(),
+      },
     };
 
     return res.status(201).json(response);
