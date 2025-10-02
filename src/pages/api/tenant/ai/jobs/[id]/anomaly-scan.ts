@@ -4,6 +4,7 @@ import { aiJobService, ServiceError } from '@/server/services/aiJobService';
 import { withRateLimit, rateLimitPresets } from '@/middleware/rateLimit';
 import { getEmailFromReq } from '@/lib/rbac';
 import { prisma } from '@/lib/prisma';
+import { withAudienceAndCostGuard, AUDIENCE, COST_GUARD } from '@/middleware/withCostGuard';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -55,5 +56,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withRateLimit(rateLimitPresets.ai, handler);
+export default withAudienceAndCostGuard(
+  AUDIENCE.CLIENT_ONLY,
+  COST_GUARD.AI_QA_SUMMARY,
+  withRateLimit(rateLimitPresets.ai, handler)
+);
 
