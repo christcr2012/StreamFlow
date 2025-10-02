@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { auditLog } from '@/server/services/auditService';
+import { withAudience, AUDIENCE, getUserInfo } from '@/middleware/withAudience';
 
 // Validation schema for updates
 const updateOpportunitySchema = z.object({
