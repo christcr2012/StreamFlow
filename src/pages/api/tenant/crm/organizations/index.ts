@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { auditLog } from '@/server/services/auditService';
+import { withAudience, AUDIENCE, getUserInfo } from '@/middleware/withAudience';
 
 // Validation schemas
 const createOrganizationSchema = z.object({
@@ -32,10 +33,9 @@ function errorResponse(res: NextApiResponse, status: number, error: string, mess
   });
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // TODO: Add withAudience middleware (Task 3)
-  const orgId = req.headers['x-org-id'] as string || 'org_test';
-  const userId = req.headers['x-user-id'] as string || 'user_test';
+async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { orgId, email } = getUserInfo(req);
+  const userId = email || 'user_test';
 
   if (req.method === 'GET') {
     return handleGet(req, res, orgId);
@@ -198,4 +198,6 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, orgId: stri
     return errorResponse(res, 500, 'Internal', 'Failed to create organization');
   }
 }
+
+export default withAudience(AUDIENCE.CLIENT_ONLY, handler);
 
