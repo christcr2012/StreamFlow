@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { auditLog } from '@/server/services/auditService';
 import { withAudience, AUDIENCE, getUserInfo } from '@/middleware/withAudience';
+import { withIdempotency } from '@/middleware/withIdempotency';
+import { withRateLimit, RATE_LIMIT_CONFIGS } from '@/middleware/withRateLimit';
 
 // Zod schemas for validation
 const CreateNoteSchema = z.object({
@@ -158,5 +160,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withAudience(AUDIENCE.CLIENT_ONLY, handler);
+export default withRateLimit(
+  RATE_LIMIT_CONFIGS.DEFAULT,
+  withIdempotency(
+    withAudience(AUDIENCE.CLIENT_ONLY, handler)
+  )
+);
 
