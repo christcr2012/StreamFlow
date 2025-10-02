@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { withAudience, AUDIENCE } from '@/middleware/withAudience';
+import { withRateLimit, RATE_LIMIT_CONFIGS } from '@/middleware/withRateLimit';
 import { ULAPService } from '@/server/services/ulapService';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -43,5 +44,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withAudience(AUDIENCE.CLIENT_ONLY, handler);
+export default withRateLimit(
+  RATE_LIMIT_CONFIGS.DEFAULT,
+  withAudience(AUDIENCE.CLIENT_ONLY, handler)
+);
 
