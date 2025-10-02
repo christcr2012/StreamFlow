@@ -417,6 +417,9 @@ model Org {
   leadTasks     LeadTask[]      @relation("OrgLeadTasks")
   contacts      Contact[]       @relation("OrgContacts")
   quotes        Quote[]         // Bridge System: Quotes for this org
+  crmTasks      CrmTask[]       @relation("OrgCrmTasks")
+  crmNotes      CrmNote[]       @relation("OrgCrmNotes")
+  crmFiles      CrmFile[]       @relation("OrgCrmFiles")
 
   // Multi-Portal Business OS Relations
   employeeProfiles EmployeeProfile[] @relation("OrgEmployeeProfiles")
@@ -1195,6 +1198,91 @@ model Contact {
   @@index([orgId, status])                 // Status filtering
   @@index([orgId, createdAt])              // Timeline queries
   @@index([orgId, lastContactedAt])        // Recent contact queries
+}
+
+/// CrmTask manages tasks attached to CRM entities (opportunities, organizations, contacts)
+/// Implements binder2 requirement for task management with full CRUD capabilities
+model CrmTask {
+  id          String   @id @default(cuid())
+  orgId       String   // Multi-tenant isolation (tenant_id in binder2)
+
+  // Entity attachment
+  entityType  String   // enum: 'opportunity', 'organization', 'contact'
+  entityId    String   // ID of the attached entity
+
+  // Task details
+  title       String
+  dueAt       DateTime?
+  assigneeUserId String?
+  status      String   @default("open") // enum: 'open', 'in_progress', 'done', 'cancelled'
+
+  // Metadata
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  org         Org      @relation("OrgCrmTasks", fields: [orgId], references: [id], onDelete: Cascade)
+
+  // Indexes for performance (binder2 requirements)
+  @@index([orgId, entityType, entityId])       // Entity tasks lookup
+  @@index([orgId, assigneeUserId, status])     // Assignee's tasks
+  @@index([orgId, dueAt])                      // Due date queries
+  @@index([orgId, updatedAt])                  // Recent updates
+}
+
+/// CrmNote manages notes attached to CRM entities
+/// Implements binder2 requirement for note management with audit trail
+model CrmNote {
+  id          String   @id @default(cuid())
+  orgId       String   // Multi-tenant isolation (tenant_id in binder2)
+
+  // Entity attachment
+  entityType  String   // enum: 'opportunity', 'organization', 'contact'
+  entityId    String   // ID of the attached entity
+
+  // Note content
+  body        String   @db.Text
+  createdBy   String   // User who created the note
+
+  // Metadata
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  org         Org      @relation("OrgCrmNotes", fields: [orgId], references: [id], onDelete: Cascade)
+
+  // Indexes for performance (binder2 requirements)
+  @@index([orgId, entityType, entityId, createdAt]) // Entity notes timeline
+  @@index([orgId, createdBy])                       // User's notes
+  @@index([orgId, updatedAt])                       // Recent updates
+}
+
+/// CrmFile manages file attachments for CRM entities
+/// Implements binder2 requirement for file management with AV scanning
+model CrmFile {
+  id          String   @id @default(cuid())
+  orgId       String   // Multi-tenant isolation (tenant_id in binder2)
+
+  // Entity attachment
+  entityType  String   // enum: 'opportunity', 'organization', 'contact'
+  entityId    String   // ID of the attached entity
+
+  // File details
+  filename    String
+  mimeType    String
+  sizeBytes   Int
+  storageKey  String   // S3/storage key
+
+  // Metadata
+  createdAt   DateTime @default(now())
+
+  // Relations
+  org         Org      @relation("OrgCrmFiles", fields: [orgId], references: [id], onDelete: Cascade)
+
+  // Indexes for performance (binder2 requirements)
+  @@index([orgId, entityType, entityId, createdAt]) // Entity files timeline
+  @@index([orgId, storageKey])                      // Storage key lookup
+  @@index([orgId, createdAt])                       // Recent uploads
 }
 
 model Invoice {
