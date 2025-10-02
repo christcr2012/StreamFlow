@@ -66,14 +66,12 @@ export class LineOfBusinessService {
       }
     }
 
-    // Check for duplicate
-    const existing = await prisma.lineOfBusiness.findUnique({
+    // Check for duplicate (use findFirst for nullable unique constraint)
+    const existing = await prisma.lineOfBusiness.findFirst({
       where: {
-        orgId_key_buId: {
-          orgId,
-          key: validated.key,
-          buId: validated.buId ?? null,
-        },
+        orgId,
+        key: validated.key,
+        buId: validated.buId ?? null,
       },
     });
 
@@ -88,7 +86,7 @@ export class LineOfBusinessService {
         buId: validated.buId,
         key: validated.key,
         enabled: validated.enabled ?? false,
-        config: validated.config ?? {},
+        config: (validated.config ?? {}) as any,
       },
     });
 
@@ -181,7 +179,7 @@ export class LineOfBusinessService {
       data: {
         ...(validated.buId !== undefined && { buId: validated.buId }),
         ...(validated.enabled !== undefined && { enabled: validated.enabled }),
-        ...(validated.config !== undefined && { config: validated.config }),
+        ...(validated.config !== undefined && { config: validated.config as any }),
       },
     });
 

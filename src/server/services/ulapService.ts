@@ -124,7 +124,7 @@ export class ULAPService {
         key: event.key,
         quantity: event.quantity,
         costCents: event.costCents,
-        context: event.context ?? {},
+        context: (event.context ?? {}) as any,
       },
     });
   }

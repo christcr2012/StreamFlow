@@ -102,7 +102,7 @@ export class FleetVehicleService {
         dotNumber: validated.dotNumber,
         odometer: validated.odometer ?? BigInt(0),
         status: validated.status ?? 'active',
-        metadata: validated.metadata ?? {},
+        metadata: (validated.metadata ?? {}) as any,
       },
     });
 
@@ -207,7 +207,7 @@ export class FleetVehicleService {
         ...(validated.dotNumber !== undefined && { dotNumber: validated.dotNumber }),
         ...(validated.odometer !== undefined && { odometer: validated.odometer }),
         ...(validated.status !== undefined && { status: validated.status }),
-        ...(validated.metadata !== undefined && { metadata: validated.metadata }),
+        ...(validated.metadata !== undefined && { metadata: validated.metadata as any }),
       },
     });
 

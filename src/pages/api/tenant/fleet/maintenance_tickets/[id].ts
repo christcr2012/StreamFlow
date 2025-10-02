@@ -8,7 +8,7 @@
  */
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { withAudience } from '@/middleware/withAudience';
+import { withAudience, AUDIENCE } from '@/middleware/withAudience';
 import { maintenanceTicketService } from '@/server/services/fleet/maintenanceTicketService';
 
 async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
@@ -93,5 +93,5 @@ async function handleDelete(
   res.status(204).end();
 }
 
-export default withAudience('tenant')(handler);
+export default withAudience(AUDIENCE.CLIENT_ONLY, handler);
 

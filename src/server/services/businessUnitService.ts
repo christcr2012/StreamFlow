@@ -73,7 +73,7 @@ export class BusinessUnitService {
         orgId,
         name: validated.name,
         timezone: validated.timezone ?? 'UTC',
-        address: validated.address ?? {},
+        address: (validated.address ?? {}) as any,
       },
     });
 
@@ -165,7 +165,7 @@ export class BusinessUnitService {
       data: {
         ...(validated.name !== undefined && { name: validated.name }),
         ...(validated.timezone !== undefined && { timezone: validated.timezone }),
-        ...(validated.address !== undefined && { address: validated.address }),
+        ...(validated.address !== undefined && { address: validated.address as any }),
       },
     });
 
