@@ -516,6 +516,14 @@ model Org {
   notes       Note[]       @relation("OrgNotes")
   attachments Attachment[] @relation("OrgAttachments")
 
+  // Binder5: Field PWA, Assets, Rate Limiting
+  assets              Asset[]              @relation("OrgAssets")
+  assetHistory        AssetHistory[]       @relation("OrgAssetHistory")
+  rateLimits          RateLimit[]          @relation("OrgRateLimits")
+  rateLimitUsage      RateLimitUsage[]     @relation("OrgRateLimitUsage")
+  workOrderTimeEntries WorkOrderTimeEntry[] @relation("OrgWorkOrderTimeEntries")
+  syncQueue           SyncQueue[]          @relation("OrgSyncQueue")
+
   // Work Orders Relations
   jobTickets JobTicket[]
 
@@ -2247,18 +2255,26 @@ model WorkOrder {
   estimatedValue Decimal? @db.Decimal(12, 2)
   actualCost     Decimal? @db.Decimal(12, 2)
 
+  // Binder5: Lifecycle enhancements
+  pausedAt     DateTime?
+  resumedAt    DateTime?
+  pauseReason  String?
+  completedBy  String? // User who completed
+  version      Int       @default(1) // Optimistic locking
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Relations
-  org          Org                @relation("OrgWorkOrders", fields: [orgId], references: [id])
-  customer     Customer?          @relation("CustomerWorkOrders", fields: [orgId, customerId], references: [orgId, id])
-  jobSite      JobSite?           @relation("JobSiteWorkOrders", fields: [orgId, jobSiteId], references: [orgId, id])
-  assignments  JobAssignment[]    @relation("WorkOrderAssignments")
-  checklists   JobChecklistItem[] @relation("WorkOrderChecklists")
-  timesheets   TimesheetEntry[]   @relation("WorkOrderTimesheets")
-  issueReports IssueReport[]      @relation("WorkOrderIssueReports")
-  mediaAssets  MediaAsset[]       @relation("WorkOrderMedia")
+  org          Org                  @relation("OrgWorkOrders", fields: [orgId], references: [id])
+  customer     Customer?            @relation("CustomerWorkOrders", fields: [orgId, customerId], references: [orgId, id])
+  jobSite      JobSite?             @relation("JobSiteWorkOrders", fields: [orgId, jobSiteId], references: [orgId, id])
+  assignments  JobAssignment[]      @relation("WorkOrderAssignments")
+  checklists   JobChecklistItem[]   @relation("WorkOrderChecklists")
+  timesheets   TimesheetEntry[]     @relation("WorkOrderTimesheets")
+  issueReports IssueReport[]        @relation("WorkOrderIssueReports")
+  mediaAssets  MediaAsset[]         @relation("WorkOrderMedia")
+  timeEntries  WorkOrderTimeEntry[] // Binder5: Time tracking
 
   @@unique([orgId, id]) // Multi-tenant isolation
   @@index([orgId, status])
@@ -3936,6 +3952,11 @@ model FleetVehicle {
   status    String  @default("active") // active, maintenance, retired
   metadata  Json    @default("{}") // Additional metadata
 
+  // Binder5: DVIR enhancements
+  dvirStatus  String?   @default("pass") // 'pass', 'fail', 'pending'
+  lastDvirAt  DateTime? // Last DVIR inspection
+  nextDvirDue DateTime? // Next DVIR due date
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -4197,4 +4218,169 @@ model Attachment {
   @@index([orgId, entityType, entityId])
   @@index([userId])
   @@index([createdAt])
+}
+
+// =============================================================================
+// BINDER5 ENHANCEMENTS
+// =============================================================================
+
+/// Asset - Track equipment, tools, vehicles, materials with QR codes
+model Asset {
+  id          String    @id @default(cuid())
+  orgId       String
+  buId        String? // Business Unit assignment
+  assetNumber String // Unique asset number (e.g., "AST-001")
+  name        String
+  description String?
+  category    String // 'equipment', 'tool', 'vehicle', 'material', 'other'
+  status      String    @default("active") // 'active', 'maintenance', 'retired', 'lost'
+
+  // QR Code
+  qrCode    String  @unique // QR code value (UUID or custom)
+  qrCodeUrl String? // URL to QR code image
+
+  // Location & Assignment
+  locationId           String? // Current location (JobSite, BusinessUnit, etc.)
+  locationType         String? // 'jobsite', 'bu', 'warehouse', 'vehicle'
+  assignedToUserId     String? // Currently assigned to user
+  assignedToVehicleId  String? // Currently assigned to vehicle
+
+  // Financial
+  purchasePrice  Int? // Purchase price in cents
+  currentValue   Int? // Current value in cents
+  purchaseDate   DateTime?
+  warrantyExpiry DateTime?
+
+  // Maintenance
+  lastMaintenanceAt       DateTime?
+  nextMaintenanceAt       DateTime?
+  maintenanceIntervalDays Int?
+
+  // Metadata
+  serialNumber String?
+  manufacturer String?
+  model        String?
+  customFields Json    @default("{}")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  org     Org            @relation("OrgAssets", fields: [orgId], references: [id], onDelete: Cascade)
+  history AssetHistory[]
+
+  @@unique([orgId, assetNumber])
+  @@index([orgId, category])
+  @@index([orgId, status])
+  @@index([qrCode])
+  @@index([assignedToUserId])
+  @@index([buId])
+}
+
+/// AssetHistory - Track asset movements, assignments, scans
+model AssetHistory {
+  id        String   @id @default(cuid())
+  orgId     String
+  assetId   String
+  userId    String? // User who performed action
+  action    String // 'scan', 'assign', 'unassign', 'move', 'maintenance', 'status_change'
+  fromValue String? // Previous value
+  toValue   String? // New value
+  notes     String?
+  location  String? // GPS coordinates or location description
+  createdAt DateTime @default(now())
+
+  // Relations
+  org   Org   @relation("OrgAssetHistory", fields: [orgId], references: [id], onDelete: Cascade)
+  asset Asset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@index([assetId, createdAt])
+  @@index([orgId, userId])
+  @@index([action])
+}
+
+/// RateLimit - Define rate limits per org/BU/key
+model RateLimit {
+  id             String   @id @default(cuid())
+  orgId          String
+  buId           String? // Optional: Business Unit specific limits
+  key            String // Rate limit key (e.g., 'api:leads:create', 'ai:chat')
+  limitPerMinute Int      @default(60)
+  limitPerHour   Int      @default(1000)
+  limitPerDay    Int      @default(10000)
+  enabled        Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  org Org @relation("OrgRateLimits", fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, buId, key])
+  @@index([enabled])
+}
+
+/// RateLimitUsage - Track actual rate limit usage
+model RateLimitUsage {
+  id          String   @id @default(cuid())
+  orgId       String
+  buId        String?
+  key         String
+  windowStart DateTime // Start of time window
+  windowType  String // 'minute', 'hour', 'day'
+  count       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  org Org @relation("OrgRateLimitUsage", fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, key, windowStart, windowType])
+  @@index([windowStart])
+}
+
+/// WorkOrderTimeEntry - Track time spent on work orders
+model WorkOrderTimeEntry {
+  id              String    @id @default(cuid())
+  orgId           String
+  workOrderId     String
+  userId          String // Tech who logged time
+  startedAt       DateTime
+  endedAt         DateTime?
+  durationMinutes Int? // Calculated duration
+  notes           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  org       Org       @relation("OrgWorkOrderTimeEntries", fields: [orgId], references: [id], onDelete: Cascade)
+  workOrder WorkOrder @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+
+  @@index([workOrderId])
+  @@index([userId])
+  @@index([startedAt])
+}
+
+/// SyncQueue - Offline-first sync queue for Field PWA
+model SyncQueue {
+  id            String    @id @default(cuid())
+  orgId         String
+  userId        String
+  deviceId      String? // Device identifier
+  action        String // 'create', 'update', 'delete'
+  entityType    String // 'workorder', 'timeentry', 'note', etc.
+  entityId      String?
+  payload       String // JSON payload
+  status        String    @default("pending") // 'pending', 'synced', 'failed'
+  attempts      Int       @default(0)
+  lastAttemptAt DateTime?
+  error         String?
+  createdAt     DateTime  @default(now())
+  syncedAt      DateTime?
+
+  // Relations
+  org Org @relation("OrgSyncQueue", fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, userId, status])
+  @@index([status, createdAt])
+  @@index([deviceId])
 }
