@@ -54,7 +54,7 @@ export async function auditLog(input: AuditInput): Promise<void> {
         userId: userId || undefined,
         action,
         resource,
-        meta: meta ?? undefined,
+        meta: meta ? (meta as any) : undefined,
         ip: ip || undefined,
         userAgent: userAgent || undefined,
       },

@@ -23,7 +23,7 @@ function errorResponse(res: NextApiResponse, status: number, error: string, mess
   });
 }
 
-async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { orgId, email } = getUserInfo(req);
   const userId = email || 'user_test';
   const { id } = req.query;
@@ -45,7 +45,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: string, id: string) {
+async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: string, id: string): Promise<void> {
   try {
     const opportunity = await prisma.opportunity.findFirst({
       where: {
@@ -119,7 +119,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: strin
   }
 }
 
-async function handlePatch(req: NextApiRequest, res: NextApiResponse, orgId: string, userId: string, id: string) {
+async function handlePatch(req: NextApiRequest, res: NextApiResponse, orgId: string, userId: string, id: string): Promise<void> {
   try {
     // Validate request body
     const data = updateOpportunitySchema.parse(req.body);
@@ -206,7 +206,7 @@ async function handlePatch(req: NextApiRequest, res: NextApiResponse, orgId: str
   }
 }
 
-async function handleDelete(req: NextApiRequest, res: NextApiResponse, orgId: string, userId: string, id: string) {
+async function handleDelete(req: NextApiRequest, res: NextApiResponse, orgId: string, userId: string, id: string): Promise<void> {
   try {
     // Check if opportunity exists
     const existing = await prisma.opportunity.findFirst({
@@ -236,11 +236,10 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse, orgId: st
       delta: {},
     });
 
-    return res.status(204).end();
+    res.status(204).end();
   } catch (error) {
     console.error('Error deleting opportunity:', error);
     errorResponse(res, 500, 'Internal', 'Failed to delete opportunity');
-    return;
   }
 }
 

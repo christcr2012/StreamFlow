@@ -176,20 +176,41 @@ export class ImportService {
             }
           }
 
+          // Get or create organization
+          let organizationId = validated.organizationId;
+          if (!organizationId) {
+            // Auto-create "Unassigned" organization
+            const unassignedOrg = await prisma.organization.upsert({
+              where: {
+                orgId_name: {
+                  orgId,
+                  name: 'Unassigned',
+                },
+              },
+              update: {},
+              create: {
+                orgId,
+                name: 'Unassigned',
+                archived: false,
+              },
+            });
+            organizationId = unassignedOrg.id;
+          }
+
           // Create contact
           const contact = await prisma.contact.create({
             data: {
               orgId,
               name: validated.name,
-              email: validated.email || null,
-              phone: validated.phone || null,
-              title: validated.title || null,
-              department: validated.department || null,
-              organizationId: validated.organizationId || null,
-              mobilePhone: validated.mobilePhone || null,
-              workPhone: validated.workPhone || null,
-              website: validated.website || null,
-              notes: validated.notes || null,
+              email: validated.email || undefined,
+              phone: validated.phone || undefined,
+              title: validated.title || undefined,
+              department: validated.department || undefined,
+              organizationId,
+              mobilePhone: validated.mobilePhone || undefined,
+              workPhone: validated.workPhone || undefined,
+              website: validated.website || undefined,
+              notes: validated.notes || undefined,
               ownerId: userId,
             },
           });

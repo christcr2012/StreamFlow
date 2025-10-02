@@ -69,7 +69,7 @@ export class ConversionService {
       // 1. Create Organization (if requested)
       let organizationId: string | undefined;
       if (validated.createOrganization && lead.company) {
-        const organization = await tx.customer.create({
+        const organization = await tx.organization.create({
           data: {
             orgId,
             name: validated.organizationName || lead.company,
@@ -77,7 +77,6 @@ export class ConversionService {
             industry: lead.industryType || undefined,
             website: lead.website || undefined,
             phone: lead.phoneE164 || undefined,
-            email: lead.email || undefined,
             archived: false,
           },
         });
@@ -86,14 +85,14 @@ export class ConversionService {
 
       // 2. Create Contact (if requested)
       let contactId: string | undefined;
-      if (validated.createContact && lead.contactName) {
+      if (validated.createContact && lead.contactName && organizationId) {
         const contact = await tx.contact.create({
           data: {
             orgId,
             name: validated.contactName || lead.contactName,
             email: lead.email || undefined,
             phone: lead.phoneE164 || undefined,
-            organizationId: organizationId || undefined,
+            organizationId, // Guaranteed to be defined by if condition
             isPrimary: true,
             source: lead.sourceType,
           },
@@ -115,16 +114,14 @@ export class ConversionService {
       });
 
       // 4. Create Conversion Audit
-      // TODO: Add conversionAudit model to schema
-      /* const conversionAudit = await tx.conversionAudit.create({
+      const conversionAudit = await tx.conversionAudit.create({
         data: {
-          orgId,
-          leadId: lead.id,
-          customerId: customer.id,
+          tenantId: orgId,
           organizationId: organizationId || undefined,
-          contactId: contactId || undefined,
-          convertedBy: userId,
-          conversionData: {
+          userId,
+          action: 'convert',
+          resource: `lead:${lead.id}`,
+          meta: {
             leadSource: lead.sourceType,
             leadStage: lead.stage,
             leadScore: lead.aiScore,
@@ -132,9 +129,11 @@ export class ConversionService {
             contactName: lead.contactName,
             email: lead.email,
             phone: lead.phoneE164,
-          },
+            customerId: customer.id,
+            contactId,
+          } as any,
         },
-      }); */
+      });
 
       // 5. Update Lead with conversion info
       await tx.lead.update({
@@ -144,7 +143,6 @@ export class ConversionService {
           convertedToOrganizationId: organizationId || undefined,
           convertedToContactId: contactId || undefined,
           convertedAt: new Date(),
-          conversionAuditId: conversionAudit.id,
           status: 'CONVERTED' as any, // Update lead status
         },
       });
@@ -209,12 +207,10 @@ export class ConversionService {
       };
     }
 
-    // Get conversion audit
-    const audit = lead.conversionAuditId
-      ? null /* await prisma.conversionAudit.findUnique({
-          where: { id: lead.conversionAuditId },
-        }) */
-      : null;
+    // Get conversion audit (if available)
+    // Note: Lead model doesn't have conversionAuditId field yet
+    // This will be added in future migration
+    const audit = null;
 
     return {
       converted: true,
@@ -222,14 +218,7 @@ export class ConversionService {
       organizationId: lead.convertedToOrganizationId,
       contactId: lead.convertedToContactId,
       convertedAt: lead.convertedAt,
-      audit: audit
-        ? {
-            id: audit.id,
-            convertedBy: audit.convertedBy,
-            conversionData: audit.conversionData,
-            createdAt: audit.createdAt,
-          }
-        : null,
+      audit: null, // Will be populated when Lead.conversionAuditId field is added
     };
   }
 

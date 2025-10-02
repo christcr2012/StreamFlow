@@ -1,0 +1,17 @@
+src/pages/api/tenant/crm/contacts/[id].ts(254,5): error TS2322: Type 'NextApiResponse<any>' is not assignable to type 'void'.
+src/pages/api/tenant/crm/opportunities/[id].ts(239,5): error TS2322: Type 'NextApiResponse<any>' is not assignable to type 'void'.
+src/pages/api/tenant/crm/organizations/[id].ts(155,5): error TS2322: Type 'NextApiResponse<any>' is not assignable to type 'void'.
+src/pages/api/tenant/crm/quotes/[id].ts(141,5): error TS2322: Type 'NextApiResponse<any>' is not assignable to type 'void'.
+src/server/services/bridge/conversionService.ts(90,11): error TS2322: Type '{ orgId: string; name: string; email: string | undefined; phone: string | undefined; organizationId: string | undefined; isPrimary: true; source: $Enums.LeadSource; }' is not assignable to type '(Without<ContactCreateInput, ContactUncheckedCreateInput> & ContactUncheckedCreateInput) | (Without<...> & ContactCreateInput)'.
+  Types of property 'organizationId' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/server/services/bridge/conversionService.ts(225,23): error TS2339: Property 'id' does not exist on type 'never'.
+src/server/services/bridge/conversionService.ts(226,32): error TS2339: Property 'convertedBy' does not exist on type 'never'.
+src/server/services/bridge/conversionService.ts(227,35): error TS2339: Property 'conversionData' does not exist on type 'never'.
+src/server/services/bridge/conversionService.ts(228,30): error TS2339: Property 'createdAt' does not exist on type 'never'.
+src/server/services/crm/organizationService.ts(328,7): error TS2353: Object literal may only specify known properties, and 'orgId' does not exist in type '(Without<ConversionAuditCreateInput, ConversionAuditUncheckedCreateInput> & ConversionAuditUncheckedCreateInput) | (Without<...> & ConversionAuditCreateInput)'.
+src/server/services/importService.ts(181,13): error TS2322: Type '{ orgId: string; name: string; email: string | undefined; phone: string | undefined; title: string | undefined; department: string | undefined; organizationId: string | undefined; ... 4 more ...; ownerId: string; }' is not assignable to type '(Without<ContactCreateInput, ContactUncheckedCreateInput> & ContactUncheckedCreateInput) | (Without<...> & ContactCreateInput)'.
+  Types of property 'organizationId' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.

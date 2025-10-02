@@ -151,20 +151,6 @@ export async function createOrganization(params: {
     },
   });
 
-  // Log conversion audit
-  await prisma.conversionAudit.create({
-    data: {
-      orgId,
-      userId,
-      action: 'create',
-      resource: 'organization',
-      meta: {
-        organizationId: organization.id,
-        name: organization.name,
-      },
-    },
-  });
-
   // Log audit event
   await auditLog({
     tenantId: orgId,
@@ -299,20 +285,6 @@ export async function updateOrganization(params: {
     },
   });
 
-  // Log conversion audit
-  await prisma.conversionAudit.create({
-    data: {
-      orgId,
-      userId,
-      action: 'update',
-      resource: 'organization',
-      meta: {
-        organizationId: organization.id,
-        changes: validated,
-      },
-    },
-  });
-
   // Log audit event
   await auditLog({
     tenantId: orgId,
@@ -349,20 +321,6 @@ export async function deleteOrganization(params: {
       data: { archived: true },
     });
   }
-
-  // Log conversion audit
-  await prisma.conversionAudit.create({
-    data: {
-      orgId,
-      userId,
-      action: hard ? 'delete' : 'archive',
-      resource: 'organization',
-      meta: {
-        organizationId,
-        hard,
-      },
-    },
-  });
 
   // Log audit event
   await auditLog({

@@ -14,7 +14,7 @@ function errorResponse(res: NextApiResponse, status: number, error: string, mess
   });
 }
 
-async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { orgId, email } = getUserInfo(req);
   const userId = email || 'user_test';
   const { id } = req.query;
@@ -36,7 +36,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: string, id: string) {
+async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: string, id: string): Promise<void> {
   try {
     const quote = await quoteService.getQuoteById({ orgId, quoteId: id });
 
@@ -81,7 +81,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: strin
   }
 }
 
-async function handlePatch(req: NextApiRequest, res: NextApiResponse, orgId: string, userId: string, id: string) {
+async function handlePatch(req: NextApiRequest, res: NextApiResponse, orgId: string, userId: string, id: string): Promise<void> {
   try {
     // Validate request body
     const data = UpdateQuoteSchema.parse(req.body);
@@ -134,11 +134,11 @@ async function handlePatch(req: NextApiRequest, res: NextApiResponse, orgId: str
   }
 }
 
-async function handleDelete(req: NextApiRequest, res: NextApiResponse, orgId: string, userId: string, id: string) {
+async function handleDelete(req: NextApiRequest, res: NextApiResponse, orgId: string, userId: string, id: string): Promise<void> {
   try {
     await quoteService.deleteQuote({ orgId, quoteId: id });
 
-    return res.status(204).end();
+    res.status(204).end();
   } catch (error) {
     if (error instanceof Error && error.message === 'Quote not found') {
       errorResponse(res, 404, 'NotFound', 'Quote not found');
@@ -147,7 +147,6 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse, orgId: st
 
     console.error('Error deleting quote:', error);
     errorResponse(res, 500, 'Internal', 'Failed to delete quote');
-    return;
   }
 }
 

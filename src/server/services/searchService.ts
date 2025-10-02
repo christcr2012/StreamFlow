@@ -162,14 +162,18 @@ export class SearchService {
       byType.opportunities = opportunities.length;
 
       opportunities.forEach(opp => {
+        const customerName = opp.customer
+          ? (opp.customer.company || opp.customer.primaryName || 'Unknown')
+          : 'Unknown';
+
         results.push({
           id: opp.id,
           type: 'opportunity',
-          title: `${opp.customer.company || opp.customer.primaryName || 'Unknown'} - ${opp.stage}`,
+          title: `${customerName} - ${opp.stage}`,
           subtitle: `${opp.valueType} - $${opp.estValue?.toString() || '0'}`,
           relevance: this.calculateRelevance(query, [
             opp.stage,
-            opp.customer.company,
+            opp.customer?.company || '',
           ]),
           metadata: {
             customerId: opp.customerId,
