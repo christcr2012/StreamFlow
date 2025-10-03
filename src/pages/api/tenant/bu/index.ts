@@ -1,13 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { withAudience, AUDIENCE } from '@/middleware/withAudience';
-import { withIdempotency } from '@/middleware/withIdempotency';
-import { withRateLimit, RATE_LIMIT_CONFIGS } from '@/middleware/withRateLimit';
-import { BusinessUnitService } from '@/server/services/businessUnitService';
+import { withAudience } from '@/middleware/audience';
+import { auditService } from '@/lib/auditService';
+import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 
 const CreateBusinessUnitSchema = z.object({
   name: z.string().min(1).max(200),
-  timezone: z.string().optional(),
+  timezone: z.string().default('UTC'),
   address: z.object({
     street: z.string().optional(),
     city: z.string().optional(),
@@ -18,57 +17,88 @@ const CreateBusinessUnitSchema = z.object({
 });
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { method } = req;
-  const orgId = req.headers['x-org-id'] as string;
-  const userId = req.headers['x-user-id'] as string;
-
-  if (!orgId || !userId) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
-
-  const service = new BusinessUnitService();
+  const orgId = req.headers['x-org-id'] as string || 'org_test';
 
   try {
-    switch (method) {
-      case 'GET': {
-        // List business units
-        const limit = parseInt(req.query.limit as string) || 20;
-        const offset = parseInt(req.query.offset as string) || 0;
+    // GET - List business units
+    if (req.method === 'GET') {
+      const businessUnits = await prisma.businessUnit.findMany({
+        where: { orgId },
+        orderBy: { createdAt: 'desc' },
+        include: {
+          _count: {
+            select: {
+              linesOfBusiness: true,
+              fleetVehicles: true,
+            },
+          },
+        },
+      });
 
-        const result = await service.list(orgId, { limit, offset });
-        return res.status(200).json(result);
-      }
+      await auditService.logBinderEvent({
+        action: 'bu.list',
+        tenantId: orgId,
+        path: req.url,
+        ts: Date.now(),
+      });
 
-      case 'POST': {
-        // Create business unit
-        const validated = CreateBusinessUnitSchema.parse(req.body);
-        const bu = await service.create(orgId, userId, validated);
-        return res.status(201).json(bu);
-      }
-
-      default:
-        res.setHeader('Allow', ['GET', 'POST']);
-        return res.status(405).json({ error: `Method ${method} not allowed` });
+      return res.status(200).json({
+        ok: true,
+        businessUnits,
+        count: businessUnits.length,
+      });
     }
+
+    // POST - Create business unit
+    if (req.method === 'POST') {
+      const validation = CreateBusinessUnitSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({
+          error: 'VALIDATION_ERROR',
+          details: validation.error.errors,
+        });
+      }
+
+      const { name, timezone, address } = validation.data;
+
+      const businessUnit = await prisma.businessUnit.create({
+        data: {
+          orgId,
+          name,
+          timezone,
+          address: address || {},
+        },
+      });
+
+      await auditService.logBinderEvent({
+        action: 'bu.create',
+        tenantId: orgId,
+        path: req.url,
+        ts: Date.now(),
+      });
+
+      return res.status(201).json({
+        ok: true,
+        businessUnit,
+      });
+    }
+
+    return res.status(405).json({ error: 'Method not allowed' });
   } catch (error) {
-    console.error('Business unit API error:', error);
-    
-    if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: 'Validation error', details: error.errors });
-    }
-
-    if (error instanceof Error) {
-      return res.status(400).json({ error: error.message });
-    }
-
-    return res.status(500).json({ error: 'Internal server error' });
+    console.error('Error handling business units:', error);
+    await auditService.logBinderEvent({
+      action: 'bu.error',
+      tenantId: orgId,
+      path: req.url,
+      error: String(error),
+      ts: Date.now(),
+    });
+    return res.status(500).json({
+      error: 'INTERNAL_ERROR',
+      message: 'Failed to handle business unit operation',
+    });
   }
 }
 
-export default withRateLimit(
-  RATE_LIMIT_CONFIGS.DEFAULT,
-  withIdempotency(
-    withAudience(AUDIENCE.CLIENT_ONLY, handler)
-  )
-);
+export default withAudience('tenant', handler);
 
