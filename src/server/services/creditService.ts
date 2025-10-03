@@ -251,6 +251,25 @@ export class CreditService {
       `Trial credits: $${(trialCreditsCents / 100).toFixed(2)}`
     );
   }
+
+  /**
+   * Check if org can afford the estimated costs
+   * Returns boolean instead of throwing
+   */
+  async canAfford(orgId: string, estimates: {type: string, estimate: number}[]): Promise<boolean> {
+    if (!orgId || !estimates?.length) return false;
+
+    const totalCents = estimates.reduce((sum, est) => sum + (est.estimate || 0), 0);
+    if (totalCents <= 0) return true;
+
+    try {
+      const { balanceCents } = await this.getBalance(orgId);
+      return balanceCents >= totalCents;
+    } catch (error) {
+      console.error('Error checking credit affordability:', error);
+      return false;
+    }
+  }
 }
 
 export const creditService = new CreditService();

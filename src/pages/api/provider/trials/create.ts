@@ -9,7 +9,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
-import { withAudience, AUDIENCE } from '@/middleware/withAudience';
+import { withAudience } from '@/middleware/audience';
 import { withIdempotency } from '@/middleware/withIdempotency';
 import { auditLog } from '@/server/services/auditService';
 import { trialService } from '@/server/services/trialService';
@@ -151,7 +151,5 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
 }
 
 // Export with middleware stack
-export default withIdempotency(
-  withAudience(AUDIENCE.PROVIDER_ONLY, handler)
-);
+export default withAudience('provider', handler);
 

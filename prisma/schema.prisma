@@ -4416,3 +4416,41 @@ model SyncQueue {
   @@index([status, createdAt])
   @@index([deviceId])
 }
+
+// Binder1: Cleaning events tracking
+model cleaning_events {
+  id          String   @id @default(cuid())
+  tenant_id   String
+  user_id     String?
+  feature     String
+  request_id  String
+  payload     Json?
+  result      Json?
+  cost_cents  Int      @default(0)
+  tokens_in   Int      @default(0)
+  tokens_out  Int      @default(0)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  @@index([tenant_id, feature, created_at])
+  @@index([request_id])
+}
+
+// Binder1: Fencing events tracking
+model fencing_events {
+  id          String   @id @default(cuid())
+  tenant_id   String
+  user_id     String?
+  feature     String
+  request_id  String
+  payload     Json?
+  result      Json?
+  cost_cents  Int      @default(0)
+  tokens_in   Int      @default(0)
+  tokens_out  Int      @default(0)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  @@index([tenant_id, feature, created_at])
+  @@index([request_id])
+}

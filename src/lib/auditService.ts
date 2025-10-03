@@ -406,6 +406,36 @@ class AuditService {
       recommendations
     };
   }
+
+  /**
+   * Log generic event (for binder middleware)
+   */
+  async logBinderEvent(event: {
+    action: string;
+    expected?: string;
+    actual?: string;
+    tenantId?: string | null;
+    path?: string;
+    error?: string;
+    ts: number;
+  }): Promise<void> {
+    try {
+      // For now, just log to console - in production would save to database
+      console.log('Audit Event:', {
+        timestamp: new Date(event.ts).toISOString(),
+        action: event.action,
+        path: event.path,
+        details: {
+          expected: event.expected,
+          actual: event.actual,
+          tenantId: event.tenantId,
+          error: event.error
+        }
+      });
+    } catch (error) {
+      console.error('Failed to log audit event:', error);
+    }
+  }
 }
 
 // Export singleton instance
