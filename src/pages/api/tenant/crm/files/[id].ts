@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/lib/prisma';
-import { auditLog } from '@/server/services/auditService';
-import { withAudience, AUDIENCE, getUserInfo } from '@/middleware/withAudience';
+import { auditService } from '@/lib/auditService';
+import { withAudience } from '@/middleware/audience';
 
 function errorResponse(res: NextApiResponse, status: number, error: string, message: string, details?: any) {
   return res.status(status).json({
@@ -56,13 +56,11 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse, orgId: st
     // In production, also delete from storage service
 
     // Audit log
-    await auditLog({
-      orgId,
-      actorId: userId,
-      action: 'delete',
-      entityType: 'crm_file',
-      entityId: id,
-      delta: { filename: existing.filename, storageKey: existing.storageKey },
+    await auditService.logBinderEvent({
+      action: 'crm.file.delete',
+      tenantId: orgId,
+      path: req.url,
+      ts: Date.now(),
     });
 
     return res.status(200).json({
@@ -76,8 +74,8 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse, orgId: st
 }
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { orgId, email } = getUserInfo(req);
-  const userId = email || 'user_test';
+  const orgId = req.headers['x-org-id'] as string || 'org_test';
+  const userId = req.headers['x-user-id'] as string || 'user_test';
   const { id } = req.query;
 
   if (typeof id !== 'string') {
@@ -93,5 +91,5 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withAudience(AUDIENCE.CLIENT_ONLY, handler);
+export default withAudience('tenant', handler);
 
