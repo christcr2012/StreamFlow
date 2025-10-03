@@ -1,5 +1,39 @@
 import { prisma } from '@/lib/prisma';
+import { auditService } from '@/lib/auditService';
 import { z } from 'zod';
+
+export interface CSVUploadResult {
+  id: string;
+  filename: string;
+  recordCount: number;
+  headers: string[];
+  sampleData: any[];
+}
+
+export interface FieldMapping {
+  csvField: string;
+  targetField: string;
+  transformation?: string;
+  required: boolean;
+}
+
+export interface ValidationResult {
+  valid: boolean;
+  totalRecords: number;
+  validRecords: number;
+  errors: Array<{
+    row: number;
+    field: string;
+    error: string;
+    value: any;
+  }>;
+  warnings: Array<{
+    row: number;
+    field: string;
+    warning: string;
+    value: any;
+  }>;
+}
 
 const CSVImportSchema = z.object({
   entity_type: z.enum(['customer', 'contact', 'job', 'invoice', 'asset', 'vehicle']),
@@ -272,6 +306,348 @@ export class MigrationService {
       failed,
       success_rate: total > 0 ? (synced / total) * 100 : 0,
     };
+  }
+
+  /**
+   * Upload CSV file for migration (BINDER3)
+   */
+  static async uploadCSV(
+    tenantId: string,
+    userId: string,
+    filename: string,
+    csvData: string,
+    type: 'organizations' | 'contacts' | 'assets' | 'invoices' | 'work_orders' | 'fuel' | 'dvir'
+  ): Promise<CSVUploadResult> {
+    try {
+      // Parse CSV data
+      const lines = csvData.trim().split('\n');
+      const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+      const dataLines = lines.slice(1);
+
+      // Parse sample data (first 5 rows)
+      const sampleData = dataLines.slice(0, 5).map(line => {
+        const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
+        const record: any = {};
+        headers.forEach((header, index) => {
+          record[header] = values[index] || '';
+        });
+        return record;
+      });
+
+      // Create a mock upload record (in real implementation would use a proper table)
+      const uploadId = `upload_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+      // Store in memory for demo (in real app would use database)
+      (global as any).csvUploads = (global as any).csvUploads || {};
+      (global as any).csvUploads[uploadId] = {
+        id: uploadId,
+        orgId: tenantId,
+        filename,
+        type,
+        headers: JSON.stringify(headers),
+        recordCount: dataLines.length,
+        sampleData: JSON.stringify(sampleData),
+        rawData: csvData,
+        uploadedBy: userId,
+        status: 'uploaded',
+        createdAt: new Date(),
+      };
+
+      // Audit log
+      await auditService.logBinderEvent({
+        action: 'migration.csv.upload',
+        tenantId,
+        path: '/migration/csv',
+        ts: Date.now(),
+      });
+
+      return {
+        id: uploadId,
+        filename,
+        recordCount: dataLines.length,
+        headers,
+        sampleData,
+      };
+    } catch (error) {
+      await auditService.logBinderEvent({
+        action: 'migration.csv.upload.error',
+        tenantId,
+        path: '/migration/csv',
+        error: String(error),
+        ts: Date.now(),
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Map CSV fields to target schema (BINDER3)
+   */
+  static async mapFields(
+    tenantId: string,
+    userId: string,
+    uploadId: string,
+    mappings: FieldMapping[]
+  ): Promise<{ success: boolean; suggestions?: string[] }> {
+    try {
+      // Get upload record from memory (in real app would use database)
+      const uploads = (global as any).csvUploads || {};
+      const upload = uploads[uploadId];
+
+      if (!upload || upload.orgId !== tenantId) {
+        throw new Error('CSV upload not found');
+      }
+
+      // Validate mappings
+      const headers = JSON.parse(upload.headers);
+      const invalidMappings = mappings.filter(m => !headers.includes(m.csvField));
+
+      if (invalidMappings.length > 0) {
+        throw new Error(`Invalid CSV fields: ${invalidMappings.map(m => m.csvField).join(', ')}`);
+      }
+
+      // Store field mappings
+      upload.fieldMappings = JSON.stringify(mappings);
+      upload.status = 'mapped';
+      upload.updatedAt = new Date();
+
+      // Generate AI suggestions for unmapped fields (mock implementation)
+      const mappedFields = mappings.map(m => m.csvField);
+      const unmappedFields = headers.filter((h: string) => !mappedFields.includes(h));
+      const suggestions = unmappedFields.map((field: string) =>
+        `Consider mapping "${field}" to a target field`
+      );
+
+      // Audit log
+      await auditService.logBinderEvent({
+        action: 'migration.fields.map',
+        tenantId,
+        path: '/migration/map',
+        ts: Date.now(),
+      });
+
+      return {
+        success: true,
+        suggestions: suggestions.length > 0 ? suggestions : undefined,
+      };
+    } catch (error) {
+      await auditService.logBinderEvent({
+        action: 'migration.fields.map.error',
+        tenantId,
+        path: '/migration/map',
+        error: String(error),
+        ts: Date.now(),
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Validate sample records (BINDER3)
+   */
+  static async validateSample(
+    tenantId: string,
+    userId: string,
+    uploadId: string,
+    sampleSize: number = 100
+  ): Promise<ValidationResult> {
+    try {
+      // Get upload record from memory
+      const uploads = (global as any).csvUploads || {};
+      const upload = uploads[uploadId];
+
+      if (!upload || upload.orgId !== tenantId || !upload.fieldMappings) {
+        throw new Error('CSV upload not found or not mapped');
+      }
+
+      const mappings: FieldMapping[] = JSON.parse(upload.fieldMappings);
+      const rawData = upload.rawData;
+
+      // Parse CSV data
+      const lines = rawData.trim().split('\n');
+      const headers = lines[0].split(',').map((h: string) => h.trim().replace(/"/g, ''));
+      const dataLines = lines.slice(1, sampleSize + 1);
+
+      const errors: ValidationResult['errors'] = [];
+      const warnings: ValidationResult['warnings'] = [];
+      let validRecords = 0;
+
+      // Validate each record
+      dataLines.forEach((line: string, index: number) => {
+        const values = line.split(',').map((v: string) => v.trim().replace(/"/g, ''));
+        const record: any = {};
+        headers.forEach((header: string, headerIndex: number) => {
+          record[header] = values[headerIndex] || '';
+        });
+
+        let recordValid = true;
+
+        // Validate required fields
+        mappings.forEach(mapping => {
+          if (mapping.required && !record[mapping.csvField]) {
+            errors.push({
+              row: index + 2, // +2 because we skip header and use 1-based indexing
+              field: mapping.csvField,
+              error: 'Required field is empty',
+              value: record[mapping.csvField],
+            });
+            recordValid = false;
+          }
+
+          // Add warnings for potential data quality issues
+          if (record[mapping.csvField] && record[mapping.csvField].length > 255) {
+            warnings.push({
+              row: index + 2,
+              field: mapping.csvField,
+              warning: 'Value may be too long',
+              value: record[mapping.csvField].substring(0, 50) + '...',
+            });
+          }
+        });
+
+        if (recordValid) {
+          validRecords++;
+        }
+      });
+
+      // Update upload status
+      const validationPassed = errors.length / dataLines.length < 0.1; // Less than 10% errors
+      upload.status = validationPassed ? 'validated' : 'validation_failed';
+      upload.validationResults = JSON.stringify({ errors, warnings, validRecords });
+      upload.updatedAt = new Date();
+
+      // Audit log
+      await auditService.logBinderEvent({
+        action: 'migration.validate',
+        tenantId,
+        path: '/migration/validate',
+        ts: Date.now(),
+      });
+
+      return {
+        valid: validationPassed,
+        totalRecords: dataLines.length,
+        validRecords,
+        errors,
+        warnings,
+      };
+    } catch (error) {
+      await auditService.logBinderEvent({
+        action: 'migration.validate.error',
+        tenantId,
+        path: '/migration/validate',
+        error: String(error),
+        ts: Date.now(),
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Execute migration (import data) (BINDER3)
+   */
+  static async executeMigration(
+    tenantId: string,
+    userId: string,
+    uploadId: string
+  ): Promise<{ imported: number; errors: string[] }> {
+    try {
+      // Get validated upload from memory
+      const uploads = (global as any).csvUploads || {};
+      const upload = uploads[uploadId];
+
+      if (!upload || upload.orgId !== tenantId || upload.status !== 'validated') {
+        throw new Error('CSV upload not found or not validated');
+      }
+
+      const mappings: FieldMapping[] = JSON.parse(upload.fieldMappings);
+      const rawData = upload.rawData;
+
+      // Parse and import data
+      const lines = rawData.trim().split('\n');
+      const headers = lines[0].split(',').map((h: string) => h.trim().replace(/"/g, ''));
+      const dataLines = lines.slice(1);
+
+      let imported = 0;
+      const errors: string[] = [];
+
+      // Import each record (mock implementation)
+      for (let i = 0; i < Math.min(dataLines.length, 10); i++) { // Limit to 10 for demo
+        try {
+          const values = dataLines[i].split(',').map((v: string) => v.trim().replace(/"/g, ''));
+          const record: any = {};
+          headers.forEach((header: string, headerIndex: number) => {
+            record[header] = values[headerIndex] || '';
+          });
+
+          // Transform record based on mappings
+          const transformedRecord = this.transformRecord(record, mappings, tenantId);
+
+          // Mock import (in real app would actually create records)
+          console.log(`Importing ${upload.type} record:`, transformedRecord);
+          imported++;
+        } catch (error) {
+          errors.push(`Row ${i + 2}: ${String(error)}`);
+        }
+      }
+
+      // Update upload status
+      upload.status = 'completed';
+      upload.importResults = JSON.stringify({ imported, errors });
+      upload.updatedAt = new Date();
+
+      // Audit log
+      await auditService.logBinderEvent({
+        action: 'migration.execute',
+        tenantId,
+        path: '/migration/execute',
+        ts: Date.now(),
+      });
+
+      return { imported, errors };
+    } catch (error) {
+      await auditService.logBinderEvent({
+        action: 'migration.execute.error',
+        tenantId,
+        path: '/migration/execute',
+        error: String(error),
+        ts: Date.now(),
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Transform record based on field mappings (BINDER3)
+   */
+  private static transformRecord(record: any, mappings: FieldMapping[], tenantId: string): any {
+    const transformed: any = { orgId: tenantId };
+
+    mappings.forEach(mapping => {
+      let value = record[mapping.csvField];
+
+      // Apply transformations
+      if (mapping.transformation) {
+        switch (mapping.transformation) {
+          case 'uppercase':
+            value = value?.toUpperCase();
+            break;
+          case 'lowercase':
+            value = value?.toLowerCase();
+            break;
+          case 'trim':
+            value = value?.trim();
+            break;
+          case 'date':
+            value = new Date(value);
+            break;
+        }
+      }
+
+      transformed[mapping.targetField] = value;
+    });
+
+    return transformed;
   }
 }
 
