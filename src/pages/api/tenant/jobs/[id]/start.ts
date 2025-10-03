@@ -4,11 +4,11 @@
  */
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { withAudience, AUDIENCE } from '@/middleware/withAudience';
+import { withAudience } from '@/middleware/audience';
 import { withRateLimit, RATE_LIMIT_CONFIGS } from '@/middleware/withRateLimit';
 import { withIdempotency } from '@/middleware/withIdempotency';
 import { prisma } from '@/lib/prisma';
-import { auditLog } from '@/server/services/auditService';
+import { auditService } from '@/lib/auditService';
 import { z } from 'zod';
 
 const StartJobSchema = z.object({
@@ -74,17 +74,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     // For now, we'll skip time entry creation
 
     // Audit log
-    await auditLog({
-      orgId,
-      actorId: userId,
-      action: 'update',
-      entityType: 'job_start',
-      entityId: jobId,
-      delta: {
-        status: 'in_progress',
-        startedAt,
-        notes: validated.notes,
-      },
+    await auditService.logBinderEvent({
+      action: 'job.start',
+      tenantId: orgId,
+      path: req.url,
+      ts: Date.now(),
     });
 
     res.status(200).json({
@@ -112,7 +106,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 export default withRateLimit(
   RATE_LIMIT_CONFIGS.DEFAULT,
   withIdempotency(
-    withAudience(AUDIENCE.CLIENT_ONLY, handler)
+    withAudience('tenant', handler)
   )
 );
 

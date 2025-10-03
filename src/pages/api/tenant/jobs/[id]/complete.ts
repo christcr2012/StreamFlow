@@ -3,7 +3,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { jobTicketService, ServiceError } from '@/server/services/jobTicketService';
 import { withRateLimit, rateLimitPresets } from '@/middleware/rateLimit';
 import { withIdempotency } from '@/middleware/idempotency';
-import { withAudience, AUDIENCE } from '@/middleware/withAudience';
+import { withAudience } from '@/middleware/audience';
+import { auditService } from '@/lib/auditService';
 import { getEmailFromReq } from '@/lib/rbac';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
@@ -40,6 +41,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   try {
     const completion = await jobTicketService.complete(orgId, userId, ticketId, req.body);
+
+    await auditService.logBinderEvent({
+      action: 'job.complete',
+      tenantId: orgId,
+      path: req.url,
+      ts: Date.now(),
+    });
+
     res.status(200).json(completion);
     return;
   } catch (error) {
@@ -68,7 +77,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 export default withAudience(
-  AUDIENCE.CLIENT_ONLY,
+  'tenant',
   withRateLimit(
     rateLimitPresets.api,
     withIdempotency({}, handler)
