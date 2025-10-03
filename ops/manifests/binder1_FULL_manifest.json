@@ -1,0 +1,1068 @@
+{
+  "api_endpoints": [],
+  "db_migrations": [
+    {
+      "id": "db_cleaning_events_651394",
+      "description": "Database: CREATE TABLE cleaning_events",
+      "source_line_start": 1475,
+      "source_line_end": 1480,
+      "table_name": "cleaning_events",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_cleaning_events_1_651394",
+      "description": "Database: CREATE INDEX idx_cleaning_events_1",
+      "source_line_start": 1489,
+      "source_line_end": 1494,
+      "table_name": "idx_cleaning_events_1",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_cleaning_events_2_651394",
+      "description": "Database: CREATE INDEX idx_cleaning_events_2",
+      "source_line_start": 1490,
+      "source_line_end": 1495,
+      "table_name": "idx_cleaning_events_2",
+      "implemented": true
+    },
+    {
+      "id": "db_cleaning_events_651394",
+      "description": "Database: model cleaning_events {",
+      "source_line_start": 1495,
+      "source_line_end": 1500,
+      "table_name": "cleaning_events",
+      "implemented": true
+    },
+    {
+      "id": "db_cleaning_events_651394",
+      "description": "Database: CREATE TABLE cleaning_events",
+      "source_line_start": 1516,
+      "source_line_end": 1521,
+      "table_name": "cleaning_events",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_cleaning_events_1_651395",
+      "description": "Database: CREATE INDEX idx_cleaning_events_1",
+      "source_line_start": 1530,
+      "source_line_end": 1535,
+      "table_name": "idx_cleaning_events_1",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_cleaning_events_2_651395",
+      "description": "Database: CREATE INDEX idx_cleaning_events_2",
+      "source_line_start": 1531,
+      "source_line_end": 1536,
+      "table_name": "idx_cleaning_events_2",
+      "implemented": true
+    },
+    {
+      "id": "db_fencing_events_651399",
+      "description": "Database: CREATE TABLE fencing_events",
+      "source_line_start": 2945,
+      "source_line_end": 2950,
+      "table_name": "fencing_events",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_fencing_events_1_651399",
+      "description": "Database: CREATE INDEX idx_fencing_events_1",
+      "source_line_start": 2959,
+      "source_line_end": 2964,
+      "table_name": "idx_fencing_events_1",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_fencing_events_2_651399",
+      "description": "Database: CREATE INDEX idx_fencing_events_2",
+      "source_line_start": 2960,
+      "source_line_end": 2965,
+      "table_name": "idx_fencing_events_2",
+      "implemented": true
+    },
+    {
+      "id": "db_fencing_events_651399",
+      "description": "Database: model fencing_events {",
+      "source_line_start": 2965,
+      "source_line_end": 2970,
+      "table_name": "fencing_events",
+      "implemented": true
+    },
+    {
+      "id": "db_fencing_events_651399",
+      "description": "Database: CREATE TABLE fencing_events",
+      "source_line_start": 2986,
+      "source_line_end": 2991,
+      "table_name": "fencing_events",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_fencing_events_1_651399",
+      "description": "Database: CREATE INDEX idx_fencing_events_1",
+      "source_line_start": 3000,
+      "source_line_end": 3005,
+      "table_name": "idx_fencing_events_1",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_fencing_events_2_651399",
+      "description": "Database: CREATE INDEX idx_fencing_events_2",
+      "source_line_start": 3001,
+      "source_line_end": 3006,
+      "table_name": "idx_fencing_events_2",
+      "implemented": true
+    },
+    {
+      "id": "db_concrete_events_651403",
+      "description": "Database: CREATE TABLE concrete_events",
+      "source_line_start": 4415,
+      "source_line_end": 4420,
+      "table_name": "concrete_events",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_concrete_events_1_651403",
+      "description": "Database: CREATE INDEX idx_concrete_events_1",
+      "source_line_start": 4429,
+      "source_line_end": 4434,
+      "table_name": "idx_concrete_events_1",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_concrete_events_2_651403",
+      "description": "Database: CREATE INDEX idx_concrete_events_2",
+      "source_line_start": 4430,
+      "source_line_end": 4435,
+      "table_name": "idx_concrete_events_2",
+      "implemented": true
+    },
+    {
+      "id": "db_concrete_events_651403",
+      "description": "Database: model concrete_events {",
+      "source_line_start": 4435,
+      "source_line_end": 4440,
+      "table_name": "concrete_events",
+      "implemented": true
+    },
+    {
+      "id": "db_concrete_events_651403",
+      "description": "Database: CREATE TABLE concrete_events",
+      "source_line_start": 4456,
+      "source_line_end": 4461,
+      "table_name": "concrete_events",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_concrete_events_1_651403",
+      "description": "Database: CREATE INDEX idx_concrete_events_1",
+      "source_line_start": 4470,
+      "source_line_end": 4475,
+      "table_name": "idx_concrete_events_1",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_concrete_events_2_651403",
+      "description": "Database: CREATE INDEX idx_concrete_events_2",
+      "source_line_start": 4471,
+      "source_line_end": 4476,
+      "table_name": "idx_concrete_events_2",
+      "implemented": true
+    },
+    {
+      "id": "db_appliance_events_651407",
+      "description": "Database: CREATE TABLE appliance_events",
+      "source_line_start": 5885,
+      "source_line_end": 5890,
+      "table_name": "appliance_events",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_appliance_events_1_651407",
+      "description": "Database: CREATE INDEX idx_appliance_events_1",
+      "source_line_start": 5899,
+      "source_line_end": 5904,
+      "table_name": "idx_appliance_events_1",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_appliance_events_2_651407",
+      "description": "Database: CREATE INDEX idx_appliance_events_2",
+      "source_line_start": 5900,
+      "source_line_end": 5905,
+      "table_name": "idx_appliance_events_2",
+      "implemented": true
+    },
+    {
+      "id": "db_appliance_events_651407",
+      "description": "Database: model appliance_events {",
+      "source_line_start": 5905,
+      "source_line_end": 5910,
+      "table_name": "appliance_events",
+      "implemented": true
+    },
+    {
+      "id": "db_appliance_events_651407",
+      "description": "Database: CREATE TABLE appliance_events",
+      "source_line_start": 5926,
+      "source_line_end": 5931,
+      "table_name": "appliance_events",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_appliance_events_1_651407",
+      "description": "Database: CREATE INDEX idx_appliance_events_1",
+      "source_line_start": 5940,
+      "source_line_end": 5945,
+      "table_name": "idx_appliance_events_1",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_appliance_events_2_651407",
+      "description": "Database: CREATE INDEX idx_appliance_events_2",
+      "source_line_start": 5941,
+      "source_line_end": 5946,
+      "table_name": "idx_appliance_events_2",
+      "implemented": true
+    },
+    {
+      "id": "db_mechanic_events_651410",
+      "description": "Database: CREATE TABLE mechanic_events",
+      "source_line_start": 7355,
+      "source_line_end": 7360,
+      "table_name": "mechanic_events",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_mechanic_events_1_651410",
+      "description": "Database: CREATE INDEX idx_mechanic_events_1",
+      "source_line_start": 7369,
+      "source_line_end": 7374,
+      "table_name": "idx_mechanic_events_1",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_mechanic_events_2_651410",
+      "description": "Database: CREATE INDEX idx_mechanic_events_2",
+      "source_line_start": 7370,
+      "source_line_end": 7375,
+      "table_name": "idx_mechanic_events_2",
+      "implemented": true
+    },
+    {
+      "id": "db_mechanic_events_651410",
+      "description": "Database: model mechanic_events {",
+      "source_line_start": 7375,
+      "source_line_end": 7380,
+      "table_name": "mechanic_events",
+      "implemented": true
+    },
+    {
+      "id": "db_mechanic_events_651410",
+      "description": "Database: CREATE TABLE mechanic_events",
+      "source_line_start": 7396,
+      "source_line_end": 7401,
+      "table_name": "mechanic_events",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_mechanic_events_1_651411",
+      "description": "Database: CREATE INDEX idx_mechanic_events_1",
+      "source_line_start": 7410,
+      "source_line_end": 7415,
+      "table_name": "idx_mechanic_events_1",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_mechanic_events_2_651411",
+      "description": "Database: CREATE INDEX idx_mechanic_events_2",
+      "source_line_start": 7411,
+      "source_line_end": 7416,
+      "table_name": "idx_mechanic_events_2",
+      "implemented": true
+    },
+    {
+      "id": "db_windowdoor_events_651414",
+      "description": "Database: CREATE TABLE windowdoor_events",
+      "source_line_start": 8825,
+      "source_line_end": 8830,
+      "table_name": "windowdoor_events",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_windowdoor_events_1_651414",
+      "description": "Database: CREATE INDEX idx_windowdoor_events_1",
+      "source_line_start": 8839,
+      "source_line_end": 8844,
+      "table_name": "idx_windowdoor_events_1",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_windowdoor_events_2_651414",
+      "description": "Database: CREATE INDEX idx_windowdoor_events_2",
+      "source_line_start": 8840,
+      "source_line_end": 8845,
+      "table_name": "idx_windowdoor_events_2",
+      "implemented": true
+    },
+    {
+      "id": "db_windowdoor_events_651414",
+      "description": "Database: model windowdoor_events {",
+      "source_line_start": 8845,
+      "source_line_end": 8850,
+      "table_name": "windowdoor_events",
+      "implemented": true
+    },
+    {
+      "id": "db_windowdoor_events_651414",
+      "description": "Database: CREATE TABLE windowdoor_events",
+      "source_line_start": 8866,
+      "source_line_end": 8871,
+      "table_name": "windowdoor_events",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_windowdoor_events_1_651414",
+      "description": "Database: CREATE INDEX idx_windowdoor_events_1",
+      "source_line_start": 8880,
+      "source_line_end": 8885,
+      "table_name": "idx_windowdoor_events_1",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_windowdoor_events_2_651414",
+      "description": "Database: CREATE INDEX idx_windowdoor_events_2",
+      "source_line_start": 8881,
+      "source_line_end": 8886,
+      "table_name": "idx_windowdoor_events_2",
+      "implemented": true
+    },
+    {
+      "id": "db_rolloff_events_651417",
+      "description": "Database: CREATE TABLE rolloff_events",
+      "source_line_start": 10295,
+      "source_line_end": 10300,
+      "table_name": "rolloff_events",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_rolloff_events_1_651417",
+      "description": "Database: CREATE INDEX idx_rolloff_events_1",
+      "source_line_start": 10309,
+      "source_line_end": 10314,
+      "table_name": "idx_rolloff_events_1",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_rolloff_events_2_651417",
+      "description": "Database: CREATE INDEX idx_rolloff_events_2",
+      "source_line_start": 10310,
+      "source_line_end": 10315,
+      "table_name": "idx_rolloff_events_2",
+      "implemented": true
+    },
+    {
+      "id": "db_rolloff_events_651417",
+      "description": "Database: model rolloff_events {",
+      "source_line_start": 10315,
+      "source_line_end": 10320,
+      "table_name": "rolloff_events",
+      "implemented": true
+    },
+    {
+      "id": "db_rolloff_events_651417",
+      "description": "Database: CREATE TABLE rolloff_events",
+      "source_line_start": 10336,
+      "source_line_end": 10341,
+      "table_name": "rolloff_events",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_rolloff_events_1_651417",
+      "description": "Database: CREATE INDEX idx_rolloff_events_1",
+      "source_line_start": 10350,
+      "source_line_end": 10355,
+      "table_name": "idx_rolloff_events_1",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_rolloff_events_2_651417",
+      "description": "Database: CREATE INDEX idx_rolloff_events_2",
+      "source_line_start": 10351,
+      "source_line_end": 10356,
+      "table_name": "idx_rolloff_events_2",
+      "implemented": true
+    },
+    {
+      "id": "db_portajohn_events_651418",
+      "description": "Database: CREATE TABLE portajohn_events",
+      "source_line_start": 11765,
+      "source_line_end": 11770,
+      "table_name": "portajohn_events",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_portajohn_events_1_651418",
+      "description": "Database: CREATE INDEX idx_portajohn_events_1",
+      "source_line_start": 11779,
+      "source_line_end": 11784,
+      "table_name": "idx_portajohn_events_1",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_portajohn_events_2_651418",
+      "description": "Database: CREATE INDEX idx_portajohn_events_2",
+      "source_line_start": 11780,
+      "source_line_end": 11785,
+      "table_name": "idx_portajohn_events_2",
+      "implemented": true
+    },
+    {
+      "id": "db_portajohn_events_651418",
+      "description": "Database: model portajohn_events {",
+      "source_line_start": 11785,
+      "source_line_end": 11790,
+      "table_name": "portajohn_events",
+      "implemented": true
+    },
+    {
+      "id": "db_portajohn_events_651419",
+      "description": "Database: CREATE TABLE portajohn_events",
+      "source_line_start": 11806,
+      "source_line_end": 11811,
+      "table_name": "portajohn_events",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_portajohn_events_1_651419",
+      "description": "Database: CREATE INDEX idx_portajohn_events_1",
+      "source_line_start": 11820,
+      "source_line_end": 11825,
+      "table_name": "idx_portajohn_events_1",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_portajohn_events_2_651419",
+      "description": "Database: CREATE INDEX idx_portajohn_events_2",
+      "source_line_start": 11821,
+      "source_line_end": 11826,
+      "table_name": "idx_portajohn_events_2",
+      "implemented": true
+    },
+    {
+      "id": "db_trucking_events_651420",
+      "description": "Database: CREATE TABLE trucking_events",
+      "source_line_start": 13235,
+      "source_line_end": 13240,
+      "table_name": "trucking_events",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_trucking_events_1_651420",
+      "description": "Database: CREATE INDEX idx_trucking_events_1",
+      "source_line_start": 13249,
+      "source_line_end": 13254,
+      "table_name": "idx_trucking_events_1",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_trucking_events_2_651420",
+      "description": "Database: CREATE INDEX idx_trucking_events_2",
+      "source_line_start": 13250,
+      "source_line_end": 13255,
+      "table_name": "idx_trucking_events_2",
+      "implemented": true
+    },
+    {
+      "id": "db_trucking_events_651420",
+      "description": "Database: model trucking_events {",
+      "source_line_start": 13255,
+      "source_line_end": 13260,
+      "table_name": "trucking_events",
+      "implemented": true
+    },
+    {
+      "id": "db_trucking_events_651420",
+      "description": "Database: CREATE TABLE trucking_events",
+      "source_line_start": 13276,
+      "source_line_end": 13281,
+      "table_name": "trucking_events",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_trucking_events_1_651420",
+      "description": "Database: CREATE INDEX idx_trucking_events_1",
+      "source_line_start": 13290,
+      "source_line_end": 13295,
+      "table_name": "idx_trucking_events_1",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_trucking_events_2_651420",
+      "description": "Database: CREATE INDEX idx_trucking_events_2",
+      "source_line_start": 13291,
+      "source_line_end": 13296,
+      "table_name": "idx_trucking_events_2",
+      "implemented": true
+    },
+    {
+      "id": "db_infra_adoption_651420",
+      "description": "Database: CREATE TABLE infra_adoption",
+      "source_line_start": 13773,
+      "source_line_end": 13778,
+      "table_name": "infra_adoption",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_infra_adoption_1_651420",
+      "description": "Database: CREATE INDEX idx_infra_adoption_1",
+      "source_line_start": 13781,
+      "source_line_end": 13795,
+      "table_name": "idx_infra_adoption_1",
+      "implemented": true
+    },
+    {
+      "id": "db_idx_infra_adoption_2_651420",
+      "description": "Database: CREATE INDEX idx_infra_adoption_2",
+      "source_line_start": 13782,
+      "source_line_end": 13795,
+      "table_name": "idx_infra_adoption_2",
+      "implemented": true
+    },
+    {
+      "id": "db_cleaning_events_660054",
+      "description": "Database: CREATE TABLE cleaning_events",
+      "source_line_start": 1475,
+      "source_line_end": 1480,
+      "table_name": "cleaning_events",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_cleaning_events_1_660054",
+      "description": "Database: CREATE INDEX idx_cleaning_events_1",
+      "source_line_start": 1489,
+      "source_line_end": 1494,
+      "table_name": "idx_cleaning_events_1",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_cleaning_events_2_660054",
+      "description": "Database: CREATE INDEX idx_cleaning_events_2",
+      "source_line_start": 1490,
+      "source_line_end": 1495,
+      "table_name": "idx_cleaning_events_2",
+      "implemented": false
+    },
+    {
+      "id": "db_cleaning_events_660054",
+      "description": "Database: model cleaning_events {",
+      "source_line_start": 1495,
+      "source_line_end": 1500,
+      "table_name": "cleaning_events",
+      "implemented": false
+    },
+    {
+      "id": "db_cleaning_events_660054",
+      "description": "Database: CREATE TABLE cleaning_events",
+      "source_line_start": 1516,
+      "source_line_end": 1521,
+      "table_name": "cleaning_events",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_cleaning_events_1_660054",
+      "description": "Database: CREATE INDEX idx_cleaning_events_1",
+      "source_line_start": 1530,
+      "source_line_end": 1535,
+      "table_name": "idx_cleaning_events_1",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_cleaning_events_2_660054",
+      "description": "Database: CREATE INDEX idx_cleaning_events_2",
+      "source_line_start": 1531,
+      "source_line_end": 1536,
+      "table_name": "idx_cleaning_events_2",
+      "implemented": false
+    },
+    {
+      "id": "db_fencing_events_660055",
+      "description": "Database: CREATE TABLE fencing_events",
+      "source_line_start": 2945,
+      "source_line_end": 2950,
+      "table_name": "fencing_events",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_fencing_events_1_660055",
+      "description": "Database: CREATE INDEX idx_fencing_events_1",
+      "source_line_start": 2959,
+      "source_line_end": 2964,
+      "table_name": "idx_fencing_events_1",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_fencing_events_2_660055",
+      "description": "Database: CREATE INDEX idx_fencing_events_2",
+      "source_line_start": 2960,
+      "source_line_end": 2965,
+      "table_name": "idx_fencing_events_2",
+      "implemented": false
+    },
+    {
+      "id": "db_fencing_events_660055",
+      "description": "Database: model fencing_events {",
+      "source_line_start": 2965,
+      "source_line_end": 2970,
+      "table_name": "fencing_events",
+      "implemented": false
+    },
+    {
+      "id": "db_fencing_events_660055",
+      "description": "Database: CREATE TABLE fencing_events",
+      "source_line_start": 2986,
+      "source_line_end": 2991,
+      "table_name": "fencing_events",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_fencing_events_1_660055",
+      "description": "Database: CREATE INDEX idx_fencing_events_1",
+      "source_line_start": 3000,
+      "source_line_end": 3005,
+      "table_name": "idx_fencing_events_1",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_fencing_events_2_660055",
+      "description": "Database: CREATE INDEX idx_fencing_events_2",
+      "source_line_start": 3001,
+      "source_line_end": 3006,
+      "table_name": "idx_fencing_events_2",
+      "implemented": false
+    },
+    {
+      "id": "db_concrete_events_660056",
+      "description": "Database: CREATE TABLE concrete_events",
+      "source_line_start": 4415,
+      "source_line_end": 4420,
+      "table_name": "concrete_events",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_concrete_events_1_660056",
+      "description": "Database: CREATE INDEX idx_concrete_events_1",
+      "source_line_start": 4429,
+      "source_line_end": 4434,
+      "table_name": "idx_concrete_events_1",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_concrete_events_2_660056",
+      "description": "Database: CREATE INDEX idx_concrete_events_2",
+      "source_line_start": 4430,
+      "source_line_end": 4435,
+      "table_name": "idx_concrete_events_2",
+      "implemented": false
+    },
+    {
+      "id": "db_concrete_events_660056",
+      "description": "Database: model concrete_events {",
+      "source_line_start": 4435,
+      "source_line_end": 4440,
+      "table_name": "concrete_events",
+      "implemented": false
+    },
+    {
+      "id": "db_concrete_events_660056",
+      "description": "Database: CREATE TABLE concrete_events",
+      "source_line_start": 4456,
+      "source_line_end": 4461,
+      "table_name": "concrete_events",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_concrete_events_1_660056",
+      "description": "Database: CREATE INDEX idx_concrete_events_1",
+      "source_line_start": 4470,
+      "source_line_end": 4475,
+      "table_name": "idx_concrete_events_1",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_concrete_events_2_660056",
+      "description": "Database: CREATE INDEX idx_concrete_events_2",
+      "source_line_start": 4471,
+      "source_line_end": 4476,
+      "table_name": "idx_concrete_events_2",
+      "implemented": false
+    },
+    {
+      "id": "db_appliance_events_660057",
+      "description": "Database: CREATE TABLE appliance_events",
+      "source_line_start": 5885,
+      "source_line_end": 5890,
+      "table_name": "appliance_events",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_appliance_events_1_660057",
+      "description": "Database: CREATE INDEX idx_appliance_events_1",
+      "source_line_start": 5899,
+      "source_line_end": 5904,
+      "table_name": "idx_appliance_events_1",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_appliance_events_2_660058",
+      "description": "Database: CREATE INDEX idx_appliance_events_2",
+      "source_line_start": 5900,
+      "source_line_end": 5905,
+      "table_name": "idx_appliance_events_2",
+      "implemented": false
+    },
+    {
+      "id": "db_appliance_events_660058",
+      "description": "Database: model appliance_events {",
+      "source_line_start": 5905,
+      "source_line_end": 5910,
+      "table_name": "appliance_events",
+      "implemented": false
+    },
+    {
+      "id": "db_appliance_events_660058",
+      "description": "Database: CREATE TABLE appliance_events",
+      "source_line_start": 5926,
+      "source_line_end": 5931,
+      "table_name": "appliance_events",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_appliance_events_1_660058",
+      "description": "Database: CREATE INDEX idx_appliance_events_1",
+      "source_line_start": 5940,
+      "source_line_end": 5945,
+      "table_name": "idx_appliance_events_1",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_appliance_events_2_660058",
+      "description": "Database: CREATE INDEX idx_appliance_events_2",
+      "source_line_start": 5941,
+      "source_line_end": 5946,
+      "table_name": "idx_appliance_events_2",
+      "implemented": false
+    },
+    {
+      "id": "db_mechanic_events_660059",
+      "description": "Database: CREATE TABLE mechanic_events",
+      "source_line_start": 7355,
+      "source_line_end": 7360,
+      "table_name": "mechanic_events",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_mechanic_events_1_660059",
+      "description": "Database: CREATE INDEX idx_mechanic_events_1",
+      "source_line_start": 7369,
+      "source_line_end": 7374,
+      "table_name": "idx_mechanic_events_1",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_mechanic_events_2_660059",
+      "description": "Database: CREATE INDEX idx_mechanic_events_2",
+      "source_line_start": 7370,
+      "source_line_end": 7375,
+      "table_name": "idx_mechanic_events_2",
+      "implemented": false
+    },
+    {
+      "id": "db_mechanic_events_660059",
+      "description": "Database: model mechanic_events {",
+      "source_line_start": 7375,
+      "source_line_end": 7380,
+      "table_name": "mechanic_events",
+      "implemented": false
+    },
+    {
+      "id": "db_mechanic_events_660059",
+      "description": "Database: CREATE TABLE mechanic_events",
+      "source_line_start": 7396,
+      "source_line_end": 7401,
+      "table_name": "mechanic_events",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_mechanic_events_1_660059",
+      "description": "Database: CREATE INDEX idx_mechanic_events_1",
+      "source_line_start": 7410,
+      "source_line_end": 7415,
+      "table_name": "idx_mechanic_events_1",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_mechanic_events_2_660059",
+      "description": "Database: CREATE INDEX idx_mechanic_events_2",
+      "source_line_start": 7411,
+      "source_line_end": 7416,
+      "table_name": "idx_mechanic_events_2",
+      "implemented": false
+    },
+    {
+      "id": "db_windowdoor_events_660060",
+      "description": "Database: CREATE TABLE windowdoor_events",
+      "source_line_start": 8825,
+      "source_line_end": 8830,
+      "table_name": "windowdoor_events",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_windowdoor_events_1_660060",
+      "description": "Database: CREATE INDEX idx_windowdoor_events_1",
+      "source_line_start": 8839,
+      "source_line_end": 8844,
+      "table_name": "idx_windowdoor_events_1",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_windowdoor_events_2_660060",
+      "description": "Database: CREATE INDEX idx_windowdoor_events_2",
+      "source_line_start": 8840,
+      "source_line_end": 8845,
+      "table_name": "idx_windowdoor_events_2",
+      "implemented": false
+    },
+    {
+      "id": "db_windowdoor_events_660060",
+      "description": "Database: model windowdoor_events {",
+      "source_line_start": 8845,
+      "source_line_end": 8850,
+      "table_name": "windowdoor_events",
+      "implemented": false
+    },
+    {
+      "id": "db_windowdoor_events_660060",
+      "description": "Database: CREATE TABLE windowdoor_events",
+      "source_line_start": 8866,
+      "source_line_end": 8871,
+      "table_name": "windowdoor_events",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_windowdoor_events_1_660060",
+      "description": "Database: CREATE INDEX idx_windowdoor_events_1",
+      "source_line_start": 8880,
+      "source_line_end": 8885,
+      "table_name": "idx_windowdoor_events_1",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_windowdoor_events_2_660060",
+      "description": "Database: CREATE INDEX idx_windowdoor_events_2",
+      "source_line_start": 8881,
+      "source_line_end": 8886,
+      "table_name": "idx_windowdoor_events_2",
+      "implemented": false
+    },
+    {
+      "id": "db_rolloff_events_660061",
+      "description": "Database: CREATE TABLE rolloff_events",
+      "source_line_start": 10295,
+      "source_line_end": 10300,
+      "table_name": "rolloff_events",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_rolloff_events_1_660061",
+      "description": "Database: CREATE INDEX idx_rolloff_events_1",
+      "source_line_start": 10309,
+      "source_line_end": 10314,
+      "table_name": "idx_rolloff_events_1",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_rolloff_events_2_660061",
+      "description": "Database: CREATE INDEX idx_rolloff_events_2",
+      "source_line_start": 10310,
+      "source_line_end": 10315,
+      "table_name": "idx_rolloff_events_2",
+      "implemented": false
+    },
+    {
+      "id": "db_rolloff_events_660061",
+      "description": "Database: model rolloff_events {",
+      "source_line_start": 10315,
+      "source_line_end": 10320,
+      "table_name": "rolloff_events",
+      "implemented": false
+    },
+    {
+      "id": "db_rolloff_events_660061",
+      "description": "Database: CREATE TABLE rolloff_events",
+      "source_line_start": 10336,
+      "source_line_end": 10341,
+      "table_name": "rolloff_events",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_rolloff_events_1_660061",
+      "description": "Database: CREATE INDEX idx_rolloff_events_1",
+      "source_line_start": 10350,
+      "source_line_end": 10355,
+      "table_name": "idx_rolloff_events_1",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_rolloff_events_2_660061",
+      "description": "Database: CREATE INDEX idx_rolloff_events_2",
+      "source_line_start": 10351,
+      "source_line_end": 10356,
+      "table_name": "idx_rolloff_events_2",
+      "implemented": false
+    },
+    {
+      "id": "db_portajohn_events_660062",
+      "description": "Database: CREATE TABLE portajohn_events",
+      "source_line_start": 11765,
+      "source_line_end": 11770,
+      "table_name": "portajohn_events",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_portajohn_events_1_660062",
+      "description": "Database: CREATE INDEX idx_portajohn_events_1",
+      "source_line_start": 11779,
+      "source_line_end": 11784,
+      "table_name": "idx_portajohn_events_1",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_portajohn_events_2_660062",
+      "description": "Database: CREATE INDEX idx_portajohn_events_2",
+      "source_line_start": 11780,
+      "source_line_end": 11785,
+      "table_name": "idx_portajohn_events_2",
+      "implemented": false
+    },
+    {
+      "id": "db_portajohn_events_660062",
+      "description": "Database: model portajohn_events {",
+      "source_line_start": 11785,
+      "source_line_end": 11790,
+      "table_name": "portajohn_events",
+      "implemented": false
+    },
+    {
+      "id": "db_portajohn_events_660062",
+      "description": "Database: CREATE TABLE portajohn_events",
+      "source_line_start": 11806,
+      "source_line_end": 11811,
+      "table_name": "portajohn_events",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_portajohn_events_1_660062",
+      "description": "Database: CREATE INDEX idx_portajohn_events_1",
+      "source_line_start": 11820,
+      "source_line_end": 11825,
+      "table_name": "idx_portajohn_events_1",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_portajohn_events_2_660062",
+      "description": "Database: CREATE INDEX idx_portajohn_events_2",
+      "source_line_start": 11821,
+      "source_line_end": 11826,
+      "table_name": "idx_portajohn_events_2",
+      "implemented": false
+    },
+    {
+      "id": "db_trucking_events_660063",
+      "description": "Database: CREATE TABLE trucking_events",
+      "source_line_start": 13235,
+      "source_line_end": 13240,
+      "table_name": "trucking_events",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_trucking_events_1_660063",
+      "description": "Database: CREATE INDEX idx_trucking_events_1",
+      "source_line_start": 13249,
+      "source_line_end": 13254,
+      "table_name": "idx_trucking_events_1",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_trucking_events_2_660063",
+      "description": "Database: CREATE INDEX idx_trucking_events_2",
+      "source_line_start": 13250,
+      "source_line_end": 13255,
+      "table_name": "idx_trucking_events_2",
+      "implemented": false
+    },
+    {
+      "id": "db_trucking_events_660063",
+      "description": "Database: model trucking_events {",
+      "source_line_start": 13255,
+      "source_line_end": 13260,
+      "table_name": "trucking_events",
+      "implemented": false
+    },
+    {
+      "id": "db_trucking_events_660063",
+      "description": "Database: CREATE TABLE trucking_events",
+      "source_line_start": 13276,
+      "source_line_end": 13281,
+      "table_name": "trucking_events",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_trucking_events_1_660063",
+      "description": "Database: CREATE INDEX idx_trucking_events_1",
+      "source_line_start": 13290,
+      "source_line_end": 13295,
+      "table_name": "idx_trucking_events_1",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_trucking_events_2_660063",
+      "description": "Database: CREATE INDEX idx_trucking_events_2",
+      "source_line_start": 13291,
+      "source_line_end": 13296,
+      "table_name": "idx_trucking_events_2",
+      "implemented": false
+    },
+    {
+      "id": "db_infra_adoption_660064",
+      "description": "Database: CREATE TABLE infra_adoption",
+      "source_line_start": 13773,
+      "source_line_end": 13778,
+      "table_name": "infra_adoption",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_infra_adoption_1_660064",
+      "description": "Database: CREATE INDEX idx_infra_adoption_1",
+      "source_line_start": 13781,
+      "source_line_end": 13795,
+      "table_name": "idx_infra_adoption_1",
+      "implemented": false
+    },
+    {
+      "id": "db_idx_infra_adoption_2_660064",
+      "description": "Database: CREATE INDEX idx_infra_adoption_2",
+      "source_line_start": 13782,
+      "source_line_end": 13795,
+      "table_name": "idx_infra_adoption_2",
+      "implemented": false
+    }
+  ],
+  "screens": [],
+  "controls": [],
+  "tests": [],
+  "jobs": [],
+  "ai_flows": [],
+  "webhooks": [],
+  "integrations": []
+}

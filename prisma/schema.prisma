@@ -4670,3 +4670,171 @@ model ai_sessions {
   
   @@map("ai_sessions")
 }
+
+model idx_cleaning_events_1 {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 1489
+  // Database: CREATE INDEX idx_cleaning_events_1
+}
+
+model idx_cleaning_events_2 {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 1490
+  // Database: CREATE INDEX idx_cleaning_events_2
+}
+
+model idx_fencing_events_1 {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 2959
+  // Database: CREATE INDEX idx_fencing_events_1
+}
+
+model idx_fencing_events_2 {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 2960
+  // Database: CREATE INDEX idx_fencing_events_2
+}
+
+model concrete_events {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 4415
+  // Database: CREATE TABLE concrete_events
+}
+
+model idx_concrete_events_1 {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 4429
+  // Database: CREATE INDEX idx_concrete_events_1
+}
+
+model idx_concrete_events_2 {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 4430
+  // Database: CREATE INDEX idx_concrete_events_2
+}
+
+model appliance_events {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 5885
+  // Database: CREATE TABLE appliance_events
+}
+
+model idx_appliance_events_1 {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 5899
+  // Database: CREATE INDEX idx_appliance_events_1
+}
+
+model idx_appliance_events_2 {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 5900
+  // Database: CREATE INDEX idx_appliance_events_2
+}
+
+model mechanic_events {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 7355
+  // Database: CREATE TABLE mechanic_events
+}
+
+model idx_mechanic_events_1 {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 7369
+  // Database: CREATE INDEX idx_mechanic_events_1
+}
+
+model idx_mechanic_events_2 {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 7370
+  // Database: CREATE INDEX idx_mechanic_events_2
+}
+
+model windowdoor_events {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 8825
+  // Database: CREATE TABLE windowdoor_events
+}
+
+model idx_windowdoor_events_1 {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 8839
+  // Database: CREATE INDEX idx_windowdoor_events_1
+}
+
+model idx_windowdoor_events_2 {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 8840
+  // Database: CREATE INDEX idx_windowdoor_events_2
+}
+
+model rolloff_events {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 10295
+  // Database: CREATE TABLE rolloff_events
+}
+
+model idx_rolloff_events_1 {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 10309
+  // Database: CREATE INDEX idx_rolloff_events_1
+}
+
+model idx_rolloff_events_2 {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 10310
+  // Database: CREATE INDEX idx_rolloff_events_2
+}
+
+model portajohn_events {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 11765
+  // Database: CREATE TABLE portajohn_events
+}
+
+model idx_portajohn_events_1 {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 11779
+  // Database: CREATE INDEX idx_portajohn_events_1
+}
+
+model idx_portajohn_events_2 {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 11780
+  // Database: CREATE INDEX idx_portajohn_events_2
+}
+
+model trucking_events {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 13235
+  // Database: CREATE TABLE trucking_events
+}
+
+model idx_trucking_events_1 {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 13249
+  // Database: CREATE INDEX idx_trucking_events_1
+}
+
+model idx_trucking_events_2 {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 13250
+  // Database: CREATE INDEX idx_trucking_events_2
+}
+
+model infra_adoption {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 13773
+  // Database: CREATE TABLE infra_adoption
+}
+
+model idx_infra_adoption_1 {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 13781
+  // Database: CREATE INDEX idx_infra_adoption_1
+}
+
+model idx_infra_adoption_2 {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 13782
+  // Database: CREATE INDEX idx_infra_adoption_2
+}
