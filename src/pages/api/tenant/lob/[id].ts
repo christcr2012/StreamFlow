@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { withAudience, AUDIENCE } from '@/middleware/withAudience';
-import { withRateLimit, RATE_LIMIT_CONFIGS } from '@/middleware/withRateLimit';
-import { withIdempotency } from '@/middleware/withIdempotency';
-import { LineOfBusinessService } from '@/server/services/lineOfBusinessService';
+import { withAudience } from '@/middleware/audience';
+import { auditService } from '@/lib/auditService';
+import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 
 const UpdateLineOfBusinessSchema = z.object({
@@ -11,75 +10,128 @@ const UpdateLineOfBusinessSchema = z.object({
 });
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { method } = req;
-  const orgId = req.headers['x-org-id'] as string;
-  const userId = req.headers['x-user-id'] as string;
-  const lobId = req.query.id as string;
+  const { id } = req.query;
+  const orgId = req.headers['x-org-id'] as string || 'org_test';
 
-  if (!orgId || !userId) {
-    return res.status(401).json({ error: 'Unauthorized' });
+  if (typeof id !== 'string') {
+    return res.status(400).json({ error: 'Invalid ID' });
   }
-
-  if (!lobId) {
-    return res.status(400).json({ error: 'Line of business ID required' });
-  }
-
-  const service = new LineOfBusinessService();
 
   try {
-    switch (method) {
-      case 'GET': {
-        // Get line of business by ID
-        const lob = await service.getById(orgId, lobId);
-        if (!lob) {
-          res.status(404).json({ error: 'Line of business not found' });
-          return;
-        }
-        res.status(200).json(lob);
-        return;
+    // GET - Retrieve line of business
+    if (req.method === 'GET') {
+      const lineOfBusiness = await prisma.lineOfBusiness.findFirst({
+        where: { id, orgId },
+        include: {
+          businessUnit: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+
+      if (!lineOfBusiness) {
+        return res.status(404).json({ error: 'Line of business not found' });
       }
 
-      case 'PATCH': {
-        // Update line of business
-        const validated = UpdateLineOfBusinessSchema.parse(req.body);
-        const lob = await service.update(orgId, userId, lobId, validated);
-        res.status(200).json(lob);
-        return;
-      }
+      await auditService.logBinderEvent({
+        action: 'lob.get',
+        tenantId: orgId,
+        path: req.url,
+        ts: Date.now(),
+      });
 
-      case 'DELETE': {
-        // Delete/disable line of business
-        await service.delete(orgId, userId, lobId);
-        res.status(204).end();
-        return;
-      }
-
-      default:
-        res.setHeader('Allow', ['GET', 'PATCH', 'DELETE']);
-        return res.status(405).json({ error: `Method ${method} not allowed` });
+      return res.status(200).json({
+        ok: true,
+        lineOfBusiness,
+      });
     }
+
+    // PUT/PATCH - Update line of business
+    if (req.method === 'PUT' || req.method === 'PATCH') {
+      const validation = UpdateLineOfBusinessSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({
+          error: 'VALIDATION_ERROR',
+          details: validation.error.errors,
+        });
+      }
+
+      const updateData: any = {};
+      if (validation.data.enabled !== undefined) updateData.enabled = validation.data.enabled;
+      if (validation.data.config) updateData.config = validation.data.config;
+
+      const lineOfBusiness = await prisma.lineOfBusiness.updateMany({
+        where: { id, orgId },
+        data: updateData,
+      });
+
+      if (lineOfBusiness.count === 0) {
+        return res.status(404).json({ error: 'Line of business not found' });
+      }
+
+      await auditService.logBinderEvent({
+        action: 'lob.update',
+        tenantId: orgId,
+        path: req.url,
+        ts: Date.now(),
+      });
+
+      const updated = await prisma.lineOfBusiness.findFirst({
+        where: { id, orgId },
+      });
+
+      return res.status(200).json({
+        ok: true,
+        lineOfBusiness: updated,
+      });
+    }
+
+    // DELETE - Delete line of business
+    if (req.method === 'DELETE') {
+      const lineOfBusiness = await prisma.lineOfBusiness.findFirst({
+        where: { id, orgId },
+      });
+
+      if (!lineOfBusiness) {
+        return res.status(404).json({ error: 'Line of business not found' });
+      }
+
+      await prisma.lineOfBusiness.deleteMany({
+        where: { id, orgId },
+      });
+
+      await auditService.logBinderEvent({
+        action: 'lob.delete',
+        tenantId: orgId,
+        path: req.url,
+        ts: Date.now(),
+      });
+
+      return res.status(200).json({
+        ok: true,
+        message: 'Line of business deleted',
+      });
+    }
+
+    return res.status(405).json({ error: 'Method not allowed' });
   } catch (error) {
-    console.error('Line of business API error:', error);
-    
-    if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: 'Validation error', details: error.errors });
-    }
-
-    if (error instanceof Error) {
-      if (error.message.includes('not found')) {
-        return res.status(404).json({ error: error.message });
-      }
-      return res.status(400).json({ error: error.message });
-    }
-
-    return res.status(500).json({ error: 'Internal server error' });
+    console.error('Error handling line of business:', error);
+    await auditService.logBinderEvent({
+      action: 'lob.error',
+      tenantId: orgId,
+      path: req.url,
+      error: String(error),
+      ts: Date.now(),
+    });
+    return res.status(500).json({
+      error: 'INTERNAL_ERROR',
+      message: 'Failed to handle line of business operation',
+    });
   }
 }
 
-export default withRateLimit(
-  RATE_LIMIT_CONFIGS.DEFAULT,
-  withIdempotency(
-    withAudience(AUDIENCE.CLIENT_ONLY, handler)
-  )
-);
+export default withAudience('tenant', handler);
 
