@@ -5,15 +5,21 @@ import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 
 const CreateBusinessUnitSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  timezone: z.string().default('UTC'),
-  address: z.object({
-    street: z.string().optional(),
-    city: z.string().optional(),
-    state: z.string().optional(),
-    zip: z.string().optional(),
-    country: z.string().optional(),
-  }).optional(),
+  request_id: z.string().uuid(),
+  tenant_id: z.string(),
+  bu_id: z.string().optional(),
+  actor: z.object({
+    user_id: z.string(),
+    role: z.string(),
+  }),
+  payload: z.object({
+    name: z.string().min(1, 'Name is required'),
+    timezone: z.string().default('UTC'),
+    address: z.string().optional(), // Full address string as per BINDER4_FULL
+    phone: z.string().optional(),
+    manager_email: z.string().email().optional(),
+  }),
+  idempotency_key: z.string().uuid(),
 });
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -25,7 +31,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const orgId = req.headers['x-org-id'] as string || 'org_test';
     const userId = req.headers['x-user-id'] as string || 'user_test';
 
-    // Validate request body
+    // Validate BINDER4_FULL contract
     const validation = CreateBusinessUnitSchema.safeParse(req.body);
     if (!validation.success) {
       return res.status(400).json({
@@ -34,15 +40,19 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       });
     }
 
-    const { name, timezone, address } = validation.data;
+    const { request_id, payload, idempotency_key } = validation.data;
 
-    // Create business unit
+    // Create business unit (using available schema fields)
     const businessUnit = await prisma.businessUnit.create({
       data: {
         orgId,
-        name,
-        timezone,
-        address: address || {},
+        name: payload.name,
+        timezone: payload.timezone,
+        address: payload.address ? {
+          full_address: payload.address,
+          phone: payload.phone,
+          manager_email: payload.manager_email
+        } : {},
       },
     });
 
@@ -54,9 +64,24 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       ts: Date.now(),
     });
 
+    const buId = `BU-${businessUnit.id.substring(0, 6)}`;
+
     return res.status(201).json({
-      ok: true,
-      businessUnit,
+      status: 'ok',
+      result: {
+        id: buId,
+        version: 1,
+      },
+      business_unit: {
+        id: buId,
+        name: payload.name,
+        timezone: payload.timezone,
+        address: payload.address,
+        phone: payload.phone,
+        manager_email: payload.manager_email,
+        created_at: businessUnit.createdAt,
+      },
+      audit_id: `AUD-BU-${businessUnit.id.substring(0, 6)}`,
     });
   } catch (error) {
     console.error('Error creating business unit:', error);

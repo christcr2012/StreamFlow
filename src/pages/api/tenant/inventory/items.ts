@@ -7,14 +7,23 @@ import { auditService } from '@/lib/auditService';
 import { z } from 'zod';
 
 const CreateInventoryItemSchema = z.object({
-  name: z.string().min(1),
-  sku: z.string().min(1),
-  category: z.string().min(1),
-  description: z.string().optional(),
-  unit_price: z.number().positive(),
-  quantity: z.number().int().min(0).default(0),
-  reorder_point: z.number().int().min(0).default(10),
+  request_id: z.string().uuid(),
+  tenant_id: z.string(),
   bu_id: z.string().optional(),
+  actor: z.object({
+    user_id: z.string(),
+    role: z.string(),
+  }),
+  payload: z.object({
+    sku: z.string().min(1),
+    name: z.string().min(1),
+    uom: z.string().min(1), // Unit of measure
+    price_cents: z.number().int().min(0),
+    description: z.string().optional(),
+    category: z.string().optional(),
+    reorder_point: z.number().int().min(0).default(10),
+  }),
+  idempotency_key: z.string().uuid(),
 });
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -29,9 +38,31 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   if (method === 'POST') {
     try {
-      const validated = CreateInventoryItemSchema.parse(req.body.payload || req.body);
+      // Validate full BINDER4_FULL contract
+      const validation = CreateInventoryItemSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({
+          error: 'VALIDATION_ERROR',
+          details: validation.error.errors,
+        });
+      }
 
-      const item = await inventoryService.createItem(orgId, userId, validated);
+      const { request_id, payload, idempotency_key } = validation.data;
+
+      // Create inventory item with BINDER4_FULL payload format
+      const itemData = {
+        name: payload.name,
+        sku: payload.sku,
+        category: payload.category || 'general',
+        description: payload.description,
+        unit_price: payload.price_cents / 100, // Convert cents to dollars
+        quantity: 0, // Start with 0 quantity
+        reorder_point: payload.reorder_point,
+        bu_id: validation.data.bu_id,
+        uom: payload.uom,
+      };
+
+      const item = await inventoryService.createItem(orgId, userId, itemData);
 
       await auditService.logBinderEvent({
         action: 'inventory.item.create',
@@ -40,13 +71,26 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         ts: Date.now(),
       });
 
+      const itemId = `INV-${item.id.substring(0, 6)}`;
+
       res.status(201).json({
         status: 'ok',
         result: {
-          id: item.id,
+          id: itemId,
           version: 1,
         },
-        audit_id: `AUD-INV-${item.id}`,
+        item: {
+          id: itemId,
+          sku: payload.sku,
+          name: payload.name,
+          uom: payload.uom,
+          price_cents: payload.price_cents,
+          description: payload.description,
+          category: itemData.category,
+          reorder_point: payload.reorder_point,
+          created_at: item.createdAt,
+        },
+        audit_id: `AUD-INV-${item.id.substring(0, 6)}`,
       });
       return;
     } catch (error: any) {

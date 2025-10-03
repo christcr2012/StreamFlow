@@ -5,9 +5,14 @@ import { IntegrationService } from '@/server/services/integrations/integrationSe
 import { z } from 'zod';
 
 const ConnectPaylocitySchema = z.object({
-  client_id: z.string().min(1),
-  client_secret: z.string().min(1),
-  company_id: z.string().min(1),
+  request_id: z.string().uuid(),
+  tenant_id: z.string(),
+  payload: z.object({
+    client_id: z.string().min(1),
+    client_secret: z.string().min(1),
+    company_id: z.string().min(1),
+  }),
+  idempotency_key: z.string().uuid(),
 });
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -19,7 +24,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const orgId = req.headers['x-org-id'] as string || 'org_test';
     const userId = req.headers['x-user-id'] as string || 'user_test';
 
-    // Validate request body
+    // Validate BINDER4_FULL contract
     const validation = ConnectPaylocitySchema.safeParse(req.body);
     if (!validation.success) {
       return res.status(400).json({
@@ -28,7 +33,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       });
     }
 
-    const { client_id, client_secret, company_id } = validation.data;
+    const { request_id, payload, idempotency_key } = validation.data;
+    const { client_id, client_secret, company_id } = payload;
 
     // Connect integration
     const integration = await IntegrationService.connect({
