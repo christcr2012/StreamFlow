@@ -4460,3 +4460,213 @@ model fencing_events {
   @@index([tenant_id, feature, created_at])
   @@index([request_id])
 }
+
+model work_orders {
+  id String @id @default(cuid())
+  // TODO: Convert SQL definition to Prisma fields
+  // Original SQL:   id UUID PRIMARY KEY,
+  //   tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  //   bu_id UUID REFERENCES business_units(id),
+  //   job_id UUID,
+  //   title TEXT NOT NULL,
+  //   status TEXT DEFAULT 'scheduled',
+  //   scheduled_at TIMESTAMPTZ,
+  //   window_start TIMESTAMPTZ,
+  //   window_end TIMESTAMPTZ,
+  //   crew_id UUID,
+  //   address JSONB,
+  //   created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ
+  // );
+  
+  @@map("work_orders")
+}
+
+model work_order_events {
+  id String @id @default(cuid())
+  // TODO: Convert SQL definition to Prisma fields
+  // Original SQL:   id UUID PRIMARY KEY,
+  //   work_order_id UUID REFERENCES work_orders(id) ON DELETE CASCADE,
+  //   actor_id UUID,
+  //   type TEXT,
+  //   payload JSONB,
+  //   created_at TIMESTAMPTZ DEFAULT now()
+  // );
+  
+  @@map("work_order_events")
+}
+
+model dvir_records {
+  id String @id @default(cuid())
+  // TODO: Convert SQL definition to Prisma fields
+  // Original SQL:   id UUID PRIMARY KEY,
+  //   tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  //   vehicle_id UUID NOT NULL,
+  //   type TEXT CHECK (type in ('pre','post')),
+  //   odometer BIGINT,
+  //   location JSONB,
+  //   status TEXT DEFAULT 'open',
+  //   created_at TIMESTAMPTZ DEFAULT now()
+  // );
+  
+  @@map("dvir_records")
+}
+
+model dvir_defects {
+  id String @id @default(cuid())
+  // TODO: Convert SQL definition to Prisma fields
+  // Original SQL:   id UUID PRIMARY KEY,
+  //   dvir_id UUID REFERENCES dvir_records(id) ON DELETE CASCADE,
+  //   component TEXT,
+  //   severity TEXT,
+  //   note TEXT,
+  //   photo_id UUID,
+  //   status TEXT DEFAULT 'open'
+  // );
+  
+  @@map("dvir_defects")
+}
+
+model maintenance_tickets {
+  id String @id @default(cuid())
+  // TODO: Convert SQL definition to Prisma fields
+  // Original SQL:   id UUID PRIMARY KEY,
+  //   tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  //   vehicle_id UUID,
+  //   source_dvir_id UUID REFERENCES dvir_records(id) ON DELETE SET NULL,
+  //   title TEXT, priority TEXT, description TEXT,
+  //   status TEXT DEFAULT 'open',
+  //   created_at TIMESTAMPTZ DEFAULT now()
+  // );
+  
+  @@map("maintenance_tickets")
+}
+
+model assets {
+  id String @id @default(cuid())
+  // TODO: Convert SQL definition to Prisma fields
+  // Original SQL:   id UUID PRIMARY KEY,
+  //   tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  //   sku TEXT,
+  //   serial TEXT,
+  //   name TEXT,
+  //   type TEXT,
+  //   status TEXT DEFAULT 'in_service',
+  //   last_seen_at TIMESTAMPTZ,
+  //   last_seen_loc JSONB
+  // );
+  
+  @@map("assets")
+}
+
+model asset_events {
+  id String @id @default(cuid())
+  // TODO: Convert SQL definition to Prisma fields
+  // Original SQL:   id UUID PRIMARY KEY,
+  //   asset_id UUID REFERENCES assets(id) ON DELETE CASCADE,
+  //   event_type TEXT,
+  //   actor_id UUID,
+  //   job_id UUID,
+  //   data JSONB,
+  //   created_at TIMESTAMPTZ DEFAULT now()
+  // );
+  
+  @@map("asset_events")
+}
+
+model qr_tags {
+  id String @id @default(cuid())
+  // TODO: Convert SQL definition to Prisma fields
+  // Original SQL:   id UUID PRIMARY KEY,
+  //   asset_id UUID REFERENCES assets(id) ON DELETE CASCADE,
+  //   code TEXT UNIQUE NOT NULL,
+  //   signed_by_provider BOOLEAN DEFAULT true,
+  //   created_at TIMESTAMPTZ DEFAULT now()
+  // );
+  
+  @@map("qr_tags")
+}
+
+model migration_jobs {
+  id String @id @default(cuid())
+  // TODO: Convert SQL definition to Prisma fields
+  // Original SQL:   id UUID PRIMARY KEY,
+  //   tenant_id UUID NOT NULL,
+  //   source TEXT,
+  //   status TEXT DEFAULT 'created',
+  //   options JSONB,
+  //   created_at TIMESTAMPTZ DEFAULT now()
+  // );
+  
+  @@map("migration_jobs")
+}
+
+model migration_mappings {
+  id String @id @default(cuid())
+  // TODO: Convert SQL definition to Prisma fields
+  // Original SQL:   id UUID PRIMARY KEY,
+  //   job_id UUID REFERENCES migration_jobs(id) ON DELETE CASCADE,
+  //   entity TEXT,
+  //   mapping JSONB
+  // );
+  
+  @@map("migration_mappings")
+}
+
+model migration_results {
+  id String @id @default(cuid())
+  // TODO: Convert SQL definition to Prisma fields
+  // Original SQL:   id UUID PRIMARY KEY,
+  //   job_id UUID REFERENCES migration_jobs(id) ON DELETE CASCADE,
+  //   entity TEXT,
+  //   processed INT, succeeded INT, failed INT,
+  //   report JSONB
+  // );
+  
+  @@map("migration_results")
+}
+
+model federation_domains {
+  id String @id @default(cuid())
+  // TODO: Convert SQL definition to Prisma fields
+  // Original SQL:   id UUID PRIMARY KEY,
+  //   tenant_id UUID NOT NULL,
+  //   domain TEXT NOT NULL,
+  //   method TEXT,
+  //   status TEXT DEFAULT 'pending',
+  //   verified_at TIMESTAMPTZ,
+  //   cert_status TEXT DEFAULT 'none'
+  // );
+  
+  @@map("federation_domains")
+}
+
+model rate_limit_policies {
+  id String @id @default(cuid())
+  // TODO: Convert SQL definition to Prisma fields
+  // Original SQL:   id UUID PRIMARY KEY,
+  //   tenant_id UUID NOT NULL,
+  //   plan TEXT,
+  //   base_per_min INT,
+  //   burst_per_min INT,
+  //   override_until TIMESTAMPTZ,
+  //   created_at TIMESTAMPTZ DEFAULT now()
+  // );
+  
+  @@map("rate_limit_policies")
+}
+
+model ai_sessions {
+  id String @id @default(cuid())
+  // TODO: Convert SQL definition to Prisma fields
+  // Original SQL:   id UUID PRIMARY KEY,
+  //   tenant_id UUID NOT NULL,
+  //   agent TEXT,
+  //   tier TEXT,
+  //   tokens_in BIGINT,
+  //   tokens_out BIGINT,
+  //   cost_cents BIGINT,
+  //   created_at TIMESTAMPTZ DEFAULT now()
+  // );
+  
+  @@map("ai_sessions")
+}
