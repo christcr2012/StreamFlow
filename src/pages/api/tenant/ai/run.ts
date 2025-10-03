@@ -3,10 +3,12 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { aiTaskService, ServiceError } from '@/server/services/aiTaskService';
 import { withRateLimit, rateLimitPresets } from '@/middleware/rateLimit';
 import { withIdempotency } from '@/middleware/idempotency';
+import { withAudience } from '@/middleware/audience';
+import { withCostGuard } from '@/middleware/costGuard';
+import { auditService } from '@/lib/auditService';
 import { getEmailFromReq } from '@/lib/rbac';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
-import { withAudienceAndCostGuard, AUDIENCE, COST_GUARD } from '@/middleware/withCostGuard';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -34,7 +36,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   try {
     const result = await aiTaskService.execute(orgId, userId, role, req.body);
-    
+
+    await auditService.logBinderEvent({
+      action: 'ai.run',
+      tenantId: orgId,
+      path: req.url,
+      ts: Date.now(),
+    });
+
     const statusCode = result.status === 'preview' ? 200 : result.status === 'success' ? 200 : 500;
     res.status(statusCode).json(result);
     return;
@@ -63,12 +72,23 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withAudienceAndCostGuard(
-  AUDIENCE.CLIENT_ONLY,
-  COST_GUARD.AI_ESTIMATE_DRAFT,
-  withRateLimit(
-    rateLimitPresets.ai,
-    withIdempotency({}, handler)
+export default withAudience(
+  'tenant',
+  withCostGuard(
+    withRateLimit(
+      rateLimitPresets.ai,
+      withIdempotency({}, handler)
+    ),
+    [
+      {
+        type: 'ai_tokens',
+        estimate: (req) => {
+          const body = req.body || {};
+          const prompt = body.prompt || '';
+          return Math.ceil(prompt.length / 4) + 500; // Rough token estimate
+        }
+      }
+    ]
   )
 );
 
