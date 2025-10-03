@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { withAudience, AUDIENCE } from '@/middleware/withAudience';
+import { withAudience } from '@/middleware/audience';
 import { withRateLimit, RATE_LIMIT_CONFIGS } from '@/middleware/withRateLimit';
 import { withIdempotency } from '@/middleware/withIdempotency';
 import { inventoryService } from '@/server/services/inventoryService';
+import { auditService } from '@/lib/auditService';
 import { z } from 'zod';
 
 const CreateInventoryItemSchema = z.object({
@@ -31,6 +32,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       const validated = CreateInventoryItemSchema.parse(req.body.payload || req.body);
 
       const item = await inventoryService.createItem(orgId, userId, validated);
+
+      await auditService.logBinderEvent({
+        action: 'inventory.item.create',
+        tenantId: orgId,
+        path: req.url,
+        ts: Date.now(),
+      });
 
       res.status(201).json({
         status: 'ok',
@@ -83,7 +91,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 export default withRateLimit(
   RATE_LIMIT_CONFIGS.DEFAULT,
   withIdempotency(
-    withAudience(AUDIENCE.CLIENT_ONLY, handler)
+    withAudience('tenant', handler)
   )
 );
 

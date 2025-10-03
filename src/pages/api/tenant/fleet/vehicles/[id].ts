@@ -8,12 +8,14 @@
  */
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { withAudience, AUDIENCE } from '@/middleware/withAudience';
+import { withAudience } from '@/middleware/audience';
 import { fleetVehicleService } from '@/server/services/fleet/fleetVehicleService';
+import { auditService } from '@/lib/auditService';
 
 async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { method, query } = req;
-  const { orgId, userId } = req as any;
+  const orgId = req.headers['x-org-id'] as string || 'org_test';
+  const userId = req.headers['x-user-id'] as string || 'user_test';
   const vehicleId = query.id as string;
 
   if (!orgId || !userId) {
@@ -75,6 +77,13 @@ async function handlePatch(
 ): Promise<void> {
   const vehicle = await fleetVehicleService.update(orgId, userId, vehicleId, req.body);
 
+  await auditService.logBinderEvent({
+    action: 'fleet.vehicle.update',
+    tenantId: orgId,
+    path: req.url,
+    ts: Date.now(),
+  });
+
   res.status(200).json({
     status: 'ok',
     result: vehicle,
@@ -92,8 +101,15 @@ async function handleDelete(
 
   await fleetVehicleService.delete(orgId, userId, vehicleId, hard === 'true');
 
+  await auditService.logBinderEvent({
+    action: 'fleet.vehicle.delete',
+    tenantId: orgId,
+    path: req.url,
+    ts: Date.now(),
+  });
+
   res.status(204).end();
 }
 
-export default withAudience(AUDIENCE.CLIENT_ONLY, handler);
+export default withAudience('tenant', handler);
 

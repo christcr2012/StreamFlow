@@ -7,12 +7,14 @@
  */
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { withAudience, AUDIENCE } from '@/middleware/withAudience';
+import { withAudience } from '@/middleware/audience';
 import { fleetVehicleService } from '@/server/services/fleet/fleetVehicleService';
+import { auditService } from '@/lib/auditService';
 
 async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { method } = req;
-  const { orgId, userId } = req as any;
+  const orgId = req.headers['x-org-id'] as string || 'org_test';
+  const userId = req.headers['x-user-id'] as string || 'user_test';
 
   if (!orgId || !userId) {
     res.status(401).json({ error: 'Unauthorized' });
@@ -65,11 +67,18 @@ async function handlePost(
 ): Promise<void> {
   const vehicle = await fleetVehicleService.create(orgId, userId, req.body);
 
+  await auditService.logBinderEvent({
+    action: 'fleet.vehicle.create',
+    tenantId: orgId,
+    path: req.url,
+    ts: Date.now(),
+  });
+
   res.status(201).json({
     status: 'ok',
     result: vehicle,
   });
 }
 
-export default withAudience(AUDIENCE.CLIENT_ONLY, handler);
+export default withAudience('tenant', handler);
 
