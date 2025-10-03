@@ -15,18 +15,8 @@ const CompleteWorkOrderSchema = z.object({
   }),
   payload: z.object({
     work_order_id: z.string(),
-    completion_notes: z.string().optional(),
-    customer_signature: z.string().optional(), // Base64 encoded signature
-    photos: z.array(z.string()).optional(), // Array of photo URLs/IDs
-    parts_used: z.array(z.object({
-      item_id: z.string(),
-      quantity: z.number(),
-    })).optional(),
-    location: z.object({
-      lat: z.number(),
-      lng: z.number(),
-      accuracy: z.number().optional(),
-    }).optional(),
+    completed_at: z.string(),
+    completion_notes: z.string(),
   }),
   idempotency_key: z.string().uuid(),
 });
@@ -127,10 +117,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         action: 'complete',
         resource: `workorder:${workOrderId}`,
         meta: {
+          work_order_id: payload.work_order_id,
+          completed_at: payload.completed_at,
           completion_notes: payload.completion_notes,
-          photos_count: payload.photos?.length || 0,
-          parts_used_count: payload.parts_used?.length || 0,
-          location: payload.location,
         },
       },
     });
@@ -143,15 +132,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         id: workOrderIdFormatted,
         version: completedWorkOrder.version || 1,
       },
-      work_order: {
-        id: workOrderIdFormatted,
-        status: completedWorkOrder.status,
-        completed_at: completedWorkOrder.actualEndAt,
-        completed_by: userId,
-        completion_notes: payload.completion_notes,
-        photos: payload.photos,
-        parts_used: payload.parts_used,
-      },
+      // Response format exactly as specified in BINDER5_FULL lines 223-231
       audit_id: `AUD-WO-${workOrderId.substring(0, 6)}`,
     });
   } catch (error) {

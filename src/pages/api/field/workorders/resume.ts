@@ -15,12 +15,7 @@ const ResumeWorkOrderSchema = z.object({
   }),
   payload: z.object({
     work_order_id: z.string(),
-    notes: z.string().optional(),
-    location: z.object({
-      lat: z.number(),
-      lng: z.number(),
-      accuracy: z.number().optional(),
-    }).optional(),
+    resumed_at: z.string(),
   }),
   idempotency_key: z.string().uuid(),
 });
@@ -99,8 +94,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         action: 'resume',
         resource: `workorder:${workOrderId}`,
         meta: {
-          notes: payload.notes,
-          location: payload.location,
+          work_order_id: payload.work_order_id,
+          resumed_at: payload.resumed_at,
         },
       },
     });
@@ -113,12 +108,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         id: workOrderIdFormatted,
         version: resumedWorkOrder.version || 1,
       },
-      work_order: {
-        id: workOrderIdFormatted,
-        status: resumedWorkOrder.status,
-        resumed_at: resumedWorkOrder.resumedAt,
-        notes: payload.notes,
-      },
+      // Response format exactly as specified in BINDER5_FULL lines 183-191
       audit_id: `AUD-WO-${workOrderId.substring(0, 6)}`,
     });
   } catch (error) {
