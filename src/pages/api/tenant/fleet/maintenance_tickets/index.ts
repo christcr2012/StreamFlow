@@ -7,14 +7,16 @@
  */
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { withAudience, AUDIENCE } from '@/middleware/withAudience';
+import { withAudience } from '@/middleware/audience';
 import { withIdempotency } from '@/middleware/withIdempotency';
 import { withRateLimit, RATE_LIMIT_CONFIGS } from '@/middleware/withRateLimit';
 import { maintenanceTicketService } from '@/server/services/fleet/maintenanceTicketService';
+import { auditService } from '@/lib/auditService';
 
 async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { method } = req;
-  const { orgId, userId } = req as any;
+  const orgId = req.headers['x-org-id'] as string || 'org_test';
+  const userId = req.headers['x-user-id'] as string || 'user_test';
 
   if (!orgId || !userId) {
     res.status(401).json({ error: 'Unauthorized' });
@@ -68,6 +70,13 @@ async function handlePost(
 ): Promise<void> {
   const ticket = await maintenanceTicketService.create(orgId, userId, req.body);
 
+  await auditService.logBinderEvent({
+    action: 'fleet.maintenance.create',
+    tenantId: orgId,
+    path: req.url,
+    ts: Date.now(),
+  });
+
   res.status(201).json({
     status: 'ok',
     result: ticket,
@@ -77,7 +86,7 @@ async function handlePost(
 export default withRateLimit(
   RATE_LIMIT_CONFIGS.DEFAULT,
   withIdempotency(
-    withAudience(AUDIENCE.CLIENT_ONLY, handler)
+    withAudience('tenant', handler)
   )
 );
 

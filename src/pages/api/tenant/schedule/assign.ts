@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { withAudience, AUDIENCE } from '@/middleware/withAudience';
+import { withAudience } from '@/middleware/audience';
 import { withRateLimit, RATE_LIMIT_CONFIGS } from '@/middleware/withRateLimit';
 import { withIdempotency } from '@/middleware/withIdempotency';
 import { schedulingService } from '@/server/services/schedulingService';
+import { auditService } from '@/lib/auditService';
 import { z } from 'zod';
 
 const AssignCrewSchema = z.object({
@@ -31,6 +32,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const assignment = await schedulingService.assignCrew(orgId, userId, validated);
 
+    await auditService.logBinderEvent({
+      action: 'schedule.crew.assign',
+      tenantId: orgId,
+      path: req.url,
+      ts: Date.now(),
+    });
+
     res.status(200).json({
       status: 'ok',
       result: {
@@ -55,7 +63,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 export default withRateLimit(
   RATE_LIMIT_CONFIGS.DEFAULT,
   withIdempotency(
-    withAudience(AUDIENCE.CLIENT_ONLY, handler)
+    withAudience('tenant', handler)
   )
 );
 
