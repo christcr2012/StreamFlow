@@ -5092,3 +5092,294 @@ model audit_logs {
   
   @@map("audit_logs")
 }
+
+model crm_leads {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  bu_id String
+  first_name String
+  email String
+  status String
+  created_at DateTime
+  // Generated from binder4_FULL line 4111
+  // Operation: create_table
+  // Database: CREATE TABLE crm_leads
+  
+  @@map("crm_leads")
+}
+
+model crm_orgs {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  name String
+  created_at DateTime
+  // Generated from binder4_FULL line 4124
+  // Operation: create_table
+  // Database: CREATE TABLE crm_orgs
+  
+  @@map("crm_orgs")
+}
+
+model crm_contacts {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  org_id String
+  first_name String
+  is_primary Boolean
+  created_at DateTime
+  // Generated from binder4_FULL line 4134
+  // Operation: create_table
+  // Database: CREATE TABLE crm_contacts
+  
+  @@map("crm_contacts")
+}
+
+model crm_opps {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  org_id String
+  contact_id String
+  title String
+  created_at DateTime
+  // Generated from binder4_FULL line 4146
+  // Operation: create_table
+  // Database: CREATE TABLE crm_opps
+  
+  @@map("crm_opps")
+}
+
+model schedule_jobs {
+  id String @id @default(cuid())
+  id String
+  org_id String
+  status String
+  // Generated from binder4_FULL line 4158
+  // Operation: create_table
+  // Database: CREATE TABLE schedule_jobs
+  
+  @@map("schedule_jobs")
+}
+
+model schedule_visits {
+  id String @id @default(cuid())
+  id String
+  job_id String
+  scheduled_at DateTime
+  status String
+  // Generated from binder4_FULL line 4166
+  // Operation: create_table
+  // Database: CREATE TABLE schedule_visits
+  
+  @@map("schedule_visits")
+}
+
+model billing_estimates {
+  id String @id @default(cuid())
+  id String
+  org_id String
+  created_at DateTime
+  // Generated from binder4_FULL line 4176
+  // Operation: create_table
+  // Database: CREATE TABLE billing_estimates
+  
+  @@map("billing_estimates")
+}
+
+model billing_estimate_lines {
+  id String @id @default(cuid())
+  id String
+  sku String
+  // Generated from binder4_FULL line 4181
+  // Operation: create_table
+  // Database: CREATE TABLE billing_estimate_lines
+  
+  @@map("billing_estimate_lines")
+}
+
+model billing_invoices {
+  id String @id @default(cuid())
+  id String
+  org_id String
+  created_at DateTime
+  // Generated from binder4_FULL line 4188
+  // Operation: create_table
+  // Database: CREATE TABLE billing_invoices
+  
+  @@map("billing_invoices")
+}
+
+model billing_invoice_lines {
+  id String @id @default(cuid())
+  id String
+  sku String
+  // Generated from binder4_FULL line 4193
+  // Operation: create_table
+  // Database: CREATE TABLE billing_invoice_lines
+  
+  @@map("billing_invoice_lines")
+}
+
+model billing_payments {
+  id String @id @default(cuid())
+  id String
+  amount_cents BigInt
+  // Generated from binder4_FULL line 4197
+  // Operation: create_table
+  // Database: CREATE TABLE billing_payments
+  
+  @@map("billing_payments")
+}
+
+model inventory_items {
+  id String @id @default(cuid())
+  id String
+  sku String
+  // Generated from binder4_FULL line 4204
+  // Operation: create_table
+  // Database: CREATE TABLE inventory_items
+  
+  @@map("inventory_items")
+}
+
+model inventory_bins {
+  id String @id @default(cuid())
+  id String
+  name String
+  // Generated from binder4_FULL line 4208
+  // Operation: create_table
+  // Database: CREATE TABLE inventory_bins
+  
+  @@map("inventory_bins")
+}
+
+model inventory_stock {
+  id String @id @default(cuid())
+  id String
+  item_id String
+  bin_id String
+  // Generated from binder4_FULL line 4212
+  // Operation: create_table
+  // Database: CREATE TABLE inventory_stock
+  
+  @@map("inventory_stock")
+}
+
+model subs_vendors {
+  id String @id @default(cuid())
+  id String
+  email String
+  // Generated from binder4_FULL line 4222
+  // Operation: create_table
+  // Database: CREATE TABLE subs_vendors
+  
+  @@map("subs_vendors")
+}
+
+model subs_work_orders {
+  id String @id @default(cuid())
+  id String
+  job_id String
+  // Generated from binder4_FULL line 4226
+  // Operation: create_table
+  // Database: CREATE TABLE subs_work_orders
+  
+  @@map("subs_work_orders")
+}
+
+model subs_milestones {
+  id String @id @default(cuid())
+  id String
+  title String
+  // Generated from binder4_FULL line 4230
+  // Operation: create_table
+  // Database: CREATE TABLE subs_milestones
+  
+  @@map("subs_milestones")
+}
+
+model subs_payouts {
+  id String @id @default(cuid())
+  id String
+  amount_cents BigInt
+  // Generated from binder4_FULL line 4234
+  // Operation: create_table
+  // Database: CREATE TABLE subs_payouts
+  
+  @@map("subs_payouts")
+}
+
+model portal_sessions {
+  id String @id @default(cuid())
+  id String
+  token String
+  // Generated from binder4_FULL line 4241
+  // Operation: create_table
+  // Database: CREATE TABLE portal_sessions
+  
+  @@map("portal_sessions")
+}
+
+model finance_cost_centers {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  bu_id String
+  name String
+  lob String
+  created_at DateTime
+  // Generated from binder4_FULL line 45351
+  // Operation: create_table
+  // Database: CREATE TABLE finance_cost_centers
+  
+  @@map("finance_cost_centers")
+}
+
+model finance_budgets {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  cost_center_id String
+  period_d String
+  amount_cents BigInt
+  created_at DateTime
+  // Generated from binder4_FULL line 45362
+  // Operation: create_table
+  // Database: CREATE TABLE finance_budgets
+  
+  @@map("finance_budgets")
+}
+
+model time_entries {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  user_id String
+  visit_id String
+  started_at DateTime
+  ended_at DateTime
+  notes String
+  // Generated from binder4_FULL line 45373
+  // Operation: create_table
+  // Database: CREATE TABLE time_entries
+  
+  @@map("time_entries")
+}
+
+model integrations_vendor_tokens {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  vendor String
+  data Json
+  created_at DateTime
+  updated_at DateTime
+  // Generated from binder4_FULL line 45386
+  // Operation: create_table
+  // Database: CREATE TABLE integrations_vendor_tokens
+  
+  @@map("integrations_vendor_tokens")
+}
