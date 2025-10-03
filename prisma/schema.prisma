@@ -4838,3 +4838,12 @@ model idx_infra_adoption_2 {
   // Generated from binder1_FULL line 13782
   // Database: CREATE INDEX idx_infra_adoption_2
 }
+
+model IF {
+  id String @id @default(cuid())
+  // Generated from binder1_FULL line 1534
+  // Operation: drop_table
+  // Database: DROP TABLE IF
+  
+  @@map("IF")
+}
