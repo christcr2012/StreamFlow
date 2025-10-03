@@ -1,8 +1,8 @@
 # STREAMFLOW IMPLEMENTATION HANDOFF DOCUMENT
 
-**Date:** 2025-10-03  
-**Token Usage:** ~125K / 200K (62.5%)  
-**Status:** BINDER1 & BINDER2 COMPLETE, BINDER3 READY TO START
+**Date:** 2025-10-03
+**Token Usage:** ~147K / 200K (73.5%)
+**Status:** BINDER1 & BINDER2 COMPLETE, BINDER3 30% COMPLETE
 
 ---
 
@@ -16,7 +16,7 @@ Successfully completed 100% implementation of BINDER1_FULL and BINDER2_FULL with
 - ✅ Next.js build successful
 - ✅ All changes committed and pushed to GitHub
 
-**Next Step:** Begin BINDER3_FULL implementation (Fleet & Assets, Multi-Location, Vendor Roles, Integrations)
+**Next Step:** Continue BINDER3_FULL implementation (Fleet enhancements, Integrations, Migration, ULAP, AI flows)
 
 ---
 
@@ -154,72 +154,115 @@ export default withAudience('tenant', handler);
 
 ---
 
-## NEXT STEPS: BINDER3_FULL
+## BINDER3_FULL - 30% COMPLETE
 
 **File:** `binderFiles/binder3_FULL.md` (85,173 lines, ~2.6MB)
 
 **Scope:** Multi-Location, Fleet & Assets, Scoped Vendor Roles, Migration, ULAP, Integrations
 
-**Key Sections:**
-1. **RBAC & Scoped Vendor Roles**
-   - New roles: `tenant_accountant`, `tenant_it_vendor`, `tenant_auditor`, `tenant_consultant`
-   - JWT audience: `aud=tenant_vendor`
-   - Row-level security with role scoping
+### ✅ COMPLETED (30%)
 
-2. **Navigation & Routes**
-   - `/tenant/bu` - Business Units management
-   - `/tenant/lob` - Lines of Business configuration
-   - `/tenant/fleet` - Fleet & Assets
-   - `/tenant/vendors` - Vendor Center
-   - `/tenant/integrations` - Paylocity, Geotab, Holman
-   - `/tenant/migration` - CSV importers, API bridges
-   - `/tenant/billing` - ULAP & Credits
-   - `/tenant/ai` - AI Hub
+1. **Database Schema Validation**
+   - All Binder 3 tables exist in Prisma schema
+   - BusinessUnit, LineOfBusiness, VendorRole, FleetVehicle, FleetMaintenanceTicket
+   - IntegrationConfig, GeotabDvirLog, HolmanFuelTransaction
+   - PricingCatalogItem, TenantEntitlement, CreditsLedgerEntry, UsageLedgerEntry
+   - AuditLog2
 
-3. **Database Migrations**
-   - `business_units` table
-   - `lines_of_business` table
-   - Vendor role tables
-   - Integration configuration tables
+2. **Business Unit APIs** (✅ Complete)
+   - `/api/tenant/bu/index` - List & Create
+   - `/api/tenant/bu/[id]` - Get, Update, Delete
+   - `/api/tenant/bu/create` - Create endpoint
+   - `/api/tenant/bu/list` - List endpoint
+   - All using new middleware pattern (withAudience, auditService)
+   - Proper relation handling (fleetVehicles, linesOfBusiness)
 
-4. **Backend APIs**
-   - Business Unit CRUD
-   - Line of Business CRUD
-   - Fleet management enhancements
-   - Vendor invitation/management
-   - Integration connectors (Paylocity, Geotab, Holman)
-   - Migration tools (CSV import, API bridges)
+3. **Line of Business APIs** (✅ Complete)
+   - `/api/tenant/lob/index` - List & Create
+   - `/api/tenant/lob/[id]` - Get, Update, Delete
+   - Vertical pack management (cleaning, fencing, hvac, etc.)
+   - BU scoping support
 
-5. **Frontend Components**
-   - Business Unit management UI
-   - Fleet dashboard
-   - Vendor portal
-   - Integration configuration screens
-   - Migration wizard
+4. **Vendor Role APIs** (✅ Partial - 2/3 endpoints)
+   - `/api/tenant/vendors/invite` - Invite vendor users
+   - `/api/tenant/vendors/list` - List vendor users
+   - TODO: Add `/api/tenant/vendors/[id]` for get/update/delete
+   - NOTE: Schema needs roleScope, audience, metadata fields added to User model
 
-**Execution Order (from binder):**
-1. `01_rbac_and_roles`
-2. `02_nav_and_routes`
-3. `03_db_migrations`
-4. `04_backend_apis`
-5. `05_frontend_wire`
-6. `06_integrations`
-7. `07_ai_flows`
-8. `08_security`
-9. `09_tests`
-10. `10_ops_observability`
-11. `11_acceptance`
+### ⏳ REMAINING WORK (70%)
 
-**Recommended Approach:**
-1. Start with database migrations (business_units, lines_of_business)
-2. Implement RBAC for vendor roles
-3. Create backend APIs for BU/LoB management
-4. Build fleet management enhancements
-5. Implement vendor invitation system
-6. Add integration connectors
-7. Create migration tools
-8. Build frontend components
-9. Run validation gates
+1. **Fleet Enhancement APIs** (0%)
+   - Enhance existing fleet endpoints with BU scoping
+   - Add driver assignment endpoint
+   - Add odometer logging endpoint
+   - Add fuel upload CSV endpoint
+   - Add maintenance ticket close endpoint
+
+2. **Integration APIs** (0%)
+   - `/api/tenant/integrations/paylocity` - Connect/disconnect
+   - `/api/tenant/integrations/geotab` - Connect/disconnect
+   - `/api/tenant/integrations/holman` - Connect/disconnect (optional)
+   - Integration status monitoring
+   - Webhook handlers for integration events
+
+3. **Migration Framework APIs** (0%)
+   - `/api/tenant/migration/csv` - Upload CSV files
+   - `/api/tenant/migration/map` - Map CSV fields
+   - `/api/tenant/migration/validate` - Validate import data
+   - `/api/tenant/migration/execute` - Execute import
+   - API bridge connectors (Jobber, ProDBX, ServiceTitan)
+
+4. **ULAP & Credits APIs** (0%)
+   - `/api/tenant/billing/credits` - View credit balance
+   - `/api/tenant/billing/usage` - View usage history
+   - `/api/tenant/billing/prepay` - Add credits
+   - Credit deduction on AI operations
+   - Usage tracking and reporting
+
+5. **AI Flow Enhancements** (0%)
+   - Schedule optimization (Eco default)
+   - Estimate draft (Eco → Full upgrade)
+   - DVIR summary & risk flags
+   - Fuel anomaly detection
+   - Cost hooks integration with ULAP
+
+6. **Schema Enhancements Needed**
+   - Add `roleScope` field to User model ('employee' | 'vendor')
+   - Add `audience` field to User model ('tenant' | 'tenant_vendor')
+   - Add `metadata` JSON field to User model for vendor scoping
+
+7. **POST-CHECKS & Validation** (0%)
+   - Run TypeScript validation
+   - Run Next.js build
+   - Run database migration check
+   - Create completion report
+   - Update status documents
+
+### NEXT IMMEDIATE STEPS
+
+1. **Complete Vendor APIs**
+   - Create `/api/tenant/vendors/[id]` endpoint
+   - Add schema migration for User model enhancements
+
+2. **Fleet Enhancements**
+   - Update `/api/tenant/fleet/vehicles/[id]` with BU scoping
+   - Create driver assignment endpoint
+   - Create odometer logging endpoint
+
+3. **Integration Connectors**
+   - Start with Paylocity integration
+   - Add Geotab integration
+   - Add Holman integration (optional)
+
+4. **Migration Framework**
+   - Create CSV upload endpoint
+   - Create field mapping endpoint
+   - Create validation endpoint
+
+5. **ULAP Implementation**
+   - Create credit management endpoints
+   - Add cost hooks to AI operations
+   - Implement usage tracking
 
 ---
 
@@ -345,14 +388,27 @@ npm test
 To continue this work in a new chat, use:
 
 ```
-Continue StreamFlow implementation from HANDOFF_DOCUMENT.md.
+Continue StreamFlow BINDER3_FULL implementation from HANDOFF_DOCUMENT.md.
 
 Current status:
 - BINDER1_FULL: ✅ 100% COMPLETE
-- BINDER2_FULL: ✅ 100% COMPLETE  
-- BINDER3_FULL: ⏳ READY TO START
+- BINDER2_FULL: ✅ 100% COMPLETE
+- BINDER3_FULL: 🔄 30% COMPLETE
 
-Start with BINDER3_FULL implementation following the execution order in binderFiles/binder3_FULL.md. Apply the same middleware patterns established in BINDER1 and BINDER2.
+Completed in Binder 3:
+- ✅ Database schema validation
+- ✅ Business Unit APIs (create, list, get, update, delete)
+- ✅ Line of Business APIs (create, list, get, update, delete)
+- ✅ Vendor Role APIs (invite, list) - partial
+
+Next immediate steps:
+1. Complete vendor APIs (/api/tenant/vendors/[id])
+2. Enhance fleet APIs with BU scoping
+3. Implement integration connectors (Paylocity, Geotab, Holman)
+4. Build migration framework (CSV import, API bridges)
+5. Add ULAP credit management
+6. Enhance AI flows with cost hooks
+7. Run POST-CHECKS validation
 
 Key patterns to maintain:
 1. Use withAudience('tenant'|'provider'|'portal', handler)
@@ -362,6 +418,8 @@ Key patterns to maintain:
 5. Run validation gates after each major section
 
 Work autonomously through all sections, committing at reasonable intervals, and pushing to GitHub regularly.
+
+Note: User model needs schema enhancements (roleScope, audience, metadata fields) for full vendor role support.
 ```
 
 ---
@@ -384,6 +442,6 @@ Work autonomously through all sections, committing at reasonable intervals, and 
 
 ---
 
-**Document Generated:** 2025-10-03  
-**Token Usage:** ~125K / 200K (62.5%)  
-**Ready for:** BINDER3_FULL implementation
+**Document Generated:** 2025-10-03
+**Token Usage:** ~147K / 200K (73.5%)
+**Ready for:** BINDER3_FULL continuation (70% remaining)
