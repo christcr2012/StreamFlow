@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
-import { withAudience, AUDIENCE, getUserInfo } from '@/middleware/withAudience';
+import { withAudience } from '@/middleware/audience';
 import {
   getOrganizationById,
   updateOrganization,
@@ -17,8 +17,8 @@ function errorResponse(res: NextApiResponse, status: number, error: string, mess
 }
 
 async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const { orgId, email } = getUserInfo(req);
-  const userId = email || 'user_test';
+  const orgId = req.headers['x-org-id'] as string || 'org_test';
+  const userId = req.headers['x-user-id'] as string || 'user_test';
   const { id } = req.query;
 
   if (typeof id !== 'string') {
@@ -159,5 +159,5 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse, orgId: st
   }
 }
 
-export default withAudience(AUDIENCE.CLIENT_ONLY, handler);
+export default withAudience('tenant', handler);
 
