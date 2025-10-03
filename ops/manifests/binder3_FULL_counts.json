@@ -1,0 +1,56 @@
+{
+  "api_endpoints": {
+    "total": 419,
+    "implemented": 0,
+    "skipped": 0,
+    "percentage": 0
+  },
+  "db_migrations": {
+    "total": 1925,
+    "implemented": 0,
+    "skipped": 0,
+    "percentage": 0
+  },
+  "screens": {
+    "total": 0,
+    "implemented": 0,
+    "skipped": 0,
+    "percentage": 0
+  },
+  "controls": {
+    "total": 0,
+    "implemented": 0,
+    "skipped": 0,
+    "percentage": 0
+  },
+  "tests": {
+    "total": 0,
+    "implemented": 0,
+    "skipped": 0,
+    "percentage": 0
+  },
+  "jobs": {
+    "total": 0,
+    "implemented": 0,
+    "skipped": 0,
+    "percentage": 0
+  },
+  "ai_flows": {
+    "total": 0,
+    "implemented": 0,
+    "skipped": 0,
+    "percentage": 0
+  },
+  "webhooks": {
+    "total": 1,
+    "implemented": 0,
+    "skipped": 0,
+    "percentage": 0
+  },
+  "integrations": {
+    "total": 0,
+    "implemented": 0,
+    "skipped": 0,
+    "percentage": 0
+  }
+}

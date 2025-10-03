@@ -4847,3 +4847,248 @@ model IF {
   
   @@map("IF")
 }
+
+model tenants {
+  id String @id @default(cuid())
+  id String
+  name String
+  plan String
+  created_at DateTime
+  updated_at DateTime
+  // Generated from binder3_FULL line 91
+  // Operation: create_table
+  // Database: CREATE TABLE tenants
+  
+  @@map("tenants")
+}
+
+model business_units {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  name String
+  timezone String
+  address Json
+  created_at DateTime
+  // Generated from binder3_FULL line 100
+  // Operation: create_table
+  // Database: CREATE TABLE business_units
+  
+  @@map("business_units")
+}
+
+model lines_of_business {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  bu_id String
+  key String
+  enabled Boolean
+  config Json
+  created_at DateTime
+  // Generated from binder3_FULL line 111
+  // Operation: create_table
+  // Database: CREATE TABLE lines_of_business
+  
+  @@map("lines_of_business")
+}
+
+model vendor_roles {
+  id String @id @default(cuid())
+  id String
+  key String
+  description String
+  // Generated from binder3_FULL line 125
+  // Operation: create_table
+  // Database: CREATE TABLE vendor_roles
+  
+  @@map("vendor_roles")
+}
+
+model users {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  email String
+  password_hash String
+  role String
+  role_scope String
+  audience String
+  status String
+  created_at DateTime
+  // Generated from binder3_FULL line 131
+  // Operation: create_table
+  // Database: CREATE TABLE users
+  
+  @@map("users")
+}
+
+model fleet_vehicles {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  bu_id String
+  asset_tag String
+  vin String
+  plate String
+  make String
+  dot_number String
+  odometer BigInt
+  status String
+  metadata Json
+  created_at DateTime
+  // Generated from binder3_FULL line 147
+  // Operation: create_table
+  // Database: CREATE TABLE fleet_vehicles
+  
+  @@map("fleet_vehicles")
+}
+
+model fleet_maintenance_tickets {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  vehicle_id String
+  opened_by String
+  assigned_to String
+  title String
+  description String
+  severity String
+  status String
+  dvir_ref String
+  opened_at DateTime
+  closed_at DateTime
+  // Generated from binder3_FULL line 163
+  // Operation: create_table
+  // Database: CREATE TABLE fleet_maintenance_tickets
+  
+  @@map("fleet_maintenance_tickets")
+}
+
+model integration_configs {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  type String
+  status String
+  config Json
+  created_at DateTime
+  updated_at DateTime
+  // Generated from binder3_FULL line 182
+  // Operation: create_table
+  // Database: CREATE TABLE integration_configs
+  
+  @@map("integration_configs")
+}
+
+model geotab_dvir_logs {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  device_id String
+  driver_id String
+  vehicle_ref String
+  defects Json
+  certified_at DateTime
+  status String
+  raw Json
+  // Generated from binder3_FULL line 194
+  // Operation: create_table
+  // Database: CREATE TABLE geotab_dvir_logs
+  
+  @@map("geotab_dvir_logs")
+}
+
+model holman_fuel_transactions {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  vehicle_ref String
+  driver_pin String
+  total_cents BigInt
+  odometer BigInt
+  vendor String
+  purchased_at DateTime
+  raw Json
+  // Generated from binder3_FULL line 208
+  // Operation: create_table
+  // Database: CREATE TABLE holman_fuel_transactions
+  
+  @@map("holman_fuel_transactions")
+}
+
+model pricing_catalog {
+  id String @id @default(cuid())
+  id String
+  key String
+  list_price_cents BigInt
+  adoption_discount_eligible Boolean
+  // Generated from binder3_FULL line 226
+  // Operation: create_table
+  // Database: CREATE TABLE pricing_catalog
+  
+  @@map("pricing_catalog")
+}
+
+model tenant_entitlements {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  key String
+  enabled Boolean
+  quota BigInt
+  meta Json
+  // Generated from binder3_FULL line 233
+  // Operation: create_table
+  // Database: CREATE TABLE tenant_entitlements
+  
+  @@map("tenant_entitlements")
+}
+
+model credits_ledger {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  key String
+  delta_cents BigInt
+  reason String
+  created_at DateTime
+  // Generated from binder3_FULL line 243
+  // Operation: create_table
+  // Database: CREATE TABLE credits_ledger
+  
+  @@map("credits_ledger")
+}
+
+model usage_ledger {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  key String
+  quantity BigInt
+  cost_cents BigInt
+  context Json
+  created_at DateTime
+  // Generated from binder3_FULL line 253
+  // Operation: create_table
+  // Database: CREATE TABLE usage_ledger
+  
+  @@map("usage_ledger")
+}
+
+model audit_logs {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  user_id String
+  role String
+  action String
+  resource String
+  meta Json
+  created_at DateTime
+  // Generated from binder3_FULL line 267
+  // Operation: create_table
+  // Database: CREATE TABLE audit_logs
+  
+  @@map("audit_logs")
+}
