@@ -46,8 +46,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       });
     }
 
-    // TODO: Add roleScope, audience, metadata fields to User model in schema
-    // For now, create user with basic fields
+    // Create vendor user with new schema fields
     const vendorUser = await prisma.user.create({
       data: {
         orgId,
@@ -55,6 +54,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         name: name || email,
         role: 'STAFF', // Using existing Role enum
         status: 'pending', // Pending until they accept invitation
+        roleScope: 'vendor', // Mark as vendor user
+        audience: 'tenant_vendor', // JWT audience for vendor access
+        metadata: {
+          vendorRole: role,
+          scope: scope || {},
+          invitedAt: new Date().toISOString(),
+        },
       },
     });
 

@@ -11,12 +11,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const orgId = req.headers['x-org-id'] as string || 'org_test';
 
-    // TODO: Filter by roleScope='vendor' once added to schema
-    // For now, get all users with status='pending' as proxy for vendors
+    // Filter by roleScope='vendor' using new schema fields
     const vendors = await prisma.user.findMany({
       where: {
         orgId,
-        status: 'pending', // Temporary filter until roleScope field is added
+        roleScope: 'vendor',
       },
       select: {
         id: true,
@@ -24,6 +23,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         name: true,
         role: true,
         status: true,
+        roleScope: true,
+        audience: true,
+        metadata: true,
         createdAt: true,
       },
       orderBy: { createdAt: 'desc' },

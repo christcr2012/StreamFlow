@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { withAudience, AUDIENCE } from '@/middleware/withAudience';
-import { integrationService } from '@/server/services/integrationService';
+import { withAudience } from '@/middleware/audience';
+import { auditService } from '@/lib/auditService';
+import { IntegrationService } from '@/server/services/integrations/integrationService';
 import { z } from 'zod';
 
 const ConnectPaylocitySchema = z.object({
@@ -10,51 +11,72 @@ const ConnectPaylocitySchema = z.object({
 });
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { method } = req;
-  const orgId = req.headers['x-org-id'] as string;
-  const userId = req.headers['x-user-id'] as string;
-
-  if (!orgId || !userId) {
-    res.status(401).json({ error: 'Unauthorized' });
-    return;
-  }
-
-  if (method !== 'POST') {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).json({ error: `Method ${method} not allowed` });
-    return;
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const validated = ConnectPaylocitySchema.parse(req.body);
+    const orgId = req.headers['x-org-id'] as string || 'org_test';
+    const userId = req.headers['x-user-id'] as string || 'user_test';
 
-    const integration = await integrationService.connectPaylocity(
-      orgId,
+    // Validate request body
+    const validation = ConnectPaylocitySchema.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(400).json({
+        error: 'VALIDATION_ERROR',
+        details: validation.error.errors,
+      });
+    }
+
+    const { client_id, client_secret, company_id } = validation.data;
+
+    // Connect integration
+    const integration = await IntegrationService.connect({
+      tenantId: orgId,
+      type: 'paylocity',
+      credentials: {
+        client_id,
+        client_secret,
+        company_id,
+      },
       userId,
-      validated
-    );
+    });
 
-    res.status(200).json({
+    // Audit log
+    await auditService.logBinderEvent({
+      action: 'integration.paylocity.connect',
+      tenantId: orgId,
+      path: req.url,
+      ts: Date.now(),
+    });
+
+    return res.status(200).json({
       status: 'ok',
       result: {
         id: integration.id,
-        type: integration.type,
-        status: integration.status,
+        version: 1,
       },
       audit_id: `AUD-INT-${integration.id}`,
+      cost: {
+        ai_tokens: 0,
+        cents: 0,
+      },
     });
-    return;
   } catch (error: any) {
-    if (error.name === 'ZodError') {
-      res.status(400).json({ error: 'Validation error', details: error.errors });
-      return;
-    }
-
-    console.error('Paylocity connect error:', error);
-    res.status(500).json({ error: 'Internal server error' });
-    return;
+    console.error('Error connecting Paylocity:', error);
+    await auditService.logBinderEvent({
+      action: 'integration.paylocity.connect.error',
+      tenantId: req.headers['x-org-id'] as string || 'org_test',
+      path: req.url,
+      error: String(error),
+      ts: Date.now(),
+    });
+    return res.status(500).json({
+      error: 'INTERNAL_ERROR',
+      message: 'Failed to connect Paylocity integration',
+    });
   }
 }
 
-export default withAudience(AUDIENCE.CLIENT_ONLY, handler);
+export default withAudience('tenant', handler);
 

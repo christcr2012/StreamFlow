@@ -661,6 +661,12 @@ model User {
   status              String    @default("active")
   passwordResetToken  String? // SHA-256 hash of reset token
   passwordResetExpiry DateTime? // Token expiration time
+
+  // BINDER3: Vendor Role Support
+  roleScope           String?   @default("employee") // 'employee' | 'vendor'
+  audience            String?   @default("tenant") // 'tenant' | 'tenant_vendor'
+  metadata            Json?     // Vendor scoping data (buIds, permissions, etc.)
+
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
 
