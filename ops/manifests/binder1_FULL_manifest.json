@@ -2,2460 +2,7 @@
   "api_endpoints": [],
   "db_migrations": [
     {
-      "id": "db_cleaning_events_585568",
-      "description": "Database: CREATE TABLE cleaning_events",
-      "source_line_start": 1475,
-      "source_line_end": 1480,
-      "table_name": "cleaning_events",
-      "implemented": true,
-      "operation_type": "create_table",
-      "sql_content": "CREATE TABLE cleaning_events (\r\n  id TEXT PRIMARY KEY NOT NULL DEFAULT cuid(),\r\n  tenant_id TEXT NOT NULL,\r\n  user_id TEXT,\r\n  feature TEXT NOT NULL,\r\n  request_id TEXT NOT NULL,\r\n  payload JSONB,\r\n  result JSONB,\r\n  cost_cents INTEGER DEFAULT 0,\r\n  tokens_in INTEGER DEFAULT 0,\r\n  tokens_out INTEGER DEFAULT 0,\r\n  created_at TIMESTAMP DEFAULT now(),\r\n  updated_at TIMESTAMP DEFAULT now()\r\n);\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "text",
-          "line": 476
-        },
-        {
-          "name": "tenant_id",
-          "type": "text",
-          "line": 477
-        },
-        {
-          "name": "user_id",
-          "type": "text",
-          "line": 478
-        },
-        {
-          "name": "feature",
-          "type": "text",
-          "line": 479
-        },
-        {
-          "name": "request_id",
-          "type": "text",
-          "line": 480
-        },
-        {
-          "name": "payload",
-          "type": "jsonb",
-          "line": 481
-        },
-        {
-          "name": "result",
-          "type": "jsonb",
-          "line": 482
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 483
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 484
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 485
-        }
-      ]
-    },
-    {
-      "id": "db_idx_cleaning_events_1_585568",
-      "description": "Database: CREATE INDEX idx_cleaning_events_1",
-      "source_line_start": 1489,
-      "source_line_end": 1494,
-      "table_name": "idx_cleaning_events_1",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_cleaning_events_1 ON cleaning_events (tenant_id, feature, created_at);\r\nCREATE INDEX idx_cleaning_events_2 ON cleaning_events (request_id);\r",
-      "fields": []
-    },
-    {
-      "id": "db_idx_cleaning_events_2_585568",
-      "description": "Database: CREATE INDEX idx_cleaning_events_2",
-      "source_line_start": 1490,
-      "source_line_end": 1495,
-      "table_name": "idx_cleaning_events_2",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_cleaning_events_2 ON cleaning_events (request_id);\r\n\r\n```\r\n\r\n```prisma\r\nmodel cleaning_events {\r\n  id String @id @default(cuid())\r\n  tenant_id String\r\n  user_id String\r\n  feature String\r\n  request_id String\r\n  payload Json\r\n  result Json\r\n  cost_cents Int @default(0)\r\n  tokens_in Int @default(0)\r\n  tokens_out Int @default(0)\r\n  created_at DateTime @default(now())\r\n  updated_at DateTime @default(now())\r\n  @@index([tenant_id, feature, created_at])\r\n  @@index([request_id])\r",
-      "fields": []
-    },
-    {
-      "id": "db_cleaning_events_585568",
-      "description": "Database: model cleaning_events {",
-      "source_line_start": 1495,
-      "source_line_end": 1500,
-      "table_name": "cleaning_events",
-      "implemented": true,
-      "operation_type": "prisma_model",
-      "sql_content": "model cleaning_events {\r\n  id String @id @default(cuid())\r\n  tenant_id String\r\n  user_id String\r\n  feature String\r\n  request_id String\r\n  payload Json\r\n  result Json\r\n  cost_cents Int @default(0)\r\n  tokens_in Int @default(0)\r\n  tokens_out Int @default(0)\r\n  created_at DateTime @default(now())\r\n  updated_at DateTime @default(now())\r\n  @@index([tenant_id, feature, created_at])\r\n  @@index([request_id])\r\n}\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "string",
-          "line": 496
-        },
-        {
-          "name": "tenant_id",
-          "type": "string",
-          "line": 497
-        },
-        {
-          "name": "user_id",
-          "type": "string",
-          "line": 498
-        },
-        {
-          "name": "feature",
-          "type": "string",
-          "line": 499
-        },
-        {
-          "name": "request_id",
-          "type": "string",
-          "line": 500
-        },
-        {
-          "name": "payload",
-          "type": "json",
-          "line": 501
-        },
-        {
-          "name": "result",
-          "type": "json",
-          "line": 502
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 503
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 503
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 504
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 504
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 505
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 505
-        },
-        {
-          "name": "created_at",
-          "type": "datetime",
-          "line": 506
-        },
-        {
-          "name": "updated_at",
-          "type": "datetime",
-          "line": 507
-        }
-      ]
-    },
-    {
-      "id": "db_cleaning_events_585568",
-      "description": "Database: CREATE TABLE cleaning_events",
-      "source_line_start": 1516,
-      "source_line_end": 1521,
-      "table_name": "cleaning_events",
-      "implemented": true,
-      "operation_type": "create_table",
-      "sql_content": "CREATE TABLE cleaning_events (\r\n  id TEXT PRIMARY KEY NOT NULL DEFAULT cuid(),\r\n  tenant_id TEXT NOT NULL,\r\n  user_id TEXT,\r\n  feature TEXT NOT NULL,\r\n  request_id TEXT NOT NULL,\r\n  payload JSONB,\r\n  result JSONB,\r\n  cost_cents INTEGER DEFAULT 0,\r\n  tokens_in INTEGER DEFAULT 0,\r\n  tokens_out INTEGER DEFAULT 0,\r\n  created_at TIMESTAMP DEFAULT now(),\r\n  updated_at TIMESTAMP DEFAULT now()\r\n);\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "text",
-          "line": 517
-        },
-        {
-          "name": "tenant_id",
-          "type": "text",
-          "line": 518
-        },
-        {
-          "name": "user_id",
-          "type": "text",
-          "line": 519
-        },
-        {
-          "name": "feature",
-          "type": "text",
-          "line": 520
-        },
-        {
-          "name": "request_id",
-          "type": "text",
-          "line": 521
-        },
-        {
-          "name": "payload",
-          "type": "jsonb",
-          "line": 522
-        },
-        {
-          "name": "result",
-          "type": "jsonb",
-          "line": 523
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 524
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 525
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 526
-        }
-      ]
-    },
-    {
-      "id": "db_idx_cleaning_events_1_585568",
-      "description": "Database: CREATE INDEX idx_cleaning_events_1",
-      "source_line_start": 1530,
-      "source_line_end": 1535,
-      "table_name": "idx_cleaning_events_1",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_cleaning_events_1 ON cleaning_events (tenant_id, feature, created_at);\r\nCREATE INDEX idx_cleaning_events_2 ON cleaning_events (request_id);\r",
-      "fields": []
-    },
-    {
-      "id": "db_idx_cleaning_events_2_585568",
-      "description": "Database: CREATE INDEX idx_cleaning_events_2",
-      "source_line_start": 1531,
-      "source_line_end": 1536,
-      "table_name": "idx_cleaning_events_2",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_cleaning_events_2 ON cleaning_events (request_id);\r\n\r\n-- Migration DOWN\r\nDROP TABLE IF EXISTS {table_name};\r",
-      "fields": []
-    },
-    {
-      "id": "db_if_585568",
-      "description": "Database: DROP TABLE IF",
-      "source_line_start": 1534,
-      "source_line_end": 1539,
-      "table_name": "IF",
-      "implemented": true,
-      "operation_type": "drop_table",
-      "sql_content": "DROP TABLE IF EXISTS {table_name};\r\n\r\n```\r\n\r\n```json\r\n{\r\n  \"example_record\": {\r\n    \"id\": \"evt_123\",\r\n    \"tenant_id\": \"tnt_abc\",\r\n    \"user_id\": \"usr_1\",\r\n    \"feature\": \"route_optimize\",\r\n    \"request_id\": \"req_001\",\r\n    \"payload\": {\r\n      \"sample\": true\r\n    },\r\n    \"result\": {\r\n      \"ok\": true,\r\n      \"data\": {\r\n        \"sample\": \"yes\"\r\n      }\r",
-      "fields": []
-    },
-    {
-      "id": "db_fencing_events_585574",
-      "description": "Database: CREATE TABLE fencing_events",
-      "source_line_start": 2945,
-      "source_line_end": 2950,
-      "table_name": "fencing_events",
-      "implemented": true,
-      "operation_type": "create_table",
-      "sql_content": "CREATE TABLE fencing_events (\r\n  id TEXT PRIMARY KEY NOT NULL DEFAULT cuid(),\r\n  tenant_id TEXT NOT NULL,\r\n  user_id TEXT,\r\n  feature TEXT NOT NULL,\r\n  request_id TEXT NOT NULL,\r\n  payload JSONB,\r\n  result JSONB,\r\n  cost_cents INTEGER DEFAULT 0,\r\n  tokens_in INTEGER DEFAULT 0,\r\n  tokens_out INTEGER DEFAULT 0,\r\n  created_at TIMESTAMP DEFAULT now(),\r\n  updated_at TIMESTAMP DEFAULT now()\r\n);\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "text",
-          "line": 946
-        },
-        {
-          "name": "tenant_id",
-          "type": "text",
-          "line": 947
-        },
-        {
-          "name": "user_id",
-          "type": "text",
-          "line": 948
-        },
-        {
-          "name": "feature",
-          "type": "text",
-          "line": 949
-        },
-        {
-          "name": "request_id",
-          "type": "text",
-          "line": 950
-        },
-        {
-          "name": "payload",
-          "type": "jsonb",
-          "line": 951
-        },
-        {
-          "name": "result",
-          "type": "jsonb",
-          "line": 952
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 953
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 954
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 955
-        }
-      ]
-    },
-    {
-      "id": "db_idx_fencing_events_1_585575",
-      "description": "Database: CREATE INDEX idx_fencing_events_1",
-      "source_line_start": 2959,
-      "source_line_end": 2964,
-      "table_name": "idx_fencing_events_1",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_fencing_events_1 ON fencing_events (tenant_id, feature, created_at);\r\nCREATE INDEX idx_fencing_events_2 ON fencing_events (request_id);\r",
-      "fields": []
-    },
-    {
-      "id": "db_idx_fencing_events_2_585575",
-      "description": "Database: CREATE INDEX idx_fencing_events_2",
-      "source_line_start": 2960,
-      "source_line_end": 2965,
-      "table_name": "idx_fencing_events_2",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_fencing_events_2 ON fencing_events (request_id);\r\n\r\n```\r\n\r\n```prisma\r\nmodel fencing_events {\r\n  id String @id @default(cuid())\r\n  tenant_id String\r\n  user_id String\r\n  feature String\r\n  request_id String\r\n  payload Json\r\n  result Json\r\n  cost_cents Int @default(0)\r\n  tokens_in Int @default(0)\r\n  tokens_out Int @default(0)\r\n  created_at DateTime @default(now())\r\n  updated_at DateTime @default(now())\r\n  @@index([tenant_id, feature, created_at])\r\n  @@index([request_id])\r",
-      "fields": []
-    },
-    {
-      "id": "db_fencing_events_585575",
-      "description": "Database: model fencing_events {",
-      "source_line_start": 2965,
-      "source_line_end": 2970,
-      "table_name": "fencing_events",
-      "implemented": true,
-      "operation_type": "prisma_model",
-      "sql_content": "model fencing_events {\r\n  id String @id @default(cuid())\r\n  tenant_id String\r\n  user_id String\r\n  feature String\r\n  request_id String\r\n  payload Json\r\n  result Json\r\n  cost_cents Int @default(0)\r\n  tokens_in Int @default(0)\r\n  tokens_out Int @default(0)\r\n  created_at DateTime @default(now())\r\n  updated_at DateTime @default(now())\r\n  @@index([tenant_id, feature, created_at])\r\n  @@index([request_id])\r\n}\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "string",
-          "line": 966
-        },
-        {
-          "name": "tenant_id",
-          "type": "string",
-          "line": 967
-        },
-        {
-          "name": "user_id",
-          "type": "string",
-          "line": 968
-        },
-        {
-          "name": "feature",
-          "type": "string",
-          "line": 969
-        },
-        {
-          "name": "request_id",
-          "type": "string",
-          "line": 970
-        },
-        {
-          "name": "payload",
-          "type": "json",
-          "line": 971
-        },
-        {
-          "name": "result",
-          "type": "json",
-          "line": 972
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 973
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 973
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 974
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 974
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 975
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 975
-        },
-        {
-          "name": "created_at",
-          "type": "datetime",
-          "line": 976
-        },
-        {
-          "name": "updated_at",
-          "type": "datetime",
-          "line": 977
-        }
-      ]
-    },
-    {
-      "id": "db_fencing_events_585575",
-      "description": "Database: CREATE TABLE fencing_events",
-      "source_line_start": 2986,
-      "source_line_end": 2991,
-      "table_name": "fencing_events",
-      "implemented": true,
-      "operation_type": "create_table",
-      "sql_content": "CREATE TABLE fencing_events (\r\n  id TEXT PRIMARY KEY NOT NULL DEFAULT cuid(),\r\n  tenant_id TEXT NOT NULL,\r\n  user_id TEXT,\r\n  feature TEXT NOT NULL,\r\n  request_id TEXT NOT NULL,\r\n  payload JSONB,\r\n  result JSONB,\r\n  cost_cents INTEGER DEFAULT 0,\r\n  tokens_in INTEGER DEFAULT 0,\r\n  tokens_out INTEGER DEFAULT 0,\r\n  created_at TIMESTAMP DEFAULT now(),\r\n  updated_at TIMESTAMP DEFAULT now()\r\n);\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "text",
-          "line": 987
-        },
-        {
-          "name": "tenant_id",
-          "type": "text",
-          "line": 988
-        },
-        {
-          "name": "user_id",
-          "type": "text",
-          "line": 989
-        },
-        {
-          "name": "feature",
-          "type": "text",
-          "line": 990
-        },
-        {
-          "name": "request_id",
-          "type": "text",
-          "line": 991
-        },
-        {
-          "name": "payload",
-          "type": "jsonb",
-          "line": 992
-        },
-        {
-          "name": "result",
-          "type": "jsonb",
-          "line": 993
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 994
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 995
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 996
-        }
-      ]
-    },
-    {
-      "id": "db_idx_fencing_events_1_585575",
-      "description": "Database: CREATE INDEX idx_fencing_events_1",
-      "source_line_start": 3000,
-      "source_line_end": 3005,
-      "table_name": "idx_fencing_events_1",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_fencing_events_1 ON fencing_events (tenant_id, feature, created_at);\r",
-      "fields": []
-    },
-    {
-      "id": "db_idx_fencing_events_2_585575",
-      "description": "Database: CREATE INDEX idx_fencing_events_2",
-      "source_line_start": 3001,
-      "source_line_end": 3006,
-      "table_name": "idx_fencing_events_2",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_fencing_events_2 ON fencing_events (request_id);\r\n\r\n-- Migration DOWN\r\nDROP TABLE IF EXISTS {table_name};\r",
-      "fields": []
-    },
-    {
-      "id": "db_if_585575",
-      "description": "Database: DROP TABLE IF",
-      "source_line_start": 3004,
-      "source_line_end": 3009,
-      "table_name": "IF",
-      "implemented": true,
-      "operation_type": "drop_table",
-      "sql_content": "DROP TABLE IF EXISTS {table_name};\r\n\r\n```\r\n\r\n```json\r\n{\r\n  \"example_record\": {\r\n    \"id\": \"evt_123\",\r\n    \"tenant_id\": \"tnt_abc\",\r\n    \"user_id\": \"usr_1\",\r\n    \"feature\": \"bom_estimate\",\r\n    \"request_id\": \"req_001\",\r\n    \"payload\": {\r\n      \"sample\": true\r\n    },\r\n    \"result\": {\r\n      \"ok\": true,\r\n      \"data\": {\r\n        \"sample\": \"yes\"\r\n      }\r",
-      "fields": []
-    },
-    {
-      "id": "db_concrete_events_585577",
-      "description": "Database: CREATE TABLE concrete_events",
-      "source_line_start": 4415,
-      "source_line_end": 4420,
-      "table_name": "concrete_events",
-      "implemented": true,
-      "operation_type": "create_table",
-      "sql_content": "CREATE TABLE concrete_events (\r\n  id TEXT PRIMARY KEY NOT NULL DEFAULT cuid(),\r\n  tenant_id TEXT NOT NULL,\r\n  user_id TEXT,\r\n  feature TEXT NOT NULL,\r\n  request_id TEXT NOT NULL,\r\n  payload JSONB,\r\n  result JSONB,\r\n  cost_cents INTEGER DEFAULT 0,\r\n  tokens_in INTEGER DEFAULT 0,\r\n  tokens_out INTEGER DEFAULT 0,\r\n  created_at TIMESTAMP DEFAULT now(),\r\n  updated_at TIMESTAMP DEFAULT now()\r\n);\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "text",
-          "line": 416
-        },
-        {
-          "name": "tenant_id",
-          "type": "text",
-          "line": 417
-        },
-        {
-          "name": "user_id",
-          "type": "text",
-          "line": 418
-        },
-        {
-          "name": "feature",
-          "type": "text",
-          "line": 419
-        },
-        {
-          "name": "request_id",
-          "type": "text",
-          "line": 420
-        },
-        {
-          "name": "payload",
-          "type": "jsonb",
-          "line": 421
-        },
-        {
-          "name": "result",
-          "type": "jsonb",
-          "line": 422
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 423
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 424
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 425
-        }
-      ]
-    },
-    {
-      "id": "db_idx_concrete_events_1_585578",
-      "description": "Database: CREATE INDEX idx_concrete_events_1",
-      "source_line_start": 4429,
-      "source_line_end": 4434,
-      "table_name": "idx_concrete_events_1",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_concrete_events_1 ON concrete_events (tenant_id, feature, created_at);\r\nCREATE INDEX idx_concrete_events_2 ON concrete_events (request_id);\r",
-      "fields": []
-    },
-    {
-      "id": "db_idx_concrete_events_2_585578",
-      "description": "Database: CREATE INDEX idx_concrete_events_2",
-      "source_line_start": 4430,
-      "source_line_end": 4435,
-      "table_name": "idx_concrete_events_2",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_concrete_events_2 ON concrete_events (request_id);\r\n\r\n```\r\n\r\n```prisma\r\nmodel concrete_events {\r\n  id String @id @default(cuid())\r\n  tenant_id String\r\n  user_id String\r\n  feature String\r\n  request_id String\r\n  payload Json\r\n  result Json\r\n  cost_cents Int @default(0)\r\n  tokens_in Int @default(0)\r\n  tokens_out Int @default(0)\r\n  created_at DateTime @default(now())\r\n  updated_at DateTime @default(now())\r\n  @@index([tenant_id, feature, created_at])\r\n  @@index([request_id])\r",
-      "fields": []
-    },
-    {
-      "id": "db_concrete_events_585578",
-      "description": "Database: model concrete_events {",
-      "source_line_start": 4435,
-      "source_line_end": 4440,
-      "table_name": "concrete_events",
-      "implemented": true,
-      "operation_type": "prisma_model",
-      "sql_content": "model concrete_events {\r\n  id String @id @default(cuid())\r\n  tenant_id String\r\n  user_id String\r\n  feature String\r\n  request_id String\r\n  payload Json\r\n  result Json\r\n  cost_cents Int @default(0)\r\n  tokens_in Int @default(0)\r\n  tokens_out Int @default(0)\r\n  created_at DateTime @default(now())\r\n  updated_at DateTime @default(now())\r\n  @@index([tenant_id, feature, created_at])\r\n  @@index([request_id])\r\n}\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "string",
-          "line": 436
-        },
-        {
-          "name": "tenant_id",
-          "type": "string",
-          "line": 437
-        },
-        {
-          "name": "user_id",
-          "type": "string",
-          "line": 438
-        },
-        {
-          "name": "feature",
-          "type": "string",
-          "line": 439
-        },
-        {
-          "name": "request_id",
-          "type": "string",
-          "line": 440
-        },
-        {
-          "name": "payload",
-          "type": "json",
-          "line": 441
-        },
-        {
-          "name": "result",
-          "type": "json",
-          "line": 442
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 443
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 443
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 444
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 444
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 445
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 445
-        },
-        {
-          "name": "created_at",
-          "type": "datetime",
-          "line": 446
-        },
-        {
-          "name": "updated_at",
-          "type": "datetime",
-          "line": 447
-        }
-      ]
-    },
-    {
-      "id": "db_concrete_events_585578",
-      "description": "Database: CREATE TABLE concrete_events",
-      "source_line_start": 4456,
-      "source_line_end": 4461,
-      "table_name": "concrete_events",
-      "implemented": true,
-      "operation_type": "create_table",
-      "sql_content": "CREATE TABLE concrete_events (\r\n  id TEXT PRIMARY KEY NOT NULL DEFAULT cuid(),\r\n  tenant_id TEXT NOT NULL,\r\n  user_id TEXT,\r\n  feature TEXT NOT NULL,\r\n  request_id TEXT NOT NULL,\r\n  payload JSONB,\r\n  result JSONB,\r\n  cost_cents INTEGER DEFAULT 0,\r\n  tokens_in INTEGER DEFAULT 0,\r\n  tokens_out INTEGER DEFAULT 0,\r\n  created_at TIMESTAMP DEFAULT now(),\r\n  updated_at TIMESTAMP DEFAULT now()\r\n);\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "text",
-          "line": 457
-        },
-        {
-          "name": "tenant_id",
-          "type": "text",
-          "line": 458
-        },
-        {
-          "name": "user_id",
-          "type": "text",
-          "line": 459
-        },
-        {
-          "name": "feature",
-          "type": "text",
-          "line": 460
-        },
-        {
-          "name": "request_id",
-          "type": "text",
-          "line": 461
-        },
-        {
-          "name": "payload",
-          "type": "jsonb",
-          "line": 462
-        },
-        {
-          "name": "result",
-          "type": "jsonb",
-          "line": 463
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 464
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 465
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 466
-        }
-      ]
-    },
-    {
-      "id": "db_idx_concrete_events_1_585578",
-      "description": "Database: CREATE INDEX idx_concrete_events_1",
-      "source_line_start": 4470,
-      "source_line_end": 4475,
-      "table_name": "idx_concrete_events_1",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_concrete_events_1 ON concrete_events (tenant_id, feature, created_at);\r\nCREATE INDEX idx_concrete_events_2 ON concrete_events (request_id);\r",
-      "fields": []
-    },
-    {
-      "id": "db_idx_concrete_events_2_585578",
-      "description": "Database: CREATE INDEX idx_concrete_events_2",
-      "source_line_start": 4471,
-      "source_line_end": 4476,
-      "table_name": "idx_concrete_events_2",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_concrete_events_2 ON concrete_events (request_id);\r\n\r\n-- Migration DOWN\r\nDROP TABLE IF EXISTS {table_name};\r",
-      "fields": []
-    },
-    {
-      "id": "db_if_585578",
-      "description": "Database: DROP TABLE IF",
-      "source_line_start": 4474,
-      "source_line_end": 4479,
-      "table_name": "IF",
-      "implemented": true,
-      "operation_type": "drop_table",
-      "sql_content": "DROP TABLE IF EXISTS {table_name};\r\n\r\n```\r\n\r\n```json\r\n{\r\n  \"example_record\": {\r\n    \"id\": \"evt_123\",\r\n    \"tenant_id\": \"tnt_abc\",\r\n    \"user_id\": \"usr_1\",\r\n    \"feature\": \"void_calc\",\r\n    \"request_id\": \"req_001\",\r\n    \"payload\": {\r\n      \"sample\": true\r\n    },\r\n    \"result\": {\r\n      \"ok\": true,\r\n      \"data\": {\r\n        \"sample\": \"yes\"\r\n      }\r",
-      "fields": []
-    },
-    {
-      "id": "db_appliance_events_585583",
-      "description": "Database: CREATE TABLE appliance_events",
-      "source_line_start": 5885,
-      "source_line_end": 5890,
-      "table_name": "appliance_events",
-      "implemented": true,
-      "operation_type": "create_table",
-      "sql_content": "CREATE TABLE appliance_events (\r\n  id TEXT PRIMARY KEY NOT NULL DEFAULT cuid(),\r\n  tenant_id TEXT NOT NULL,\r\n  user_id TEXT,\r\n  feature TEXT NOT NULL,\r\n  request_id TEXT NOT NULL,\r\n  payload JSONB,\r\n  result JSONB,\r\n  cost_cents INTEGER DEFAULT 0,\r\n  tokens_in INTEGER DEFAULT 0,\r\n  tokens_out INTEGER DEFAULT 0,\r\n  created_at TIMESTAMP DEFAULT now(),\r\n  updated_at TIMESTAMP DEFAULT now()\r\n);\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "text",
-          "line": 886
-        },
-        {
-          "name": "tenant_id",
-          "type": "text",
-          "line": 887
-        },
-        {
-          "name": "user_id",
-          "type": "text",
-          "line": 888
-        },
-        {
-          "name": "feature",
-          "type": "text",
-          "line": 889
-        },
-        {
-          "name": "request_id",
-          "type": "text",
-          "line": 890
-        },
-        {
-          "name": "payload",
-          "type": "jsonb",
-          "line": 891
-        },
-        {
-          "name": "result",
-          "type": "jsonb",
-          "line": 892
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 893
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 894
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 895
-        }
-      ]
-    },
-    {
-      "id": "db_idx_appliance_events_1_585583",
-      "description": "Database: CREATE INDEX idx_appliance_events_1",
-      "source_line_start": 5899,
-      "source_line_end": 5904,
-      "table_name": "idx_appliance_events_1",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_appliance_events_1 ON appliance_events (tenant_id, feature, created_at);\r\nCREATE INDEX idx_appliance_events_2 ON appliance_events (request_id);\r",
-      "fields": []
-    },
-    {
-      "id": "db_idx_appliance_events_2_585583",
-      "description": "Database: CREATE INDEX idx_appliance_events_2",
-      "source_line_start": 5900,
-      "source_line_end": 5905,
-      "table_name": "idx_appliance_events_2",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_appliance_events_2 ON appliance_events (request_id);\r\n\r\n```\r\n\r\n```prisma\r\nmodel appliance_events {\r\n  id String @id @default(cuid())\r\n  tenant_id String\r\n  user_id String\r\n  feature String\r\n  request_id String\r\n  payload Json\r\n  result Json\r\n  cost_cents Int @default(0)\r\n  tokens_in Int @default(0)\r\n  tokens_out Int @default(0)\r\n  created_at DateTime @default(now())\r\n  updated_at DateTime @default(now())\r\n  @@index([tenant_id, feature, created_at])\r\n  @@index([request_id])\r",
-      "fields": []
-    },
-    {
-      "id": "db_appliance_events_585583",
-      "description": "Database: model appliance_events {",
-      "source_line_start": 5905,
-      "source_line_end": 5910,
-      "table_name": "appliance_events",
-      "implemented": true,
-      "operation_type": "prisma_model",
-      "sql_content": "model appliance_events {\r\n  id String @id @default(cuid())\r\n  tenant_id String\r\n  user_id String\r\n  feature String\r\n  request_id String\r\n  payload Json\r\n  result Json\r\n  cost_cents Int @default(0)\r\n  tokens_in Int @default(0)\r\n  tokens_out Int @default(0)\r\n  created_at DateTime @default(now())\r\n  updated_at DateTime @default(now())\r\n  @@index([tenant_id, feature, created_at])\r\n  @@index([request_id])\r\n}\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "string",
-          "line": 906
-        },
-        {
-          "name": "tenant_id",
-          "type": "string",
-          "line": 907
-        },
-        {
-          "name": "user_id",
-          "type": "string",
-          "line": 908
-        },
-        {
-          "name": "feature",
-          "type": "string",
-          "line": 909
-        },
-        {
-          "name": "request_id",
-          "type": "string",
-          "line": 910
-        },
-        {
-          "name": "payload",
-          "type": "json",
-          "line": 911
-        },
-        {
-          "name": "result",
-          "type": "json",
-          "line": 912
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 913
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 913
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 914
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 914
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 915
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 915
-        },
-        {
-          "name": "created_at",
-          "type": "datetime",
-          "line": 916
-        },
-        {
-          "name": "updated_at",
-          "type": "datetime",
-          "line": 917
-        }
-      ]
-    },
-    {
-      "id": "db_appliance_events_585583",
-      "description": "Database: CREATE TABLE appliance_events",
-      "source_line_start": 5926,
-      "source_line_end": 5931,
-      "table_name": "appliance_events",
-      "implemented": true,
-      "operation_type": "create_table",
-      "sql_content": "CREATE TABLE appliance_events (\r\n  id TEXT PRIMARY KEY NOT NULL DEFAULT cuid(),\r\n  tenant_id TEXT NOT NULL,\r\n  user_id TEXT,\r\n  feature TEXT NOT NULL,\r\n  request_id TEXT NOT NULL,\r\n  payload JSONB,\r\n  result JSONB,\r\n  cost_cents INTEGER DEFAULT 0,\r\n  tokens_in INTEGER DEFAULT 0,\r\n  tokens_out INTEGER DEFAULT 0,\r\n  created_at TIMESTAMP DEFAULT now(),\r\n  updated_at TIMESTAMP DEFAULT now()\r\n);\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "text",
-          "line": 927
-        },
-        {
-          "name": "tenant_id",
-          "type": "text",
-          "line": 928
-        },
-        {
-          "name": "user_id",
-          "type": "text",
-          "line": 929
-        },
-        {
-          "name": "feature",
-          "type": "text",
-          "line": 930
-        },
-        {
-          "name": "request_id",
-          "type": "text",
-          "line": 931
-        },
-        {
-          "name": "payload",
-          "type": "jsonb",
-          "line": 932
-        },
-        {
-          "name": "result",
-          "type": "jsonb",
-          "line": 933
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 934
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 935
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 936
-        }
-      ]
-    },
-    {
-      "id": "db_idx_appliance_events_1_585583",
-      "description": "Database: CREATE INDEX idx_appliance_events_1",
-      "source_line_start": 5940,
-      "source_line_end": 5945,
-      "table_name": "idx_appliance_events_1",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_appliance_events_1 ON appliance_events (tenant_id, feature, created_at);\r\nCREATE INDEX idx_appliance_events_2 ON appliance_events (request_id);\r",
-      "fields": []
-    },
-    {
-      "id": "db_idx_appliance_events_2_585583",
-      "description": "Database: CREATE INDEX idx_appliance_events_2",
-      "source_line_start": 5941,
-      "source_line_end": 5946,
-      "table_name": "idx_appliance_events_2",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_appliance_events_2 ON appliance_events (request_id);\r\n\r\n-- Migration DOWN\r\nDROP TABLE IF EXISTS {table_name};\r",
-      "fields": []
-    },
-    {
-      "id": "db_if_585583",
-      "description": "Database: DROP TABLE IF",
-      "source_line_start": 5944,
-      "source_line_end": 5949,
-      "table_name": "IF",
-      "implemented": true,
-      "operation_type": "drop_table",
-      "sql_content": "DROP TABLE IF EXISTS {table_name};\r\n\r\n```\r\n\r\n```json\r\n{\r\n  \"example_record\": {\r\n    \"id\": \"evt_123\",\r\n    \"tenant_id\": \"tnt_abc\",\r\n    \"user_id\": \"usr_1\",\r\n    \"feature\": \"install_workflow\",\r\n    \"request_id\": \"req_001\",\r\n    \"payload\": {\r\n      \"sample\": true\r\n    },\r\n    \"result\": {\r\n      \"ok\": true,\r\n      \"data\": {\r\n        \"sample\": \"yes\"\r\n      }\r",
-      "fields": []
-    },
-    {
-      "id": "db_mechanic_events_585588",
-      "description": "Database: CREATE TABLE mechanic_events",
-      "source_line_start": 7355,
-      "source_line_end": 7360,
-      "table_name": "mechanic_events",
-      "implemented": true,
-      "operation_type": "create_table",
-      "sql_content": "CREATE TABLE mechanic_events (\r\n  id TEXT PRIMARY KEY NOT NULL DEFAULT cuid(),\r\n  tenant_id TEXT NOT NULL,\r\n  user_id TEXT,\r\n  feature TEXT NOT NULL,\r\n  request_id TEXT NOT NULL,\r\n  payload JSONB,\r\n  result JSONB,\r\n  cost_cents INTEGER DEFAULT 0,\r\n  tokens_in INTEGER DEFAULT 0,\r\n  tokens_out INTEGER DEFAULT 0,\r\n  created_at TIMESTAMP DEFAULT now(),\r\n  updated_at TIMESTAMP DEFAULT now()\r\n);\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "text",
-          "line": 356
-        },
-        {
-          "name": "tenant_id",
-          "type": "text",
-          "line": 357
-        },
-        {
-          "name": "user_id",
-          "type": "text",
-          "line": 358
-        },
-        {
-          "name": "feature",
-          "type": "text",
-          "line": 359
-        },
-        {
-          "name": "request_id",
-          "type": "text",
-          "line": 360
-        },
-        {
-          "name": "payload",
-          "type": "jsonb",
-          "line": 361
-        },
-        {
-          "name": "result",
-          "type": "jsonb",
-          "line": 362
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 363
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 364
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 365
-        }
-      ]
-    },
-    {
-      "id": "db_idx_mechanic_events_1_585588",
-      "description": "Database: CREATE INDEX idx_mechanic_events_1",
-      "source_line_start": 7369,
-      "source_line_end": 7374,
-      "table_name": "idx_mechanic_events_1",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_mechanic_events_1 ON mechanic_events (tenant_id, feature, created_at);\r\nCREATE INDEX idx_mechanic_events_2 ON mechanic_events (request_id);\r",
-      "fields": []
-    },
-    {
-      "id": "db_idx_mechanic_events_2_585588",
-      "description": "Database: CREATE INDEX idx_mechanic_events_2",
-      "source_line_start": 7370,
-      "source_line_end": 7375,
-      "table_name": "idx_mechanic_events_2",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_mechanic_events_2 ON mechanic_events (request_id);\r\n\r\n```\r\n\r\n```prisma\r\nmodel mechanic_events {\r\n  id String @id @default(cuid())\r\n  tenant_id String\r\n  user_id String\r\n  feature String\r\n  request_id String\r\n  payload Json\r\n  result Json\r\n  cost_cents Int @default(0)\r\n  tokens_in Int @default(0)\r\n  tokens_out Int @default(0)\r\n  created_at DateTime @default(now())\r\n  updated_at DateTime @default(now())\r\n  @@index([tenant_id, feature, created_at])\r\n  @@index([request_id])\r",
-      "fields": []
-    },
-    {
-      "id": "db_mechanic_events_585588",
-      "description": "Database: model mechanic_events {",
-      "source_line_start": 7375,
-      "source_line_end": 7380,
-      "table_name": "mechanic_events",
-      "implemented": true,
-      "operation_type": "prisma_model",
-      "sql_content": "model mechanic_events {\r\n  id String @id @default(cuid())\r\n  tenant_id String\r\n  user_id String\r\n  feature String\r\n  request_id String\r\n  payload Json\r\n  result Json\r\n  cost_cents Int @default(0)\r\n  tokens_in Int @default(0)\r\n  tokens_out Int @default(0)\r\n  created_at DateTime @default(now())\r\n  updated_at DateTime @default(now())\r\n  @@index([tenant_id, feature, created_at])\r\n  @@index([request_id])\r\n}\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "string",
-          "line": 376
-        },
-        {
-          "name": "tenant_id",
-          "type": "string",
-          "line": 377
-        },
-        {
-          "name": "user_id",
-          "type": "string",
-          "line": 378
-        },
-        {
-          "name": "feature",
-          "type": "string",
-          "line": 379
-        },
-        {
-          "name": "request_id",
-          "type": "string",
-          "line": 380
-        },
-        {
-          "name": "payload",
-          "type": "json",
-          "line": 381
-        },
-        {
-          "name": "result",
-          "type": "json",
-          "line": 382
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 383
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 383
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 384
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 384
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 385
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 385
-        },
-        {
-          "name": "created_at",
-          "type": "datetime",
-          "line": 386
-        },
-        {
-          "name": "updated_at",
-          "type": "datetime",
-          "line": 387
-        }
-      ]
-    },
-    {
-      "id": "db_mechanic_events_585588",
-      "description": "Database: CREATE TABLE mechanic_events",
-      "source_line_start": 7396,
-      "source_line_end": 7401,
-      "table_name": "mechanic_events",
-      "implemented": true,
-      "operation_type": "create_table",
-      "sql_content": "CREATE TABLE mechanic_events (\r\n  id TEXT PRIMARY KEY NOT NULL DEFAULT cuid(),\r\n  tenant_id TEXT NOT NULL,\r\n  user_id TEXT,\r\n  feature TEXT NOT NULL,\r\n  request_id TEXT NOT NULL,\r\n  payload JSONB,\r\n  result JSONB,\r\n  cost_cents INTEGER DEFAULT 0,\r\n  tokens_in INTEGER DEFAULT 0,\r\n  tokens_out INTEGER DEFAULT 0,\r\n  created_at TIMESTAMP DEFAULT now(),\r\n  updated_at TIMESTAMP DEFAULT now()\r\n);\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "text",
-          "line": 397
-        },
-        {
-          "name": "tenant_id",
-          "type": "text",
-          "line": 398
-        },
-        {
-          "name": "user_id",
-          "type": "text",
-          "line": 399
-        },
-        {
-          "name": "feature",
-          "type": "text",
-          "line": 400
-        },
-        {
-          "name": "request_id",
-          "type": "text",
-          "line": 401
-        },
-        {
-          "name": "payload",
-          "type": "jsonb",
-          "line": 402
-        },
-        {
-          "name": "result",
-          "type": "jsonb",
-          "line": 403
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 404
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 405
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 406
-        }
-      ]
-    },
-    {
-      "id": "db_idx_mechanic_events_1_585588",
-      "description": "Database: CREATE INDEX idx_mechanic_events_1",
-      "source_line_start": 7410,
-      "source_line_end": 7415,
-      "table_name": "idx_mechanic_events_1",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_mechanic_events_1 ON mechanic_events (tenant_id, feature, created_at);\r\nCREATE INDEX idx_mechanic_events_2 ON mechanic_events (request_id);\r",
-      "fields": []
-    },
-    {
-      "id": "db_idx_mechanic_events_2_585588",
-      "description": "Database: CREATE INDEX idx_mechanic_events_2",
-      "source_line_start": 7411,
-      "source_line_end": 7416,
-      "table_name": "idx_mechanic_events_2",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_mechanic_events_2 ON mechanic_events (request_id);\r\n\r\n-- Migration DOWN\r\nDROP TABLE IF EXISTS {table_name};\r",
-      "fields": []
-    },
-    {
-      "id": "db_if_585588",
-      "description": "Database: DROP TABLE IF",
-      "source_line_start": 7414,
-      "source_line_end": 7419,
-      "table_name": "IF",
-      "implemented": true,
-      "operation_type": "drop_table",
-      "sql_content": "DROP TABLE IF EXISTS {table_name};\r\n\r\n```\r\n\r\n```json\r\n{\r\n  \"example_record\": {\r\n    \"id\": \"evt_123\",\r\n    \"tenant_id\": \"tnt_abc\",\r\n    \"user_id\": \"usr_1\",\r\n    \"feature\": \"vin_scan\",\r\n    \"request_id\": \"req_001\",\r\n    \"payload\": {\r\n      \"sample\": true\r\n    },\r\n    \"result\": {\r\n      \"ok\": true,\r\n      \"data\": {\r\n        \"sample\": \"yes\"\r\n      }\r",
-      "fields": []
-    },
-    {
-      "id": "db_windowdoor_events_585593",
-      "description": "Database: CREATE TABLE windowdoor_events",
-      "source_line_start": 8825,
-      "source_line_end": 8830,
-      "table_name": "windowdoor_events",
-      "implemented": true,
-      "operation_type": "create_table",
-      "sql_content": "CREATE TABLE windowdoor_events (\r\n  id TEXT PRIMARY KEY NOT NULL DEFAULT cuid(),\r\n  tenant_id TEXT NOT NULL,\r\n  user_id TEXT,\r\n  feature TEXT NOT NULL,\r\n  request_id TEXT NOT NULL,\r\n  payload JSONB,\r\n  result JSONB,\r\n  cost_cents INTEGER DEFAULT 0,\r\n  tokens_in INTEGER DEFAULT 0,\r\n  tokens_out INTEGER DEFAULT 0,\r\n  created_at TIMESTAMP DEFAULT now(),\r\n  updated_at TIMESTAMP DEFAULT now()\r\n);\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "text",
-          "line": 826
-        },
-        {
-          "name": "tenant_id",
-          "type": "text",
-          "line": 827
-        },
-        {
-          "name": "user_id",
-          "type": "text",
-          "line": 828
-        },
-        {
-          "name": "feature",
-          "type": "text",
-          "line": 829
-        },
-        {
-          "name": "request_id",
-          "type": "text",
-          "line": 830
-        },
-        {
-          "name": "payload",
-          "type": "jsonb",
-          "line": 831
-        },
-        {
-          "name": "result",
-          "type": "jsonb",
-          "line": 832
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 833
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 834
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 835
-        }
-      ]
-    },
-    {
-      "id": "db_idx_windowdoor_events_1_585593",
-      "description": "Database: CREATE INDEX idx_windowdoor_events_1",
-      "source_line_start": 8839,
-      "source_line_end": 8844,
-      "table_name": "idx_windowdoor_events_1",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_windowdoor_events_1 ON windowdoor_events (tenant_id, feature, created_at);\r\nCREATE INDEX idx_windowdoor_events_2 ON windowdoor_events (request_id);\r",
-      "fields": []
-    },
-    {
-      "id": "db_idx_windowdoor_events_2_585593",
-      "description": "Database: CREATE INDEX idx_windowdoor_events_2",
-      "source_line_start": 8840,
-      "source_line_end": 8845,
-      "table_name": "idx_windowdoor_events_2",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_windowdoor_events_2 ON windowdoor_events (request_id);\r\n\r\n```\r\n\r\n```prisma\r\nmodel windowdoor_events {\r\n  id String @id @default(cuid())\r\n  tenant_id String\r\n  user_id String\r\n  feature String\r\n  request_id String\r\n  payload Json\r\n  result Json\r\n  cost_cents Int @default(0)\r\n  tokens_in Int @default(0)\r\n  tokens_out Int @default(0)\r\n  created_at DateTime @default(now())\r\n  updated_at DateTime @default(now())\r\n  @@index([tenant_id, feature, created_at])\r\n  @@index([request_id])\r",
-      "fields": []
-    },
-    {
-      "id": "db_windowdoor_events_585593",
-      "description": "Database: model windowdoor_events {",
-      "source_line_start": 8845,
-      "source_line_end": 8850,
-      "table_name": "windowdoor_events",
-      "implemented": true,
-      "operation_type": "prisma_model",
-      "sql_content": "model windowdoor_events {\r\n  id String @id @default(cuid())\r\n  tenant_id String\r\n  user_id String\r\n  feature String\r\n  request_id String\r\n  payload Json\r\n  result Json\r\n  cost_cents Int @default(0)\r\n  tokens_in Int @default(0)\r\n  tokens_out Int @default(0)\r\n  created_at DateTime @default(now())\r\n  updated_at DateTime @default(now())\r\n  @@index([tenant_id, feature, created_at])\r\n  @@index([request_id])\r\n}\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "string",
-          "line": 846
-        },
-        {
-          "name": "tenant_id",
-          "type": "string",
-          "line": 847
-        },
-        {
-          "name": "user_id",
-          "type": "string",
-          "line": 848
-        },
-        {
-          "name": "feature",
-          "type": "string",
-          "line": 849
-        },
-        {
-          "name": "request_id",
-          "type": "string",
-          "line": 850
-        },
-        {
-          "name": "payload",
-          "type": "json",
-          "line": 851
-        },
-        {
-          "name": "result",
-          "type": "json",
-          "line": 852
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 853
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 853
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 854
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 854
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 855
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 855
-        },
-        {
-          "name": "created_at",
-          "type": "datetime",
-          "line": 856
-        },
-        {
-          "name": "updated_at",
-          "type": "datetime",
-          "line": 857
-        }
-      ]
-    },
-    {
-      "id": "db_windowdoor_events_585593",
-      "description": "Database: CREATE TABLE windowdoor_events",
-      "source_line_start": 8866,
-      "source_line_end": 8871,
-      "table_name": "windowdoor_events",
-      "implemented": true,
-      "operation_type": "create_table",
-      "sql_content": "CREATE TABLE windowdoor_events (\r\n  id TEXT PRIMARY KEY NOT NULL DEFAULT cuid(),\r\n  tenant_id TEXT NOT NULL,\r\n  user_id TEXT,\r\n  feature TEXT NOT NULL,\r\n  request_id TEXT NOT NULL,\r\n  payload JSONB,\r\n  result JSONB,\r\n  cost_cents INTEGER DEFAULT 0,\r\n  tokens_in INTEGER DEFAULT 0,\r\n  tokens_out INTEGER DEFAULT 0,\r\n  created_at TIMESTAMP DEFAULT now(),\r\n  updated_at TIMESTAMP DEFAULT now()\r\n);\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "text",
-          "line": 867
-        },
-        {
-          "name": "tenant_id",
-          "type": "text",
-          "line": 868
-        },
-        {
-          "name": "user_id",
-          "type": "text",
-          "line": 869
-        },
-        {
-          "name": "feature",
-          "type": "text",
-          "line": 870
-        },
-        {
-          "name": "request_id",
-          "type": "text",
-          "line": 871
-        },
-        {
-          "name": "payload",
-          "type": "jsonb",
-          "line": 872
-        },
-        {
-          "name": "result",
-          "type": "jsonb",
-          "line": 873
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 874
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 875
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 876
-        }
-      ]
-    },
-    {
-      "id": "db_idx_windowdoor_events_1_585593",
-      "description": "Database: CREATE INDEX idx_windowdoor_events_1",
-      "source_line_start": 8880,
-      "source_line_end": 8885,
-      "table_name": "idx_windowdoor_events_1",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_windowdoor_events_1 ON windowdoor_events (tenant_id, feature, created_at);\r\nCREATE INDEX idx_windowdoor_events_2 ON windowdoor_events (request_id);\r",
-      "fields": []
-    },
-    {
-      "id": "db_idx_windowdoor_events_2_585593",
-      "description": "Database: CREATE INDEX idx_windowdoor_events_2",
-      "source_line_start": 8881,
-      "source_line_end": 8886,
-      "table_name": "idx_windowdoor_events_2",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_windowdoor_events_2 ON windowdoor_events (request_id);\r\n\r\n-- Migration DOWN\r\nDROP TABLE IF EXISTS {table_name};\r",
-      "fields": []
-    },
-    {
-      "id": "db_if_585593",
-      "description": "Database: DROP TABLE IF",
-      "source_line_start": 8884,
-      "source_line_end": 8889,
-      "table_name": "IF",
-      "implemented": true,
-      "operation_type": "drop_table",
-      "sql_content": "DROP TABLE IF EXISTS {table_name};\r\n\r\n```\r\n\r\n```json\r\n{\r\n  \"example_record\": {\r\n    \"id\": \"evt_123\",\r\n    \"tenant_id\": \"tnt_abc\",\r\n    \"user_id\": \"usr_1\",\r\n    \"feature\": \"dimension_template\",\r\n    \"request_id\": \"req_001\",\r\n    \"payload\": {\r\n      \"sample\": true\r\n    },\r\n    \"result\": {\r\n      \"ok\": true,\r\n      \"data\": {\r\n        \"sample\": \"yes\"\r\n      }\r",
-      "fields": []
-    },
-    {
-      "id": "db_rolloff_events_585595",
-      "description": "Database: CREATE TABLE rolloff_events",
-      "source_line_start": 10295,
-      "source_line_end": 10300,
-      "table_name": "rolloff_events",
-      "implemented": true,
-      "operation_type": "create_table",
-      "sql_content": "CREATE TABLE rolloff_events (\r\n  id TEXT PRIMARY KEY NOT NULL DEFAULT cuid(),\r\n  tenant_id TEXT NOT NULL,\r\n  user_id TEXT,\r\n  feature TEXT NOT NULL,\r\n  request_id TEXT NOT NULL,\r\n  payload JSONB,\r\n  result JSONB,\r\n  cost_cents INTEGER DEFAULT 0,\r\n  tokens_in INTEGER DEFAULT 0,\r\n  tokens_out INTEGER DEFAULT 0,\r\n  created_at TIMESTAMP DEFAULT now(),\r\n  updated_at TIMESTAMP DEFAULT now()\r\n);\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "text",
-          "line": 296
-        },
-        {
-          "name": "tenant_id",
-          "type": "text",
-          "line": 297
-        },
-        {
-          "name": "user_id",
-          "type": "text",
-          "line": 298
-        },
-        {
-          "name": "feature",
-          "type": "text",
-          "line": 299
-        },
-        {
-          "name": "request_id",
-          "type": "text",
-          "line": 300
-        },
-        {
-          "name": "payload",
-          "type": "jsonb",
-          "line": 301
-        },
-        {
-          "name": "result",
-          "type": "jsonb",
-          "line": 302
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 303
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 304
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 305
-        }
-      ]
-    },
-    {
-      "id": "db_idx_rolloff_events_1_585595",
-      "description": "Database: CREATE INDEX idx_rolloff_events_1",
-      "source_line_start": 10309,
-      "source_line_end": 10314,
-      "table_name": "idx_rolloff_events_1",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_rolloff_events_1 ON rolloff_events (tenant_id, feature, created_at);\r\nCREATE INDEX idx_rolloff_events_2 ON rolloff_events (request_id);\r",
-      "fields": []
-    },
-    {
-      "id": "db_idx_rolloff_events_2_585595",
-      "description": "Database: CREATE INDEX idx_rolloff_events_2",
-      "source_line_start": 10310,
-      "source_line_end": 10315,
-      "table_name": "idx_rolloff_events_2",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_rolloff_events_2 ON rolloff_events (request_id);\r\n\r\n```\r\n\r\n```prisma\r\nmodel rolloff_events {\r\n  id String @id @default(cuid())\r\n  tenant_id String\r\n  user_id String\r\n  feature String\r\n  request_id String\r\n  payload Json\r\n  result Json\r\n  cost_cents Int @default(0)\r\n  tokens_in Int @default(0)\r\n  tokens_out Int @default(0)\r\n  created_at DateTime @default(now())\r\n  updated_at DateTime @default(now())\r\n  @@index([tenant_id, feature, created_at])\r\n  @@index([request_id])\r",
-      "fields": []
-    },
-    {
-      "id": "db_rolloff_events_585595",
-      "description": "Database: model rolloff_events {",
-      "source_line_start": 10315,
-      "source_line_end": 10320,
-      "table_name": "rolloff_events",
-      "implemented": true,
-      "operation_type": "prisma_model",
-      "sql_content": "model rolloff_events {\r\n  id String @id @default(cuid())\r\n  tenant_id String\r\n  user_id String\r\n  feature String\r\n  request_id String\r\n  payload Json\r\n  result Json\r\n  cost_cents Int @default(0)\r\n  tokens_in Int @default(0)\r\n  tokens_out Int @default(0)\r\n  created_at DateTime @default(now())\r\n  updated_at DateTime @default(now())\r\n  @@index([tenant_id, feature, created_at])\r\n  @@index([request_id])\r\n}\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "string",
-          "line": 316
-        },
-        {
-          "name": "tenant_id",
-          "type": "string",
-          "line": 317
-        },
-        {
-          "name": "user_id",
-          "type": "string",
-          "line": 318
-        },
-        {
-          "name": "feature",
-          "type": "string",
-          "line": 319
-        },
-        {
-          "name": "request_id",
-          "type": "string",
-          "line": 320
-        },
-        {
-          "name": "payload",
-          "type": "json",
-          "line": 321
-        },
-        {
-          "name": "result",
-          "type": "json",
-          "line": 322
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 323
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 323
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 324
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 324
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 325
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 325
-        },
-        {
-          "name": "created_at",
-          "type": "datetime",
-          "line": 326
-        },
-        {
-          "name": "updated_at",
-          "type": "datetime",
-          "line": 327
-        }
-      ]
-    },
-    {
-      "id": "db_rolloff_events_585595",
-      "description": "Database: CREATE TABLE rolloff_events",
-      "source_line_start": 10336,
-      "source_line_end": 10341,
-      "table_name": "rolloff_events",
-      "implemented": true,
-      "operation_type": "create_table",
-      "sql_content": "CREATE TABLE rolloff_events (\r\n  id TEXT PRIMARY KEY NOT NULL DEFAULT cuid(),\r\n  tenant_id TEXT NOT NULL,\r\n  user_id TEXT,\r\n  feature TEXT NOT NULL,\r\n  request_id TEXT NOT NULL,\r\n  payload JSONB,\r\n  result JSONB,\r\n  cost_cents INTEGER DEFAULT 0,\r\n  tokens_in INTEGER DEFAULT 0,\r\n  tokens_out INTEGER DEFAULT 0,\r\n  created_at TIMESTAMP DEFAULT now(),\r\n  updated_at TIMESTAMP DEFAULT now()\r\n);\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "text",
-          "line": 337
-        },
-        {
-          "name": "tenant_id",
-          "type": "text",
-          "line": 338
-        },
-        {
-          "name": "user_id",
-          "type": "text",
-          "line": 339
-        },
-        {
-          "name": "feature",
-          "type": "text",
-          "line": 340
-        },
-        {
-          "name": "request_id",
-          "type": "text",
-          "line": 341
-        },
-        {
-          "name": "payload",
-          "type": "jsonb",
-          "line": 342
-        },
-        {
-          "name": "result",
-          "type": "jsonb",
-          "line": 343
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 344
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 345
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 346
-        }
-      ]
-    },
-    {
-      "id": "db_idx_rolloff_events_1_585595",
-      "description": "Database: CREATE INDEX idx_rolloff_events_1",
-      "source_line_start": 10350,
-      "source_line_end": 10355,
-      "table_name": "idx_rolloff_events_1",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_rolloff_events_1 ON rolloff_events (tenant_id, feature, created_at);\r\nCREATE INDEX idx_rolloff_events_2 ON rolloff_events (request_id);\r",
-      "fields": []
-    },
-    {
-      "id": "db_idx_rolloff_events_2_585595",
-      "description": "Database: CREATE INDEX idx_rolloff_events_2",
-      "source_line_start": 10351,
-      "source_line_end": 10356,
-      "table_name": "idx_rolloff_events_2",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_rolloff_events_2 ON rolloff_events (request_id);\r\n\r\n-- Migration DOWN\r\nDROP TABLE IF EXISTS {table_name};\r",
-      "fields": []
-    },
-    {
-      "id": "db_if_585595",
-      "description": "Database: DROP TABLE IF",
-      "source_line_start": 10354,
-      "source_line_end": 10359,
-      "table_name": "IF",
-      "implemented": true,
-      "operation_type": "drop_table",
-      "sql_content": "DROP TABLE IF EXISTS {table_name};\r\n\r\n```\r\n\r\n```json\r\n{\r\n  \"example_record\": {\r\n    \"id\": \"evt_123\",\r\n    \"tenant_id\": \"tnt_abc\",\r\n    \"user_id\": \"usr_1\",\r\n    \"feature\": \"container_inventory\",\r\n    \"request_id\": \"req_001\",\r\n    \"payload\": {\r\n      \"sample\": true\r\n    },\r\n    \"result\": {\r\n      \"ok\": true,\r\n      \"data\": {\r\n        \"sample\": \"yes\"\r\n      }\r",
-      "fields": []
-    },
-    {
-      "id": "db_portajohn_events_585597",
-      "description": "Database: CREATE TABLE portajohn_events",
-      "source_line_start": 11765,
-      "source_line_end": 11770,
-      "table_name": "portajohn_events",
-      "implemented": true,
-      "operation_type": "create_table",
-      "sql_content": "CREATE TABLE portajohn_events (\r\n  id TEXT PRIMARY KEY NOT NULL DEFAULT cuid(),\r\n  tenant_id TEXT NOT NULL,\r\n  user_id TEXT,\r\n  feature TEXT NOT NULL,\r\n  request_id TEXT NOT NULL,\r\n  payload JSONB,\r\n  result JSONB,\r\n  cost_cents INTEGER DEFAULT 0,\r\n  tokens_in INTEGER DEFAULT 0,\r\n  tokens_out INTEGER DEFAULT 0,\r\n  created_at TIMESTAMP DEFAULT now(),\r\n  updated_at TIMESTAMP DEFAULT now()\r\n);\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "text",
-          "line": 766
-        },
-        {
-          "name": "tenant_id",
-          "type": "text",
-          "line": 767
-        },
-        {
-          "name": "user_id",
-          "type": "text",
-          "line": 768
-        },
-        {
-          "name": "feature",
-          "type": "text",
-          "line": 769
-        },
-        {
-          "name": "request_id",
-          "type": "text",
-          "line": 770
-        },
-        {
-          "name": "payload",
-          "type": "jsonb",
-          "line": 771
-        },
-        {
-          "name": "result",
-          "type": "jsonb",
-          "line": 772
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 773
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 774
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 775
-        }
-      ]
-    },
-    {
-      "id": "db_idx_portajohn_events_1_585597",
-      "description": "Database: CREATE INDEX idx_portajohn_events_1",
-      "source_line_start": 11779,
-      "source_line_end": 11784,
-      "table_name": "idx_portajohn_events_1",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_portajohn_events_1 ON portajohn_events (tenant_id, feature, created_at);\r\nCREATE INDEX idx_portajohn_events_2 ON portajohn_events (request_id);\r",
-      "fields": []
-    },
-    {
-      "id": "db_idx_portajohn_events_2_585597",
-      "description": "Database: CREATE INDEX idx_portajohn_events_2",
-      "source_line_start": 11780,
-      "source_line_end": 11785,
-      "table_name": "idx_portajohn_events_2",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_portajohn_events_2 ON portajohn_events (request_id);\r\n\r\n```\r\n\r\n```prisma\r\nmodel portajohn_events {\r\n  id String @id @default(cuid())\r\n  tenant_id String\r\n  user_id String\r\n  feature String\r\n  request_id String\r\n  payload Json\r\n  result Json\r\n  cost_cents Int @default(0)\r\n  tokens_in Int @default(0)\r\n  tokens_out Int @default(0)\r\n  created_at DateTime @default(now())\r\n  updated_at DateTime @default(now())\r\n  @@index([tenant_id, feature, created_at])\r\n  @@index([request_id])\r",
-      "fields": []
-    },
-    {
-      "id": "db_portajohn_events_585597",
-      "description": "Database: model portajohn_events {",
-      "source_line_start": 11785,
-      "source_line_end": 11790,
-      "table_name": "portajohn_events",
-      "implemented": true,
-      "operation_type": "prisma_model",
-      "sql_content": "model portajohn_events {\r\n  id String @id @default(cuid())\r\n  tenant_id String\r\n  user_id String\r\n  feature String\r\n  request_id String\r\n  payload Json\r\n  result Json\r\n  cost_cents Int @default(0)\r\n  tokens_in Int @default(0)\r\n  tokens_out Int @default(0)\r\n  created_at DateTime @default(now())\r\n  updated_at DateTime @default(now())\r\n  @@index([tenant_id, feature, created_at])\r\n  @@index([request_id])\r\n}\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "string",
-          "line": 786
-        },
-        {
-          "name": "tenant_id",
-          "type": "string",
-          "line": 787
-        },
-        {
-          "name": "user_id",
-          "type": "string",
-          "line": 788
-        },
-        {
-          "name": "feature",
-          "type": "string",
-          "line": 789
-        },
-        {
-          "name": "request_id",
-          "type": "string",
-          "line": 790
-        },
-        {
-          "name": "payload",
-          "type": "json",
-          "line": 791
-        },
-        {
-          "name": "result",
-          "type": "json",
-          "line": 792
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 793
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 793
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 794
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 794
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 795
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 795
-        },
-        {
-          "name": "created_at",
-          "type": "datetime",
-          "line": 796
-        },
-        {
-          "name": "updated_at",
-          "type": "datetime",
-          "line": 797
-        }
-      ]
-    },
-    {
-      "id": "db_portajohn_events_585597",
-      "description": "Database: CREATE TABLE portajohn_events",
-      "source_line_start": 11806,
-      "source_line_end": 11811,
-      "table_name": "portajohn_events",
-      "implemented": true,
-      "operation_type": "create_table",
-      "sql_content": "CREATE TABLE portajohn_events (\r\n  id TEXT PRIMARY KEY NOT NULL DEFAULT cuid(),\r\n  tenant_id TEXT NOT NULL,\r\n  user_id TEXT,\r\n  feature TEXT NOT NULL,\r\n  request_id TEXT NOT NULL,\r\n  payload JSONB,\r\n  result JSONB,\r\n  cost_cents INTEGER DEFAULT 0,\r\n  tokens_in INTEGER DEFAULT 0,\r\n  tokens_out INTEGER DEFAULT 0,\r\n  created_at TIMESTAMP DEFAULT now(),\r\n  updated_at TIMESTAMP DEFAULT now()\r\n);\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "text",
-          "line": 807
-        },
-        {
-          "name": "tenant_id",
-          "type": "text",
-          "line": 808
-        },
-        {
-          "name": "user_id",
-          "type": "text",
-          "line": 809
-        },
-        {
-          "name": "feature",
-          "type": "text",
-          "line": 810
-        },
-        {
-          "name": "request_id",
-          "type": "text",
-          "line": 811
-        },
-        {
-          "name": "payload",
-          "type": "jsonb",
-          "line": 812
-        },
-        {
-          "name": "result",
-          "type": "jsonb",
-          "line": 813
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 814
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 815
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 816
-        }
-      ]
-    },
-    {
-      "id": "db_idx_portajohn_events_1_585597",
-      "description": "Database: CREATE INDEX idx_portajohn_events_1",
-      "source_line_start": 11820,
-      "source_line_end": 11825,
-      "table_name": "idx_portajohn_events_1",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_portajohn_events_1 ON portajohn_events (tenant_id, feature, created_at);\r\nCREATE INDEX idx_portajohn_events_2 ON portajohn_events (request_id);\r",
-      "fields": []
-    },
-    {
-      "id": "db_idx_portajohn_events_2_585597",
-      "description": "Database: CREATE INDEX idx_portajohn_events_2",
-      "source_line_start": 11821,
-      "source_line_end": 11826,
-      "table_name": "idx_portajohn_events_2",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_portajohn_events_2 ON portajohn_events (request_id);\r\n\r\n-- Migration DOWN\r\nDROP TABLE IF EXISTS {table_name};\r",
-      "fields": []
-    },
-    {
-      "id": "db_if_585597",
-      "description": "Database: DROP TABLE IF",
-      "source_line_start": 11824,
-      "source_line_end": 11829,
-      "table_name": "IF",
-      "implemented": true,
-      "operation_type": "drop_table",
-      "sql_content": "DROP TABLE IF EXISTS {table_name};\r\n\r\n```\r\n\r\n```json\r\n{\r\n  \"example_record\": {\r\n    \"id\": \"evt_123\",\r\n    \"tenant_id\": \"tnt_abc\",\r\n    \"user_id\": \"usr_1\",\r\n    \"feature\": \"unit_inventory\",\r\n    \"request_id\": \"req_001\",\r\n    \"payload\": {\r\n      \"sample\": true\r\n    },\r\n    \"result\": {\r\n      \"ok\": true,\r\n      \"data\": {\r\n        \"sample\": \"yes\"\r\n      }\r",
-      "fields": []
-    },
-    {
-      "id": "db_trucking_events_585599",
-      "description": "Database: CREATE TABLE trucking_events",
-      "source_line_start": 13235,
-      "source_line_end": 13240,
-      "table_name": "trucking_events",
-      "implemented": true,
-      "operation_type": "create_table",
-      "sql_content": "CREATE TABLE trucking_events (\r\n  id TEXT PRIMARY KEY NOT NULL DEFAULT cuid(),\r\n  tenant_id TEXT NOT NULL,\r\n  user_id TEXT,\r\n  feature TEXT NOT NULL,\r\n  request_id TEXT NOT NULL,\r\n  payload JSONB,\r\n  result JSONB,\r\n  cost_cents INTEGER DEFAULT 0,\r\n  tokens_in INTEGER DEFAULT 0,\r\n  tokens_out INTEGER DEFAULT 0,\r\n  created_at TIMESTAMP DEFAULT now(),\r\n  updated_at TIMESTAMP DEFAULT now()\r\n);\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "text",
-          "line": 236
-        },
-        {
-          "name": "tenant_id",
-          "type": "text",
-          "line": 237
-        },
-        {
-          "name": "user_id",
-          "type": "text",
-          "line": 238
-        },
-        {
-          "name": "feature",
-          "type": "text",
-          "line": 239
-        },
-        {
-          "name": "request_id",
-          "type": "text",
-          "line": 240
-        },
-        {
-          "name": "payload",
-          "type": "jsonb",
-          "line": 241
-        },
-        {
-          "name": "result",
-          "type": "jsonb",
-          "line": 242
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 243
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 244
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 245
-        }
-      ]
-    },
-    {
-      "id": "db_idx_trucking_events_1_585599",
-      "description": "Database: CREATE INDEX idx_trucking_events_1",
-      "source_line_start": 13249,
-      "source_line_end": 13254,
-      "table_name": "idx_trucking_events_1",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_trucking_events_1 ON trucking_events (tenant_id, feature, created_at);\r\nCREATE INDEX idx_trucking_events_2 ON trucking_events (request_id);\r",
-      "fields": []
-    },
-    {
-      "id": "db_idx_trucking_events_2_585599",
-      "description": "Database: CREATE INDEX idx_trucking_events_2",
-      "source_line_start": 13250,
-      "source_line_end": 13255,
-      "table_name": "idx_trucking_events_2",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_trucking_events_2 ON trucking_events (request_id);\r\n\r\n```\r\n\r\n```prisma\r\nmodel trucking_events {\r\n  id String @id @default(cuid())\r\n  tenant_id String\r\n  user_id String\r\n  feature String\r\n  request_id String\r\n  payload Json\r\n  result Json\r\n  cost_cents Int @default(0)\r\n  tokens_in Int @default(0)\r\n  tokens_out Int @default(0)\r\n  created_at DateTime @default(now())\r\n  updated_at DateTime @default(now())\r\n  @@index([tenant_id, feature, created_at])\r\n  @@index([request_id])\r",
-      "fields": []
-    },
-    {
-      "id": "db_trucking_events_585599",
-      "description": "Database: model trucking_events {",
-      "source_line_start": 13255,
-      "source_line_end": 13260,
-      "table_name": "trucking_events",
-      "implemented": true,
-      "operation_type": "prisma_model",
-      "sql_content": "model trucking_events {\r\n  id String @id @default(cuid())\r\n  tenant_id String\r\n  user_id String\r\n  feature String\r\n  request_id String\r\n  payload Json\r\n  result Json\r\n  cost_cents Int @default(0)\r\n  tokens_in Int @default(0)\r\n  tokens_out Int @default(0)\r\n  created_at DateTime @default(now())\r\n  updated_at DateTime @default(now())\r\n  @@index([tenant_id, feature, created_at])\r\n  @@index([request_id])\r\n}\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "string",
-          "line": 256
-        },
-        {
-          "name": "tenant_id",
-          "type": "string",
-          "line": 257
-        },
-        {
-          "name": "user_id",
-          "type": "string",
-          "line": 258
-        },
-        {
-          "name": "feature",
-          "type": "string",
-          "line": 259
-        },
-        {
-          "name": "request_id",
-          "type": "string",
-          "line": 260
-        },
-        {
-          "name": "payload",
-          "type": "json",
-          "line": 261
-        },
-        {
-          "name": "result",
-          "type": "json",
-          "line": 262
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 263
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 263
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 264
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 264
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 265
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 265
-        },
-        {
-          "name": "created_at",
-          "type": "datetime",
-          "line": 266
-        },
-        {
-          "name": "updated_at",
-          "type": "datetime",
-          "line": 267
-        }
-      ]
-    },
-    {
-      "id": "db_trucking_events_585599",
-      "description": "Database: CREATE TABLE trucking_events",
-      "source_line_start": 13276,
-      "source_line_end": 13281,
-      "table_name": "trucking_events",
-      "implemented": true,
-      "operation_type": "create_table",
-      "sql_content": "CREATE TABLE trucking_events (\r\n  id TEXT PRIMARY KEY NOT NULL DEFAULT cuid(),\r\n  tenant_id TEXT NOT NULL,\r\n  user_id TEXT,\r\n  feature TEXT NOT NULL,\r\n  request_id TEXT NOT NULL,\r\n  payload JSONB,\r\n  result JSONB,\r\n  cost_cents INTEGER DEFAULT 0,\r\n  tokens_in INTEGER DEFAULT 0,\r\n  tokens_out INTEGER DEFAULT 0,\r\n  created_at TIMESTAMP DEFAULT now(),\r\n  updated_at TIMESTAMP DEFAULT now()\r\n);\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "text",
-          "line": 277
-        },
-        {
-          "name": "tenant_id",
-          "type": "text",
-          "line": 278
-        },
-        {
-          "name": "user_id",
-          "type": "text",
-          "line": 279
-        },
-        {
-          "name": "feature",
-          "type": "text",
-          "line": 280
-        },
-        {
-          "name": "request_id",
-          "type": "text",
-          "line": 281
-        },
-        {
-          "name": "payload",
-          "type": "jsonb",
-          "line": 282
-        },
-        {
-          "name": "result",
-          "type": "jsonb",
-          "line": 283
-        },
-        {
-          "name": "cost_cents",
-          "type": "int",
-          "line": 284
-        },
-        {
-          "name": "tokens_in",
-          "type": "int",
-          "line": 285
-        },
-        {
-          "name": "tokens_out",
-          "type": "int",
-          "line": 286
-        }
-      ]
-    },
-    {
-      "id": "db_idx_trucking_events_1_585599",
-      "description": "Database: CREATE INDEX idx_trucking_events_1",
-      "source_line_start": 13290,
-      "source_line_end": 13295,
-      "table_name": "idx_trucking_events_1",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_trucking_events_1 ON trucking_events (tenant_id, feature, created_at);\r\nCREATE INDEX idx_trucking_events_2 ON trucking_events (request_id);\r",
-      "fields": []
-    },
-    {
-      "id": "db_idx_trucking_events_2_585599",
-      "description": "Database: CREATE INDEX idx_trucking_events_2",
-      "source_line_start": 13291,
-      "source_line_end": 13296,
-      "table_name": "idx_trucking_events_2",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_trucking_events_2 ON trucking_events (request_id);\r\n\r\n-- Migration DOWN\r\nDROP TABLE IF EXISTS {table_name};\r",
-      "fields": []
-    },
-    {
-      "id": "db_if_585599",
-      "description": "Database: DROP TABLE IF",
-      "source_line_start": 13294,
-      "source_line_end": 13299,
-      "table_name": "IF",
-      "implemented": true,
-      "operation_type": "drop_table",
-      "sql_content": "DROP TABLE IF EXISTS {table_name};\r\n\r\n```\r\n\r\n```json\r\n{\r\n  \"example_record\": {\r\n    \"id\": \"evt_123\",\r\n    \"tenant_id\": \"tnt_abc\",\r\n    \"user_id\": \"usr_1\",\r\n    \"feature\": \"multistop_route\",\r\n    \"request_id\": \"req_001\",\r\n    \"payload\": {\r\n      \"sample\": true\r\n    },\r\n    \"result\": {\r\n      \"ok\": true,\r\n      \"data\": {\r\n        \"sample\": \"yes\"\r\n      }\r",
-      "fields": []
-    },
-    {
-      "id": "db_infra_adoption_585600",
-      "description": "Database: CREATE TABLE infra_adoption",
-      "source_line_start": 13773,
-      "source_line_end": 13778,
-      "table_name": "infra_adoption",
-      "implemented": true,
-      "operation_type": "create_table",
-      "sql_content": "CREATE TABLE infra_adoption (\r\n  id TEXT PRIMARY KEY DEFAULT cuid(),\r\n  meter TEXT NOT NULL,\r\n  tenant_count INTEGER DEFAULT 0,\r\n  monthly_volume INTEGER DEFAULT 0,\r\n  provider_tier TEXT NOT NULL,\r\n  updated_at TIMESTAMP DEFAULT now()\r\n);\r",
-      "fields": [
-        {
-          "name": "id",
-          "type": "text",
-          "line": 774
-        },
-        {
-          "name": "meter",
-          "type": "text",
-          "line": 775
-        },
-        {
-          "name": "tenant_count",
-          "type": "int",
-          "line": 776
-        },
-        {
-          "name": "monthly_volume",
-          "type": "int",
-          "line": 777
-        },
-        {
-          "name": "provider_tier",
-          "type": "text",
-          "line": 778
-        }
-      ]
-    },
-    {
-      "id": "db_idx_infra_adoption_1_585600",
-      "description": "Database: CREATE INDEX idx_infra_adoption_1",
-      "source_line_start": 13781,
-      "source_line_end": 13795,
-      "table_name": "idx_infra_adoption_1",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_infra_adoption_1 ON infra_adoption (meter);\r\nCREATE INDEX idx_infra_adoption_2 ON infra_adoption (updated_at);\r",
-      "fields": []
-    },
-    {
-      "id": "db_idx_infra_adoption_2_585600",
-      "description": "Database: CREATE INDEX idx_infra_adoption_2",
-      "source_line_start": 13782,
-      "source_line_end": 13795,
-      "table_name": "idx_infra_adoption_2",
-      "implemented": true,
-      "operation_type": "create_index",
-      "sql_content": "CREATE INDEX idx_infra_adoption_2 ON infra_adoption (updated_at);\r\n\r\n```\r\n\r\n\r\n\r\n    TESTS:\r\n    - infra.optimizer.thresholds.spec.ts\r\n- infra.optimizer.approval.flow.spec.ts\r\n\r\n    ACCEPTANCE:\r\n    [ ] Accurate recs and cost simulation; approval updates config; rollback documented; audits complete\r\n    === TASK END: L1.infra.optimizer ===\r\n## M. Global Acceptance — Outstandingly Exceptional\r\n\r\n\r\n- Every endpoint has: method, path, request/response schema, errors, retries, idempotency, RBAC, examples.\r\n- Every UI button has: label, props/state, events, backend call with JSON, validation, error/loading UX, acceptance checklist.\r\n- Every DB change has: fields, types, constraints, indexes, defaults, example rows, up/down migrations, backfill & rollback.\r\n- Every AI flow has: prompt payloads, sample responses, fallback logic, eval metrics, workflow integration points.\r",
-      "fields": []
-    },
-    {
-      "id": "db_cleaning_events_593865",
+      "id": "db_cleaning_events_789467",
       "description": "Database: CREATE TABLE cleaning_events",
       "source_line_start": 1475,
       "source_line_end": 1480,
@@ -2517,7 +64,7 @@
       ]
     },
     {
-      "id": "db_idx_cleaning_events_1_593865",
+      "id": "db_idx_cleaning_events_1_789468",
       "description": "Database: CREATE INDEX idx_cleaning_events_1",
       "source_line_start": 1489,
       "source_line_end": 1494,
@@ -2528,7 +75,7 @@
       "fields": []
     },
     {
-      "id": "db_idx_cleaning_events_2_593865",
+      "id": "db_idx_cleaning_events_2_789468",
       "description": "Database: CREATE INDEX idx_cleaning_events_2",
       "source_line_start": 1490,
       "source_line_end": 1495,
@@ -2539,7 +86,7 @@
       "fields": []
     },
     {
-      "id": "db_cleaning_events_593865",
+      "id": "db_cleaning_events_789468",
       "description": "Database: model cleaning_events {",
       "source_line_start": 1495,
       "source_line_end": 1500,
@@ -2626,7 +173,7 @@
       ]
     },
     {
-      "id": "db_cleaning_events_593865",
+      "id": "db_cleaning_events_789468",
       "description": "Database: CREATE TABLE cleaning_events",
       "source_line_start": 1516,
       "source_line_end": 1521,
@@ -2688,7 +235,7 @@
       ]
     },
     {
-      "id": "db_idx_cleaning_events_1_593865",
+      "id": "db_idx_cleaning_events_1_789468",
       "description": "Database: CREATE INDEX idx_cleaning_events_1",
       "source_line_start": 1530,
       "source_line_end": 1535,
@@ -2699,7 +246,7 @@
       "fields": []
     },
     {
-      "id": "db_idx_cleaning_events_2_593865",
+      "id": "db_idx_cleaning_events_2_789468",
       "description": "Database: CREATE INDEX idx_cleaning_events_2",
       "source_line_start": 1531,
       "source_line_end": 1536,
@@ -2710,7 +257,7 @@
       "fields": []
     },
     {
-      "id": "db_if_593865",
+      "id": "db_if_789468",
       "description": "Database: DROP TABLE IF",
       "source_line_start": 1534,
       "source_line_end": 1539,
@@ -2721,7 +268,7 @@
       "fields": []
     },
     {
-      "id": "db_fencing_events_593873",
+      "id": "db_fencing_events_789474",
       "description": "Database: CREATE TABLE fencing_events",
       "source_line_start": 2945,
       "source_line_end": 2950,
@@ -2783,7 +330,7 @@
       ]
     },
     {
-      "id": "db_idx_fencing_events_1_593873",
+      "id": "db_idx_fencing_events_1_789474",
       "description": "Database: CREATE INDEX idx_fencing_events_1",
       "source_line_start": 2959,
       "source_line_end": 2964,
@@ -2794,7 +341,7 @@
       "fields": []
     },
     {
-      "id": "db_idx_fencing_events_2_593873",
+      "id": "db_idx_fencing_events_2_789474",
       "description": "Database: CREATE INDEX idx_fencing_events_2",
       "source_line_start": 2960,
       "source_line_end": 2965,
@@ -2805,7 +352,7 @@
       "fields": []
     },
     {
-      "id": "db_fencing_events_593873",
+      "id": "db_fencing_events_789474",
       "description": "Database: model fencing_events {",
       "source_line_start": 2965,
       "source_line_end": 2970,
@@ -2892,7 +439,7 @@
       ]
     },
     {
-      "id": "db_fencing_events_593873",
+      "id": "db_fencing_events_789474",
       "description": "Database: CREATE TABLE fencing_events",
       "source_line_start": 2986,
       "source_line_end": 2991,
@@ -2954,7 +501,7 @@
       ]
     },
     {
-      "id": "db_idx_fencing_events_1_593873",
+      "id": "db_idx_fencing_events_1_789475",
       "description": "Database: CREATE INDEX idx_fencing_events_1",
       "source_line_start": 3000,
       "source_line_end": 3005,
@@ -2965,7 +512,7 @@
       "fields": []
     },
     {
-      "id": "db_idx_fencing_events_2_593873",
+      "id": "db_idx_fencing_events_2_789475",
       "description": "Database: CREATE INDEX idx_fencing_events_2",
       "source_line_start": 3001,
       "source_line_end": 3006,
@@ -2976,7 +523,7 @@
       "fields": []
     },
     {
-      "id": "db_if_593873",
+      "id": "db_if_789475",
       "description": "Database: DROP TABLE IF",
       "source_line_start": 3004,
       "source_line_end": 3009,
@@ -2987,7 +534,7 @@
       "fields": []
     },
     {
-      "id": "db_concrete_events_593875",
+      "id": "db_concrete_events_789478",
       "description": "Database: CREATE TABLE concrete_events",
       "source_line_start": 4415,
       "source_line_end": 4420,
@@ -3049,7 +596,7 @@
       ]
     },
     {
-      "id": "db_idx_concrete_events_1_593875",
+      "id": "db_idx_concrete_events_1_789478",
       "description": "Database: CREATE INDEX idx_concrete_events_1",
       "source_line_start": 4429,
       "source_line_end": 4434,
@@ -3060,7 +607,7 @@
       "fields": []
     },
     {
-      "id": "db_idx_concrete_events_2_593875",
+      "id": "db_idx_concrete_events_2_789478",
       "description": "Database: CREATE INDEX idx_concrete_events_2",
       "source_line_start": 4430,
       "source_line_end": 4435,
@@ -3071,7 +618,7 @@
       "fields": []
     },
     {
-      "id": "db_concrete_events_593875",
+      "id": "db_concrete_events_789478",
       "description": "Database: model concrete_events {",
       "source_line_start": 4435,
       "source_line_end": 4440,
@@ -3158,7 +705,7 @@
       ]
     },
     {
-      "id": "db_concrete_events_593875",
+      "id": "db_concrete_events_789478",
       "description": "Database: CREATE TABLE concrete_events",
       "source_line_start": 4456,
       "source_line_end": 4461,
@@ -3220,7 +767,7 @@
       ]
     },
     {
-      "id": "db_idx_concrete_events_1_593875",
+      "id": "db_idx_concrete_events_1_789478",
       "description": "Database: CREATE INDEX idx_concrete_events_1",
       "source_line_start": 4470,
       "source_line_end": 4475,
@@ -3231,7 +778,7 @@
       "fields": []
     },
     {
-      "id": "db_idx_concrete_events_2_593875",
+      "id": "db_idx_concrete_events_2_789478",
       "description": "Database: CREATE INDEX idx_concrete_events_2",
       "source_line_start": 4471,
       "source_line_end": 4476,
@@ -3242,7 +789,7 @@
       "fields": []
     },
     {
-      "id": "db_if_593875",
+      "id": "db_if_789478",
       "description": "Database: DROP TABLE IF",
       "source_line_start": 4474,
       "source_line_end": 4479,
@@ -3253,7 +800,7 @@
       "fields": []
     },
     {
-      "id": "db_appliance_events_593878",
+      "id": "db_appliance_events_789483",
       "description": "Database: CREATE TABLE appliance_events",
       "source_line_start": 5885,
       "source_line_end": 5890,
@@ -3315,7 +862,7 @@
       ]
     },
     {
-      "id": "db_idx_appliance_events_1_593878",
+      "id": "db_idx_appliance_events_1_789483",
       "description": "Database: CREATE INDEX idx_appliance_events_1",
       "source_line_start": 5899,
       "source_line_end": 5904,
@@ -3326,7 +873,7 @@
       "fields": []
     },
     {
-      "id": "db_idx_appliance_events_2_593878",
+      "id": "db_idx_appliance_events_2_789483",
       "description": "Database: CREATE INDEX idx_appliance_events_2",
       "source_line_start": 5900,
       "source_line_end": 5905,
@@ -3337,7 +884,7 @@
       "fields": []
     },
     {
-      "id": "db_appliance_events_593878",
+      "id": "db_appliance_events_789483",
       "description": "Database: model appliance_events {",
       "source_line_start": 5905,
       "source_line_end": 5910,
@@ -3424,7 +971,7 @@
       ]
     },
     {
-      "id": "db_appliance_events_593878",
+      "id": "db_appliance_events_789483",
       "description": "Database: CREATE TABLE appliance_events",
       "source_line_start": 5926,
       "source_line_end": 5931,
@@ -3486,7 +1033,7 @@
       ]
     },
     {
-      "id": "db_idx_appliance_events_1_593878",
+      "id": "db_idx_appliance_events_1_789483",
       "description": "Database: CREATE INDEX idx_appliance_events_1",
       "source_line_start": 5940,
       "source_line_end": 5945,
@@ -3497,7 +1044,7 @@
       "fields": []
     },
     {
-      "id": "db_idx_appliance_events_2_593878",
+      "id": "db_idx_appliance_events_2_789483",
       "description": "Database: CREATE INDEX idx_appliance_events_2",
       "source_line_start": 5941,
       "source_line_end": 5946,
@@ -3508,7 +1055,7 @@
       "fields": []
     },
     {
-      "id": "db_if_593878",
+      "id": "db_if_789483",
       "description": "Database: DROP TABLE IF",
       "source_line_start": 5944,
       "source_line_end": 5949,
@@ -3519,7 +1066,7 @@
       "fields": []
     },
     {
-      "id": "db_mechanic_events_593880",
+      "id": "db_mechanic_events_789488",
       "description": "Database: CREATE TABLE mechanic_events",
       "source_line_start": 7355,
       "source_line_end": 7360,
@@ -3581,7 +1128,7 @@
       ]
     },
     {
-      "id": "db_idx_mechanic_events_1_593880",
+      "id": "db_idx_mechanic_events_1_789488",
       "description": "Database: CREATE INDEX idx_mechanic_events_1",
       "source_line_start": 7369,
       "source_line_end": 7374,
@@ -3592,7 +1139,7 @@
       "fields": []
     },
     {
-      "id": "db_idx_mechanic_events_2_593880",
+      "id": "db_idx_mechanic_events_2_789488",
       "description": "Database: CREATE INDEX idx_mechanic_events_2",
       "source_line_start": 7370,
       "source_line_end": 7375,
@@ -3603,7 +1150,7 @@
       "fields": []
     },
     {
-      "id": "db_mechanic_events_593880",
+      "id": "db_mechanic_events_789488",
       "description": "Database: model mechanic_events {",
       "source_line_start": 7375,
       "source_line_end": 7380,
@@ -3690,7 +1237,7 @@
       ]
     },
     {
-      "id": "db_mechanic_events_593880",
+      "id": "db_mechanic_events_789488",
       "description": "Database: CREATE TABLE mechanic_events",
       "source_line_start": 7396,
       "source_line_end": 7401,
@@ -3752,7 +1299,7 @@
       ]
     },
     {
-      "id": "db_idx_mechanic_events_1_593880",
+      "id": "db_idx_mechanic_events_1_789489",
       "description": "Database: CREATE INDEX idx_mechanic_events_1",
       "source_line_start": 7410,
       "source_line_end": 7415,
@@ -3763,7 +1310,7 @@
       "fields": []
     },
     {
-      "id": "db_idx_mechanic_events_2_593880",
+      "id": "db_idx_mechanic_events_2_789489",
       "description": "Database: CREATE INDEX idx_mechanic_events_2",
       "source_line_start": 7411,
       "source_line_end": 7416,
@@ -3774,7 +1321,7 @@
       "fields": []
     },
     {
-      "id": "db_if_593880",
+      "id": "db_if_789489",
       "description": "Database: DROP TABLE IF",
       "source_line_start": 7414,
       "source_line_end": 7419,
@@ -3785,7 +1332,7 @@
       "fields": []
     },
     {
-      "id": "db_windowdoor_events_593882",
+      "id": "db_windowdoor_events_789493",
       "description": "Database: CREATE TABLE windowdoor_events",
       "source_line_start": 8825,
       "source_line_end": 8830,
@@ -3847,7 +1394,7 @@
       ]
     },
     {
-      "id": "db_idx_windowdoor_events_1_593882",
+      "id": "db_idx_windowdoor_events_1_789493",
       "description": "Database: CREATE INDEX idx_windowdoor_events_1",
       "source_line_start": 8839,
       "source_line_end": 8844,
@@ -3858,7 +1405,7 @@
       "fields": []
     },
     {
-      "id": "db_idx_windowdoor_events_2_593882",
+      "id": "db_idx_windowdoor_events_2_789493",
       "description": "Database: CREATE INDEX idx_windowdoor_events_2",
       "source_line_start": 8840,
       "source_line_end": 8845,
@@ -3869,7 +1416,7 @@
       "fields": []
     },
     {
-      "id": "db_windowdoor_events_593882",
+      "id": "db_windowdoor_events_789493",
       "description": "Database: model windowdoor_events {",
       "source_line_start": 8845,
       "source_line_end": 8850,
@@ -3956,7 +1503,7 @@
       ]
     },
     {
-      "id": "db_windowdoor_events_593882",
+      "id": "db_windowdoor_events_789494",
       "description": "Database: CREATE TABLE windowdoor_events",
       "source_line_start": 8866,
       "source_line_end": 8871,
@@ -4018,7 +1565,7 @@
       ]
     },
     {
-      "id": "db_idx_windowdoor_events_1_593882",
+      "id": "db_idx_windowdoor_events_1_789494",
       "description": "Database: CREATE INDEX idx_windowdoor_events_1",
       "source_line_start": 8880,
       "source_line_end": 8885,
@@ -4029,7 +1576,7 @@
       "fields": []
     },
     {
-      "id": "db_idx_windowdoor_events_2_593882",
+      "id": "db_idx_windowdoor_events_2_789494",
       "description": "Database: CREATE INDEX idx_windowdoor_events_2",
       "source_line_start": 8881,
       "source_line_end": 8886,
@@ -4040,7 +1587,7 @@
       "fields": []
     },
     {
-      "id": "db_if_593882",
+      "id": "db_if_789494",
       "description": "Database: DROP TABLE IF",
       "source_line_start": 8884,
       "source_line_end": 8889,
@@ -4051,7 +1598,7 @@
       "fields": []
     },
     {
-      "id": "db_rolloff_events_593885",
+      "id": "db_rolloff_events_789495",
       "description": "Database: CREATE TABLE rolloff_events",
       "source_line_start": 10295,
       "source_line_end": 10300,
@@ -4113,7 +1660,7 @@
       ]
     },
     {
-      "id": "db_idx_rolloff_events_1_593885",
+      "id": "db_idx_rolloff_events_1_789495",
       "description": "Database: CREATE INDEX idx_rolloff_events_1",
       "source_line_start": 10309,
       "source_line_end": 10314,
@@ -4124,7 +1671,7 @@
       "fields": []
     },
     {
-      "id": "db_idx_rolloff_events_2_593885",
+      "id": "db_idx_rolloff_events_2_789495",
       "description": "Database: CREATE INDEX idx_rolloff_events_2",
       "source_line_start": 10310,
       "source_line_end": 10315,
@@ -4135,7 +1682,7 @@
       "fields": []
     },
     {
-      "id": "db_rolloff_events_593885",
+      "id": "db_rolloff_events_789495",
       "description": "Database: model rolloff_events {",
       "source_line_start": 10315,
       "source_line_end": 10320,
@@ -4222,7 +1769,7 @@
       ]
     },
     {
-      "id": "db_rolloff_events_593885",
+      "id": "db_rolloff_events_789496",
       "description": "Database: CREATE TABLE rolloff_events",
       "source_line_start": 10336,
       "source_line_end": 10341,
@@ -4284,7 +1831,7 @@
       ]
     },
     {
-      "id": "db_idx_rolloff_events_1_593885",
+      "id": "db_idx_rolloff_events_1_789496",
       "description": "Database: CREATE INDEX idx_rolloff_events_1",
       "source_line_start": 10350,
       "source_line_end": 10355,
@@ -4295,7 +1842,7 @@
       "fields": []
     },
     {
-      "id": "db_idx_rolloff_events_2_593885",
+      "id": "db_idx_rolloff_events_2_789496",
       "description": "Database: CREATE INDEX idx_rolloff_events_2",
       "source_line_start": 10351,
       "source_line_end": 10356,
@@ -4306,7 +1853,7 @@
       "fields": []
     },
     {
-      "id": "db_if_593885",
+      "id": "db_if_789496",
       "description": "Database: DROP TABLE IF",
       "source_line_start": 10354,
       "source_line_end": 10359,
@@ -4317,7 +1864,7 @@
       "fields": []
     },
     {
-      "id": "db_portajohn_events_593887",
+      "id": "db_portajohn_events_789497",
       "description": "Database: CREATE TABLE portajohn_events",
       "source_line_start": 11765,
       "source_line_end": 11770,
@@ -4379,7 +1926,7 @@
       ]
     },
     {
-      "id": "db_idx_portajohn_events_1_593887",
+      "id": "db_idx_portajohn_events_1_789498",
       "description": "Database: CREATE INDEX idx_portajohn_events_1",
       "source_line_start": 11779,
       "source_line_end": 11784,
@@ -4390,7 +1937,7 @@
       "fields": []
     },
     {
-      "id": "db_idx_portajohn_events_2_593887",
+      "id": "db_idx_portajohn_events_2_789498",
       "description": "Database: CREATE INDEX idx_portajohn_events_2",
       "source_line_start": 11780,
       "source_line_end": 11785,
@@ -4401,7 +1948,7 @@
       "fields": []
     },
     {
-      "id": "db_portajohn_events_593887",
+      "id": "db_portajohn_events_789498",
       "description": "Database: model portajohn_events {",
       "source_line_start": 11785,
       "source_line_end": 11790,
@@ -4488,7 +2035,7 @@
       ]
     },
     {
-      "id": "db_portajohn_events_593887",
+      "id": "db_portajohn_events_789498",
       "description": "Database: CREATE TABLE portajohn_events",
       "source_line_start": 11806,
       "source_line_end": 11811,
@@ -4550,7 +2097,7 @@
       ]
     },
     {
-      "id": "db_idx_portajohn_events_1_593887",
+      "id": "db_idx_portajohn_events_1_789498",
       "description": "Database: CREATE INDEX idx_portajohn_events_1",
       "source_line_start": 11820,
       "source_line_end": 11825,
@@ -4561,7 +2108,7 @@
       "fields": []
     },
     {
-      "id": "db_idx_portajohn_events_2_593887",
+      "id": "db_idx_portajohn_events_2_789498",
       "description": "Database: CREATE INDEX idx_portajohn_events_2",
       "source_line_start": 11821,
       "source_line_end": 11826,
@@ -4572,7 +2119,7 @@
       "fields": []
     },
     {
-      "id": "db_if_593887",
+      "id": "db_if_789498",
       "description": "Database: DROP TABLE IF",
       "source_line_start": 11824,
       "source_line_end": 11829,
@@ -4583,7 +2130,7 @@
       "fields": []
     },
     {
-      "id": "db_trucking_events_593889",
+      "id": "db_trucking_events_789499",
       "description": "Database: CREATE TABLE trucking_events",
       "source_line_start": 13235,
       "source_line_end": 13240,
@@ -4645,7 +2192,7 @@
       ]
     },
     {
-      "id": "db_idx_trucking_events_1_593889",
+      "id": "db_idx_trucking_events_1_789499",
       "description": "Database: CREATE INDEX idx_trucking_events_1",
       "source_line_start": 13249,
       "source_line_end": 13254,
@@ -4656,7 +2203,7 @@
       "fields": []
     },
     {
-      "id": "db_idx_trucking_events_2_593889",
+      "id": "db_idx_trucking_events_2_789499",
       "description": "Database: CREATE INDEX idx_trucking_events_2",
       "source_line_start": 13250,
       "source_line_end": 13255,
@@ -4667,7 +2214,7 @@
       "fields": []
     },
     {
-      "id": "db_trucking_events_593889",
+      "id": "db_trucking_events_789499",
       "description": "Database: model trucking_events {",
       "source_line_start": 13255,
       "source_line_end": 13260,
@@ -4754,7 +2301,7 @@
       ]
     },
     {
-      "id": "db_trucking_events_593889",
+      "id": "db_trucking_events_789500",
       "description": "Database: CREATE TABLE trucking_events",
       "source_line_start": 13276,
       "source_line_end": 13281,
@@ -4816,7 +2363,7 @@
       ]
     },
     {
-      "id": "db_idx_trucking_events_1_593889",
+      "id": "db_idx_trucking_events_1_789500",
       "description": "Database: CREATE INDEX idx_trucking_events_1",
       "source_line_start": 13290,
       "source_line_end": 13295,
@@ -4827,7 +2374,7 @@
       "fields": []
     },
     {
-      "id": "db_idx_trucking_events_2_593889",
+      "id": "db_idx_trucking_events_2_789500",
       "description": "Database: CREATE INDEX idx_trucking_events_2",
       "source_line_start": 13291,
       "source_line_end": 13296,
@@ -4838,7 +2385,7 @@
       "fields": []
     },
     {
-      "id": "db_if_593889",
+      "id": "db_if_789500",
       "description": "Database: DROP TABLE IF",
       "source_line_start": 13294,
       "source_line_end": 13299,
@@ -4849,7 +2396,7 @@
       "fields": []
     },
     {
-      "id": "db_infra_adoption_593890",
+      "id": "db_infra_adoption_789500",
       "description": "Database: CREATE TABLE infra_adoption",
       "source_line_start": 13773,
       "source_line_end": 13778,
@@ -4886,7 +2433,7 @@
       ]
     },
     {
-      "id": "db_idx_infra_adoption_1_593890",
+      "id": "db_idx_infra_adoption_1_789500",
       "description": "Database: CREATE INDEX idx_infra_adoption_1",
       "source_line_start": 13781,
       "source_line_end": 13795,
@@ -4897,7 +2444,7 @@
       "fields": []
     },
     {
-      "id": "db_idx_infra_adoption_2_593890",
+      "id": "db_idx_infra_adoption_2_789500",
       "description": "Database: CREATE INDEX idx_infra_adoption_2",
       "source_line_start": 13782,
       "source_line_end": 13795,

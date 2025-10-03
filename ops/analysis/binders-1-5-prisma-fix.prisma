@@ -1,0 +1,825 @@
+// HOLISTIC BINDERS 1-5 SCHEMA FIX
+// Generated: 2025-10-03T18:13:45.848Z
+// Total Tables: 62
+
+model cleaning_events {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  user_id String
+  feature String
+  request_id String
+  payload Json
+  result Json
+  cost_cents Int
+  tokens_in Int
+  tokens_out Int
+  
+  // Generated from binder1_FULL lines 1516-1529
+  @@map("cleaning_events")
+}
+
+model fencing_events {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  user_id String
+  feature String
+  request_id String
+  payload Json
+  result Json
+  cost_cents Int
+  tokens_in Int
+  tokens_out Int
+  
+  // Generated from binder1_FULL lines 2986-2999
+  @@map("fencing_events")
+}
+
+model concrete_events {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  user_id String
+  feature String
+  request_id String
+  payload Json
+  result Json
+  cost_cents Int
+  tokens_in Int
+  tokens_out Int
+  
+  // Generated from binder1_FULL lines 4456-4469
+  @@map("concrete_events")
+}
+
+model appliance_events {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  user_id String
+  feature String
+  request_id String
+  payload Json
+  result Json
+  cost_cents Int
+  tokens_in Int
+  tokens_out Int
+  
+  // Generated from binder1_FULL lines 5926-5939
+  @@map("appliance_events")
+}
+
+model mechanic_events {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  user_id String
+  feature String
+  request_id String
+  payload Json
+  result Json
+  cost_cents Int
+  tokens_in Int
+  tokens_out Int
+  
+  // Generated from binder1_FULL lines 7396-7409
+  @@map("mechanic_events")
+}
+
+model windowdoor_events {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  user_id String
+  feature String
+  request_id String
+  payload Json
+  result Json
+  cost_cents Int
+  tokens_in Int
+  tokens_out Int
+  
+  // Generated from binder1_FULL lines 8866-8879
+  @@map("windowdoor_events")
+}
+
+model rolloff_events {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  user_id String
+  feature String
+  request_id String
+  payload Json
+  result Json
+  cost_cents Int
+  tokens_in Int
+  tokens_out Int
+  
+  // Generated from binder1_FULL lines 10336-10349
+  @@map("rolloff_events")
+}
+
+model portajohn_events {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  user_id String
+  feature String
+  request_id String
+  payload Json
+  result Json
+  cost_cents Int
+  tokens_in Int
+  tokens_out Int
+  
+  // Generated from binder1_FULL lines 11806-11819
+  @@map("portajohn_events")
+}
+
+model trucking_events {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  user_id String
+  feature String
+  request_id String
+  payload Json
+  result Json
+  cost_cents Int
+  tokens_in Int
+  tokens_out Int
+  
+  // Generated from binder1_FULL lines 13276-13289
+  @@map("trucking_events")
+}
+
+model infra_adoption {
+  id String @id @default(cuid())
+  id String
+  meter String
+  tenant_count Int
+  monthly_volume Int
+  provider_tier String
+  
+  // Generated from binder1_FULL lines 13773-13780
+  @@map("infra_adoption")
+}
+
+model tenants {
+  id String @id @default(cuid())
+  id String
+  name String
+  plan String
+  created_at DateTime
+  updated_at DateTime
+  
+  // Generated from binder3_FULL lines 91-97
+  @@map("tenants")
+}
+
+model business_units {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  name String
+  timezone String
+  address Json
+  created_at DateTime
+  
+  // Generated from binder4_FULL lines 45339-45346
+  @@map("business_units")
+}
+
+model lines_of_business {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  bu_id String
+  key String
+  enabled Boolean
+  config Json
+  created_at DateTime
+  
+  // Generated from binder3_FULL lines 111-119
+  @@map("lines_of_business")
+}
+
+model vendor_roles {
+  id String @id @default(cuid())
+  id String
+  key String
+  description String
+  
+  // Generated from binder3_FULL lines 125-129
+  @@map("vendor_roles")
+}
+
+model users {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  email String
+  password_hash String
+  role String
+  role_scope String
+  audience String
+  status String
+  created_at DateTime
+  
+  // Generated from binder3_FULL lines 131-141
+  @@map("users")
+}
+
+model fleet_vehicles {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  bu_id String
+  asset_tag String
+  vin String
+  plate String
+  make String
+  dot_number String
+  odometer BigInt
+  status String
+  metadata Json
+  created_at DateTime
+  
+  // Generated from binder3_FULL lines 147-160
+  @@map("fleet_vehicles")
+}
+
+model fleet_maintenance_tickets {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  vehicle_id String
+  opened_by String
+  assigned_to String
+  title String
+  description String
+  severity String
+  status String
+  dvir_ref String
+  opened_at DateTime
+  closed_at DateTime
+  
+  // Generated from binder3_FULL lines 163-176
+  @@map("fleet_maintenance_tickets")
+}
+
+model integration_configs {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  type String
+  status String
+  config Json
+  created_at DateTime
+  updated_at DateTime
+  
+  // Generated from binder3_FULL lines 182-190
+  @@map("integration_configs")
+}
+
+model geotab_dvir_logs {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  device_id String
+  driver_id String
+  vehicle_ref String
+  defects Json
+  certified_at DateTime
+  status String
+  raw Json
+  
+  // Generated from binder3_FULL lines 194-204
+  @@map("geotab_dvir_logs")
+}
+
+model holman_fuel_transactions {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  vehicle_ref String
+  driver_pin String
+  total_cents BigInt
+  odometer BigInt
+  vendor String
+  purchased_at DateTime
+  raw Json
+  
+  // Generated from binder3_FULL lines 208-220
+  @@map("holman_fuel_transactions")
+}
+
+model pricing_catalog {
+  id String @id @default(cuid())
+  id String
+  key String
+  list_price_cents BigInt
+  adoption_discount_eligible Boolean
+  
+  // Generated from binder3_FULL lines 226-231
+  @@map("pricing_catalog")
+}
+
+model tenant_entitlements {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  key String
+  enabled Boolean
+  quota BigInt
+  meta Json
+  
+  // Generated from binder3_FULL lines 233-240
+  @@map("tenant_entitlements")
+}
+
+model credits_ledger {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  key String
+  delta_cents BigInt
+  reason String
+  created_at DateTime
+  
+  // Generated from binder3_FULL lines 243-250
+  @@map("credits_ledger")
+}
+
+model usage_ledger {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  key String
+  quantity BigInt
+  cost_cents BigInt
+  context Json
+  created_at DateTime
+  
+  // Generated from binder3_FULL lines 253-261
+  @@map("usage_ledger")
+}
+
+model audit_logs {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  user_id String
+  role String
+  action String
+  resource String
+  payload Json
+  created_at DateTime
+  
+  // Generated from binder4_FULL lines 45325-45334
+  @@map("audit_logs")
+}
+
+model crm_leads {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  bu_id String
+  first_name String
+  email String
+  status String
+  created_at DateTime
+  
+  // Generated from binder4_FULL lines 4111-4119
+  @@map("crm_leads")
+}
+
+model crm_orgs {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  name String
+  created_at DateTime
+  
+  // Generated from binder4_FULL lines 4124-4129
+  @@map("crm_orgs")
+}
+
+model crm_contacts {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  org_id String
+  first_name String
+  is_primary Boolean
+  created_at DateTime
+  
+  // Generated from binder4_FULL lines 4134-4141
+  @@map("crm_contacts")
+}
+
+model crm_opps {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  org_id String
+  contact_id String
+  title String
+  created_at DateTime
+  
+  // Generated from binder4_FULL lines 4146-4153
+  @@map("crm_opps")
+}
+
+model schedule_jobs {
+  id String @id @default(cuid())
+  id String
+  org_id String
+  status String
+  
+  // Generated from binder4_FULL lines 4158-4162
+  @@map("schedule_jobs")
+}
+
+model schedule_visits {
+  id String @id @default(cuid())
+  id String
+  job_id String
+  scheduled_at DateTime
+  status String
+  
+  // Generated from binder4_FULL lines 4166-4171
+  @@map("schedule_visits")
+}
+
+model billing_estimates {
+  id String @id @default(cuid())
+  id String
+  org_id String
+  created_at DateTime
+  
+  // Generated from binder4_FULL lines 4176-4180
+  @@map("billing_estimates")
+}
+
+model billing_estimate_lines {
+  id String @id @default(cuid())
+  id String
+  sku String
+  
+  // Generated from binder4_FULL lines 4181-4184
+  @@map("billing_estimate_lines")
+}
+
+model billing_invoices {
+  id String @id @default(cuid())
+  id String
+  org_id String
+  created_at DateTime
+  
+  // Generated from binder4_FULL lines 4188-4192
+  @@map("billing_invoices")
+}
+
+model billing_invoice_lines {
+  id String @id @default(cuid())
+  id String
+  sku String
+  
+  // Generated from binder4_FULL lines 4193-4196
+  @@map("billing_invoice_lines")
+}
+
+model billing_payments {
+  id String @id @default(cuid())
+  id String
+  amount_cents BigInt
+  
+  // Generated from binder4_FULL lines 4197-4200
+  @@map("billing_payments")
+}
+
+model inventory_items {
+  id String @id @default(cuid())
+  id String
+  sku String
+  
+  // Generated from binder4_FULL lines 4204-4207
+  @@map("inventory_items")
+}
+
+model inventory_bins {
+  id String @id @default(cuid())
+  id String
+  name String
+  
+  // Generated from binder4_FULL lines 4208-4211
+  @@map("inventory_bins")
+}
+
+model inventory_stock {
+  id String @id @default(cuid())
+  id String
+  item_id String
+  bin_id String
+  
+  // Generated from binder4_FULL lines 4212-4217
+  @@map("inventory_stock")
+}
+
+model subs_vendors {
+  id String @id @default(cuid())
+  id String
+  email String
+  
+  // Generated from binder4_FULL lines 4222-4225
+  @@map("subs_vendors")
+}
+
+model subs_work_orders {
+  id String @id @default(cuid())
+  id String
+  job_id String
+  
+  // Generated from binder4_FULL lines 4226-4229
+  @@map("subs_work_orders")
+}
+
+model subs_milestones {
+  id String @id @default(cuid())
+  id String
+  title String
+  
+  // Generated from binder4_FULL lines 4230-4233
+  @@map("subs_milestones")
+}
+
+model subs_payouts {
+  id String @id @default(cuid())
+  id String
+  amount_cents BigInt
+  
+  // Generated from binder4_FULL lines 4234-4237
+  @@map("subs_payouts")
+}
+
+model portal_sessions {
+  id String @id @default(cuid())
+  id String
+  token String
+  
+  // Generated from binder4_FULL lines 4241-4244
+  @@map("portal_sessions")
+}
+
+model finance_cost_centers {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  bu_id String
+  name String
+  lob String
+  created_at DateTime
+  
+  // Generated from binder4_FULL lines 45351-45358
+  @@map("finance_cost_centers")
+}
+
+model finance_budgets {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  cost_center_id String
+  period_d String
+  amount_cents BigInt
+  created_at DateTime
+  
+  // Generated from binder4_FULL lines 45362-45369
+  @@map("finance_budgets")
+}
+
+model time_entries {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  user_id String
+  visit_id String
+  started_at DateTime
+  ended_at DateTime
+  notes String
+  
+  // Generated from binder4_FULL lines 45373-45381
+  @@map("time_entries")
+}
+
+model integrations_vendor_tokens {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  vendor String
+  data Json
+  created_at DateTime
+  updated_at DateTime
+  
+  // Generated from binder4_FULL lines 45386-45393
+  @@map("integrations_vendor_tokens")
+}
+
+model work_orders {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  bu_id String
+  job_id String
+  title String
+  status String
+  scheduled_at DateTime
+  window_start DateTime
+  window_end DateTime
+  crew_id String
+  address Json
+  created_at DateTime
+  
+  // Generated from binder5_FULL lines 1929-1942
+  @@map("work_orders")
+}
+
+model work_order_events {
+  id String @id @default(cuid())
+  id String
+  work_order_id String
+  actor_id String
+  type String
+  payload Json
+  created_at DateTime
+  
+  // Generated from binder5_FULL lines 1947-1954
+  @@map("work_order_events")
+}
+
+model dvir_records {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  vehicle_id String
+  type String
+  odometer BigInt
+  location Json
+  status String
+  created_at DateTime
+  
+  // Generated from binder5_FULL lines 1959-1968
+  @@map("dvir_records")
+}
+
+model dvir_defects {
+  id String @id @default(cuid())
+  id String
+  dvir_id String
+  component String
+  severity String
+  note String
+  photo_id String
+  status String
+  
+  // Generated from binder5_FULL lines 1969-1977
+  @@map("dvir_defects")
+}
+
+model maintenance_tickets {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  vehicle_id String
+  source_dvir_id String
+  title String
+  status String
+  created_at DateTime
+  
+  // Generated from binder5_FULL lines 1981-1989
+  @@map("maintenance_tickets")
+}
+
+model assets {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  sku String
+  serial String
+  name String
+  type String
+  status String
+  last_seen_at DateTime
+  last_seen_loc Json
+  
+  // Generated from binder5_FULL lines 1993-2003
+  @@map("assets")
+}
+
+model asset_events {
+  id String @id @default(cuid())
+  id String
+  asset_id String
+  event_type String
+  actor_id String
+  job_id String
+  data Json
+  created_at DateTime
+  
+  // Generated from binder5_FULL lines 2008-2016
+  @@map("asset_events")
+}
+
+model qr_tags {
+  id String @id @default(cuid())
+  id String
+  asset_id String
+  code String
+  signed_by_provider Boolean
+  created_at DateTime
+  
+  // Generated from binder5_FULL lines 2020-2026
+  @@map("qr_tags")
+}
+
+model migration_jobs {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  source String
+  status String
+  options Json
+  created_at DateTime
+  
+  // Generated from binder5_FULL lines 2030-2037
+  @@map("migration_jobs")
+}
+
+model migration_mappings {
+  id String @id @default(cuid())
+  id String
+  job_id String
+  entity String
+  mapping Json
+  
+  // Generated from binder5_FULL lines 2038-2043
+  @@map("migration_mappings")
+}
+
+model migration_results {
+  id String @id @default(cuid())
+  id String
+  job_id String
+  entity String
+  processed Int
+  report Json
+  
+  // Generated from binder5_FULL lines 2044-2050
+  @@map("migration_results")
+}
+
+model federation_domains {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  domain String
+  method String
+  status String
+  verified_at DateTime
+  cert_status String
+  
+  // Generated from binder5_FULL lines 2054-2062
+  @@map("federation_domains")
+}
+
+model rate_limit_policies {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  plan String
+  base_per_min Int
+  burst_per_min Int
+  override_until DateTime
+  created_at DateTime
+  
+  // Generated from binder5_FULL lines 2067-2075
+  @@map("rate_limit_policies")
+}
+
+model ai_sessions {
+  id String @id @default(cuid())
+  id String
+  tenant_id String
+  agent String
+  tier String
+  tokens_in BigInt
+  tokens_out BigInt
+  cost_cents BigInt
+  created_at DateTime
+  
+  // Generated from binder5_FULL lines 2079-2088
+  @@map("ai_sessions")
+}
+
