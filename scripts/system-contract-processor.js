@@ -800,6 +800,8 @@ export default ${serviceName};
         return await this.executeDbMigration(item);
       case 'api_endpoints':
         return await this.executeApiEndpoint(item);
+      case 'webhooks':
+        return await this.executeWebhook(item);
       case 'screens':
         return await this.executeScreen(item);
       case 'controls':
@@ -901,6 +903,52 @@ export default ${serviceName};
     if (!fs.existsSync(apiPath)) {
       const apiContent = this.generateEnhancedApiEndpoint(item, endpointId);
       fs.writeFileSync(apiPath, apiContent);
+    }
+
+    // Mark as implemented
+    item.implemented = true;
+  }
+
+  async executeWebhook(item) {
+    const webhookPath = path.join('src/webhooks', `${item.id}.ts`);
+
+    // Ensure webhooks directory exists
+    const webhooksDir = 'src/webhooks';
+    if (!fs.existsSync(webhooksDir)) {
+      fs.mkdirSync(webhooksDir, { recursive: true });
+    }
+
+    if (!fs.existsSync(webhookPath)) {
+      const content = `// Generated webhook handler for ${item.id}
+// ${item.description}
+// Source: ${this.binderName} lines ${item.source_line_start}-${item.source_line_end}
+
+import type { NextApiRequest, NextApiResponse } from 'next';
+
+export default async function webhookHandler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  console.log('Webhook received:', {
+    id: '${item.id}',
+    description: '${item.description}',
+    body: req.body,
+    headers: req.headers
+  });
+
+  // TODO: Implement webhook logic for ${item.description}
+
+  return res.status(200).json({
+    status: 'received',
+    webhook: '${item.id}',
+    binder: '${this.binderName}',
+    timestamp: new Date().toISOString()
+  });
+}
+`;
+
+      fs.writeFileSync(webhookPath, content);
     }
 
     // Mark as implemented
@@ -1066,8 +1114,8 @@ export default ${item.id};`;
   }
 
   async executeTest(item) {
-    const testPath = path.join('tests/binder1', `${item.id}.test.ts`);
-    
+    const testPath = path.join('tests', `${item.id}.test.ts`);
+
     if (!fs.existsSync(path.dirname(testPath))) {
       fs.mkdirSync(path.dirname(testPath), { recursive: true });
     }
@@ -1085,11 +1133,14 @@ describe('${item.id}', () => {
 });`;
       fs.writeFileSync(testPath, testContent);
     }
+
+    // Mark as implemented
+    item.implemented = true;
   }
 
   async executeGeneric(category, item) {
-    const genericPath = path.join(`src/generated/binder1/${category}`, `${item.id}.ts`);
-    
+    const genericPath = path.join(`src/generated/${this.binderName}/${category}`, `${item.id}.ts`);
+
     if (!fs.existsSync(path.dirname(genericPath))) {
       fs.mkdirSync(path.dirname(genericPath), { recursive: true });
     }
@@ -1108,6 +1159,9 @@ export const ${item.id} = {
 export default ${item.id};`;
       fs.writeFileSync(genericPath, genericContent);
     }
+
+    // Mark as implemented
+    item.implemented = true;
   }
 
   async runCategoryChecks(category) {

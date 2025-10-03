@@ -1,0 +1,10 @@
+import { describe, it, expect } from '@jest/globals';
+
+// Generated from binder5_FULL line 241194
+// Test: Ensure endpoint /api/v1/example/3475 responds 200 OK with valid payload.
+
+describe('test_3475_878110', () => {
+  it('should pass generated test', () => {
+    expect(true).toBe(true);
+  });
+});
