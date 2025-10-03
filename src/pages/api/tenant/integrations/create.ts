@@ -76,7 +76,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     // Validate data mapping
-    if (payload.configuration.data_mapping.length === 0 && payload.sync_direction !== 'manual') {
+    if (payload.configuration.data_mapping.length === 0 && payload.configuration.sync_frequency !== 'manual') {
       return res.status(400).json({
         error: 'MISSING_DATA_MAPPING',
         message: 'Data mapping is required for automated sync',
