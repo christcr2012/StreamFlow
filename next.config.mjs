@@ -7,13 +7,11 @@ const nextConfig = {
   // Fix workspace root warning for multiple lockfiles
   outputFileTracingRoot: process.cwd(),
 
-  // Optimize build performance for large codebase (32k+ files)
+  // Optimize build performance for minimized codebase
   experimental: {
     // Reduce memory usage and file handles during build
     workerThreads: false,
     cpus: 1,
-    // Disable file system cache to reduce open file handles
-    isrMemoryCacheSize: 0,
   },
 
   // Webpack optimizations for large codebase (32k+ files)
@@ -83,12 +81,12 @@ const nextConfig = {
     };
 
     // Reduce file watching overhead
-    if (config.watchOptions) {
-      config.watchOptions = {
-        ...config.watchOptions,
-        ignored: ['**/node_modules', '**/.next', '**/ops', '**/docs'],
-      };
-    }
+    config.watchOptions = {
+      ...config.watchOptions,
+      ignored: /node_modules|\.next|ops|docs|binderFiles|attached_assets/,
+      aggregateTimeout: 300,
+      poll: false,
+    };
 
     return config;
   },
