@@ -1,0 +1,170 @@
+{
+  "binder1_FULL.md": {
+    "detected": 3318,
+    "primary": 0,
+    "fallback": 3318,
+    "timestamp": "2025-10-04T15:11:30.481Z"
+  },
+  "binder10_FULL.md": {
+    "detected": 804014,
+    "primary": 130001,
+    "fallback": 674013,
+    "timestamp": "2025-10-04T15:11:31.054Z"
+  },
+  "binder11_FULL.md": {
+    "detected": 168896,
+    "primary": 800,
+    "fallback": 168096,
+    "timestamp": "2025-10-04T15:11:31.527Z"
+  },
+  "binder12_FULL.md": {
+    "detected": 339709,
+    "primary": 0,
+    "fallback": 339709,
+    "timestamp": "2025-10-04T15:11:31.942Z"
+  },
+  "binder13_FULL.md": {
+    "detected": 0,
+    "primary": 0,
+    "fallback": 0,
+    "timestamp": "2025-10-04T15:11:32.614Z"
+  },
+  "binder14_ready_FULL.md": {
+    "detected": 0,
+    "primary": 0,
+    "fallback": 0,
+    "timestamp": "2025-10-04T15:11:33.156Z"
+  },
+  "binder15_ready_FULL.md": {
+    "detected": 0,
+    "primary": 0,
+    "fallback": 0,
+    "timestamp": "2025-10-04T15:11:33.554Z"
+  },
+  "binder16_ready_FULL.md": {
+    "detected": 0,
+    "primary": 0,
+    "fallback": 0,
+    "timestamp": "2025-10-04T15:11:33.953Z"
+  },
+  "binder17_ready_FULL.md": {
+    "detected": 0,
+    "primary": 0,
+    "fallback": 0,
+    "timestamp": "2025-10-04T15:11:34.316Z"
+  },
+  "binder18_ready_FULL.md": {
+    "detected": 0,
+    "primary": 0,
+    "fallback": 0,
+    "timestamp": "2025-10-04T15:11:34.700Z"
+  },
+  "binder19_ready_FULL.md": {
+    "detected": 164160,
+    "primary": 0,
+    "fallback": 164160,
+    "timestamp": "2025-10-04T15:11:35.240Z"
+  },
+  "binder2_FULL.md": {
+    "detected": 14897,
+    "primary": 4209,
+    "fallback": 10688,
+    "timestamp": "2025-10-04T15:11:35.254Z"
+  },
+  "binder20_ready_FULL.md": {
+    "detected": 180790,
+    "primary": 36158,
+    "fallback": 144632,
+    "timestamp": "2025-10-04T15:11:35.794Z"
+  },
+  "binder21_ready_FULL.md": {
+    "detected": 76065,
+    "primary": 25355,
+    "fallback": 50710,
+    "timestamp": "2025-10-04T15:11:36.304Z"
+  },
+  "binder22_ready_FULL.md": {
+    "detected": 169600,
+    "primary": 42400,
+    "fallback": 127200,
+    "timestamp": "2025-10-04T15:11:36.913Z"
+  },
+  "binder23_ready_FULL.md": {
+    "detected": 235960,
+    "primary": 69400,
+    "fallback": 166560,
+    "timestamp": "2025-10-04T15:11:37.501Z"
+  },
+  "binder3_FULL.md": {
+    "detected": 7163,
+    "primary": 0,
+    "fallback": 7163,
+    "timestamp": "2025-10-04T15:11:37.514Z"
+  },
+  "binder3A_FULL.md": {
+    "detected": 386007,
+    "primary": 96501,
+    "fallback": 289506,
+    "timestamp": "2025-10-04T15:11:38.087Z"
+  },
+  "binder3B_FULL.md": {
+    "detected": 1,
+    "primary": 0,
+    "fallback": 1,
+    "timestamp": "2025-10-04T15:11:38.622Z"
+  },
+  "binder3C_full_FULL.md": {
+    "detected": 156373,
+    "primary": 0,
+    "fallback": 156373,
+    "timestamp": "2025-10-04T15:11:39.193Z"
+  },
+  "binder3C_full.md": {
+    "detected": 156373,
+    "primary": 0,
+    "fallback": 156373,
+    "timestamp": "2025-10-04T15:11:39.720Z"
+  },
+  "binder4_FULL.md": {
+    "detected": 17715,
+    "primary": 0,
+    "fallback": 17715,
+    "timestamp": "2025-10-04T15:11:39.738Z"
+  },
+  "binder5_FULL.md": {
+    "detected": 56545,
+    "primary": 10000,
+    "fallback": 46545,
+    "timestamp": "2025-10-04T15:11:39.773Z"
+  },
+  "binder6_FULL.md": {
+    "detected": 34114,
+    "primary": 4999,
+    "fallback": 29115,
+    "timestamp": "2025-10-04T15:11:39.801Z"
+  },
+  "binder7_FULL.md": {
+    "detected": 599999,
+    "primary": 100000,
+    "fallback": 499999,
+    "timestamp": "2025-10-04T15:11:40.445Z"
+  },
+  "binder8_FULL.md": {
+    "detected": 100000,
+    "primary": 0,
+    "fallback": 100000,
+    "timestamp": "2025-10-04T15:11:40.888Z"
+  },
+  "binder9_FULL.md": {
+    "detected": 352000,
+    "primary": 0,
+    "fallback": 352000,
+    "timestamp": "2025-10-04T15:11:41.444Z"
+  },
+  "EXPAND-REPORT.md": {
+    "detected": 1,
+    "primary": 0,
+    "fallback": 1,
+    "timestamp": "2025-10-04T15:11:41.444Z"
+  }
+}

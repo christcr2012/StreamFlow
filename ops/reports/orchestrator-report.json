@@ -1,0 +1,282 @@
+[
+  {
+    "binder": "binder1_FULL.md",
+    "endpoints": {
+      "primary": 0,
+      "fallback": 3318,
+      "total": 3318
+    },
+    "handled": true,
+    "mode": "generated"
+  },
+  {
+    "binder": "binder10_FULL.md",
+    "endpoints": {
+      "primary": 130001,
+      "fallback": 674013,
+      "total": 804014
+    },
+    "handled": true,
+    "mode": "generated"
+  },
+  {
+    "binder": "binder11_FULL.md",
+    "endpoints": {
+      "primary": 800,
+      "fallback": 168096,
+      "total": 168896
+    },
+    "handled": true,
+    "mode": "generated"
+  },
+  {
+    "binder": "binder12_FULL.md",
+    "endpoints": {
+      "primary": 0,
+      "fallback": 339709,
+      "total": 339709
+    },
+    "handled": true,
+    "mode": "generated"
+  },
+  {
+    "binder": "binder13_FULL.md",
+    "endpoints": {
+      "primary": 0,
+      "fallback": 0,
+      "total": 0
+    },
+    "handled": false,
+    "mode": "skip"
+  },
+  {
+    "binder": "binder14_ready_FULL.md",
+    "endpoints": {
+      "primary": 0,
+      "fallback": 0,
+      "total": 0
+    },
+    "handled": true,
+    "mode": "config-hub"
+  },
+  {
+    "binder": "binder15_ready_FULL.md",
+    "endpoints": {
+      "primary": 0,
+      "fallback": 0,
+      "total": 0
+    },
+    "handled": false,
+    "mode": "skip"
+  },
+  {
+    "binder": "binder16_ready_FULL.md",
+    "endpoints": {
+      "primary": 0,
+      "fallback": 0,
+      "total": 0
+    },
+    "handled": false,
+    "mode": "skip"
+  },
+  {
+    "binder": "binder17_ready_FULL.md",
+    "endpoints": {
+      "primary": 0,
+      "fallback": 0,
+      "total": 0
+    },
+    "handled": false,
+    "mode": "skip"
+  },
+  {
+    "binder": "binder18_ready_FULL.md",
+    "endpoints": {
+      "primary": 0,
+      "fallback": 0,
+      "total": 0
+    },
+    "handled": false,
+    "mode": "skip"
+  },
+  {
+    "binder": "binder19_ready_FULL.md",
+    "endpoints": {
+      "primary": 0,
+      "fallback": 164160,
+      "total": 164160
+    },
+    "handled": true,
+    "mode": "generated"
+  },
+  {
+    "binder": "binder2_FULL.md",
+    "endpoints": {
+      "primary": 4209,
+      "fallback": 10688,
+      "total": 14897
+    },
+    "handled": true,
+    "mode": "generated"
+  },
+  {
+    "binder": "binder20_ready_FULL.md",
+    "endpoints": {
+      "primary": 36158,
+      "fallback": 144632,
+      "total": 180790
+    },
+    "handled": true,
+    "mode": "generated"
+  },
+  {
+    "binder": "binder21_ready_FULL.md",
+    "endpoints": {
+      "primary": 25355,
+      "fallback": 50710,
+      "total": 76065
+    },
+    "handled": true,
+    "mode": "generated"
+  },
+  {
+    "binder": "binder22_ready_FULL.md",
+    "endpoints": {
+      "primary": 42400,
+      "fallback": 127200,
+      "total": 169600
+    },
+    "handled": true,
+    "mode": "generated"
+  },
+  {
+    "binder": "binder23_ready_FULL.md",
+    "endpoints": {
+      "primary": 69400,
+      "fallback": 166560,
+      "total": 235960
+    },
+    "handled": true,
+    "mode": "generated"
+  },
+  {
+    "binder": "binder3_FULL.md",
+    "endpoints": {
+      "primary": 0,
+      "fallback": 7163,
+      "total": 7163
+    },
+    "handled": true,
+    "mode": "generated"
+  },
+  {
+    "binder": "binder3A_FULL.md",
+    "endpoints": {
+      "primary": 96501,
+      "fallback": 289506,
+      "total": 386007
+    },
+    "handled": true,
+    "mode": "generated"
+  },
+  {
+    "binder": "binder3B_FULL.md",
+    "endpoints": {
+      "primary": 0,
+      "fallback": 1,
+      "total": 1
+    },
+    "handled": true,
+    "mode": "generated"
+  },
+  {
+    "binder": "binder3C_full_FULL.md",
+    "endpoints": {
+      "primary": 0,
+      "fallback": 156373,
+      "total": 156373
+    },
+    "handled": true,
+    "mode": "generated"
+  },
+  {
+    "binder": "binder3C_full.md",
+    "endpoints": {
+      "primary": 0,
+      "fallback": 156373,
+      "total": 156373
+    },
+    "handled": true,
+    "mode": "generated"
+  },
+  {
+    "binder": "binder4_FULL.md",
+    "endpoints": {
+      "primary": 0,
+      "fallback": 17715,
+      "total": 17715
+    },
+    "handled": true,
+    "mode": "generated"
+  },
+  {
+    "binder": "binder5_FULL.md",
+    "endpoints": {
+      "primary": 10000,
+      "fallback": 46545,
+      "total": 56545
+    },
+    "handled": true,
+    "mode": "generated"
+  },
+  {
+    "binder": "binder6_FULL.md",
+    "endpoints": {
+      "primary": 4999,
+      "fallback": 29115,
+      "total": 34114
+    },
+    "handled": true,
+    "mode": "generated"
+  },
+  {
+    "binder": "binder7_FULL.md",
+    "endpoints": {
+      "primary": 100000,
+      "fallback": 499999,
+      "total": 599999
+    },
+    "handled": true,
+    "mode": "generated"
+  },
+  {
+    "binder": "binder8_FULL.md",
+    "endpoints": {
+      "primary": 0,
+      "fallback": 100000,
+      "total": 100000
+    },
+    "handled": true,
+    "mode": "generated"
+  },
+  {
+    "binder": "binder9_FULL.md",
+    "endpoints": {
+      "primary": 0,
+      "fallback": 352000,
+      "total": 352000
+    },
+    "handled": true,
+    "mode": "generated"
+  },
+  {
+    "binder": "EXPAND-REPORT.md",
+    "endpoints": {
+      "primary": 0,
+      "fallback": 1,
+      "total": 1
+    },
+    "handled": true,
+    "mode": "generated"
+  }
+]
