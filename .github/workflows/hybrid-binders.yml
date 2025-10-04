@@ -1,0 +1,119 @@
+name: Hybrid Binder Executor
+
+on:
+  push:
+    branches: [main, binder-*]
+  workflow_dispatch:
+    inputs:
+      memory_limit:
+        description: 'Node.js memory limit (MB)'
+        required: false
+        default: '8192'
+
+jobs:
+  hybrid-execution:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run Hybrid Binder Executor
+        id: hybrid
+        run: npm run hybrid:binders
+        continue-on-error: true
+        env:
+          NODE_OPTIONS: --max-old-space-size=${{ github.event.inputs.memory_limit || '8192' }}
+      
+      - name: Upload Hybrid Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hybrid-execution-reports
+          path: |
+            ops/reports/hybrid-run-report.json
+            ops/reports/FAILURE_REPORT.md
+            ops/reports/validation_*.json
+            ops/reports/orchestrator-report.json
+          retention-days: 30
+      
+      - name: Read Hybrid Report
+        if: always()
+        id: report
+        run: |
+          if (Test-Path ops/reports/hybrid-run-report.json) {
+            $report = Get-Content ops/reports/hybrid-run-report.json | ConvertFrom-Json
+            echo "total=$($report.total_binders)" >> $env:GITHUB_OUTPUT
+            echo "successful=$($report.successful)" >> $env:GITHUB_OUTPUT
+            echo "failed=$($report.failed)" >> $env:GITHUB_OUTPUT
+            echo "success_rate=$($report.success_rate)" >> $env:GITHUB_OUTPUT
+          }
+      
+      - name: Comment on Commit
+        if: always() && github.event_name == 'push'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            let comment = '## 🔄 Hybrid Binder Execution Report\n\n';
+            
+            if (fs.existsSync('ops/reports/hybrid-run-report.json')) {
+              const report = JSON.parse(fs.readFileSync('ops/reports/hybrid-run-report.json', 'utf8'));
+              
+              const status = report.success_rate >= 95 ? '✅ PASSED' : '❌ FAILED';
+              
+              comment += `**Status:** ${status}\n\n`;
+              comment += '### Metrics\n\n';
+              comment += `| Metric | Value |\n`;
+              comment += `|--------|-------|\n`;
+              comment += `| Total Binders | ${report.total_binders} |\n`;
+              comment += `| Successful | ${report.successful} |\n`;
+              comment += `| Failed | ${report.failed} |\n`;
+              comment += `| Skipped | ${report.skipped} |\n`;
+              comment += `| Success Rate | ${report.success_rate}% |\n`;
+              comment += `| Duration | ${report.duration_seconds}s |\n\n`;
+              
+              if (report.failed > 0) {
+                comment += '### ❌ Failed Binders\n\n';
+                report.binders
+                  .filter(b => b.status === 'failed' || b.status === 'config_hub_failed')
+                  .forEach(b => {
+                    comment += `- **${b.binder}**: ${b.error || 'unknown error'}\n`;
+                  });
+                comment += '\n';
+              }
+            }
+            
+            comment += '\n📄 Full reports available in workflow artifacts.\n';
+            
+            // Create a comment on the commit
+            await github.rest.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+              body: comment
+            });
+      
+      - name: Check Execution Result
+        if: steps.hybrid.outcome == 'failure'
+        run: |
+          Write-Host "❌ Hybrid binder execution failed"
+          if (Test-Path ops/reports/FAILURE_REPORT.md) {
+            Write-Host "`n📄 Failure Report:"
+            Get-Content ops/reports/FAILURE_REPORT.md | Select-Object -First 50
+          }
+          exit 1
+

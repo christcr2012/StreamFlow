@@ -1,0 +1,26 @@
+{
+  "summary": {
+    "apiFiles": 32807,
+    "uiFiles": 7795,
+    "apiMarkerSampleHits": 0,
+    "mappingChecked": 26,
+    "mappingMatched": 26,
+    "mappingPct": 100,
+    "thresholds": {
+      "minApi": 100,
+      "minUi": 10,
+      "requiredSuccessRate": 95
+    }
+  },
+  "reportsFound": {
+    "orchestrator": true,
+    "validation_pre": true,
+    "validation_post": true
+  },
+  "checks": {
+    "hasEnoughApi": true,
+    "hasEnoughUi": true,
+    "mappingMeetsThreshold": true
+  },
+  "pass": true
+}
