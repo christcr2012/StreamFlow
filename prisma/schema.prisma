@@ -5383,3 +5383,57 @@ model integrations_vendor_tokens {
   
   @@map("integrations_vendor_tokens")
 }
+
+
+model CrmOpportunity {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // TODO: Add fields from binder2_FULL line 87
+}
+
+
+model CrmContact {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // TODO: Add fields from binder2_FULL line 173
+}
+
+
+model CrmOrganization {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // TODO: Add fields from binder2_FULL line 228
+}
+
+
+model RateLimitPolicy {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // TODO: Add fields from binder2_FULL line 533
+}
+
+
+model TenantUsageWindow {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // TODO: Add fields from binder2_FULL line 553
+}
+
+
+model ScalingEvent {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // TODO: Add fields from binder2_FULL line 569
+}
