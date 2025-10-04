@@ -53,11 +53,18 @@ if (!(Ensure-Python)) {
 if (!(Ensure-FilterRepo)) {
   Log "Installing git-filter-repo via pip for current user…"
   python -m pip install --user git-filter-repo
-  
-  # Add user Scripts path for this session
-  $userScripts = Join-Path $env:USERPROFILE "AppData\Roaming\Python\Python311\Scripts"
-  if (Test-Path $userScripts) { $env:PATH = "$env:PATH;$userScripts" }
-  
+
+  # Add user Scripts path for this session (try multiple Python versions)
+  $pythonVersions = @("Python313", "Python312", "Python311", "Python310", "Python39")
+  foreach ($ver in $pythonVersions) {
+    $userScripts = Join-Path $env:USERPROFILE "AppData\Roaming\Python\$ver\Scripts"
+    if (Test-Path $userScripts) {
+      $env:PATH = "$env:PATH;$userScripts"
+      Log "Added $userScripts to PATH"
+      break
+    }
+  }
+
   if (!(Ensure-FilterRepo)) { Fail "git-filter-repo still not available after install." }
 }
 
