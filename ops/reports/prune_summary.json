@@ -1,0 +1,24 @@
+{
+  "timestamp": "2025-10-04T22:20:48.183Z",
+  "before": {
+    "api_files": 32807,
+    "ui_files": 40692
+  },
+  "after": {
+    "api_files": 59,
+    "ui_files": 26
+  },
+  "removed": {
+    "apis": 32748,
+    "ui": 0,
+    "total": 32748
+  },
+  "kept": {
+    "apis": 59,
+    "ui": 26
+  },
+  "reduction_percent": {
+    "apis": "99.82",
+    "ui": "0.00"
+  }
+}
