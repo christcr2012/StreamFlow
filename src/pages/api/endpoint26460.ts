@@ -4,9 +4,8 @@ import { withAudience } from '@/middleware/audience';
 import { prisma } from '@/lib/prisma';
 import { auditService } from '@/lib/auditService';
 
-// Schema for POST /api/v4/endpoint26460
 const RequestSchema = z.object({
-  // TODO: Add request fields from binder specification
+  // TODO: Define request schema based on API specification
 });
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -20,40 +19,23 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const validated = RequestSchema.parse(req.body);
     const tenantId = req.headers['x-org-id'] as string || 'org_test';
-    
-    // Check for idempotency
     const idempotencyKey = req.headers['x-idempotency-key'] as string;
     
-    // TODO: Implement business logic from binder specification
-    // Binder specification:
-    // 
-    // - **Method**: POST
-    // - **Path**: /api/v4/endpoint26460
-    // - **Headers**: X-Idempotency-Key: ik-26460
-    // - **Request**:
-    // ```json
-    // {"tenant_id": "T001", "request_id": "req-26460", "actor": {"user_id": "U1", "role": "tenant_manager"}, "payload": {"field": 26460, "op": "upsert", "value": "V26460"}, "idempotency_key": "ik-26460"}
-    // ```
-    // - **Response**:
-    // ```json
+    // TODO: Implement business logic
     
-    // Audit log
     await auditService.log({
       tenantId,
-      action: 'POST_endpoint26460',
+      action: '_api_v4_endpoint26460',
       userId: req.headers['x-user-id'] as string,
       metadata: { idempotencyKey },
     });
 
-    return res.status(200).json({
-      ok: true,
-      data: {},
-    });
+    return res.status(200).json({ ok: true, data: {} });
   } catch (error) {
     console.error('API Error:', error);
-    return res.status(500).json({
-      ok: false,
-      error: { code: 'INTERNAL_ERROR', message: 'Internal server error' },
+    return res.status(500).json({ 
+      ok: false, 
+      error: { code: 'INTERNAL_ERROR', message: 'Internal server error' } 
     });
   }
 }
