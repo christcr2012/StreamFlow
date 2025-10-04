@@ -1,4 +1,5 @@
 import withPWA from 'next-pwa';
+import path from 'path';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -80,10 +81,24 @@ const nextConfig = {
       hints: false, // Disable warnings
     };
 
-    // Reduce file watching overhead
+    // Reduce file watching overhead with proper absolute paths
+    const rootDir = process.cwd();
     config.watchOptions = {
       ...config.watchOptions,
-      ignored: /node_modules|\.next|ops|docs|binderFiles|attached_assets/,
+      ignored: [
+        path.join(rootDir, 'node_modules'),
+        path.join(rootDir, '.next'),
+        path.join(rootDir, 'ops'),
+        path.join(rootDir, 'docs'),
+        path.join(rootDir, 'binderFiles'),
+        path.join(rootDir, 'attached_assets'),
+        '**/node_modules/**',
+        '**/.next/**',
+        '**/ops/**',
+        '**/docs/**',
+        '**/binderFiles/**',
+        '**/attached_assets/**',
+      ],
       aggregateTimeout: 300,
       poll: false,
     };
