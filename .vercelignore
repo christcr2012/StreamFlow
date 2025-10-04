@@ -1,0 +1,82 @@
+# Vercel Ignore - Exclude unnecessary files from deployment
+
+# Development files
+.git/
+.github/
+.vscode/
+.idea/
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Test files
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+__tests__/
+tests/
+
+# Build artifacts
+.next/
+out/
+dist/
+build/
+
+# Dependencies (will be installed by Vercel)
+node_modules/
+
+# Environment files (use Vercel env vars)
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+ops/logs/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Binder files (not needed for deployment)
+binderFiles/
+ops/manifests/
+*.manifest.json
+*.manifest.ndjson
+
+# Scripts (not needed for runtime)
+scripts/
+!scripts/seed.ts
+
+# Attached assets (large files)
+attached_assets/
+
+# Reports
+ops/reports/
+
+# Git files
+.gitignore
+.gitattributes
+
+# PowerShell scripts
+*.ps1
+
+# Database files
+*.db
+*.db-journal
+
+# Prisma migrations (will be applied via build command)
+# Keep migrations but exclude dev artifacts
+prisma/dev.db*
+

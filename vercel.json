@@ -1,8 +1,35 @@
 {
+  "buildCommand": "prisma generate && prisma migrate deploy && next build",
+  "installCommand": "npm ci",
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "functions": {
+    "src/pages/api/**/*.ts": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  },
   "crons": [
     {
       "path": "/api/billing/invoices.create?range=d30",
       "schedule": "0 10 1 * *"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, must-revalidate"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/health",
+      "destination": "/api/health"
     }
   ]
 }

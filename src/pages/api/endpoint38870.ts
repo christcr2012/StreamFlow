@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
 import { withAudience } from '@/middleware/audience';
 import { prisma } from '@/lib/prisma';
-import { auditService } from '@/lib/auditService';
+import { AuditService, auditService } from '@/lib/auditService';
 
 const RequestSchema = z.object({
   // TODO: Define request schema based on API specification
@@ -23,7 +23,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     
     // TODO: Implement business logic
     
-    await auditService.log({
+    await AuditService.log({
       tenantId,
       action: '_api_v4_endpoint38870',
       userId: req.headers['x-user-id'] as string,
@@ -40,4 +40,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withAudience(['client'])(handler);
+export default withAudience('client')(handler);
