@@ -1,0 +1,319 @@
+{
+  "timestamp": "2025-10-04T17:01:12.691Z",
+  "duration_seconds": 548,
+  "total_binders": 28,
+  "successful": 27,
+  "failed": 0,
+  "skipped": 1,
+  "binders": [
+    {
+      "binder": "EXPAND-REPORT.md",
+      "status": "skipped",
+      "reason": "no_content",
+      "preValidation": {
+        "detected": 0,
+        "primary": 0,
+        "fallback": 0,
+        "hasContent": false
+      }
+    },
+    {
+      "binder": "binder1_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 3220,
+        "primary": 0,
+        "fallback": 3220,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder2_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 20112,
+        "primary": 4209,
+        "fallback": 15903,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder3A_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 386020,
+        "primary": 96501,
+        "fallback": 289519,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder3B_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 390074,
+        "primary": 0,
+        "fallback": 390074,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder3C_full.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 305844,
+        "primary": 0,
+        "fallback": 305844,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder3C_full_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 305847,
+        "primary": 0,
+        "fallback": 305847,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder3_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 10121,
+        "primary": 0,
+        "fallback": 10121,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder4_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 24381,
+        "primary": 0,
+        "fallback": 24381,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder5_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 61926,
+        "primary": 10000,
+        "fallback": 51926,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder6_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 53234,
+        "primary": 4999,
+        "fallback": 48235,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder7_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 761048,
+        "primary": 100000,
+        "fallback": 661048,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder8_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 150004,
+        "primary": 0,
+        "fallback": 150004,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder9_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 400004,
+        "primary": 0,
+        "fallback": 400004,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder10_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 976021,
+        "primary": 130001,
+        "fallback": 846020,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder11_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 192136,
+        "primary": 800,
+        "fallback": 191336,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder12_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 156724,
+        "primary": 0,
+        "fallback": 156724,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder13_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 3,
+        "primary": 0,
+        "fallback": 3,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder14_ready_FULL.md",
+      "status": "config_hub_success",
+      "preValidation": {
+        "detected": 3,
+        "primary": 0,
+        "fallback": 3,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder15_ready_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 169003,
+        "primary": 0,
+        "fallback": 169003,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder16_ready_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 3,
+        "primary": 0,
+        "fallback": 3,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder17_ready_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 3,
+        "primary": 0,
+        "fallback": 3,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder18_ready_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 3,
+        "primary": 0,
+        "fallback": 3,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder19_ready_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 200644,
+        "primary": 0,
+        "fallback": 200644,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder20_ready_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 361584,
+        "primary": 36158,
+        "fallback": 325426,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder21_ready_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 304264,
+        "primary": 25355,
+        "fallback": 278909,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder22_ready_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 254404,
+        "primary": 42400,
+        "fallback": 212004,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    },
+    {
+      "binder": "binder23_ready_FULL.md",
+      "status": "fallback_success",
+      "preValidation": {
+        "detected": 444165,
+        "primary": 69400,
+        "fallback": 374765,
+        "hasContent": true
+      },
+      "method": "orchestrator"
+    }
+  ],
+  "success_rate": 96
+}
