@@ -4,28 +4,53 @@ import withPWA from 'next-pwa';
 const nextConfig = {
   reactStrictMode: true,
 
-  // Optimize for Vercel deployment with large codebase
-  swcMinify: true,
-
   // Fix workspace root warning for multiple lockfiles
   outputFileTracingRoot: process.cwd(),
 
-  // Optimize build performance
+  // Optimize build performance for large codebase (32k+ files)
   experimental: {
-    // Reduce memory usage during build
+    // Reduce memory usage and file handles during build
     workerThreads: false,
     cpus: 1,
+    // Disable file system cache to reduce open file handles
+    isrMemoryCacheSize: 0,
   },
 
-  // Webpack optimizations for large codebase
-  webpack: (config, { isServer }) => {
+  // Webpack optimizations for large codebase (32k+ files)
+  webpack: (config, { isServer, dev }) => {
+    // Critical: Reduce file system pressure
+    config.cache = dev ? {
+      type: 'filesystem',
+      compression: 'gzip',
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    } : false;
+
+    // Reduce concurrent file operations
+    config.parallelism = 1;
+
+    // Optimize module resolution to reduce file lookups
+    config.resolve = {
+      ...config.resolve,
+      symlinks: false,
+      cacheWithContext: false,
+    };
+
+    // Disable source maps in production to reduce file I/O
+    if (!dev) {
+      config.devtool = false;
+    }
+
     // Optimize for large number of files
     config.optimization = {
       ...config.optimization,
       moduleIds: 'deterministic',
       runtimeChunk: isServer ? undefined : 'single',
+      removeAvailableModules: false,
+      removeEmptyChunks: false,
       splitChunks: isServer ? false : {
         chunks: 'all',
+        maxInitialRequests: 25,
+        minSize: 20000,
         cacheGroups: {
           default: false,
           vendors: false,
@@ -54,7 +79,16 @@ const nextConfig = {
       ...config.performance,
       maxAssetSize: 512000,
       maxEntrypointSize: 512000,
+      hints: false, // Disable warnings
     };
+
+    // Reduce file watching overhead
+    if (config.watchOptions) {
+      config.watchOptions = {
+        ...config.watchOptions,
+        ignored: ['**/node_modules', '**/.next', '**/ops', '**/docs'],
+      };
+    }
 
     return config;
   },

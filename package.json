@@ -11,6 +11,8 @@
     "gen-key": "tsx scripts/gen-key.ts",
     "dev": "next dev -p 5000",
     "build": "prisma migrate deploy && next build",
+    "build:optimized": "powershell -ExecutionPolicy Bypass -File scripts/build-with-limits.ps1",
+    "build:vercel": "prisma generate && prisma migrate deploy && next build",
     "start": "next start",
     "postinstall": "prisma generate",
     "seed": "tsx prisma/seed.ts",
@@ -19,7 +21,9 @@
     "typecheck:api": "cross-env NODE_OPTIONS=--max-old-space-size=8192 tsc -p tsconfig.api.json --noEmit",
     "typecheck:ui": "cross-env NODE_OPTIONS=--max-old-space-size=8192 tsc -p tsconfig.ui.json --noEmit",
     "verify:binders": "node scripts/verify-real-code.js",
-    "guard:binders": "powershell -ExecutionPolicy Bypass -File scripts/augment-verify-and-guard.ps1"
+    "guard:binders": "powershell -ExecutionPolicy Bypass -File scripts/augment-verify-and-guard.ps1",
+    "reduce-api-files": "powershell -ExecutionPolicy Bypass -File scripts/reduce-api-files.ps1",
+    "restore-api-files": "powershell -ExecutionPolicy Bypass -File scripts/restore-api-files.ps1"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",
