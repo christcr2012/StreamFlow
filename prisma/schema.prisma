@@ -4850,7 +4850,6 @@ model IF {
 
 model tenants {
   id String @id @default(cuid())
-  id String
   name String
   plan String
   created_at DateTime
@@ -4864,7 +4863,6 @@ model tenants {
 
 model business_units {
   id String @id @default(cuid())
-  id String
   tenant_id String
   name String
   timezone String
@@ -4879,7 +4877,6 @@ model business_units {
 
 model lines_of_business {
   id String @id @default(cuid())
-  id String
   tenant_id String
   bu_id String
   key String
@@ -4895,7 +4892,6 @@ model lines_of_business {
 
 model vendor_roles {
   id String @id @default(cuid())
-  id String
   key String
   description String
   // Generated from binder3_FULL line 125
@@ -4907,7 +4903,6 @@ model vendor_roles {
 
 model users {
   id String @id @default(cuid())
-  id String
   tenant_id String
   email String
   password_hash String
@@ -4925,7 +4920,6 @@ model users {
 
 model fleet_vehicles {
   id String @id @default(cuid())
-  id String
   tenant_id String
   bu_id String
   asset_tag String
@@ -4946,7 +4940,6 @@ model fleet_vehicles {
 
 model fleet_maintenance_tickets {
   id String @id @default(cuid())
-  id String
   tenant_id String
   vehicle_id String
   opened_by String
@@ -4967,7 +4960,6 @@ model fleet_maintenance_tickets {
 
 model integration_configs {
   id String @id @default(cuid())
-  id String
   tenant_id String
   type String
   status String
@@ -4983,7 +4975,6 @@ model integration_configs {
 
 model geotab_dvir_logs {
   id String @id @default(cuid())
-  id String
   tenant_id String
   device_id String
   driver_id String
@@ -5001,7 +4992,6 @@ model geotab_dvir_logs {
 
 model holman_fuel_transactions {
   id String @id @default(cuid())
-  id String
   tenant_id String
   vehicle_ref String
   driver_pin String
@@ -5019,7 +5009,6 @@ model holman_fuel_transactions {
 
 model pricing_catalog {
   id String @id @default(cuid())
-  id String
   key String
   list_price_cents BigInt
   adoption_discount_eligible Boolean
@@ -5032,7 +5021,6 @@ model pricing_catalog {
 
 model tenant_entitlements {
   id String @id @default(cuid())
-  id String
   tenant_id String
   key String
   enabled Boolean
@@ -5047,7 +5035,6 @@ model tenant_entitlements {
 
 model credits_ledger {
   id String @id @default(cuid())
-  id String
   tenant_id String
   key String
   delta_cents BigInt
@@ -5062,7 +5049,6 @@ model credits_ledger {
 
 model usage_ledger {
   id String @id @default(cuid())
-  id String
   tenant_id String
   key String
   quantity BigInt
@@ -5078,7 +5064,6 @@ model usage_ledger {
 
 model audit_logs {
   id String @id @default(cuid())
-  id String
   tenant_id String
   user_id String
   role String
@@ -5095,7 +5080,6 @@ model audit_logs {
 
 model crm_leads {
   id String @id @default(cuid())
-  id String
   tenant_id String
   bu_id String
   first_name String
@@ -5111,7 +5095,6 @@ model crm_leads {
 
 model crm_orgs {
   id String @id @default(cuid())
-  id String
   tenant_id String
   name String
   created_at DateTime
@@ -5124,7 +5107,6 @@ model crm_orgs {
 
 model crm_contacts {
   id String @id @default(cuid())
-  id String
   tenant_id String
   org_id String
   first_name String
@@ -5139,7 +5121,6 @@ model crm_contacts {
 
 model crm_opps {
   id String @id @default(cuid())
-  id String
   tenant_id String
   org_id String
   contact_id String
@@ -5154,7 +5135,6 @@ model crm_opps {
 
 model schedule_jobs {
   id String @id @default(cuid())
-  id String
   org_id String
   status String
   // Generated from binder4_FULL line 4158
@@ -5166,7 +5146,6 @@ model schedule_jobs {
 
 model schedule_visits {
   id String @id @default(cuid())
-  id String
   job_id String
   scheduled_at DateTime
   status String
@@ -5179,7 +5158,6 @@ model schedule_visits {
 
 model billing_estimates {
   id String @id @default(cuid())
-  id String
   org_id String
   created_at DateTime
   // Generated from binder4_FULL line 4176
@@ -5191,7 +5169,6 @@ model billing_estimates {
 
 model billing_estimate_lines {
   id String @id @default(cuid())
-  id String
   sku String
   // Generated from binder4_FULL line 4181
   // Operation: create_table
@@ -5202,7 +5179,6 @@ model billing_estimate_lines {
 
 model billing_invoices {
   id String @id @default(cuid())
-  id String
   org_id String
   created_at DateTime
   // Generated from binder4_FULL line 4188
@@ -5214,7 +5190,6 @@ model billing_invoices {
 
 model billing_invoice_lines {
   id String @id @default(cuid())
-  id String
   sku String
   // Generated from binder4_FULL line 4193
   // Operation: create_table
@@ -5225,7 +5200,6 @@ model billing_invoice_lines {
 
 model billing_payments {
   id String @id @default(cuid())
-  id String
   amount_cents BigInt
   // Generated from binder4_FULL line 4197
   // Operation: create_table
@@ -5236,7 +5210,6 @@ model billing_payments {
 
 model inventory_items {
   id String @id @default(cuid())
-  id String
   sku String
   // Generated from binder4_FULL line 4204
   // Operation: create_table
@@ -5247,7 +5220,6 @@ model inventory_items {
 
 model inventory_bins {
   id String @id @default(cuid())
-  id String
   name String
   // Generated from binder4_FULL line 4208
   // Operation: create_table
@@ -5258,7 +5230,6 @@ model inventory_bins {
 
 model inventory_stock {
   id String @id @default(cuid())
-  id String
   item_id String
   bin_id String
   // Generated from binder4_FULL line 4212
@@ -5270,7 +5241,6 @@ model inventory_stock {
 
 model subs_vendors {
   id String @id @default(cuid())
-  id String
   email String
   // Generated from binder4_FULL line 4222
   // Operation: create_table
@@ -5281,7 +5251,6 @@ model subs_vendors {
 
 model subs_work_orders {
   id String @id @default(cuid())
-  id String
   job_id String
   // Generated from binder4_FULL line 4226
   // Operation: create_table
@@ -5292,7 +5261,6 @@ model subs_work_orders {
 
 model subs_milestones {
   id String @id @default(cuid())
-  id String
   title String
   // Generated from binder4_FULL line 4230
   // Operation: create_table
@@ -5303,7 +5271,6 @@ model subs_milestones {
 
 model subs_payouts {
   id String @id @default(cuid())
-  id String
   amount_cents BigInt
   // Generated from binder4_FULL line 4234
   // Operation: create_table
@@ -5314,7 +5281,6 @@ model subs_payouts {
 
 model portal_sessions {
   id String @id @default(cuid())
-  id String
   token String
   // Generated from binder4_FULL line 4241
   // Operation: create_table
@@ -5325,7 +5291,6 @@ model portal_sessions {
 
 model finance_cost_centers {
   id String @id @default(cuid())
-  id String
   tenant_id String
   bu_id String
   name String
@@ -5340,7 +5305,6 @@ model finance_cost_centers {
 
 model finance_budgets {
   id String @id @default(cuid())
-  id String
   tenant_id String
   cost_center_id String
   period_d String
@@ -5355,7 +5319,6 @@ model finance_budgets {
 
 model time_entries {
   id String @id @default(cuid())
-  id String
   tenant_id String
   user_id String
   visit_id String
@@ -5371,7 +5334,6 @@ model time_entries {
 
 model integrations_vendor_tokens {
   id String @id @default(cuid())
-  id String
   tenant_id String
   vendor String
   data Json
