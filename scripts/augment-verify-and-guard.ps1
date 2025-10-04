@@ -5,9 +5,9 @@ param(
   [int]$RequiredSuccessRate = 95
 )
 
-Write-Host "╔════════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-Write-Host "║  AUGMENT BINDER VERIFICATION & GUARD PIPELINE                  ║" -ForegroundColor Cyan
-Write-Host "╚════════════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
+Write-Host "================================================================" -ForegroundColor Cyan
+Write-Host "  AUGMENT BINDER VERIFICATION & GUARD PIPELINE" -ForegroundColor Cyan
+Write-Host "================================================================" -ForegroundColor Cyan
 Write-Host ""
 
 Write-Host "== Phase 0: Quick stats ==" -ForegroundColor Yellow
@@ -58,8 +58,8 @@ if (Test-Path ops/reports/VERIFY_SUMMARY.md) {
   Write-Warning "VERIFY_SUMMARY.md not found"
 }
 
-Write-Host "`n╔════════════════════════════════════════════════════════════════╗" -ForegroundColor Green
-Write-Host "║  ✅ PASS: All checks succeeded.                                ║" -ForegroundColor Green
-Write-Host "╚════════════════════════════════════════════════════════════════╝" -ForegroundColor Green
+Write-Host "`n================================================================" -ForegroundColor Green
+Write-Host "  PASS: All checks succeeded." -ForegroundColor Green
+Write-Host "================================================================" -ForegroundColor Green
 exit 0
 

@@ -18,8 +18,13 @@
     "typecheck": "cross-env NODE_OPTIONS=--max-old-space-size=8192 tsc --noEmit --skipLibCheck",
     "typecheck:api": "cross-env NODE_OPTIONS=--max-old-space-size=8192 tsc -p tsconfig.api.json --noEmit",
     "typecheck:ui": "cross-env NODE_OPTIONS=--max-old-space-size=8192 tsc -p tsconfig.ui.json --noEmit",
-    "verify:binders": "node scripts/verify-real-code.js",
-    "guard:binders": "powershell -ExecutionPolicy Bypass -File scripts/augment-verify-and-guard.ps1"
+    "guard:binders": "cross-env NODE_OPTIONS=--max-old-space-size=8192 node scripts/guard-binders.js",
+    "binders:pre": "node scripts/validate-binders-new.js --phase pre",
+    "binders:run": "node scripts/binder-orchestrator-new.js",
+    "binders:post": "node scripts/validate-binders-new.js --phase post",
+    "binders:retry": "node scripts/retry-failed-binders.js",
+    "binders:verify": "node scripts/verify-real-code.js",
+    "binders:quickstat": "powershell -ExecutionPolicy Bypass -File scripts/quick-stat.ps1"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",
