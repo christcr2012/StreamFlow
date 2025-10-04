@@ -1,0 +1,15 @@
+{
+  "timestamp": "2025-10-04T17:39:12.128Z",
+  "successRate": 100,
+  "mappingScore": 96,
+  "threshold": 95,
+  "totalBinders": 28,
+  "processedBinders": 28,
+  "needsHeal": [],
+  "passed": false,
+  "orchestrator": {
+    "total": 28,
+    "handled": 27,
+    "skipped": 1
+  }
+}

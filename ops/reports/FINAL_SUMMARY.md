@@ -1,69 +1,21 @@
-# Binder Execution Summary
+# Hybrid Binder Execution - Final Summary
 
-**Generated:** 2025-10-04  
-**Branch:** binder-rebuild-solid  
-**Status:** ✅ **SUCCESS - READY TO MERGE**
+**Generated:** 2025-10-04T17:39:12.127Z
 
-## 📊 Executive Summary
+## Metrics
 
-| Metric | Result | Status |
-|--------|--------|--------|
-| **Success Rate** | **100.0%** (28/28) | ✅ **PASSED** |
-| **Threshold** | 95.0% | ✅ **EXCEEDED** |
-| **Prisma Generation** | Success | ✅ **PASSED** |
-| **Binders Processed** | 28/28 | ✅ **100%** |
-| **Total Items Detected** | 5,930,795 | ✅ **ROBUST** |
+- **Total Binders:** 28
+- **Processed Successfully:** 28
+- **Success Rate:** 100%
+- **Threshold:** 95%
+- **Mapping Score:** 96%
 
-## 🎯 Key Achievements
+## Status
 
-- **Detection Fixed:** 5.9M items detected (vs 4.0M previously)
-- **False Empties Eliminated:** Only 1 empty binder (expected)
-- **Binder14 Config Hub:** All artifacts generated
-- **Memory Management:** Sharded TS configs prevent OOM
+NEEDS ATTENTION - Success: 100%, Mapping: 96%
 
-## 📋 Binder Results (28 Total)
+## Orchestrator Summary
 
-All 28 binders processed successfully with robust detection patterns.
-
-## ✅ Validation Gates
-
-| Gate | Requirement | Result | Status |
-|------|-------------|--------|--------|
-| Success Rate | ≥ 95% | 100.0% | ✅ PASS |
-| Prisma Generation | Must succeed | Success | ✅ PASS |
-| Binder14 Artifacts | Must exist | All present | ✅ PASS |
-
-## 🚀 Recommendation: **MERGE TO MAIN**
-
-**Rationale:**
-1. 100% success rate exceeds 95% threshold
-2. Prisma generation passes
-3. Robust detection eliminates false negatives
-4. Binder14 config hub fully operational
-
-**Reports:**
-- ops/reports/validation_pre.json
-- ops/reports/validation_post.json
-- ops/reports/orchestrator-report.json
-- ops/reports/FINAL_SUMMARY.md
-
-
----
-
-
----
-
-
----
-
-## 🔧 Self-Heal Report
-
-**Timestamp:** 2025-10-04T17:01:53.852Z
-**Failed Binders:** 1
-**Retry Attempts:** 1
-**Successfully Healed:** 1
-**Still Failed:** 0
-
-### Binder Details
-
-- **EXPAND-REPORT.md**: healed (1 attempts) - not handled
+- **Total Entries:** 28
+- **Handled:** 27
+- **Skipped:** 1
