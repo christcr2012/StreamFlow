@@ -102,3 +102,48 @@ binderFiles/
 ops/manifests/
 *.manifest.json
 *.manifest.ndjson
+
+# Generated API endpoints (massive auto-generated files)
+src/pages/api/endpoint*.ts
+
+# Temporary and backup files
+*.tmp
+*.temp
+*.bak
+*.backup
+*~
+.#*
+
+# Test and coverage
+*.test.js
+*.spec.js
+__tests__/
+test-results/
+
+# Build info
+tsconfig.tsbuildinfo
+.tsbuildinfo
+
+# Lock files (keep package-lock.json but ignore others)
+yarn.lock
+pnpm-lock.yaml
+
+# Prisma
+prisma/migrations/*_migration/
+*.db
+*.db-journal
+
+# Reports and logs (keep structure, ignore content)
+ops/reports/*.json
+ops/reports/*.log
+ops/logs/*.log
+ops/logs/*.txt
+
+# Storybook
+storybook-static/
+
+# Vercel
+.vercel
+
+# Turbo
+.turbo
