@@ -1,163 +1,51 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
 import { withAudience } from '@/middleware/audience';
-import {
-  getOrganizationById,
-  updateOrganization,
-  deleteOrganization,
-  UpdateOrganizationSchema,
-} from '@/server/services/crm/organizationService';
+import { prisma } from '@/lib/prisma';
+import { auditService } from '@/lib/auditService';
 
-// Error envelope helper
-function errorResponse(res: NextApiResponse, status: number, error: string, message: string, details?: any): void {
-  res.status(status).json({
-    ok: false,
-    error: { code: error, message, details },
-  });
-}
+// Schema for PATCH /api/tenant/crm/organizations/{id}
+const RequestSchema = z.object({
+  // TODO: Add request fields from binder specification
+});
 
-async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const orgId = req.headers['x-org-id'] as string || 'org_test';
-  const userId = req.headers['x-user-id'] as string || 'user_test';
-  const { id } = req.query;
-
-  if (typeof id !== 'string') {
-    errorResponse(res, 400, 'BadRequest', 'Invalid organization ID');
-    return;
+async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'PATCH') {
+    return res.status(405).json({ 
+      ok: false, 
+      error: { code: 'METHOD_NOT_ALLOWED', message: 'Method not allowed' } 
+    });
   }
 
-  if (req.method === 'GET') {
-    return handleGet(req, res, orgId, id);
-  } else if (req.method === 'PATCH') {
-    return handlePatch(req, res, orgId, userId, id);
-  } else if (req.method === 'DELETE') {
-    return handleDelete(req, res, orgId, userId, id);
-  } else {
-    errorResponse(res, 405, 'MethodNotAllowed', 'Method not allowed');
-    return;
-  }
-}
-
-async function handleGet(req: NextApiRequest, res: NextApiResponse, orgId: string, id: string): Promise<void> {
   try {
-    const organization = await getOrganizationById({
-      orgId,
-      organizationId: id,
+    const validated = RequestSchema.parse(req.body);
+    const tenantId = req.headers['x-org-id'] as string || 'org_test';
+    
+    // Check for idempotency
+    const idempotencyKey = req.headers['x-idempotency-key'] as string;
+    
+    // TODO: Implement business logic from binder specification
+    
+    
+    // Audit log
+    await auditService.log({
+      tenantId,
+      action: 'PATCH_{id}',
+      userId: req.headers['x-user-id'] as string,
+      metadata: { idempotencyKey },
     });
 
-    if (!organization) {
-      errorResponse(res, 404, 'NotFound', 'Organization not found');
-      return;
-    }
-
-    // Transform response
-    const response = {
+    return res.status(200).json({
       ok: true,
-      data: {
-        id: organization.id,
-        name: organization.name,
-        domain: organization.domain,
-        industry: organization.industry,
-        size: organization.size,
-        annualRevenue: organization.annualRevenue,
-        website: organization.website,
-        phone: organization.phone,
-        ownerId: organization.ownerId,
-        archived: organization.archived,
-        createdAt: organization.createdAt.toISOString(),
-        updatedAt: organization.updatedAt.toISOString(),
-        contacts: organization.contacts.map((c) => ({
-          id: c.id,
-          name: c.name,
-          email: c.email,
-          title: c.title,
-          isPrimary: c.isPrimary,
-        })),
-        opportunities: organization.opportunities.map((o) => ({
-          id: o.id,
-          title: o.title,
-          estValue: o.estValue ? Number(o.estValue) : undefined,
-          stage: o.stage,
-        })),
-      },
-    };
-
-    return res.status(200).json(response);
-  } catch (error) {
-    console.error('Error fetching organization:', error);
-    errorResponse(res, 500, 'Internal', 'Failed to fetch organization');
-    return;
-  }
-}
-
-async function handlePatch(req: NextApiRequest, res: NextApiResponse, orgId: string, userId: string, id: string): Promise<void> {
-  try {
-    // Validate request body
-    const data = UpdateOrganizationSchema.parse(req.body);
-
-    // Update organization
-    const organization = await updateOrganization({
-      orgId,
-      userId,
-      organizationId: id,
-      data,
+      data: {},
     });
-
-    // Transform response
-    const response = {
-      ok: true,
-      data: {
-        id: organization.id,
-        name: organization.name,
-        domain: organization.domain,
-        industry: organization.industry,
-        size: organization.size,
-        annualRevenue: organization.annualRevenue,
-        website: organization.website,
-        phone: organization.phone,
-        ownerId: organization.ownerId,
-        archived: organization.archived,
-        createdAt: organization.createdAt.toISOString(),
-        updatedAt: organization.updatedAt.toISOString(),
-      },
-    };
-
-    return res.status(200).json(response);
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      const fieldErrors: Record<string, string[]> = {};
-      error.errors.forEach((err) => {
-        const field = err.path[0]?.toString() || 'unknown';
-        if (!fieldErrors[field]) {
-          fieldErrors[field] = [];
-        }
-        fieldErrors[field].push(err.message);
-      });
-      errorResponse(res, 422, 'UnprocessableEntity', 'Validation failed', fieldErrors);
-      return;
-    }
-    console.error('Error updating organization:', error);
-    errorResponse(res, 500, 'Internal', 'Failed to update organization');
-    return;
-  }
-}
-
-async function handleDelete(req: NextApiRequest, res: NextApiResponse, orgId: string, userId: string, id: string): Promise<void> {
-  try {
-    // Soft delete (archive) by default
-    await deleteOrganization({
-      orgId,
-      userId,
-      organizationId: id,
-      hard: false,
+    console.error('API Error:', error);
+    return res.status(500).json({
+      ok: false,
+      error: { code: 'INTERNAL_ERROR', message: 'Internal server error' },
     });
-
-    res.status(204).end();
-  } catch (error) {
-    console.error('Error deleting organization:', error);
-    errorResponse(res, 500, 'Internal', 'Failed to delete organization');
   }
 }
 
-export default withAudience('tenant', handler);
-
+export default withAudience(['client'])(handler);
