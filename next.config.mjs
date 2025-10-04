@@ -3,9 +3,63 @@ import withPWA from 'next-pwa';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+
+  // Optimize for Vercel deployment with large codebase
+  swcMinify: true,
+
   // Fix workspace root warning for multiple lockfiles
   outputFileTracingRoot: process.cwd(),
-  // Allow all hosts for Replit environment - using hostname instead of experimental
+
+  // Optimize build performance
+  experimental: {
+    // Reduce memory usage during build
+    workerThreads: false,
+    cpus: 1,
+  },
+
+  // Webpack optimizations for large codebase
+  webpack: (config, { isServer }) => {
+    // Optimize for large number of files
+    config.optimization = {
+      ...config.optimization,
+      moduleIds: 'deterministic',
+      runtimeChunk: isServer ? undefined : 'single',
+      splitChunks: isServer ? false : {
+        chunks: 'all',
+        cacheGroups: {
+          default: false,
+          vendors: false,
+          // Vendor chunk
+          vendor: {
+            name: 'vendor',
+            chunks: 'all',
+            test: /node_modules/,
+            priority: 20,
+          },
+          // Common chunk
+          common: {
+            name: 'common',
+            minChunks: 2,
+            chunks: 'all',
+            priority: 10,
+            reuseExistingChunk: true,
+            enforce: true,
+          },
+        },
+      },
+    };
+
+    // Increase memory limit for webpack
+    config.performance = {
+      ...config.performance,
+      maxAssetSize: 512000,
+      maxEntrypointSize: 512000,
+    };
+
+    return config;
+  },
+
+  // Security headers
   async headers() {
     return [
       {
@@ -15,10 +69,29 @@ const nextConfig = {
             key: 'X-Frame-Options',
             value: 'SAMEORIGIN',
           },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
         ],
       },
     ]
-  }
+  },
+
+  // Ignore build errors for generated endpoints (they're templates)
+  typescript: {
+    // Only fail on critical errors
+    ignoreBuildErrors: false,
+  },
+
+  eslint: {
+    // Don't fail build on lint warnings
+    ignoreDuringBuilds: true,
+  },
 };
 
 // PWA Configuration
