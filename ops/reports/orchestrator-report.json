@@ -1,282 +1,282 @@
 [
   {
-    "binder": "binder1_FULL.md",
-    "endpoints": {
+    "name": "binder1_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 0,
-      "fallback": 3318,
-      "total": 3318
+      "fallback": 3220,
+      "total": 3220
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": true
   },
   {
-    "binder": "binder10_FULL.md",
-    "endpoints": {
+    "name": "binder10_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 130001,
-      "fallback": 674013,
-      "total": 804014
+      "fallback": 846020,
+      "total": 976021
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": true
   },
   {
-    "binder": "binder11_FULL.md",
-    "endpoints": {
+    "name": "binder11_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 800,
-      "fallback": 168096,
-      "total": 168896
+      "fallback": 191336,
+      "total": 192136
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": true
   },
   {
-    "binder": "binder12_FULL.md",
-    "endpoints": {
+    "name": "binder12_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 0,
-      "fallback": 339709,
-      "total": 339709
+      "fallback": 156724,
+      "total": 156724
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": true
   },
   {
-    "binder": "binder13_FULL.md",
-    "endpoints": {
+    "name": "binder13_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 0,
-      "fallback": 0,
-      "total": 0
+      "fallback": 3,
+      "total": 3
     },
-    "handled": false,
-    "mode": "skip"
+    "handled": true
   },
   {
-    "binder": "binder14_ready_FULL.md",
-    "endpoints": {
+    "name": "binder14_ready_FULL.md",
+    "mode": "config-hub",
+    "counts": {
       "primary": 0,
-      "fallback": 0,
-      "total": 0
+      "fallback": 3,
+      "total": 3
     },
-    "handled": true,
-    "mode": "config-hub"
+    "handled": true
   },
   {
-    "binder": "binder15_ready_FULL.md",
-    "endpoints": {
+    "name": "binder15_ready_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 0,
-      "fallback": 0,
-      "total": 0
+      "fallback": 169003,
+      "total": 169003
     },
-    "handled": false,
-    "mode": "skip"
+    "handled": true
   },
   {
-    "binder": "binder16_ready_FULL.md",
-    "endpoints": {
+    "name": "binder16_ready_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 0,
-      "fallback": 0,
-      "total": 0
+      "fallback": 3,
+      "total": 3
     },
-    "handled": false,
-    "mode": "skip"
+    "handled": true
   },
   {
-    "binder": "binder17_ready_FULL.md",
-    "endpoints": {
+    "name": "binder17_ready_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 0,
-      "fallback": 0,
-      "total": 0
+      "fallback": 3,
+      "total": 3
     },
-    "handled": false,
-    "mode": "skip"
+    "handled": true
   },
   {
-    "binder": "binder18_ready_FULL.md",
-    "endpoints": {
+    "name": "binder18_ready_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 0,
-      "fallback": 0,
-      "total": 0
+      "fallback": 3,
+      "total": 3
     },
-    "handled": false,
-    "mode": "skip"
+    "handled": true
   },
   {
-    "binder": "binder19_ready_FULL.md",
-    "endpoints": {
+    "name": "binder19_ready_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 0,
-      "fallback": 164160,
-      "total": 164160
+      "fallback": 200644,
+      "total": 200644
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": true
   },
   {
-    "binder": "binder2_FULL.md",
-    "endpoints": {
+    "name": "binder2_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 4209,
-      "fallback": 10688,
-      "total": 14897
+      "fallback": 15903,
+      "total": 20112
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": true
   },
   {
-    "binder": "binder20_ready_FULL.md",
-    "endpoints": {
+    "name": "binder20_ready_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 36158,
-      "fallback": 144632,
-      "total": 180790
+      "fallback": 325426,
+      "total": 361584
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": true
   },
   {
-    "binder": "binder21_ready_FULL.md",
-    "endpoints": {
+    "name": "binder21_ready_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 25355,
-      "fallback": 50710,
-      "total": 76065
+      "fallback": 278909,
+      "total": 304264
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": true
   },
   {
-    "binder": "binder22_ready_FULL.md",
-    "endpoints": {
+    "name": "binder22_ready_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 42400,
-      "fallback": 127200,
-      "total": 169600
+      "fallback": 212004,
+      "total": 254404
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": true
   },
   {
-    "binder": "binder23_ready_FULL.md",
-    "endpoints": {
+    "name": "binder23_ready_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 69400,
-      "fallback": 166560,
-      "total": 235960
+      "fallback": 374765,
+      "total": 444165
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": true
   },
   {
-    "binder": "binder3_FULL.md",
-    "endpoints": {
+    "name": "binder3_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 0,
-      "fallback": 7163,
-      "total": 7163
+      "fallback": 10121,
+      "total": 10121
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": true
   },
   {
-    "binder": "binder3A_FULL.md",
-    "endpoints": {
+    "name": "binder3A_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 96501,
-      "fallback": 289506,
-      "total": 386007
+      "fallback": 289519,
+      "total": 386020
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": true
   },
   {
-    "binder": "binder3B_FULL.md",
-    "endpoints": {
+    "name": "binder3B_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 0,
-      "fallback": 1,
-      "total": 1
+      "fallback": 390074,
+      "total": 390074
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": true
   },
   {
-    "binder": "binder3C_full_FULL.md",
-    "endpoints": {
+    "name": "binder3C_full_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 0,
-      "fallback": 156373,
-      "total": 156373
+      "fallback": 305847,
+      "total": 305847
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": true
   },
   {
-    "binder": "binder3C_full.md",
-    "endpoints": {
+    "name": "binder3C_full.md",
+    "mode": "generated",
+    "counts": {
       "primary": 0,
-      "fallback": 156373,
-      "total": 156373
+      "fallback": 305844,
+      "total": 305844
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": true
   },
   {
-    "binder": "binder4_FULL.md",
-    "endpoints": {
+    "name": "binder4_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 0,
-      "fallback": 17715,
-      "total": 17715
+      "fallback": 24381,
+      "total": 24381
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": true
   },
   {
-    "binder": "binder5_FULL.md",
-    "endpoints": {
+    "name": "binder5_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 10000,
-      "fallback": 46545,
-      "total": 56545
+      "fallback": 51926,
+      "total": 61926
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": true
   },
   {
-    "binder": "binder6_FULL.md",
-    "endpoints": {
+    "name": "binder6_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 4999,
-      "fallback": 29115,
-      "total": 34114
+      "fallback": 48235,
+      "total": 53234
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": true
   },
   {
-    "binder": "binder7_FULL.md",
-    "endpoints": {
+    "name": "binder7_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 100000,
-      "fallback": 499999,
-      "total": 599999
+      "fallback": 661048,
+      "total": 761048
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": true
   },
   {
-    "binder": "binder8_FULL.md",
-    "endpoints": {
+    "name": "binder8_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 0,
-      "fallback": 100000,
-      "total": 100000
+      "fallback": 150004,
+      "total": 150004
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": true
   },
   {
-    "binder": "binder9_FULL.md",
-    "endpoints": {
+    "name": "binder9_FULL.md",
+    "mode": "generated",
+    "counts": {
       "primary": 0,
-      "fallback": 352000,
-      "total": 352000
+      "fallback": 400004,
+      "total": 400004
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": true
   },
   {
-    "binder": "EXPAND-REPORT.md",
-    "endpoints": {
+    "name": "EXPAND-REPORT.md",
+    "mode": "skip",
+    "counts": {
       "primary": 0,
-      "fallback": 1,
-      "total": 1
+      "fallback": 0,
+      "total": 0
     },
-    "handled": true,
-    "mode": "generated"
+    "handled": false
   }
 ]
