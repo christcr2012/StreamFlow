@@ -1,0 +1,764 @@
+{
+  "pre": [
+    {
+      "binder": "binder1_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:20.147Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder2_FULL.md",
+      "flavor": "LEGACY_API",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 1600,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:20.868Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder3_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 1,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:21.574Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder3A_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:24.168Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder3B_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:26.795Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder3C_full_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:29.394Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder3C_full.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:31.947Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder4_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 5,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:32.682Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder5_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 151,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:33.487Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder6_FULL.md",
+      "flavor": "GENERIC",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:34.283Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder7_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 6688,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:36.801Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder8_FULL.md",
+      "flavor": "GENERIC",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:39.057Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder9_FULL.md",
+      "flavor": "GENERIC",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:41.646Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder10_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:44.898Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder11_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:47.665Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder12_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 2,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:50.307Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder13_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:53.704Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder14_ready_FULL.md",
+      "flavor": "GENERIC",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:55.902Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder15_ready_FULL.md",
+      "flavor": "GENERIC",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:57.870Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder16_ready_FULL.md",
+      "flavor": "GENERIC",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:59.850Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder17_ready_FULL.md",
+      "flavor": "GENERIC",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:19:01.777Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder18_ready_FULL.md",
+      "flavor": "GENERIC",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:19:03.549Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder19_ready_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:19:06.684Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder20_ready_FULL.md",
+      "flavor": "LEGACY_API",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:19:10.056Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder21_ready_FULL.md",
+      "flavor": "LEGACY_API",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:19:13.005Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder22_ready_FULL.md",
+      "flavor": "LEGACY_API",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:19:16.440Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder23_ready_FULL.md",
+      "flavor": "LEGACY_API",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 13880,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:19:19.748Z",
+      "phase": "pre"
+    }
+  ],
+  "post": [
+    {
+      "binder": "binder1_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:20.147Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder2_FULL.md",
+      "flavor": "LEGACY_API",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 1600,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:20.868Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder3_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 1,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:21.574Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder3A_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:24.168Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder3B_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:26.795Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder3C_full_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:29.394Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder3C_full.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:31.947Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder4_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 5,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:32.682Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder5_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 151,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:33.487Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder6_FULL.md",
+      "flavor": "GENERIC",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:34.283Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder7_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 6688,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:36.801Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder8_FULL.md",
+      "flavor": "GENERIC",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:39.057Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder9_FULL.md",
+      "flavor": "GENERIC",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:41.646Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder10_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:44.898Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder11_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:47.665Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder12_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 2,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:50.307Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder13_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:53.704Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder14_ready_FULL.md",
+      "flavor": "GENERIC",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:55.902Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder15_ready_FULL.md",
+      "flavor": "GENERIC",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:57.870Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder16_ready_FULL.md",
+      "flavor": "GENERIC",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:18:59.850Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder17_ready_FULL.md",
+      "flavor": "GENERIC",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:19:01.777Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder18_ready_FULL.md",
+      "flavor": "GENERIC",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:19:03.549Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder19_ready_FULL.md",
+      "flavor": "FRONTEND",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:19:06.684Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder20_ready_FULL.md",
+      "flavor": "LEGACY_API",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:19:10.056Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder21_ready_FULL.md",
+      "flavor": "LEGACY_API",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:19:13.005Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder22_ready_FULL.md",
+      "flavor": "LEGACY_API",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 0,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:19:16.440Z",
+      "phase": "pre"
+    },
+    {
+      "binder": "binder23_ready_FULL.md",
+      "flavor": "LEGACY_API",
+      "expectedEndpoints": 0,
+      "actualEndpoints": 32807,
+      "completionPercent": 0,
+      "expectedWebhooks": 13880,
+      "expectedTests": 0,
+      "apiByDir": {
+        "src/pages/api": 32807
+      },
+      "timestamp": "2025-10-04T12:19:19.748Z",
+      "phase": "pre"
+    }
+  ],
+  "target": 90,
+  "generatedAt": "2025-10-04T12:19:19.750Z"
+}
