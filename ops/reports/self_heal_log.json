@@ -1,0 +1,15 @@
+{
+  "timestamp": "2025-10-04T16:34:39.068Z",
+  "failedCount": 1,
+  "retriedCount": 1,
+  "successCount": 1,
+  "binders": [
+    {
+      "name": "EXPAND-REPORT.md",
+      "reason": "not handled",
+      "attempts": 1,
+      "success": true,
+      "status": "healed"
+    }
+  ]
+}

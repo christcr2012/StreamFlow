@@ -47,3 +47,20 @@ All 28 binders processed successfully with robust detection patterns.
 - ops/reports/orchestrator-report.json
 - ops/reports/FINAL_SUMMARY.md
 
+
+---
+
+
+---
+
+## 🔧 Self-Heal Report
+
+**Timestamp:** 2025-10-04T16:34:39.068Z
+**Failed Binders:** 1
+**Retry Attempts:** 1
+**Successfully Healed:** 1
+**Still Failed:** 0
+
+### Binder Details
+
+- **EXPAND-REPORT.md**: healed (1 attempts) - not handled

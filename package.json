@@ -19,6 +19,7 @@
     "typecheck:api": "cross-env NODE_OPTIONS=--max-old-space-size=8192 tsc -p tsconfig.api.json --noEmit",
     "typecheck:ui": "cross-env NODE_OPTIONS=--max-old-space-size=8192 tsc -p tsconfig.ui.json --noEmit",
     "guard:binders": "cross-env NODE_OPTIONS=--max-old-space-size=8192 node scripts/guard-binders.js",
+    "hybrid:binders": "cross-env NODE_OPTIONS=--max-old-space-size=8192 node scripts/hybrid-binder-executor.js",
     "binders:pre": "node scripts/validate-binders-new.js --phase pre",
     "binders:run": "node scripts/binder-orchestrator-new.js",
     "binders:post": "node scripts/validate-binders-new.js --phase post",
