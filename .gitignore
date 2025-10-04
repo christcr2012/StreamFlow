@@ -96,3 +96,9 @@ coverage/
 
 # TernJS port file
 .tern-port
+
+# Binder artifacts (cleaned by clean-repo-history.ps1)
+binderFiles/
+ops/manifests/
+*.manifest.json
+*.manifest.ndjson
