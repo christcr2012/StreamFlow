@@ -14,7 +14,10 @@
     "start": "next start",
     "postinstall": "prisma generate",
     "seed": "tsx prisma/seed.ts",
-    "lint": "next lint"
+    "lint": "next lint",
+    "typecheck": "cross-env NODE_OPTIONS=--max-old-space-size=8192 tsc --noEmit --skipLibCheck",
+    "typecheck:api": "cross-env NODE_OPTIONS=--max-old-space-size=8192 tsc -p tsconfig.api.json --noEmit --skipLibCheck",
+    "typecheck:ui": "cross-env NODE_OPTIONS=--max-old-space-size=8192 tsc -p tsconfig.ui.json --noEmit --skipLibCheck"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",
@@ -64,6 +67,7 @@
     "@typescript-eslint/eslint-plugin": "^8.44.1",
     "@typescript-eslint/parser": "^8.44.1",
     "autoprefixer": "10.4.20",
+    "cross-env": "^10.1.0",
     "eslint": "^9.36.0",
     "eslint-config-next": "^15.5.4",
     "postcss": "8.4.47",

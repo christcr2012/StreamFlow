@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": [
+    "src/app/**/*",
+    "src/components/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/ai-triage-agent*/**",
+    "/tmp/**",
+    "attached_assets/**",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ]
+}
+
