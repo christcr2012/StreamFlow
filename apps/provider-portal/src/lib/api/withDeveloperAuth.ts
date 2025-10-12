@@ -61,16 +61,16 @@ export interface DeveloperAuthOptions {
  * );
  * ```
  */
-export function withDeveloperAuth(
+export function withDeveloperAuth<TParams = Record<string, never>>(
   handler: (
     request: NextRequest,
-    context: { params?: any; session: DeveloperSession }
+    context: { params: TParams; session: DeveloperSession }
   ) => Promise<NextResponse> | NextResponse,
   options?: DeveloperAuthOptions
 ) {
   return async (
     request: NextRequest,
-    context?: { params?: any }
+    context: { params: TParams }
   ): Promise<NextResponse> => {
     // Extract session
     const session = getDeveloperSession(request);
@@ -98,7 +98,7 @@ export function withDeveloperAuth(
     }
 
     // Call handler with session
-    return handler(request, { params: context?.params, session });
+    return handler(request, { params: context.params, session });
   };
 }
 

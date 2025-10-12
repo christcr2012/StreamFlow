@@ -44,6 +44,9 @@ jobs:
         env:
           # Prevent Vercel build errors in CI
           SKIP_ENV_VALIDATION: true
+          # Dummy DATABASE_URL for Prisma schema validation during build
+          # Actual migrations run on Vercel with real DATABASE_URL
+          DATABASE_URL: postgresql://user:pass@localhost:5432/db
 
       - name: Unit Tests
         run: timeout 5m npm run test:unit || (echo "Tests timed out after 5 minutes" && exit 1)

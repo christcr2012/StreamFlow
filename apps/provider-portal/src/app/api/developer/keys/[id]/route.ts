@@ -9,11 +9,10 @@ export const dynamic = 'force-dynamic';
  * DELETE /api/developer/keys/[id]
  * Revoke (soft delete) a developer API key
  */
-export const DELETE = withDeveloperAuth(
-  async (request: NextRequest, context: { params?: any; session: DeveloperSession }) => {
+export const DELETE = withDeveloperAuth<Promise<{ id: string }>>(
+  async (request, { params, session }) => {
     try {
-      const params = await Promise.resolve(context.params);
-      const { id } = params || {};
+      const { id } = await params;
 
       if (!id) {
         return NextResponse.json(
@@ -35,7 +34,7 @@ export const DELETE = withDeveloperAuth(
         );
       }
 
-      if (existingKey.userId !== context.session.email) {
+      if (existingKey.userId !== session.email) {
         return NextResponse.json(
           { error: 'Forbidden: You can only delete your own API keys' },
           { status: 403 }
@@ -55,7 +54,7 @@ export const DELETE = withDeveloperAuth(
           entityType: 'developer_api_key',
           entityId: id,
           actorType: 'developer',
-          actorId: context.session.email,
+          actorId: session.email,
           metadata: {
             keyId: existingKey.keyId,
             name: existingKey.name,

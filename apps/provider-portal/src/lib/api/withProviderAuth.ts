@@ -61,16 +61,16 @@ export interface WithProviderAuthOptions {
  * });
  * ```
  */
-export function withProviderAuth(
+export function withProviderAuth<TParams = Record<string, never>>(
   handler: (
     request: NextRequest,
-    context: { params?: any; session: ProviderSession }
+    context: { params: TParams; session: ProviderSession }
   ) => Promise<NextResponse> | NextResponse,
   options: WithProviderAuthOptions = {}
 ) {
   return async (
     request: NextRequest,
-    context?: { params?: any }
+    context: { params: TParams }
   ): Promise<NextResponse> => {
     // Extract session
     const session = getProviderSession(request);
@@ -107,7 +107,7 @@ export function withProviderAuth(
     }
 
     // Call handler with session
-    return handler(request, { params: context?.params, session });
+    return handler(request, { params: context.params, session });
   };
 }
 
