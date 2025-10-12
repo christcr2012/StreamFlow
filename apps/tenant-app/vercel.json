@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd ../.. && npm install && cd apps/tenant-app && npm run vercel-build",
+  "buildCommand": "cd ../.. && npm install && cd apps/tenant-app && npm run build",
   "outputDirectory": ".next",
   "framework": "nextjs",
   "installCommand": "cd ../.. && npm install",
