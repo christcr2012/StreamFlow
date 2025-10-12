@@ -1349,3 +1349,23 @@ model IdempotencyKey {
   createdAt DateTime @default(now())
   ttl       Int
 }
+
+// ============================================================================
+// DEVELOPER PORTAL - API KEY MANAGEMENT
+// ============================================================================
+
+/// DeveloperAPIKey stores app-scoped API keys for developer authentication
+/// Used for secure API access with granular permissions
+model DeveloperAPIKey {
+  id          String    @id @default(cuid())
+  name        String    // Human-readable name for the key
+  keyId       String    @unique // Public key identifier (e.g., "dev_abc123")
+  secretHash  String    // Hashed secret for verification
+  userId      String    // Developer user ID
+  orgId       String?   // Optional organization scope
+  scopes      String[]  @default([]) // Permission scopes
+  createdAt   DateTime  @default(now())
+  lastUsedAt  DateTime?
+  expiresAt   DateTime?
+  revokedAt   DateTime?
+}
