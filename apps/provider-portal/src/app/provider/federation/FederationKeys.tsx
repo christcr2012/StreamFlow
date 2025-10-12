@@ -212,7 +212,7 @@ export default function FederationKeys() {
             </h3>
             <div className="space-y-4">
               <p style={{ color: 'var(--text-secondary)' }}>
-                This is the only time you'll see this secret. Copy it now and store it securely.
+                This is the only time you&apos;ll see this secret. Copy it now and store it securely.
               </p>
               <div className="rounded p-4 font-mono text-sm break-all" style={{ background: 'var(--input-bg)', border: '1px solid var(--border-primary)', color: 'var(--text-primary)' }}>
                 {newSecret}
@@ -230,11 +230,11 @@ export default function FederationKeys() {
                   className="px-4 py-2 rounded font-medium"
                   style={{ background: 'var(--glass-bg)', border: '1px solid var(--border-primary)', color: 'var(--text-primary)' }}
                 >
-                  I've Saved It
+                  I&apos;ve Saved It
                 </button>
               </div>
               <p className="text-sm" style={{ color: 'var(--error-text)' }}>
-                Warning: Once you close this dialog, you won't be able to retrieve this secret again.
+                Warning: Once you close this dialog, you won&apos;t be able to retrieve this secret again.
               </p>
             </div>
           </div>

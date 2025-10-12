@@ -119,7 +119,7 @@ export default function APIKeysPage() {
               </h3>
               <div className="mt-2 text-sm text-yellow-700">
                 <p className="mb-2">
-                  This is the only time you'll see this secret. Copy it now and store it securely.
+                  This is the only time you&apos;ll see this secret. Copy it now and store it securely.
                 </p>
                 <div className="flex items-center space-x-2">
                   <code className="flex-1 px-3 py-2 bg-white rounded border border-yellow-300 text-sm font-mono">
@@ -138,7 +138,7 @@ export default function APIKeysPage() {
                   onClick={() => setNewKeySecret(null)}
                   className="text-sm font-medium text-yellow-800 hover:text-yellow-900"
                 >
-                  I've saved my secret →
+                  I&apos;ve saved my secret →
                 </button>
               </div>
             </div>
