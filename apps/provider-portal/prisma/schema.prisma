@@ -1369,3 +1369,44 @@ model DeveloperAPIKey {
   expiresAt   DateTime?
   revokedAt   DateTime?
 }
+
+// ============================================================================
+// SECRETS ROTATION AUTOMATION
+// ============================================================================
+
+/// SecretsRotationPolicy defines automated key rotation rules
+model SecretsRotationPolicy {
+  id                   String    @id @default(cuid())
+  orgId                String    // Organization identifier
+  name                 String    // Policy name
+  keyType              String    // 'federation' | 'api' | 'encryption'
+  rotationIntervalDays Int       // Days between rotations
+  gracePeriodDays      Int       // Days old keys remain valid
+  autoRotate           Boolean   @default(false) // Auto-rotate on schedule
+  notifyBeforeDays     Int       // Days before rotation to notify
+  enabled              Boolean   @default(true)
+  lastRotation         DateTime? // Last rotation timestamp
+  nextRotation         DateTime? // Next scheduled rotation
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  @@index([orgId, keyType])
+  @@index([nextRotation, enabled])
+}
+
+/// SecretsRotationHistory tracks all key rotations
+model SecretsRotationHistory {
+  id         String   @id @default(cuid())
+  orgId      String   // Organization identifier
+  policyId   String?  // Associated policy (null for manual rotations)
+  keyType    String   // 'federation' | 'api' | 'encryption'
+  oldKeyId   String   // Previous key identifier
+  newKeyId   String   // New key identifier
+  rotatedAt  DateTime @default(now())
+  rotatedBy  String   // Email of user who triggered rotation
+  reason     String   // 'scheduled' | 'manual' | 'compromised' | 'policy'
+  metadata   Json?    // Additional rotation details
+
+  @@index([orgId, rotatedAt])
+  @@index([keyType, rotatedAt])
+}
