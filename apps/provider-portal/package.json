@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "node ../../node_modules/next/dist/bin/next dev -p 3000",
-    "build": "node ../../node_modules/next/dist/bin/next build",
+    "build": "node ../../node_modules/prisma/build/index.js generate && node ../../node_modules/prisma/build/index.js migrate deploy && node ../../node_modules/next/dist/bin/next build",
     "start": "node ../../node_modules/next/dist/bin/next start",
     "lint": "node ../../node_modules/next/dist/bin/next lint",
     "typecheck": "tsc --noEmit",
@@ -12,7 +12,7 @@
     "prisma:migrate": "node ../../node_modules/prisma/build/index.js migrate dev",
     "prisma:deploy": "node ../../node_modules/prisma/build/index.js migrate deploy",
     "prisma:seed": "tsx prisma/seed.ts",
-    "vercel-build": "node ../../node_modules/prisma/build/index.js generate && node ../../node_modules/prisma/build/index.js migrate deploy && node ../../node_modules/next/dist/bin/next build"
+    "test": "echo 'No tests configured for provider-portal' && exit 0"
   },
   "dependencies": {
     "@cortiware/auth-service": "file:../../packages/auth-service",

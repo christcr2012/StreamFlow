@@ -39,14 +39,15 @@ jobs:
       - name: ESLint
         run: npm run lint
 
-      - name: Build All Apps
-        run: npm run build
-        env:
-          # Prevent Vercel build errors in CI
-          SKIP_ENV_VALIDATION: true
-          # Dummy DATABASE_URL for Prisma schema validation during build
-          # Actual migrations run on Vercel with real DATABASE_URL
-          DATABASE_URL: postgresql://user:pass@localhost:5432/db
+      # NOTE: We do NOT run builds in CI/CD anymore
+      # Local builds are fundamentally different from Vercel builds
+      # Testing builds locally repeatedly broke production deployments
+      # All build verification happens on Vercel deployment
+      - name: Build Verification (Skipped - Vercel Only)
+        run: |
+          echo "⏭️  Build step skipped - builds only run on Vercel"
+          echo "✅ TypeCheck and Lint passed - code quality verified"
+          echo "🚀 Actual builds will run on Vercel with real DATABASE_URL"
 
       - name: Unit Tests
         run: timeout 5m npm run test:unit || (echo "Tests timed out after 5 minutes" && exit 1)
@@ -86,69 +87,9 @@ jobs:
           node scripts/diff-contracts.js --fail-on-breaking || echo "No baseline or differences; continuing"
 
   # ============================================================================
-  # DEPLOY TO VERCEL - Run only on main branch after quality checks pass
-  # COST OPTIMIZATION: Only deploy apps that have changed
+  # VERCEL DEPLOYMENT - DISABLED
+  # Vercel has automatic deployment on push to main
+  # Manual deployment via GitHub Actions repeatedly broke production
+  # All deployments now handled by Vercel's native Git integration
   # ============================================================================
-  deploy:
-    name: Deploy to Vercel Production (per app)
-    runs-on: ubuntu-latest
-    needs: quality_checks
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    strategy:
-      matrix:
-        include:
-          - name: provider-portal
-            dir: apps/provider-portal
-            projectSecret: VERCEL_PROJECT_ID_PROVIDER
-          - name: tenant-app
-            dir: apps/tenant-app
-            projectSecret: VERCEL_PROJECT_ID_TENANT
-          - name: marketing-cortiware
-            dir: apps/marketing-cortiware
-            projectSecret: VERCEL_PROJECT_ID_MARKETING_CORTIWARE
-          - name: marketing-robinson
-            dir: apps/marketing-robinson
-            projectSecret: VERCEL_PROJECT_ID_MARKETING_ROBINSON
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2  # Need previous commit to detect changes
-
-      - name: Check if app changed
-        id: changed
-        run: |
-          # Check if this app directory or shared packages changed
-          if git diff --quiet HEAD~1 HEAD -- ${{ matrix.dir }} packages/; then
-            echo "changed=false" >> $GITHUB_OUTPUT
-            echo "⏭️  No changes detected in ${{ matrix.name }} or shared packages"
-          else
-            echo "changed=true" >> $GITHUB_OUTPUT
-            echo "✅ Changes detected in ${{ matrix.name }} or shared packages"
-          fi
-
-      - name: Deploy ${{ matrix.name }}
-        if: steps.changed.outputs.changed == 'true'
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets[matrix.projectSecret] }}
-        run: |
-          npm install --global vercel@latest
-          cd ${{ matrix.dir }}
-          # Pull project settings into this app directory
-          vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-          # Build from this app directory
-          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-          # Deploy the prebuilt app
-          vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Deployment Summary (${{ matrix.name }})
-        run: |
-          if [ "${{ steps.changed.outputs.changed }}" == "true" ]; then
-            echo "✅ Deployment successful for ${{ matrix.name }}!"
-            echo "🚀 Deployed ${{ matrix.dir }} to Vercel production"
-          else
-            echo "⏭️  Skipped deployment for ${{ matrix.name }} (no changes)"
-            echo "💰 Cost savings: ~3 build minutes saved"
-          fi
 

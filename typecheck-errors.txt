@@ -1,0 +1,143 @@
+
+> cortiware@0.0.1 typecheck
+> turbo run typecheck
+
+turbo 2.5.8
+
+ΓÇó Packages in scope: @cortiware/agreements, @cortiware/auth-service, @cortiware/config, @cortiware/db, @cortiware/kv, @cortiware/themes, @cortiware/ui, @cortiware/ui-components, @cortiware/verticals, @cortiware/wallet, marketing-cortiware, marketing-robinson, provider-portal, tenant-app
+ΓÇó Running typecheck in 14 packages
+ΓÇó Remote caching disabled
+marketing-cortiware:typecheck: cache hit, replaying logs ee83e668b00df53b
+marketing-cortiware:typecheck: 
+marketing-cortiware:typecheck: > marketing-cortiware@0.0.1 typecheck
+marketing-cortiware:typecheck: > tsc --noEmit
+marketing-cortiware:typecheck: 
+marketing-robinson:typecheck: cache hit, replaying logs 9cb64668dfc3480f
+marketing-robinson:typecheck: 
+marketing-robinson:typecheck: > marketing-robinson@0.0.1 typecheck
+marketing-robinson:typecheck: > tsc --noEmit
+marketing-robinson:typecheck: 
+@cortiware/ui-components:typecheck: cache hit, replaying logs 78eb37b6dc56ee82
+@cortiware/ui-components:typecheck: 
+@cortiware/ui-components:typecheck: > @cortiware/ui-components@0.0.1 typecheck
+@cortiware/ui-components:typecheck: > tsc --noEmit
+@cortiware/ui-components:typecheck: 
+tenant-app:typecheck: cache miss, executing 85a19257a400f6fa
+@cortiware/auth-service:typecheck: cache hit, replaying logs f0ee8284d7458c09
+@cortiware/auth-service:typecheck: 
+@cortiware/auth-service:typecheck: > @cortiware/auth-service@0.0.1 typecheck
+@cortiware/auth-service:typecheck: > node ../../node_modules/typescript/bin/tsc --noEmit
+@cortiware/auth-service:typecheck: 
+@cortiware/wallet:typecheck: cache hit, replaying logs 87b17f3da21d17c6
+@cortiware/wallet:typecheck: 
+@cortiware/wallet:typecheck: > @cortiware/wallet@0.0.1 typecheck
+@cortiware/wallet:typecheck: > tsc --noEmit
+@cortiware/wallet:typecheck: 
+@cortiware/ui:typecheck: cache hit, replaying logs 19ecbd2339cba9f9
+@cortiware/ui:typecheck: 
+@cortiware/ui:typecheck: > @cortiware/ui@0.0.1 typecheck
+@cortiware/ui:typecheck: > tsc --noEmit
+@cortiware/ui:typecheck: 
+@cortiware/verticals:typecheck: cache hit, replaying logs e3a838530c09e837
+@cortiware/verticals:typecheck: 
+@cortiware/verticals:typecheck: > @cortiware/verticals@0.0.1 typecheck
+@cortiware/verticals:typecheck: > tsc --noEmit
+@cortiware/verticals:typecheck: 
+@cortiware/agreements:typecheck: cache hit, replaying logs 6f253aef1cc45d59
+@cortiware/agreements:typecheck: 
+@cortiware/agreements:typecheck: > @cortiware/agreements@0.0.1 typecheck
+@cortiware/agreements:typecheck: > tsc --noEmit
+@cortiware/agreements:typecheck: 
+provider-portal:typecheck: cache miss, executing d77d99b477781309
+tenant-app:typecheck: 
+tenant-app:typecheck: > tenant-app@0.0.1 typecheck
+tenant-app:typecheck: > tsc --noEmit
+tenant-app:typecheck: 
+provider-portal:typecheck: 
+provider-portal:typecheck: > provider-portal@0.0.1 typecheck
+provider-portal:typecheck: > tsc --noEmit
+provider-portal:typecheck: 
+provider-portal:typecheck: .next/types/app/api/federation/keys/[id]/route.ts(244,7): error TS2344: Type '{ __tag__: "DELETE"; __param_position__: "second"; __param_type__: { params?: any; } | undefined; }' does not satisfy the constraint 'ParamCheck<RouteContext>'.
+provider-portal:typecheck:   Types of property '__param_type__' are incompatible.
+provider-portal:typecheck:     Type '{ params?: any; } | undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck:       Type 'undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck: .next/types/app/api/federation/keys/route.ts(49,7): error TS2344: Type '{ __tag__: "GET"; __param_position__: "second"; __param_type__: { params?: any; } | undefined; }' does not satisfy the constraint 'ParamCheck<RouteContext>'.
+provider-portal:typecheck:   Types of property '__param_type__' are incompatible.
+provider-portal:typecheck:     Type '{ params?: any; } | undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck:       Type 'undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck: .next/types/app/api/federation/keys/route.ts(166,7): error TS2344: Type '{ __tag__: "POST"; __param_position__: "second"; __param_type__: { params?: any; } | undefined; }' does not satisfy the constraint 'ParamCheck<RouteContext>'.
+provider-portal:typecheck:   Types of property '__param_type__' are incompatible.
+provider-portal:typecheck:     Type '{ params?: any; } | undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck:       Type 'undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck: .next/types/app/api/federation/oidc/route.ts(49,7): error TS2344: Type '{ __tag__: "GET"; __param_position__: "second"; __param_type__: { params?: any; } | undefined; }' does not satisfy the constraint 'ParamCheck<RouteContext>'.
+provider-portal:typecheck:   Types of property '__param_type__' are incompatible.
+provider-portal:typecheck:     Type '{ params?: any; } | undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck:       Type 'undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck: .next/types/app/api/federation/oidc/route.ts(166,7): error TS2344: Type '{ __tag__: "POST"; __param_position__: "second"; __param_type__: { params?: any; } | undefined; }' does not satisfy the constraint 'ParamCheck<RouteContext>'.
+provider-portal:typecheck:   Types of property '__param_type__' are incompatible.
+provider-portal:typecheck:     Type '{ params?: any; } | undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck:       Type 'undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck: .next/types/app/api/federation/oidc/route.ts(283,7): error TS2344: Type '{ __tag__: "PATCH"; __param_position__: "second"; __param_type__: { params?: any; } | undefined; }' does not satisfy the constraint 'ParamCheck<RouteContext>'.
+provider-portal:typecheck:   Types of property '__param_type__' are incompatible.
+provider-portal:typecheck:     Type '{ params?: any; } | undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck:       Type 'undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck: .next/types/app/api/federation/oidc/test/route.ts(166,7): error TS2344: Type '{ __tag__: "POST"; __param_position__: "second"; __param_type__: { params?: any; } | undefined; }' does not satisfy the constraint 'ParamCheck<RouteContext>'.
+provider-portal:typecheck:   Types of property '__param_type__' are incompatible.
+provider-portal:typecheck:     Type '{ params?: any; } | undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck:       Type 'undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck: .next/types/app/api/monetization/coupons/route.ts(49,7): error TS2344: Type '{ __tag__: "GET"; __param_position__: "second"; __param_type__: { params?: any; } | undefined; }' does not satisfy the constraint 'ParamCheck<RouteContext>'.
+provider-portal:typecheck:   Types of property '__param_type__' are incompatible.
+provider-portal:typecheck:     Type '{ params?: any; } | undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck:       Type 'undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck: .next/types/app/api/monetization/coupons/route.ts(166,7): error TS2344: Type '{ __tag__: "POST"; __param_position__: "second"; __param_type__: { params?: any; } | undefined; }' does not satisfy the constraint 'ParamCheck<RouteContext>'.
+provider-portal:typecheck:   Types of property '__param_type__' are incompatible.
+provider-portal:typecheck:     Type '{ params?: any; } | undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck:       Type 'undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck: .next/types/app/api/monetization/coupons/route.ts(244,7): error TS2344: Type '{ __tag__: "DELETE"; __param_position__: "second"; __param_type__: { params?: any; } | undefined; }' does not satisfy the constraint 'ParamCheck<RouteContext>'.
+provider-portal:typecheck:   Types of property '__param_type__' are incompatible.
+provider-portal:typecheck:     Type '{ params?: any; } | undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck:       Type 'undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck: .next/types/app/api/monetization/coupons/route.ts(283,7): error TS2344: Type '{ __tag__: "PATCH"; __param_position__: "second"; __param_type__: { params?: any; } | undefined; }' does not satisfy the constraint 'ParamCheck<RouteContext>'.
+provider-portal:typecheck:   Types of property '__param_type__' are incompatible.
+provider-portal:typecheck:     Type '{ params?: any; } | undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck:       Type 'undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck: .next/types/app/api/monetization/plans/route.ts(49,7): error TS2344: Type '{ __tag__: "GET"; __param_position__: "second"; __param_type__: { params?: any; } | undefined; }' does not satisfy the constraint 'ParamCheck<RouteContext>'.
+provider-portal:typecheck:   Types of property '__param_type__' are incompatible.
+provider-portal:typecheck:     Type '{ params?: any; } | undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck:       Type 'undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck: .next/types/app/api/monetization/plans/route.ts(166,7): error TS2344: Type '{ __tag__: "POST"; __param_position__: "second"; __param_type__: { params?: any; } | undefined; }' does not satisfy the constraint 'ParamCheck<RouteContext>'.
+provider-portal:typecheck:   Types of property '__param_type__' are incompatible.
+provider-portal:typecheck:     Type '{ params?: any; } | undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck:       Type 'undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck: .next/types/app/api/monetization/plans/route.ts(283,7): error TS2344: Type '{ __tag__: "PATCH"; __param_position__: "second"; __param_type__: { params?: any; } | undefined; }' does not satisfy the constraint 'ParamCheck<RouteContext>'.
+provider-portal:typecheck:   Types of property '__param_type__' are incompatible.
+provider-portal:typecheck:     Type '{ params?: any; } | undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck:       Type 'undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck: .next/types/app/api/monetization/prices/route.ts(49,7): error TS2344: Type '{ __tag__: "GET"; __param_position__: "second"; __param_type__: { params?: any; } | undefined; }' does not satisfy the constraint 'ParamCheck<RouteContext>'.
+provider-portal:typecheck:   Types of property '__param_type__' are incompatible.
+provider-portal:typecheck:     Type '{ params?: any; } | undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck:       Type 'undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck: .next/types/app/api/monetization/prices/route.ts(166,7): error TS2344: Type '{ __tag__: "POST"; __param_position__: "second"; __param_type__: { params?: any; } | undefined; }' does not satisfy the constraint 'ParamCheck<RouteContext>'.
+provider-portal:typecheck:   Types of property '__param_type__' are incompatible.
+provider-portal:typecheck:     Type '{ params?: any; } | undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck:       Type 'undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck: .next/types/app/api/monetization/prices/route.ts(283,7): error TS2344: Type '{ __tag__: "PATCH"; __param_position__: "second"; __param_type__: { params?: any; } | undefined; }' does not satisfy the constraint 'ParamCheck<RouteContext>'.
+provider-portal:typecheck:   Types of property '__param_type__' are incompatible.
+provider-portal:typecheck:     Type '{ params?: any; } | undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck:       Type 'undefined' is not assignable to type 'RouteContext'.
+provider-portal:typecheck: npm error Lifecycle script `typecheck` failed with error:
+provider-portal:typecheck: npm error code 1
+provider-portal:typecheck: npm error path C:\Users\chris\Git Local\Cortiware\apps\provider-portal
+provider-portal:typecheck: npm error workspace provider-portal@0.0.1
+provider-portal:typecheck: npm error location C:\Users\chris\Git Local\Cortiware\apps\provider-portal
+provider-portal:typecheck: npm error command failed
+provider-portal:typecheck: npm error command C:\WINDOWS\system32\cmd.exe /d /s /c tsc --noEmit
+provider-portal:typecheck: ERROR: command finished with error: command (C:\Users\chris\Git Local\Cortiware\apps\provider-portal) C:\nvm4w\nodejs\npm.cmd run typecheck exited (1)
+provider-portal#typecheck: command (C:\Users\chris\Git Local\Cortiware\apps\provider-portal) C:\nvm4w\nodejs\npm.cmd run typecheck exited (1)
+
+ Tasks:    9 successful, 10 total
+Cached:    8 cached, 10 total
+  Time:    2.564s 
+Failed:    provider-portal#typecheck
+
+ ERROR  run failed: command  exited (1)
