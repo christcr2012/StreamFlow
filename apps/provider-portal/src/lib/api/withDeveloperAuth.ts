@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { PERMISSIONS, DEVELOPER_ROLE, hasPermission, type Permission } from '@/lib/rbac/roles';
 
 /**
  * Developer session extracted from request
@@ -34,21 +35,38 @@ export function getDeveloperSession(request: NextRequest): DeveloperSession | nu
 }
 
 /**
+ * Options for withDeveloperAuth
+ */
+export interface DeveloperAuthOptions {
+  requiredPermission?: Permission;
+}
+
+/**
  * Higher-order function to wrap API route handlers with developer authentication
  *
  * Usage:
  * ```typescript
+ * // Basic authentication
  * export const GET = withDeveloperAuth(async (request, { session }) => {
  *   // session is guaranteed to exist here
  *   return NextResponse.json({ email: session.email });
  * });
+ *
+ * // With permission check
+ * export const POST = withDeveloperAuth(
+ *   async (request, { session }) => {
+ *     return NextResponse.json({ created: true });
+ *   },
+ *   { requiredPermission: PERMISSIONS.DEVELOPER_KEYS_CREATE }
+ * );
  * ```
  */
 export function withDeveloperAuth(
   handler: (
     request: NextRequest,
     context: { params?: any; session: DeveloperSession }
-  ) => Promise<NextResponse> | NextResponse
+  ) => Promise<NextResponse> | NextResponse,
+  options?: DeveloperAuthOptions
 ) {
   return async (
     request: NextRequest,
@@ -63,6 +81,20 @@ export function withDeveloperAuth(
         { error: 'Unauthorized: Developer authentication required' },
         { status: 401 }
       );
+    }
+
+    // Check permission if required
+    if (options?.requiredPermission) {
+      const hasPerm = hasPermission(DEVELOPER_ROLE, options.requiredPermission);
+      if (!hasPerm) {
+        return NextResponse.json(
+          {
+            error: 'Forbidden',
+            message: `Developer role does not have permission '${options.requiredPermission}'`
+          },
+          { status: 403 }
+        );
+      }
     }
 
     // Call handler with session

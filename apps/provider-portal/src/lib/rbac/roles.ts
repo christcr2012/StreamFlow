@@ -89,6 +89,9 @@ export const PERMISSIONS = {
   DEVELOPER_API_EXPLORER: 'developer:api-explorer',
   DEVELOPER_WEBHOOKS: 'developer:webhooks',
   DEVELOPER_KEYS: 'developer:keys',
+  DEVELOPER_KEYS_READ: 'developer:keys:read',
+  DEVELOPER_KEYS_CREATE: 'developer:keys:create',
+  DEVELOPER_KEYS_DELETE: 'developer:keys:delete',
   DEVELOPER_USAGE: 'developer:usage',
   
   // Admin
@@ -161,6 +164,9 @@ export const ROLE_PERMISSIONS: Record<ProviderRole | DeveloperRole, Permission[]
     PERMISSIONS.DEVELOPER_API_EXPLORER,
     PERMISSIONS.DEVELOPER_WEBHOOKS,
     PERMISSIONS.DEVELOPER_KEYS,
+    PERMISSIONS.DEVELOPER_KEYS_READ,
+    PERMISSIONS.DEVELOPER_KEYS_CREATE,
+    PERMISSIONS.DEVELOPER_KEYS_DELETE,
     PERMISSIONS.DEVELOPER_USAGE,
   ],
 };
