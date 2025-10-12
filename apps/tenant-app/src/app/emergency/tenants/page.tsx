@@ -30,7 +30,7 @@ export default async function TenantSelectionPage() {
         <label className="block text-sm font-medium text-gray-700">Tenant</label>
         <select name="tenantId" className="mt-1 w-full rounded border px-3 py-2" required>
           <option value="" disabled>Choose a tenantc</option>
-          {orgs.map((o) => (
+          {orgs.map((o: any) => (
             <option key={o.id} value={o.id}>{o.name} 3 {o.id.substring(0,8)}</option>
           ))}
         </select>
