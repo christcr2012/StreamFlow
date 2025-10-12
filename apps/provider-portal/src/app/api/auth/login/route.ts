@@ -7,6 +7,9 @@ import {
   type ProviderAuthConfig,
   type DeveloperAuthConfig,
 } from '@cortiware/auth-service';
+import { PrismaClient } from '@prisma/client-provider';
+
+const prisma = new PrismaClient();
 
 // In-memory rate limiting (in production, use Redis)
 const loginAttempts = new Map<string, { count: number; lockedUntil?: number }>();
@@ -113,6 +116,43 @@ export async function POST(req: NextRequest) {
   // Try provider authentication
   const providerResult = await authenticateProvider(authInput, providerConfig);
   if (providerResult.success) {
+    // Check if MFA is enabled for this user
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: { totpEnabled: true, totpSecret: true, backupCodesHash: true },
+    });
+
+    if (user?.totpEnabled && user.totpSecret) {
+      // MFA is enabled - require TOTP code
+      if (!totpCode) {
+        return NextResponse.redirect(new URL('/login?totp=required', url), 303);
+      }
+
+      // Verify TOTP code
+      const { verifyTOTPCode, verifyBackupCode } = await import('@cortiware/auth-service');
+      const isValidTOTP = verifyTOTPCode(totpCode, user.totpSecret);
+
+      if (!isValidTOTP) {
+        // Try backup code
+        if (user.backupCodesHash) {
+          const backupResult = await verifyBackupCode(totpCode, user.backupCodesHash);
+          if (backupResult.valid) {
+            // Update backup codes (remove used code)
+            await prisma.user.update({
+              where: { email },
+              data: { backupCodesHash: backupResult.updatedJson },
+            });
+          } else {
+            recordFailedAttempt(email);
+            return NextResponse.redirect(new URL('/login?error=invalid&totp=required', url), 303);
+          }
+        } else {
+          recordFailedAttempt(email);
+          return NextResponse.redirect(new URL('/login?error=invalid&totp=required', url), 303);
+        }
+      }
+    }
+
     console.log(`✅ Provider login: ${email}`);
     clearAttempts(email); // Clear failed attempts on success
     const res = NextResponse.redirect(new URL('/provider', url), 303);
@@ -127,6 +167,43 @@ export async function POST(req: NextRequest) {
   // Try developer authentication
   const developerResult = await authenticateDeveloper(authInput, developerConfig);
   if (developerResult.success) {
+    // Check if MFA is enabled for this user
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: { totpEnabled: true, totpSecret: true, backupCodesHash: true },
+    });
+
+    if (user?.totpEnabled && user.totpSecret) {
+      // MFA is enabled - require TOTP code
+      if (!totpCode) {
+        return NextResponse.redirect(new URL('/login?totp=required', url), 303);
+      }
+
+      // Verify TOTP code
+      const { verifyTOTPCode, verifyBackupCode } = await import('@cortiware/auth-service');
+      const isValidTOTP = verifyTOTPCode(totpCode, user.totpSecret);
+
+      if (!isValidTOTP) {
+        // Try backup code
+        if (user.backupCodesHash) {
+          const backupResult = await verifyBackupCode(totpCode, user.backupCodesHash);
+          if (backupResult.valid) {
+            // Update backup codes (remove used code)
+            await prisma.user.update({
+              where: { email },
+              data: { backupCodesHash: backupResult.updatedJson },
+            });
+          } else {
+            recordFailedAttempt(email);
+            return NextResponse.redirect(new URL('/login?error=invalid&totp=required', url), 303);
+          }
+        } else {
+          recordFailedAttempt(email);
+          return NextResponse.redirect(new URL('/login?error=invalid&totp=required', url), 303);
+        }
+      }
+    }
+
     console.log(`✅ Developer login: ${email}`);
     clearAttempts(email); // Clear failed attempts on success
     const res = NextResponse.redirect(new URL('/provider', url), 303);
