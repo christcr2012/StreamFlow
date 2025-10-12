@@ -12,6 +12,13 @@ export const dynamic = 'force-dynamic';
 export const DELETE = withDeveloperAuth<Promise<{ id: string }>>(
   async (request, { params, session }) => {
     try {
+      if (!params) {
+        return NextResponse.json(
+          { error: 'Key ID is required' },
+          { status: 400 }
+        );
+      }
+
       const { id } = await params;
 
       if (!id) {
