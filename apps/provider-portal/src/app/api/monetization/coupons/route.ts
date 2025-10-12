@@ -5,12 +5,16 @@ import { PERMISSIONS } from '@/lib/rbac/roles';
 
 export const dynamic = 'force-dynamic';
 
+// Type for route context (fixes Next.js 15 type generation)
+type RouteContext = { params?: Record<string, never> };
+
 /**
  * GET /api/monetization/coupons
  * List coupons with optional filtering
  */
 export const GET = withProviderAuth(
-  async (request: NextRequest, { session }: { session: ProviderSession }) => {
+  async (request: NextRequest, context: RouteContext & { session: ProviderSession }) => {
+    const { session } = context;
     try {
       const url = new URL(request.url);
       const code = url.searchParams.get('code') || undefined;
@@ -45,7 +49,8 @@ export const GET = withProviderAuth(
  * Create a new coupon (admin only)
  */
 export const POST = withProviderAuth(
-  async (request: NextRequest, { session }: { session: ProviderSession }) => {
+  async (request: NextRequest, context: RouteContext & { session: ProviderSession }) => {
+    const { session } = context;
     try {
       const body = await request.json().catch(() => ({}));
       const item = await prisma.coupon.create({ data: body });
@@ -81,7 +86,8 @@ export const POST = withProviderAuth(
  * Update a coupon (admin only)
  */
 export const PATCH = withProviderAuth(
-  async (request: NextRequest, { session }: { session: ProviderSession }) => {
+  async (request: NextRequest, context: RouteContext & { session: ProviderSession }) => {
+    const { session } = context;
     try {
       const body = await request.json().catch(() => ({}));
       const { id, ...rest } = body || {};
@@ -126,7 +132,8 @@ export const PATCH = withProviderAuth(
  * Delete a coupon (admin only)
  */
 export const DELETE = withProviderAuth(
-  async (request: NextRequest, { session }: { session: ProviderSession }) => {
+  async (request: NextRequest, context: RouteContext & { session: ProviderSession }) => {
+    const { session } = context;
     try {
       const url = new URL(request.url);
       const id = url.searchParams.get('id');

@@ -5,12 +5,16 @@ import { PERMISSIONS } from '@/lib/rbac/roles';
 
 export const dynamic = 'force-dynamic';
 
+// Type for route context (fixes Next.js 15 type generation)
+type RouteContext = { params?: Record<string, never> };
+
 /**
  * GET /api/monetization/plans
  * List all price plans with their prices
  */
 export const GET = withProviderAuth(
-  async (request: NextRequest, { session }: { session: ProviderSession }) => {
+  async (request: NextRequest, context: RouteContext & { session: ProviderSession }) => {
+    const { session } = context;
     try {
       const items = await prisma.pricePlan.findMany({
         include: { prices: true },
@@ -33,7 +37,8 @@ export const GET = withProviderAuth(
  * Create a new price plan (admin only)
  */
 export const POST = withProviderAuth(
-  async (request: NextRequest, { session }: { session: ProviderSession }) => {
+  async (request: NextRequest, context: RouteContext & { session: ProviderSession }) => {
+    const { session } = context;
     try {
       const body = await request.json().catch(() => ({}));
       const { key, name, description, prices } = body || {};
@@ -106,7 +111,8 @@ export const POST = withProviderAuth(
  * Update a price plan (admin only)
  */
 export const PATCH = withProviderAuth(
-  async (request: NextRequest, { session }: { session: ProviderSession }) => {
+  async (request: NextRequest, context: RouteContext & { session: ProviderSession }) => {
+    const { session } = context;
     try {
       const body = await request.json().catch(() => ({}));
       const { id, name, description, active } = body || {};

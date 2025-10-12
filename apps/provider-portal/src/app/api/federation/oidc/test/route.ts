@@ -6,12 +6,16 @@ import { decrypt } from '@/lib/crypto/aes';
 
 const ENCRYPTION_KEY = process.env.FED_HMAC_MASTER_KEY || 'default-key-change-in-production';
 
+// Type for route context (fixes Next.js 15 type generation)
+type RouteContext = { params?: Record<string, never> };
+
 /**
  * POST /api/federation/oidc/test
  * Test OIDC configuration with discovery and token exchange (RFC 8414)
  */
 export const POST = withProviderAuth(
-  async (request: NextRequest, { session }: { session: ProviderSession }) => {
+  async (request: NextRequest, context: RouteContext & { session: ProviderSession }) => {
+    const { session } = context;
     const started = Date.now();
     try {
       // Load most recent OIDC config

@@ -5,12 +5,16 @@ import { PERMISSIONS } from '@/lib/rbac/roles';
 
 export const dynamic = 'force-dynamic';
 
+// Type for route context (fixes Next.js 15 type generation)
+type RouteContext = { params?: Record<string, never> };
+
 /**
  * GET /api/monetization/prices
  * List all plan prices (optionally filtered by planId)
  */
 export const GET = withProviderAuth(
-  async (request: NextRequest, { session }: { session: ProviderSession }) => {
+  async (request: NextRequest, context: RouteContext & { session: ProviderSession }) => {
+    const { session } = context;
     try {
       const url = new URL(request.url);
       const planId = url.searchParams.get('planId') || undefined;
@@ -38,7 +42,8 @@ export const GET = withProviderAuth(
  * Create a new plan price (admin only)
  */
 export const POST = withProviderAuth(
-  async (request: NextRequest, { session }: { session: ProviderSession }) => {
+  async (request: NextRequest, context: RouteContext & { session: ProviderSession }) => {
+    const { session } = context;
     try {
       const body = await request.json().catch(() => ({}));
       const { planId, unitAmountCents, cadence, currency, trialDays, active, stripePriceId } = body || {};
@@ -96,7 +101,8 @@ export const POST = withProviderAuth(
  * Update a plan price (admin only)
  */
 export const PATCH = withProviderAuth(
-  async (request: NextRequest, { session }: { session: ProviderSession }) => {
+  async (request: NextRequest, context: RouteContext & { session: ProviderSession }) => {
+    const { session } = context;
     try {
       const body = await request.json().catch(() => ({}));
       const { id, unitAmountCents, cadence, currency, trialDays, active, stripePriceId } = body || {};

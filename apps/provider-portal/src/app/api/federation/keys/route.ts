@@ -5,12 +5,16 @@ import { prisma } from '@/lib/prisma';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 
+// Type for route context (fixes Next.js 15 type generation)
+type RouteContext = { params?: Record<string, never> };
+
 /**
  * GET /api/federation/keys
  * List all active federation keys (secrets never returned)
  */
 export const GET = withProviderAuth(
-  async (request: NextRequest, { session }: { session: ProviderSession }) => {
+  async (request: NextRequest, context: RouteContext & { session: ProviderSession }) => {
+    const { session } = context;
     try {
       const keys = await prisma.federationKey.findMany({
         where: { disabledAt: null },
@@ -40,7 +44,8 @@ export const GET = withProviderAuth(
  * Create a new federation key (secret returned only once)
  */
 export const POST = withProviderAuth(
-  async (request: NextRequest, { session }: { session: ProviderSession }) => {
+  async (request: NextRequest, context: RouteContext & { session: ProviderSession }) => {
+    const { session } = context;
     try {
       const body = await request.json();
       const { orgId } = body;

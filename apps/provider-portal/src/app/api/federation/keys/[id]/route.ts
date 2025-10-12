@@ -3,6 +3,9 @@ import { withProviderAuth, type ProviderSession } from '@/lib/api/withProviderAu
 import { PERMISSIONS } from '@/lib/rbac/roles';
 import { prisma } from '@/lib/prisma';
 
+// Type for route context with dynamic params (fixes Next.js 15 type generation)
+type RouteContext = { params?: Promise<{ id: string }> };
+
 /**
  * DELETE /api/federation/keys/[id]
  * Disable a federation key (soft delete)
@@ -10,12 +13,13 @@ import { prisma } from '@/lib/prisma';
 export const DELETE = withProviderAuth(
   async (
     request: NextRequest,
-    { params, session }: { params?: { id: string }; session: ProviderSession }
+    context: RouteContext & { session: ProviderSession }
   ) => {
     try {
+      const { session } = context;
       // Handle params properly for Next.js 15
-      const resolvedParams = params ? await Promise.resolve(params) : { id: '' };
-      const { id } = resolvedParams;
+      const params = context.params ? await context.params : { id: '' };
+      const { id } = params;
 
       // Soft delete by setting disabledAt
       const key = await prisma.federationKey.update({

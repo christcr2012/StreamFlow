@@ -6,6 +6,9 @@ import { encrypt, decrypt } from '@/lib/crypto/aes';
 
 const ENCRYPTION_KEY = process.env.FED_HMAC_MASTER_KEY || 'default-key-change-in-production';
 
+// Type for route context (fixes Next.js 15 type generation)
+type RouteContext = { params?: Record<string, never> };
+
 /**
  * Validate OIDC configuration
  */
@@ -33,7 +36,8 @@ function validateOIDCConfig(config: {
  * Retrieve OIDC configuration (clientSecret masked)
  */
 export const GET = withProviderAuth(
-  async (request: NextRequest, { session }: { session: ProviderSession }) => {
+  async (request: NextRequest, context: RouteContext & { session: ProviderSession }) => {
+    const { session } = context;
     try {
       const config = await prisma.oIDCConfig.findFirst({
         orderBy: { createdAt: 'desc' },
@@ -64,7 +68,8 @@ export const GET = withProviderAuth(
  * Create OIDC configuration (replaces existing)
  */
 export const POST = withProviderAuth(
-  async (request: NextRequest, { session }: { session: ProviderSession }) => {
+  async (request: NextRequest, context: RouteContext & { session: ProviderSession }) => {
+    const { session } = context;
     try {
       const body = await request.json();
       const { enabled, issuerUrl, clientId, clientSecret, scopes } = body;
@@ -130,7 +135,8 @@ export const POST = withProviderAuth(
  * Update OIDC configuration
  */
 export const PATCH = withProviderAuth(
-  async (request: NextRequest, { session }: { session: ProviderSession }) => {
+  async (request: NextRequest, context: RouteContext & { session: ProviderSession }) => {
+    const { session } = context;
     try {
       const body = await request.json();
       const { enabled, issuerUrl, clientId, clientSecret, scopes } = body;
