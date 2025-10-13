@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAuthContext } from '@/lib/auth-context';
 import { prisma } from '@/lib/prisma';
 import { UpdateJobStatusSchema } from '@/lib/validations/job';
+import { broadcastToOrg } from '@/app/api/sse/route';
 
 export async function POST(
   request: NextRequest,
@@ -31,6 +32,23 @@ export async function POST(
           },
         },
       },
+      include: {
+        customer: {
+          select: { id: true, company: true, primaryName: true },
+        },
+      },
+    });
+
+    // Broadcast SSE event to all connected clients in this org
+    broadcastToOrg(authContext.orgId!, {
+      type: 'job_updated',
+      data: {
+        id: job.id,
+        title: job.title,
+        status: job.status,
+        customer: job.customer,
+      },
+      timestamp: new Date().toISOString(),
     });
 
     return NextResponse.json({ ok: true, job });

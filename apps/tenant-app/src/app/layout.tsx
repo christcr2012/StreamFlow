@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import { DirectAccessBanner } from '@/components/DirectAccessBanner';
 import { getAuthContext } from '@/lib/auth-context';
+import { ToastContainer } from '@/components/ui/toast';
 import '../styles/globals.css';
 import { DEFAULT_THEME } from '@cortiware/themes';
 
@@ -24,6 +25,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           />
         )}
         {children}
+        <ToastContainer />
       </body>
     </html>
   );

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAuthContext } from '@/lib/auth-context';
 import { prisma } from '@/lib/prisma';
 import { CreatePaymentSchema } from '@/lib/validations/invoice';
+import { broadcastToOrg } from '@/app/api/sse/route';
 
 export async function POST(
   request: NextRequest,
@@ -22,6 +23,9 @@ export async function POST(
       where: { id: invoiceId, orgId: authContext.orgId! },
       include: {
         payments: true,
+        customer: {
+          select: { id: true, company: true, primaryName: true },
+        },
       },
     });
 
@@ -54,19 +58,58 @@ export async function POST(
 
     // Update invoice status if fully paid
     const newTotalPaid = totalPaid + data.amount;
+    let updatedInvoice;
     if (newTotalPaid >= Number(invoice.amount)) {
-      await prisma.invoice.update({
+      updatedInvoice = await prisma.invoice.update({
         where: { id: invoiceId },
         data: {
           status: 'paid',
           paidAt: new Date(),
         },
+        include: {
+          customer: {
+            select: { id: true, company: true, primaryName: true },
+          },
+        },
       });
     } else if (invoice.status === 'draft') {
       // Move to open status on first payment
-      await prisma.invoice.update({
+      updatedInvoice = await prisma.invoice.update({
         where: { id: invoiceId },
         data: { status: 'open' },
+        include: {
+          customer: {
+            select: { id: true, company: true, primaryName: true },
+          },
+        },
+      });
+    }
+
+    // Broadcast payment received event
+    broadcastToOrg(authContext.orgId!, {
+      type: 'payment_received',
+      data: {
+        invoiceId,
+        invoiceNumber: invoice.number,
+        paymentAmount: data.amount,
+        totalPaid: newTotalPaid,
+        invoiceAmount: Number(invoice.amount),
+        customer: invoice.customer,
+      },
+      timestamp: new Date().toISOString(),
+    });
+
+    // Broadcast invoice updated event if status changed
+    if (updatedInvoice) {
+      broadcastToOrg(authContext.orgId!, {
+        type: 'invoice_updated',
+        data: {
+          id: updatedInvoice.id,
+          number: updatedInvoice.number,
+          status: updatedInvoice.status,
+          customer: updatedInvoice.customer,
+        },
+        timestamp: new Date().toISOString(),
       });
     }
 
