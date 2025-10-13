@@ -5,7 +5,7 @@ import { put } from '@vercel/blob';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authContext = await getAuthContext();
@@ -13,10 +13,12 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
+
     // Verify job belongs to org
     const job = await prisma.job.findFirst({
       where: {
-        id: params.id,
+        id,
         orgId: authContext.orgId,
       },
     });
@@ -52,7 +54,7 @@ export async function POST(
     }
 
     // Upload to Vercel Blob
-    const filename = `${authContext.orgId}/${params.id}/${Date.now()}-${file.name}`;
+    const filename = `${authContext.orgId}/${id}/${Date.now()}-${file.name}`;
     const blob = await put(filename, file, {
       access: 'public',
       addRandomSuffix: true,
@@ -61,7 +63,7 @@ export async function POST(
     // Create JobPhoto record
     const photo = await prisma.jobPhoto.create({
       data: {
-        jobId: params.id,
+        jobId: id,
         url: blob.url,
         caption: caption || null,
       },
@@ -70,7 +72,7 @@ export async function POST(
     // Add timeline entry
     await prisma.jobTimeline.create({
       data: {
-        jobId: params.id,
+        jobId: id,
         eventType: 'photo_added',
         description: caption ? `Photo added: ${caption}` : 'Photo added',
         metadata: { photoId: photo.id, url: blob.url },
@@ -89,7 +91,7 @@ export async function POST(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authContext = await getAuthContext();
@@ -97,10 +99,12 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
+
     // Verify job belongs to org
     const job = await prisma.job.findFirst({
       where: {
-        id: params.id,
+        id,
         orgId: authContext.orgId,
       },
     });
@@ -110,7 +114,7 @@ export async function GET(
     }
 
     const photos = await prisma.jobPhoto.findMany({
-      where: { jobId: params.id },
+      where: { jobId: id },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -126,7 +130,7 @@ export async function GET(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authContext = await getAuthContext();
@@ -134,6 +138,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
     const { searchParams } = new URL(request.url);
     const photoId = searchParams.get('photoId');
 
@@ -146,7 +151,7 @@ export async function DELETE(
       where: {
         id: photoId,
         job: {
-          id: params.id,
+          id,
           orgId: authContext.orgId,
         },
       },
@@ -164,7 +169,7 @@ export async function DELETE(
     // Add timeline entry
     await prisma.jobTimeline.create({
       data: {
-        jobId: params.id,
+        jobId: id,
         eventType: 'photo_removed',
         description: photo.caption ? `Photo removed: ${photo.caption}` : 'Photo removed',
         metadata: { photoId: photo.id },
