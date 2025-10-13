@@ -1,13 +1,14 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, useMemo } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { DataTable, Column } from '@/components/ui/data-table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
+import { showToast } from '@/components/ui/toast';
 import Link from 'next/link';
 
 interface Job {
@@ -30,20 +31,70 @@ interface JobsClientProps {
 
 export function JobsClient({ jobs }: JobsClientProps) {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const searchParams = useSearchParams();
 
-  const filteredJobs = jobs.filter((job) => {
-    const query = searchQuery.toLowerCase();
-    const matchesSearch =
-      job.title.toLowerCase().includes(query) ||
-      job.customer?.company?.toLowerCase().includes(query) ||
-      job.customer?.primaryName?.toLowerCase().includes(query);
-    
-    const matchesStatus = statusFilter === 'all' || job.status === statusFilter;
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
+  const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || 'all');
+  const [sortBy, setSortBy] = useState(searchParams.get('sortBy') || 'createdAt');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>((searchParams.get('sortOrder') as 'asc' | 'desc') || 'desc');
+  const [selectedJobs, setSelectedJobs] = useState<Set<string>>(new Set());
 
-    return matchesSearch && matchesStatus;
-  });
+  // Update URL when filters change
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (searchQuery) params.set('search', searchQuery);
+    if (statusFilter !== 'all') params.set('status', statusFilter);
+    if (sortBy !== 'createdAt') params.set('sortBy', sortBy);
+    if (sortOrder !== 'desc') params.set('sortOrder', sortOrder);
+
+    const newUrl = params.toString() ? `?${params.toString()}` : '/jobs';
+    router.replace(newUrl, { scroll: false });
+  }, [searchQuery, statusFilter, sortBy, sortOrder, router]);
+
+  const filteredAndSortedJobs = useMemo(() => {
+    let filtered = jobs.filter((job) => {
+      const query = searchQuery.toLowerCase();
+      const matchesSearch =
+        job.title.toLowerCase().includes(query) ||
+        job.customer?.company?.toLowerCase().includes(query) ||
+        job.customer?.primaryName?.toLowerCase().includes(query);
+
+      const matchesStatus = statusFilter === 'all' || job.status === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    });
+
+    // Sort jobs
+    filtered.sort((a, b) => {
+      let aVal: any, bVal: any;
+
+      switch (sortBy) {
+        case 'title':
+          aVal = a.title.toLowerCase();
+          bVal = b.title.toLowerCase();
+          break;
+        case 'status':
+          aVal = a.status;
+          bVal = b.status;
+          break;
+        case 'scheduledAt':
+          aVal = a.scheduledAt ? new Date(a.scheduledAt).getTime() : 0;
+          bVal = b.scheduledAt ? new Date(b.scheduledAt).getTime() : 0;
+          break;
+        case 'createdAt':
+        default:
+          aVal = new Date(a.createdAt).getTime();
+          bVal = new Date(b.createdAt).getTime();
+          break;
+      }
+
+      if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
+      if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    return filtered;
+  }, [jobs, searchQuery, statusFilter, sortBy, sortOrder]);
 
   const columns: Column<Job>[] = [
     {
@@ -113,6 +164,49 @@ export function JobsClient({ jobs }: JobsClientProps) {
     },
   ];
 
+  const handleBulkStatusUpdate = async (newStatus: string) => {
+    if (selectedJobs.size === 0) return;
+
+    try {
+      const promises = Array.from(selectedJobs).map(jobId =>
+        fetch(`/api/jobs/${jobId}/status`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus }),
+        })
+      );
+
+      await Promise.all(promises);
+      showToast(`Updated ${selectedJobs.size} job(s) to ${newStatus}`, 'success');
+      setSelectedJobs(new Set());
+      router.refresh();
+    } catch (error) {
+      showToast('Failed to update jobs', 'error');
+    }
+  };
+
+  const handleExportCSV = () => {
+    const csv = [
+      ['Title', 'Customer', 'Status', 'Scheduled', 'Completed', 'Created'],
+      ...filteredAndSortedJobs.map(j => [
+        j.title,
+        j.customer?.company || j.customer?.primaryName || 'No customer',
+        j.status,
+        j.scheduledAt ? new Date(j.scheduledAt).toLocaleDateString() : '',
+        j.completedAt ? new Date(j.completedAt).toLocaleDateString() : '',
+        new Date(j.createdAt).toLocaleDateString(),
+      ]),
+    ].map(row => row.join(',')).join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `jobs-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="min-h-screen p-8 bg-gray-50">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -120,35 +214,94 @@ export function JobsClient({ jobs }: JobsClientProps) {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Jobs</h1>
-            <p className="text-gray-600 mt-1">Manage your service jobs</p>
+            <p className="text-gray-600 mt-1">
+              {filteredAndSortedJobs.length} of {jobs.length} jobs
+              {selectedJobs.size > 0 && ` • ${selectedJobs.size} selected`}
+            </p>
           </div>
-          <Link href="/jobs/new">
-            <Button>+ New Job</Button>
-          </Link>
+          <div className="flex gap-3">
+            <Button variant="secondary" onClick={handleExportCSV}>
+              Export CSV
+            </Button>
+            <Link href="/jobs/new">
+              <Button>+ New Job</Button>
+            </Link>
+          </div>
         </div>
 
         {/* Search and Filters */}
         <Card>
-          <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
-              type="search"
-              placeholder="Search jobs..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              fullWidth
-            />
-            <Select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              options={[
-                { value: 'all', label: 'All Statuses' },
-                { value: 'scheduled', label: 'Scheduled' },
-                { value: 'in-progress', label: 'In Progress' },
-                { value: 'completed', label: 'Completed' },
-                { value: 'cancelled', label: 'Cancelled' },
-              ]}
-              fullWidth
-            />
+          <div className="p-4 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="md:col-span-2">
+                <Input
+                  type="search"
+                  placeholder="Search jobs by title or customer..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  fullWidth
+                />
+              </div>
+              <Select
+                label="Status"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                options={[
+                  { value: 'all', label: 'All Statuses' },
+                  { value: 'scheduled', label: 'Scheduled' },
+                  { value: 'in-progress', label: 'In Progress' },
+                  { value: 'completed', label: 'Completed' },
+                  { value: 'cancelled', label: 'Cancelled' },
+                ]}
+                fullWidth
+              />
+              <Select
+                label="Sort By"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                options={[
+                  { value: 'createdAt', label: 'Date Created' },
+                  { value: 'title', label: 'Title' },
+                  { value: 'status', label: 'Status' },
+                  { value: 'scheduledAt', label: 'Scheduled Date' },
+                ]}
+                fullWidth
+              />
+            </div>
+            <div className="flex items-center gap-4">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+              >
+                {sortOrder === 'asc' ? '↑ Ascending' : '↓ Descending'}
+              </Button>
+              {selectedJobs.size > 0 && (
+                <div className="flex gap-2">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => handleBulkStatusUpdate('in-progress')}
+                  >
+                    Mark In Progress
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => handleBulkStatusUpdate('completed')}
+                  >
+                    Mark Completed
+                  </Button>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => handleBulkStatusUpdate('cancelled')}
+                  >
+                    Cancel Selected
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
         </Card>
 
@@ -191,7 +344,7 @@ export function JobsClient({ jobs }: JobsClientProps) {
         {/* Table */}
         <Card padding="none">
           <DataTable
-            data={filteredJobs}
+            data={filteredAndSortedJobs}
             columns={columns}
             keyExtractor={(job) => job.id}
             onRowClick={(job) => router.push(`/jobs/${job.id}`)}
