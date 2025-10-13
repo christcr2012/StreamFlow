@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAuthContext } from '@/lib/auth-context';
 import { prisma } from '@/lib/prisma';
 import { UpdateJobStatusSchema } from '@/lib/validations/job';
-import { broadcastToOrg } from '@/app/api/sse/route';
+import { broadcastToOrg } from '@/lib/sse';
 
 export async function POST(
   request: NextRequest,
