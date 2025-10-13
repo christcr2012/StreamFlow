@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
+import { Pagination } from '@/components/ui/pagination';
 import { showToast } from '@/components/ui/toast';
 import Link from 'next/link';
 
@@ -38,6 +39,8 @@ export function JobsClient({ jobs }: JobsClientProps) {
   const [sortBy, setSortBy] = useState(searchParams.get('sortBy') || 'createdAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>((searchParams.get('sortOrder') as 'asc' | 'desc') || 'desc');
   const [selectedJobs, setSelectedJobs] = useState<Set<string>>(new Set());
+  const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page') || '1'));
+  const itemsPerPage = 20;
 
   // Update URL when filters change
   useEffect(() => {
@@ -46,10 +49,11 @@ export function JobsClient({ jobs }: JobsClientProps) {
     if (statusFilter !== 'all') params.set('status', statusFilter);
     if (sortBy !== 'createdAt') params.set('sortBy', sortBy);
     if (sortOrder !== 'desc') params.set('sortOrder', sortOrder);
+    if (currentPage !== 1) params.set('page', currentPage.toString());
 
     const newUrl = params.toString() ? `?${params.toString()}` : '/jobs';
     router.replace(newUrl, { scroll: false });
-  }, [searchQuery, statusFilter, sortBy, sortOrder, router]);
+  }, [searchQuery, statusFilter, sortBy, sortOrder, currentPage, router]);
 
   const filteredAndSortedJobs = useMemo(() => {
     let filtered = jobs.filter((job) => {
@@ -95,6 +99,19 @@ export function JobsClient({ jobs }: JobsClientProps) {
 
     return filtered;
   }, [jobs, searchQuery, statusFilter, sortBy, sortOrder]);
+
+  // Pagination
+  const totalPages = Math.ceil(filteredAndSortedJobs.length / itemsPerPage);
+  const paginatedJobs = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredAndSortedJobs.slice(startIndex, endIndex);
+  }, [filteredAndSortedJobs, currentPage, itemsPerPage]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const columns: Column<Job>[] = [
     {
@@ -344,12 +361,21 @@ export function JobsClient({ jobs }: JobsClientProps) {
         {/* Table */}
         <Card padding="none">
           <DataTable
-            data={filteredAndSortedJobs}
+            data={paginatedJobs}
             columns={columns}
             keyExtractor={(job) => job.id}
             onRowClick={(job) => router.push(`/jobs/${job.id}`)}
             emptyMessage="No jobs found. Create your first job to get started."
           />
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              totalItems={filteredAndSortedJobs.length}
+              itemsPerPage={itemsPerPage}
+            />
+          )}
         </Card>
       </div>
     </div>

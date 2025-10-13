@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Select } from '@/components/ui/select';
+import { Pagination } from '@/components/ui/pagination';
 import Link from 'next/link';
 
 interface Customer {
@@ -35,6 +36,8 @@ export function CustomersClient({ customers }: CustomersClientProps) {
   const [sortBy, setSortBy] = useState(searchParams.get('sortBy') || 'createdAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>((searchParams.get('sortOrder') as 'asc' | 'desc') || 'desc');
   const [selectedCustomers, setSelectedCustomers] = useState<Set<string>>(new Set());
+  const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page') || '1'));
+  const itemsPerPage = 20;
 
   // Update URL when filters change
   useEffect(() => {
@@ -42,10 +45,11 @@ export function CustomersClient({ customers }: CustomersClientProps) {
     if (searchQuery) params.set('search', searchQuery);
     if (sortBy !== 'createdAt') params.set('sortBy', sortBy);
     if (sortOrder !== 'desc') params.set('sortOrder', sortOrder);
+    if (currentPage !== 1) params.set('page', currentPage.toString());
 
     const newUrl = params.toString() ? `?${params.toString()}` : '/customers';
     router.replace(newUrl, { scroll: false });
-  }, [searchQuery, sortBy, sortOrder, router]);
+  }, [searchQuery, sortBy, sortOrder, currentPage, router]);
 
   const filteredAndSortedCustomers = useMemo(() => {
     let filtered = customers.filter((customer) => {
@@ -88,6 +92,19 @@ export function CustomersClient({ customers }: CustomersClientProps) {
 
     return filtered;
   }, [customers, searchQuery, sortBy, sortOrder]);
+
+  // Pagination
+  const totalPages = Math.ceil(filteredAndSortedCustomers.length / itemsPerPage);
+  const paginatedCustomers = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredAndSortedCustomers.slice(startIndex, endIndex);
+  }, [filteredAndSortedCustomers, currentPage, itemsPerPage]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const columns: Column<Customer>[] = [
     {
@@ -234,12 +251,21 @@ export function CustomersClient({ customers }: CustomersClientProps) {
         {/* Table */}
         <Card padding="none">
           <DataTable
-            data={filteredAndSortedCustomers}
+            data={paginatedCustomers}
             columns={columns}
             keyExtractor={(customer) => customer.id}
             onRowClick={(customer) => router.push(`/customers/${customer.id}`)}
             emptyMessage="No customers found. Create your first customer to get started."
           />
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              totalItems={filteredAndSortedCustomers.length}
+              itemsPerPage={itemsPerPage}
+            />
+          )}
         </Card>
       </div>
     </div>
