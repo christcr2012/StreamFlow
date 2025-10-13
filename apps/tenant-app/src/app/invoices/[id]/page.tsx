@@ -64,14 +64,15 @@ async function getInvoice(id: string, orgId: string) {
   };
 }
 
-export default async function InvoiceDetailPage({ params }: { params: { id: string } }) {
+export default async function InvoiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const authContext = await getAuthContext();
 
   if (!authContext.isAuthenticated || !authContext.orgId) {
     redirect('/login');
   }
 
-  const invoice = await getInvoice(params.id, authContext.orgId);
+  const { id } = await params;
+  const invoice = await getInvoice(id, authContext.orgId);
 
   return <InvoiceDetailClient invoice={invoice} />;
 }
