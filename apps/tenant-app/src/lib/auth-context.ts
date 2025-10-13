@@ -1,12 +1,13 @@
 /**
  * Authentication Context Helpers
- * 
+ *
  * Detects and manages authentication context:
  * - Normal mode: User authenticated via SSO or direct login
  * - Direct Access mode: Provider/Developer authenticated via emergency endpoint
  */
 
 import { cookies } from 'next/headers';
+import { prisma } from './prisma';
 
 export type AuthMode = 'normal' | 'direct-access';
 export type AuthRole = 'provider' | 'developer' | 'tenant' | 'accountant' | 'vendor' | null;
@@ -18,6 +19,7 @@ export interface AuthContext {
   isAuthenticated: boolean;
   isDirectAccess: boolean;
   userId?: string;
+  orgId?: string;
   providerId?: string;
   developerId?: string;
 }
@@ -58,34 +60,58 @@ export async function getAuthContext(): Promise<AuthContext> {
   const userCookie = cookieStore.get('rs_user');
   const accountantCookie = cookieStore.get('rs_accountant');
   const vendorCookie = cookieStore.get('rs_vendor');
-  
+
   if (userCookie) {
+    // Fetch user from database to get orgId
+    const user = await prisma.user.findUnique({
+      where: { email: userCookie.value.toLowerCase() },
+      select: { id: true, orgId: true },
+    });
+
     return {
       mode: 'normal',
       role: 'tenant',
       email: userCookie.value,
       isAuthenticated: true,
       isDirectAccess: false,
+      userId: user?.id,
+      orgId: user?.orgId,
     };
   }
-  
+
   if (accountantCookie) {
+    // Fetch accountant from database to get orgId
+    const user = await prisma.user.findUnique({
+      where: { email: accountantCookie.value.toLowerCase() },
+      select: { id: true, orgId: true },
+    });
+
     return {
       mode: 'normal',
       role: 'accountant',
       email: accountantCookie.value,
       isAuthenticated: true,
       isDirectAccess: false,
+      userId: user?.id,
+      orgId: user?.orgId,
     };
   }
-  
+
   if (vendorCookie) {
+    // Fetch vendor from database to get orgId
+    const user = await prisma.user.findUnique({
+      where: { email: vendorCookie.value.toLowerCase() },
+      select: { id: true, orgId: true },
+    });
+
     return {
       mode: 'normal',
       role: 'vendor',
       email: vendorCookie.value,
       isAuthenticated: true,
       isDirectAccess: false,
+      userId: user?.id,
+      orgId: user?.orgId,
     };
   }
   
