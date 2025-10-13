@@ -1,0 +1,328 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Card, CardHeader } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { showToast } from '@/components/ui/toast';
+import { downloadInvoicePDF } from '@/lib/pdf-generator';
+import Link from 'next/link';
+
+interface Invoice {
+  id: string;
+  number: string | null;
+  status: string;
+  issuedAt: Date;
+  dueDate: Date | null;
+  subtotal: number;
+  taxAmount: number;
+  discountAmount: number;
+  amount: number;
+  terms: string | null;
+  notes: string | null;
+  customer: {
+    id: string;
+    company: string | null;
+    primaryName: string | null;
+    primaryEmail: string | null;
+    primaryPhone: string | null;
+  } | null;
+  job: {
+    id: string;
+    title: string;
+  } | null;
+  lineItems: Array<{
+    id: string;
+    description: string;
+    quantity: number;
+    unitPriceCents: number;
+    amountCents: number;
+    lineType: string;
+  }>;
+  payments: Array<{
+    id: string;
+    amount: number;
+    receivedAt: Date;
+    method: string | null;
+  }>;
+}
+
+interface InvoiceDetailClientProps {
+  invoice: Invoice;
+}
+
+export function InvoiceDetailClient({ invoice }: InvoiceDetailClientProps) {
+  const router = useRouter();
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'paid':
+        return <Badge variant="success">Paid</Badge>;
+      case 'sent':
+        return <Badge variant="info">Sent</Badge>;
+      case 'overdue':
+        return <Badge variant="danger">Overdue</Badge>;
+      case 'draft':
+        return <Badge variant="default">Draft</Badge>;
+      default:
+        return <Badge variant="default">{status}</Badge>;
+    }
+  };
+
+  const handleDownloadPDF = () => {
+    try {
+      if (!invoice.customer) {
+        showToast('Cannot generate PDF: No customer assigned', 'error');
+        return;
+      }
+
+      // Convert Decimal to number for PDF generation
+      const pdfData = {
+        ...invoice,
+        subtotal: Number(invoice.subtotal),
+        taxAmount: Number(invoice.taxAmount),
+        discountAmount: Number(invoice.discountAmount),
+        amount: Number(invoice.amount),
+        customer: invoice.customer,
+      };
+
+      downloadInvoicePDF(pdfData);
+      showToast('Invoice PDF downloaded successfully', 'success');
+    } catch (error) {
+      showToast('Failed to generate PDF', 'error');
+    }
+  };
+
+  const handleMarkAsPaid = async () => {
+    if (!confirm('Mark this invoice as paid?')) return;
+
+    setIsProcessing(true);
+    try {
+      const response = await fetch(`/api/invoices/${invoice.id}/payments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: invoice.amount,
+          method: 'manual',
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to record payment');
+      }
+
+      showToast('Invoice marked as paid', 'success');
+      router.refresh();
+    } catch (error: any) {
+      showToast(error.message || 'Failed to mark as paid', 'error');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const totalPaid = invoice.payments.reduce((sum, p) => sum + p.amount, 0);
+  const amountDue = invoice.amount - totalPaid;
+
+  return (
+    <div className="min-h-screen p-8 bg-gray-50">
+      <div className="max-w-4xl mx-auto space-y-6">
+        {/* Header */}
+        <div>
+          <Link href="/invoices" className="text-sm text-blue-600 hover:text-blue-700 mb-2 inline-block">
+            ← Back to Invoices
+          </Link>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Invoice {invoice.number || 'DRAFT'}
+              </h1>
+              <p className="text-gray-600 mt-1">
+                {getStatusBadge(invoice.status)}
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <Button variant="secondary" onClick={handleDownloadPDF}>
+                Download PDF
+              </Button>
+              {invoice.status !== 'paid' && amountDue > 0 && (
+                <Button onClick={handleMarkAsPaid} loading={isProcessing} disabled={isProcessing}>
+                  Mark as Paid
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Invoice Details */}
+        <Card>
+          <CardHeader title="Invoice Details" />
+          <div className="p-6 space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-gray-600">Invoice Number</p>
+                <p className="font-medium">{invoice.number || 'DRAFT'}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Status</p>
+                <p className="font-medium">{invoice.status}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Issued Date</p>
+                <p className="font-medium">{new Date(invoice.issuedAt).toLocaleDateString()}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Due Date</p>
+                <p className="font-medium">
+                  {invoice.dueDate ? new Date(invoice.dueDate).toLocaleDateString() : 'Not set'}
+                </p>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* Customer Info */}
+        {invoice.customer && (
+          <Card>
+            <CardHeader title="Customer" />
+            <div className="p-6">
+              <Link href={`/customers/${invoice.customer.id}`} className="text-blue-600 hover:text-blue-700">
+                <p className="font-medium text-lg">
+                  {invoice.customer.company || invoice.customer.primaryName || 'Unnamed Customer'}
+                </p>
+              </Link>
+              {invoice.customer.primaryEmail && (
+                <p className="text-sm text-gray-600 mt-1">{invoice.customer.primaryEmail}</p>
+              )}
+              {invoice.customer.primaryPhone && (
+                <p className="text-sm text-gray-600">{invoice.customer.primaryPhone}</p>
+              )}
+              {invoice.job && (
+                <div className="mt-3">
+                  <p className="text-sm text-gray-600">Related Job:</p>
+                  <Link href={`/jobs/${invoice.job.id}`} className="text-blue-600 hover:text-blue-700">
+                    {invoice.job.title}
+                  </Link>
+                </div>
+              )}
+            </div>
+          </Card>
+        )}
+
+        {/* Line Items */}
+        <Card>
+          <CardHeader title="Line Items" />
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Qty</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Unit Price</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Amount</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {invoice.lineItems.map((item) => (
+                  <tr key={item.id}>
+                    <td className="px-6 py-4 text-sm text-gray-900">{item.description}</td>
+                    <td className="px-6 py-4 text-sm text-gray-900 text-right">{item.quantity}</td>
+                    <td className="px-6 py-4 text-sm text-gray-900 text-right">
+                      ${(item.unitPriceCents / 100).toFixed(2)}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-900 text-right">
+                      ${(item.amountCents / 100).toFixed(2)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="p-6 border-t border-gray-200">
+            <div className="flex justify-end">
+              <div className="w-64 space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Subtotal:</span>
+                  <span className="font-medium">${(invoice.subtotal / 100).toFixed(2)}</span>
+                </div>
+                {invoice.discountAmount > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Discount:</span>
+                    <span className="font-medium text-green-600">-${(invoice.discountAmount / 100).toFixed(2)}</span>
+                  </div>
+                )}
+                {invoice.taxAmount > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Tax:</span>
+                    <span className="font-medium">${(invoice.taxAmount / 100).toFixed(2)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between text-lg font-bold border-t pt-2">
+                  <span>Total:</span>
+                  <span>${(invoice.amount / 100).toFixed(2)}</span>
+                </div>
+                {totalPaid > 0 && (
+                  <>
+                    <div className="flex justify-between text-sm text-green-600">
+                      <span>Paid:</span>
+                      <span className="font-medium">-${(totalPaid / 100).toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-lg font-bold text-red-600 border-t pt-2">
+                      <span>Amount Due:</span>
+                      <span>${(amountDue / 100).toFixed(2)}</span>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* Terms and Notes */}
+        {(invoice.terms || invoice.notes) && (
+          <Card>
+            <CardHeader title="Additional Information" />
+            <div className="p-6 space-y-4">
+              {invoice.terms && (
+                <div>
+                  <p className="text-sm font-medium text-gray-700">Payment Terms</p>
+                  <p className="text-sm text-gray-600 mt-1">{invoice.terms}</p>
+                </div>
+              )}
+              {invoice.notes && (
+                <div>
+                  <p className="text-sm font-medium text-gray-700">Notes</p>
+                  <p className="text-sm text-gray-600 mt-1">{invoice.notes}</p>
+                </div>
+              )}
+            </div>
+          </Card>
+        )}
+
+        {/* Payment History */}
+        {invoice.payments.length > 0 && (
+          <Card>
+            <CardHeader title="Payment History" />
+            <div className="p-6">
+              <div className="space-y-3">
+                {invoice.payments.map((payment) => (
+                  <div key={payment.id} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
+                    <div>
+                      <p className="text-sm font-medium">${(payment.amount / 100).toFixed(2)}</p>
+                      <p className="text-xs text-gray-500">
+                        {new Date(payment.receivedAt).toLocaleDateString()} • {payment.method || 'Manual'}
+                      </p>
+                    </div>
+                    <Badge variant="success" size="sm">Paid</Badge>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Card>
+        )}
+      </div>
+    </div>
+  );
+}
+
