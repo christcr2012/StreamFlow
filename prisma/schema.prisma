@@ -508,8 +508,10 @@ model Job {
 
 model JobPhoto {
   id        String   @id @default(cuid())
+  publicId  String   @unique @default(cuid())
   jobId     String
   url       String
+  caption   String?
   metadata  Json     @default("{}")
   takenAt   DateTime @default(now())
   takenBy   String?
@@ -518,10 +520,12 @@ model JobPhoto {
   job Job @relation(fields: [jobId], references: [id], onDelete: Cascade)
 
   @@index([jobId])
+  @@index([publicId])
 }
 
 model JobTimeline {
   id          String   @id @default(cuid())
+  publicId    String   @unique @default(cuid())
   jobId       String
   eventType   String
   description String
@@ -532,6 +536,7 @@ model JobTimeline {
   job Job @relation(fields: [jobId], references: [id], onDelete: Cascade)
 
   @@index([jobId, createdAt])
+  @@index([publicId])
 }
 
 model Referral {

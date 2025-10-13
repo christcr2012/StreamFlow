@@ -1,11 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Timeline } from '@/components/ui/timeline';
 import { Select } from '@/components/ui/select';
+import { JobPhotoGallery } from '@/components/job-photo-gallery';
 import Link from 'next/link';
 
 interface Job {
@@ -34,9 +36,7 @@ interface Job {
   photos: Array<{
     id: string;
     url: string;
-    metadata: any;
-    takenAt: Date;
-    takenBy: string | null;
+    caption: string | null;
     createdAt: Date;
   }>;
 }
@@ -46,6 +46,7 @@ interface JobDetailClientProps {
 }
 
 export function JobDetailClient({ job }: JobDetailClientProps) {
+  const router = useRouter();
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
   const handleStatusChange = async (newStatus: string) => {
@@ -146,29 +147,11 @@ export function JobDetailClient({ job }: JobDetailClientProps) {
             </Card>
 
             {/* Photos */}
-            {job.photos.length > 0 && (
-              <Card>
-                <CardHeader title="Photos" />
-                <div className="p-6">
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {job.photos.map((photo) => (
-                      <div key={photo.id} className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                        <img
-                          src={photo.url}
-                          alt="Job photo"
-                          className="w-full h-full object-cover"
-                        />
-                        {photo.takenBy && (
-                          <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs p-2">
-                            By: {photo.takenBy}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </Card>
-            )}
+            <JobPhotoGallery
+              jobId={job.id}
+              initialPhotos={job.photos}
+              onPhotosChange={() => router.refresh()}
+            />
 
             {/* Activity Timeline */}
             <Card>
