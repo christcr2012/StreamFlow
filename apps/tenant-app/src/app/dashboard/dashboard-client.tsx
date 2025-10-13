@@ -14,6 +14,10 @@ interface DashboardClientProps {
     activeJobs: number;
     totalInvoices: number;
     unpaidInvoices: number;
+    paidInvoices: number;
+    totalRevenue: number;
+    unpaidAmount: number;
+    totalInvoiceAmount: number;
   };
   recentJobs: Array<{
     id: string;
@@ -73,12 +77,33 @@ export function DashboardClient({ stats, recentJobs, recentInvoices }: Dashboard
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Revenue Card */}
           <Card>
             <div className="p-6">
-              <p className="text-sm font-medium text-gray-500">Total Customers</p>
-              <p className="text-3xl font-bold text-gray-900 mt-2">{stats.totalCustomers}</p>
+              <p className="text-sm font-medium text-gray-500">Total Revenue</p>
+              <p className="text-3xl font-bold text-green-600 mt-2">
+                ${(stats.totalRevenue / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                {stats.paidInvoices} paid invoice{stats.paidInvoices !== 1 ? 's' : ''}
+              </p>
             </div>
           </Card>
+
+          {/* Unpaid Amount Card */}
+          <Card>
+            <div className="p-6">
+              <p className="text-sm font-medium text-gray-500">Unpaid Amount</p>
+              <p className="text-3xl font-bold text-yellow-600 mt-2">
+                ${(stats.unpaidAmount / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                {stats.unpaidInvoices} unpaid invoice{stats.unpaidInvoices !== 1 ? 's' : ''}
+              </p>
+            </div>
+          </Card>
+
+          {/* Active Jobs Card */}
           <Card>
             <div className="p-6">
               <p className="text-sm font-medium text-gray-500">Active Jobs</p>
@@ -86,17 +111,15 @@ export function DashboardClient({ stats, recentJobs, recentInvoices }: Dashboard
               <p className="text-xs text-gray-500 mt-1">of {stats.totalJobs} total</p>
             </div>
           </Card>
+
+          {/* Total Customers Card */}
           <Card>
             <div className="p-6">
-              <p className="text-sm font-medium text-gray-500">Unpaid Invoices</p>
-              <p className="text-3xl font-bold text-yellow-600 mt-2">{stats.unpaidInvoices}</p>
-              <p className="text-xs text-gray-500 mt-1">of {stats.totalInvoices} total</p>
-            </div>
-          </Card>
-          <Card>
-            <div className="p-6">
-              <p className="text-sm font-medium text-gray-500">Total Invoices</p>
-              <p className="text-3xl font-bold text-gray-900 mt-2">{stats.totalInvoices}</p>
+              <p className="text-sm font-medium text-gray-500">Total Customers</p>
+              <p className="text-3xl font-bold text-gray-900 mt-2">{stats.totalCustomers}</p>
+              <Link href="/customers" className="text-xs text-blue-600 hover:text-blue-700 mt-1 inline-block">
+                View all →
+              </Link>
             </div>
           </Card>
         </div>

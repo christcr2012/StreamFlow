@@ -10,14 +10,17 @@ async function getDashboardData(orgId: string) {
     activeJobs,
     totalInvoices,
     unpaidInvoices,
+    paidInvoices,
     recentJobs,
     recentInvoices,
+    allInvoices,
   ] = await Promise.all([
     prisma.customer.count({ where: { orgId } }),
     prisma.job.count({ where: { orgId } }),
     prisma.job.count({ where: { orgId, status: 'in-progress' } }),
     prisma.invoice.count({ where: { orgId } }),
     prisma.invoice.count({ where: { orgId, status: { in: ['draft', 'open'] } } }),
+    prisma.invoice.count({ where: { orgId, status: 'paid' } }),
     prisma.job.findMany({
       where: { orgId },
       include: { customer: true },
@@ -30,7 +33,22 @@ async function getDashboardData(orgId: string) {
       orderBy: { issuedAt: 'desc' },
       take: 5,
     }),
+    prisma.invoice.findMany({
+      where: { orgId },
+      select: { amount: true, status: true },
+    }),
   ]);
+
+  // Calculate revenue metrics
+  const totalRevenue = allInvoices
+    .filter((inv) => inv.status === 'paid')
+    .reduce((sum, inv) => sum + Number(inv.amount), 0);
+
+  const unpaidAmount = allInvoices
+    .filter((inv) => inv.status === 'open' || inv.status === 'draft')
+    .reduce((sum, inv) => sum + Number(inv.amount), 0);
+
+  const totalInvoiceAmount = allInvoices.reduce((sum, inv) => sum + Number(inv.amount), 0);
 
   return {
     stats: {
@@ -39,6 +57,10 @@ async function getDashboardData(orgId: string) {
       activeJobs,
       totalInvoices,
       unpaidInvoices,
+      paidInvoices,
+      totalRevenue,
+      unpaidAmount,
+      totalInvoiceAmount,
     },
     recentJobs,
     recentInvoices,
