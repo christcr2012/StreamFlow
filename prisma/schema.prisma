@@ -439,6 +439,7 @@ model Invoice {
   subtotal    Decimal  @db.Decimal(12, 2) @default(0)
   taxAmount   Decimal  @db.Decimal(12, 2) @default(0)
   discountAmount Decimal @db.Decimal(12, 2) @default(0)
+  currency    String   @default("USD") // ISO 4217 currency code (USD, EUR, GBP, CAD, AUD, etc.)
   status      String   @default("draft")
   dueDate     DateTime?
   issuedAt    DateTime @default(now())
@@ -464,6 +465,7 @@ model Payment {
   orgId      String
   invoiceId  String?
   amount     Decimal  @db.Decimal(12, 2)
+  currency   String   @default("USD") // ISO 4217 currency code
   method     String   @default("stripe")
   receivedAt DateTime @default(now())
   reference  String?
