@@ -24,6 +24,9 @@ interface Invoice {
   currency: string;
   terms: string | null;
   notes: string | null;
+  paymentLinkToken: string | null;
+  paymentLinkExpiresAt: Date | null;
+  paymentLinkViews: number;
   customer: {
     id: string;
     company: string | null;
@@ -60,6 +63,8 @@ export function InvoiceDetailClient({ invoice }: InvoiceDetailClientProps) {
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [paymentLink, setPaymentLink] = useState<string | null>(null);
+  const [showPaymentLink, setShowPaymentLink] = useState(false);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -127,6 +132,35 @@ export function InvoiceDetailClient({ invoice }: InvoiceDetailClientProps) {
     }
   };
 
+  const generatePaymentLink = async () => {
+    setIsProcessing(true);
+    try {
+      const res = await fetch(`/api/invoices/${invoice.id}/payment-link`, {
+        method: 'POST',
+      });
+
+      if (!res.ok) throw new Error('Failed to generate payment link');
+
+      const data = await res.json();
+      setPaymentLink(data.paymentLink);
+      setShowPaymentLink(true);
+      showToast('Payment link generated successfully', 'success');
+      router.refresh();
+    } catch (error) {
+      console.error('Error generating payment link:', error);
+      showToast('Failed to generate payment link', 'error');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const copyPaymentLink = () => {
+    if (paymentLink) {
+      navigator.clipboard.writeText(paymentLink);
+      showToast('Payment link copied to clipboard', 'success');
+    }
+  };
+
   const totalPaid = invoice.payments.reduce((sum, p) => sum + p.amount, 0);
   const amountDue = invoice.amount - totalPaid;
 
@@ -159,11 +193,42 @@ export function InvoiceDetailClient({ invoice }: InvoiceDetailClientProps) {
                   <Button variant="secondary" onClick={handleMarkAsPaid} loading={isProcessing} disabled={isProcessing}>
                     Mark as Paid
                   </Button>
+                  <Button variant="secondary" onClick={generatePaymentLink} loading={isProcessing} disabled={isProcessing}>
+                    Generate Payment Link
+                  </Button>
                 </>
               )}
             </div>
           </div>
         </div>
+
+        {/* Payment Link */}
+        {(showPaymentLink || invoice.paymentLinkToken) && (
+          <Card>
+            <CardHeader title="Payment Link" />
+            <div className="p-6 space-y-4">
+              <div>
+                <p className="text-sm text-gray-600 mb-2">Share this link with your customer to accept payment:</p>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={paymentLink || `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/pay/${invoice.paymentLinkToken}`}
+                    readOnly
+                    className="flex-1 px-3 py-2 border rounded text-sm"
+                  />
+                  <Button variant="secondary" onClick={copyPaymentLink}>
+                    Copy Link
+                  </Button>
+                </div>
+                {invoice.paymentLinkExpiresAt && (
+                  <p className="text-xs text-gray-500 mt-2">
+                    Expires: {new Date(invoice.paymentLinkExpiresAt).toLocaleDateString()} | Views: {invoice.paymentLinkViews}
+                  </p>
+                )}
+              </div>
+            </div>
+          </Card>
+        )}
 
         {/* Invoice Details */}
         <Card>

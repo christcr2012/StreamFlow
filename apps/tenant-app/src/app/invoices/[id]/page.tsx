@@ -56,6 +56,9 @@ async function getInvoice(id: string, orgId: string) {
     discountAmount: Number(invoice.discountAmount),
     amount: Number(invoice.amount),
     currency: invoice.currency,
+    paymentLinkToken: invoice.paymentLinkToken,
+    paymentLinkExpiresAt: invoice.paymentLinkExpiresAt,
+    paymentLinkViews: invoice.paymentLinkViews,
     customer,
     job,
     payments: payments.map(p => ({
