@@ -393,3 +393,101 @@ Thank you!
   return { subject, html, text };
 }
 
+/**
+ * Apply template variables to a template string
+ */
+function applyTemplateVariables(template: string, variables: Record<string, string>): string {
+  let result = template;
+  for (const [key, value] of Object.entries(variables)) {
+    result = result.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
+  }
+  return result;
+}
+
+/**
+ * Get custom email template or use default
+ */
+export async function getEmailTemplate(
+  orgId: string,
+  templateType: 'invoice_sent' | 'payment_received' | 'job_status_update' | 'job_completed',
+  variables: Record<string, string>
+): Promise<{ subject: string; html: string; text: string }> {
+  try {
+    // Try to get custom template
+    const customTemplate = await prisma.emailTemplate.findUnique({
+      where: {
+        orgId_templateType: {
+          orgId,
+          templateType,
+        },
+        active: true,
+      },
+    });
+
+    if (customTemplate) {
+      return {
+        subject: applyTemplateVariables(customTemplate.subject, variables),
+        html: applyTemplateVariables(customTemplate.htmlBody, variables),
+        text: applyTemplateVariables(customTemplate.textBody, variables),
+      };
+    }
+
+    // Fall back to default templates
+    switch (templateType) {
+      case 'invoice_sent':
+        return createInvoiceSentEmail(variables);
+      case 'payment_received':
+        return createPaymentReceivedEmail(variables);
+      case 'job_status_update':
+        return createJobStatusUpdateEmail(variables);
+      case 'job_completed':
+        return createJobCompletedEmail(variables);
+      default:
+        throw new Error(`Unknown template type: ${templateType}`);
+    }
+  } catch (error) {
+    console.error('Error getting email template:', error);
+    // Fall back to default templates on error
+    switch (templateType) {
+      case 'invoice_sent':
+        return createInvoiceSentEmail(variables);
+      case 'payment_received':
+        return createPaymentReceivedEmail(variables);
+      case 'job_status_update':
+        return createJobStatusUpdateEmail(variables);
+      case 'job_completed':
+        return createJobCompletedEmail(variables);
+      default:
+        throw new Error(`Unknown template type: ${templateType}`);
+    }
+  }
+}
+
+// Helper functions for default templates
+function createInvoiceSentEmail(variables: Record<string, string>) {
+  const subject = `Invoice ${variables.invoiceNumber || 'N/A'} from Your Company`;
+  const html = `<p>Dear ${variables.customerName || 'Customer'},</p><p>Your invoice <strong>${variables.invoiceNumber || 'N/A'}</strong> for <strong>${variables.amount || 'N/A'}</strong> is ready.</p><p>Due Date: ${variables.dueDate || 'N/A'}</p><p>Thank you for your business!</p>`;
+  const text = `Dear ${variables.customerName || 'Customer'},\n\nYour invoice ${variables.invoiceNumber || 'N/A'} for ${variables.amount || 'N/A'} is ready.\n\nDue Date: ${variables.dueDate || 'N/A'}\n\nThank you for your business!`;
+  return { subject, html, text };
+}
+
+function createPaymentReceivedEmail(variables: Record<string, string>) {
+  const subject = `Payment Received for Invoice ${variables.invoiceNumber || 'N/A'}`;
+  const html = `<p>Dear ${variables.customerName || 'Customer'},</p><p>We have received your payment of <strong>${variables.amount || 'N/A'}</strong> for invoice <strong>${variables.invoiceNumber || 'N/A'}</strong>.</p><p>Thank you for your payment!</p>`;
+  const text = `Dear ${variables.customerName || 'Customer'},\n\nWe have received your payment of ${variables.amount || 'N/A'} for invoice ${variables.invoiceNumber || 'N/A'}.\n\nThank you for your payment!`;
+  return { subject, html, text };
+}
+
+function createJobStatusUpdateEmail(variables: Record<string, string>) {
+  const subject = `Job Status Update: ${variables.jobTitle || 'N/A'}`;
+  const html = `<p>Dear ${variables.customerName || 'Customer'},</p><p>The status of your job <strong>${variables.jobTitle || 'N/A'}</strong> has been updated to <strong>${variables.status || 'N/A'}</strong>.</p><p>We will keep you informed of any further updates.</p>`;
+  const text = `Dear ${variables.customerName || 'Customer'},\n\nThe status of your job ${variables.jobTitle || 'N/A'} has been updated to ${variables.status || 'N/A'}.\n\nWe will keep you informed of any further updates.`;
+  return { subject, html, text };
+}
+
+function createJobCompletedEmail(variables: Record<string, string>) {
+  const subject = `Job Completed: ${variables.jobTitle || 'N/A'}`;
+  const html = `<p>Dear ${variables.customerName || 'Customer'},</p><p>Your job <strong>${variables.jobTitle || 'N/A'}</strong> has been completed!</p><p>Thank you for choosing our services.</p>`;
+  const text = `Dear ${variables.customerName || 'Customer'},\n\nYour job ${variables.jobTitle || 'N/A'} has been completed!\n\nThank you for choosing our services.`;
+  return { subject, html, text };
+}
