@@ -53,6 +53,14 @@ interface Invoice {
     receivedAt: Date;
     method: string | null;
   }>;
+  reminders: Array<{
+    id: string;
+    reminderType: string;
+    status: string;
+    sentAt: Date | null;
+    error: string | null;
+    createdAt: Date;
+  }>;
 }
 
 interface InvoiceDetailClientProps {
@@ -161,6 +169,28 @@ export function InvoiceDetailClient({ invoice }: InvoiceDetailClientProps) {
     }
   };
 
+  const sendReminder = async () => {
+    setIsProcessing(true);
+    try {
+      const res = await fetch(`/api/invoices/${invoice.id}/send-reminder`, {
+        method: 'POST',
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to send reminder');
+      }
+
+      showToast('Reminder sent successfully', 'success');
+      router.refresh();
+    } catch (error: any) {
+      console.error('Error sending reminder:', error);
+      showToast(error.message || 'Failed to send reminder', 'error');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   const totalPaid = invoice.payments.reduce((sum, p) => sum + p.amount, 0);
   const amountDue = invoice.amount - totalPaid;
 
@@ -196,6 +226,11 @@ export function InvoiceDetailClient({ invoice }: InvoiceDetailClientProps) {
                   <Button variant="secondary" onClick={generatePaymentLink} loading={isProcessing} disabled={isProcessing}>
                     Generate Payment Link
                   </Button>
+                  {invoice.customer?.primaryEmail && (
+                    <Button variant="secondary" onClick={sendReminder} loading={isProcessing} disabled={isProcessing}>
+                      Send Reminder
+                    </Button>
+                  )}
                 </>
               )}
             </div>
@@ -390,6 +425,39 @@ export function InvoiceDetailClient({ invoice }: InvoiceDetailClientProps) {
                       </p>
                     </div>
                     <Badge variant="success" size="sm">Paid</Badge>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* Reminder History */}
+        {invoice.reminders.length > 0 && (
+          <Card>
+            <CardHeader title="Reminder History" />
+            <div className="p-6">
+              <div className="space-y-3">
+                {invoice.reminders.map((reminder) => (
+                  <div key={reminder.id} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
+                    <div>
+                      <p className="text-sm font-medium capitalize">{reminder.reminderType.replace(/_/g, ' ')}</p>
+                      <p className="text-xs text-gray-500">
+                        {reminder.sentAt ? new Date(reminder.sentAt).toLocaleDateString() : new Date(reminder.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                        reminder.status === 'sent' ? 'bg-green-100 text-green-800' :
+                        reminder.status === 'failed' ? 'bg-red-100 text-red-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {reminder.status}
+                      </span>
+                      {reminder.error && (
+                        <p className="text-xs text-red-600 mt-1">{reminder.error}</p>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>

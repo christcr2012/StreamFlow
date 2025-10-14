@@ -21,7 +21,7 @@ async function getInvoice(id: string, orgId: string) {
   }
 
   // Fetch related data separately
-  const [customer, job, payments] = await Promise.all([
+  const [customer, job, payments, reminders] = await Promise.all([
     invoice.customerId
       ? prisma.customer.findUnique({
           where: { id: invoice.customerId },
@@ -47,6 +47,10 @@ async function getInvoice(id: string, orgId: string) {
       where: { invoiceId: invoice.id },
       orderBy: { receivedAt: 'desc' },
     }),
+    prisma.invoiceReminder.findMany({
+      where: { invoiceId: invoice.id },
+      orderBy: { createdAt: 'desc' },
+    }),
   ]);
 
   return {
@@ -66,6 +70,7 @@ async function getInvoice(id: string, orgId: string) {
       amount: Number(p.amount),
       currency: p.currency,
     })),
+    reminders,
   };
 }
 
