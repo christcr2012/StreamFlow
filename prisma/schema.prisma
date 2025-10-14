@@ -47,6 +47,8 @@ model Org {
   pricingPlan   PricingPlan?    @relation("OrgPricingPlan")
   aiUsageEvents AiUsageEvent[]  @relation("OrgAiUsageEvents")
   aiMonthlySummaries AiMonthlySummary[] @relation("OrgAiMonthlySummaries")
+  recurringInvoices RecurringInvoice[]
+  emailTemplates    EmailTemplate[]
 
   // Provider Operations Relations
   activities      Activity[]       @relation("OrgActivities")
@@ -384,12 +386,13 @@ model Customer {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  org           Org           @relation(fields: [orgId], references: [id])
-  invoices      Invoice[]
-  jobs          Job[]
-  opportunities Opportunity[]
-  agreements    Agreement[]
-  contacts      CustomerContact[]
+  org               Org                 @relation(fields: [orgId], references: [id])
+  invoices          Invoice[]
+  jobs              Job[]
+  opportunities     Opportunity[]
+  agreements        Agreement[]
+  contacts          CustomerContact[]
+  recurringInvoices RecurringInvoice[]
 
   @@index([orgId, createdAt])
   @@index([orgId, company])
@@ -449,7 +452,14 @@ model Invoice {
   notes       String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  // Payment link fields (Priority 6.4)
+  paymentLinkToken      String?   @unique
+  paymentLinkExpiresAt  DateTime?
+  paymentLinkViews      Int       @default(0)
+
   lineItems   InvoiceLine[]
+  reminders   InvoiceReminder[]
 
   customer Customer? @relation(fields: [customerId], references: [id])
   org      Org       @relation(fields: [orgId], references: [id])
@@ -458,6 +468,69 @@ model Invoice {
   @@index([orgId, status, dueDate])
   @@index([orgId, customerId])
   @@index([number])
+  @@index([paymentLinkToken])
+}
+
+/// Recurring invoice template (Priority 6.3)
+model RecurringInvoice {
+  id              String   @id @default(cuid())
+  orgId           String
+  customerId      String
+  frequency       String   // 'weekly' | 'monthly' | 'quarterly' | 'annually'
+  intervalCount   Int      @default(1) // e.g., every 2 months
+  startDate       DateTime
+  endDate         DateTime?
+  nextInvoiceDate DateTime
+  active          Boolean  @default(true)
+
+  // Invoice template data
+  items           Json     @default("[]")
+  terms           String?
+  notes           String?
+  currency        String   @default("USD")
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  customer Customer @relation(fields: [customerId], references: [id])
+  org      Org      @relation(fields: [orgId], references: [id])
+
+  @@index([orgId, active, nextInvoiceDate])
+  @@index([customerId])
+}
+
+/// Invoice reminder tracking (Priority 6.5)
+model InvoiceReminder {
+  id           String   @id @default(cuid())
+  invoiceId    String
+  reminderType String   // 'overdue_3days' | 'overdue_7days' | 'overdue_14days'
+  status       String   @default("pending") // 'pending' | 'sent' | 'failed'
+  sentAt       DateTime?
+  error        String?
+  createdAt    DateTime @default(now())
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id])
+
+  @@index([invoiceId])
+  @@index([status, sentAt])
+}
+
+/// Email template customization (Priority 6.6)
+model EmailTemplate {
+  id           String   @id @default(cuid())
+  orgId        String
+  templateType String   // 'invoice_sent' | 'payment_received' | 'job_status_update' | 'job_completed'
+  subject      String
+  htmlBody     String   @db.Text
+  textBody     String   @db.Text
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  org Org @relation(fields: [orgId], references: [id])
+
+  @@unique([orgId, templateType])
+  @@index([orgId, active])
 }
 
 model Payment {
