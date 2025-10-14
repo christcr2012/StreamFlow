@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthContext } from '@/lib/auth-context';
 import { prisma } from '@/lib/prisma';
+import { encrypt } from '@/lib/encryption';
 import { z } from 'zod';
-
-// Simple encryption for API keys (in production, use proper encryption library)
-// For now, we'll store them as-is but mark them as sensitive
-// TODO: Implement proper encryption using crypto library
 
 const emailConfigSchema = z.object({
   provider: z.enum(['sendgrid', 'resend']),
@@ -44,13 +41,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Save the configuration
-    // TODO: Encrypt the API key before storing
+    // Save the configuration with encrypted API key
     await prisma.org.update({
       where: { id: authContext.orgId },
       data: {
         emailProvider: validated.provider,
-        emailApiKey: validated.apiKey, // TODO: Encrypt this
+        emailApiKey: encrypt(validated.apiKey), // Encrypted before storage
         emailFromAddress: validated.fromAddress,
         emailFromName: validated.fromName,
         emailConfigured: true,

@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthContext } from '@/lib/auth-context';
 import { prisma } from '@/lib/prisma';
+import { encrypt } from '@/lib/encryption';
 import { z } from 'zod';
-
-// Simple encryption for API keys (in production, use proper encryption library)
-// For now, we'll store them as-is but mark them as sensitive
-// TODO: Implement proper encryption using crypto library
 
 const stripeConfigSchema = z.object({
   secretKey: z.string().min(1, 'Secret key is required').startsWith('sk_', 'Invalid Stripe secret key format'),
@@ -43,14 +40,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Save the configuration
-    // TODO: Encrypt the secret key and webhook secret before storing
+    // Save the configuration with encrypted sensitive keys
     await prisma.org.update({
       where: { id: authContext.orgId },
       data: {
-        stripeSecretKey: validated.secretKey, // TODO: Encrypt this
-        stripePublishableKey: validated.publishableKey,
-        stripeWebhookSecret: validated.webhookSecret, // TODO: Encrypt this
+        stripeSecretKey: encrypt(validated.secretKey), // Encrypted before storage
+        stripePublishableKey: validated.publishableKey, // Safe to store unencrypted
+        stripeWebhookSecret: encrypt(validated.webhookSecret), // Encrypted before storage
         stripeConfigured: true,
       },
     });
