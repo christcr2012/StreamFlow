@@ -178,7 +178,7 @@ export default function MFASettingsPage() {
             <h2 className="text-xl font-semibold mb-4">MFA is not enabled</h2>
             <p className="text-gray-600 mb-4">
               Enable MFA to protect your account with time-based one-time passwords (TOTP).
-              You'll need an authenticator app like Google Authenticator, Authy, or 1Password.
+              You&apos;ll need an authenticator app like Google Authenticator, Authy, or 1Password.
             </p>
             <button
               onClick={startEnrollment}
@@ -309,7 +309,7 @@ export default function MFASettingsPage() {
                 onClick={() => setShowBackupCodes(false)}
                 className="px-4 py-2 border rounded hover:bg-gray-50"
               >
-                I've Saved These Codes
+                I&apos;ve Saved These Codes
               </button>
             </div>
           </div>
