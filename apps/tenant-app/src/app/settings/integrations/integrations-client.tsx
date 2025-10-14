@@ -34,6 +34,11 @@ export function IntegrationsClient({ settings }: IntegrationsClientProps) {
   const [stripePublishableKey, setStripePublishableKey] = useState(settings.stripePublishableKey || '');
   const [stripeWebhookSecret, setStripeWebhookSecret] = useState('');
 
+  // SMS configuration state
+  const [smsProvider, setSmsProvider] = useState(settings.smsProvider || 'twilio');
+  const [smsApiKey, setSmsApiKey] = useState('');
+  const [smsFromNumber, setSmsFromNumber] = useState(settings.smsFromNumber || '');
+
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -91,6 +96,36 @@ export function IntegrationsClient({ settings }: IntegrationsClientProps) {
       router.refresh();
     } catch (error) {
       showToast(error instanceof Error ? error.message : 'Failed to save Stripe configuration', 'error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleSmsSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/api/settings/integrations/sms', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          provider: smsProvider,
+          apiKey: smsApiKey,
+          fromNumber: smsFromNumber,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to save SMS configuration');
+      }
+
+      showToast('SMS configuration saved successfully', 'success');
+      setSmsApiKey(''); // Clear sensitive field
+      router.refresh();
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Failed to save SMS configuration', 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -301,6 +336,94 @@ export function IntegrationsClient({ settings }: IntegrationsClientProps) {
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? 'Saving...' : settings.stripeConfigured ? 'Update Configuration' : 'Save Configuration'}
+              </button>
+            </div>
+          </form>
+        </Card>
+
+        {/* SMS Notification Configuration */}
+        <Card>
+          <CardHeader
+            title="SMS Notifications (Twilio)"
+            subtitle="Configure Twilio to send SMS notifications to customers for job updates and reminders."
+          />
+          <form onSubmit={handleSmsSubmit} className="p-6 space-y-4">
+            {/* Status Badge */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-gray-700">Status:</span>
+              {settings.smsConfigured ? (
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  ✓ Configured
+                </span>
+              ) : (
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                  ⚠ Not Configured
+                </span>
+              )}
+            </div>
+
+            {/* Provider */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Provider
+              </label>
+              <select
+                value={smsProvider}
+                onChange={(e) => setSmsProvider(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                disabled
+              >
+                <option value="twilio">Twilio</option>
+              </select>
+              <p className="text-xs text-gray-500 mt-1">
+                Only Twilio is supported at this time
+              </p>
+            </div>
+
+            {/* API Key (Account SID:Auth Token) */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Twilio Credentials
+              </label>
+              <input
+                type="password"
+                value={smsApiKey}
+                onChange={(e) => setSmsApiKey(e.target.value)}
+                placeholder={settings.smsConfigured ? '••••••••••••••••' : 'ACCOUNT_SID:AUTH_TOKEN'}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required={!settings.smsConfigured}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Format: ACCOUNT_SID:AUTH_TOKEN (get from <a href="https://console.twilio.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Twilio Console</a>)
+              </p>
+            </div>
+
+            {/* From Number */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                From Phone Number
+              </label>
+              <input
+                type="tel"
+                value={smsFromNumber}
+                onChange={(e) => setSmsFromNumber(e.target.value)}
+                placeholder="+1234567890"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Use E.164 format (e.g., +1234567890). Must be a Twilio phone number.
+              </p>
+            </div>
+
+            {/* Submit Button */}
+            <div className="flex justify-end pt-4">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? 'Saving...' : settings.smsConfigured ? 'Update Configuration' : 'Save Configuration'}
               </button>
             </div>
           </form>
