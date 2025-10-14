@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { DataTable, Column } from '@/components/ui/data-table';
+import { ResponsiveTable } from '@/components/responsive-table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -106,41 +106,39 @@ export function CustomersClient({ customers }: CustomersClientProps) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const columns: Column<Customer>[] = [
+  const columns = [
     {
       key: 'name',
-      header: 'Customer',
-      sortable: true,
-      render: (customer) => (
+      label: 'Customer',
+      render: (customer: Customer) => (
         <div>
-          <p className="font-medium text-gray-900">
+          <p className="font-medium text-gray-900 dark:text-gray-100">
             {customer.company || customer.primaryName || 'Unnamed Customer'}
           </p>
           {customer.company && customer.primaryName && (
-            <p className="text-sm text-gray-500">{customer.primaryName}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{customer.primaryName}</p>
           )}
         </div>
       ),
     },
     {
       key: 'contact',
-      header: 'Contact',
-      render: (customer) => (
+      label: 'Contact',
+      render: (customer: Customer) => (
         <div className="text-sm">
           {customer.primaryEmail && (
-            <p className="text-gray-900">{customer.primaryEmail}</p>
+            <p className="text-gray-900 dark:text-gray-100">{customer.primaryEmail}</p>
           )}
           {customer.primaryPhone && (
-            <p className="text-gray-500">{customer.primaryPhone}</p>
+            <p className="text-gray-500 dark:text-gray-400">{customer.primaryPhone}</p>
           )}
         </div>
       ),
     },
     {
       key: 'jobs',
-      header: 'Jobs',
-      sortable: true,
-      render: (customer) => (
+      label: 'Jobs',
+      render: (customer: Customer) => (
         <Badge variant="info" size="sm">
           {customer._count.jobs}
         </Badge>
@@ -148,9 +146,8 @@ export function CustomersClient({ customers }: CustomersClientProps) {
     },
     {
       key: 'invoices',
-      header: 'Invoices',
-      sortable: true,
-      render: (customer) => (
+      label: 'Invoices',
+      render: (customer: Customer) => (
         <Badge variant="default" size="sm">
           {customer._count.invoices}
         </Badge>
@@ -158,10 +155,9 @@ export function CustomersClient({ customers }: CustomersClientProps) {
     },
     {
       key: 'createdAt',
-      header: 'Created',
-      sortable: true,
-      render: (customer) => (
-        <span className="text-sm text-gray-500">
+      label: 'Created',
+      render: (customer: Customer) => (
+        <span className="text-sm text-gray-500 dark:text-gray-400">
           {new Date(customer.createdAt).toLocaleDateString()}
         </span>
       ),
@@ -192,22 +188,27 @@ export function CustomersClient({ customers }: CustomersClientProps) {
   };
 
   return (
-    <div className="min-h-screen p-8 bg-gray-50">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="min-h-screen p-4 md:p-8 bg-gray-50 dark:bg-gray-900">
+      <div className="max-w-7xl mx-auto space-y-4 md:space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Customers</h1>
-            <p className="text-gray-600 mt-1">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">Customers</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1 text-sm md:text-base">
               {filteredAndSortedCustomers.length} of {customers.length} customers
             </p>
           </div>
-          <div className="flex gap-3">
-            <Button variant="secondary" onClick={handleExportCSV}>
+          <div className="flex gap-2 md:gap-3">
+            <Button
+              variant="secondary"
+              onClick={handleExportCSV}
+              className="flex-1 md:flex-none"
+              style={{ minHeight: '44px' }}
+            >
               Export CSV
             </Button>
-            <Link href="/customers/new">
-              <Button>+ New Customer</Button>
+            <Link href="/customers/new" className="flex-1 md:flex-none">
+              <Button className="w-full" style={{ minHeight: '44px' }}>+ New Customer</Button>
             </Link>
           </div>
         </div>
@@ -250,13 +251,15 @@ export function CustomersClient({ customers }: CustomersClientProps) {
 
         {/* Table */}
         <Card padding="none">
-          <DataTable
-            data={paginatedCustomers}
-            columns={columns}
-            keyExtractor={(customer) => customer.id}
-            onRowClick={(customer) => router.push(`/customers/${customer.id}`)}
-            emptyMessage="No customers found. Create your first customer to get started."
-          />
+          <div className="p-4">
+            <ResponsiveTable
+              data={paginatedCustomers}
+              columns={columns}
+              keyExtractor={(customer) => customer.id}
+              onRowClick={(customer) => router.push(`/customers/${customer.id}`)}
+              emptyMessage="No customers found. Create your first customer to get started."
+            />
+          </div>
           {totalPages > 1 && (
             <Pagination
               currentPage={currentPage}
