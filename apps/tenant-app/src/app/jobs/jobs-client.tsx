@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { DataTable, Column } from '@/components/ui/data-table';
+import { ResponsiveTable } from '@/components/responsive-table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
@@ -113,16 +113,15 @@ export function JobsClient({ jobs }: JobsClientProps) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const columns: Column<Job>[] = [
+  const columns = [
     {
       key: 'title',
-      header: 'Job',
-      sortable: true,
-      render: (job) => (
+      label: 'Job',
+      render: (job: Job) => (
         <div>
-          <p className="font-medium text-gray-900">{job.title}</p>
+          <p className="font-medium text-gray-900 dark:text-gray-100">{job.title}</p>
           {job.customer && (
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               {job.customer.company || job.customer.primaryName}
             </p>
           )}
@@ -131,9 +130,8 @@ export function JobsClient({ jobs }: JobsClientProps) {
     },
     {
       key: 'status',
-      header: 'Status',
-      sortable: true,
-      render: (job) => (
+      label: 'Status',
+      render: (job: Job) => (
         <Badge
           variant={
             job.status === 'completed' ? 'success' :
@@ -147,10 +145,9 @@ export function JobsClient({ jobs }: JobsClientProps) {
     },
     {
       key: 'scheduledAt',
-      header: 'Scheduled',
-      sortable: true,
-      render: (job) => (
-        <span className="text-sm text-gray-500">
+      label: 'Scheduled',
+      render: (job: Job) => (
+        <span className="text-sm text-gray-500 dark:text-gray-400">
           {job.scheduledAt
             ? new Date(job.scheduledAt).toLocaleDateString()
             : 'Not scheduled'}
@@ -159,10 +156,9 @@ export function JobsClient({ jobs }: JobsClientProps) {
     },
     {
       key: 'completedAt',
-      header: 'Completed',
-      sortable: true,
-      render: (job) => (
-        <span className="text-sm text-gray-500">
+      label: 'Completed',
+      render: (job: Job) => (
+        <span className="text-sm text-gray-500 dark:text-gray-400">
           {job.completedAt
             ? new Date(job.completedAt).toLocaleDateString()
             : '-'}
@@ -171,10 +167,9 @@ export function JobsClient({ jobs }: JobsClientProps) {
     },
     {
       key: 'createdAt',
-      header: 'Created',
-      sortable: true,
-      render: (job) => (
-        <span className="text-sm text-gray-500">
+      label: 'Created',
+      render: (job: Job) => (
+        <span className="text-sm text-gray-500 dark:text-gray-400">
           {new Date(job.createdAt).toLocaleDateString()}
         </span>
       ),
@@ -225,23 +220,28 @@ export function JobsClient({ jobs }: JobsClientProps) {
   };
 
   return (
-    <div className="min-h-screen p-8 bg-gray-50">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="min-h-screen p-4 md:p-8 bg-gray-50 dark:bg-gray-900">
+      <div className="max-w-7xl mx-auto space-y-4 md:space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Jobs</h1>
-            <p className="text-gray-600 mt-1">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">Jobs</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1 text-sm md:text-base">
               {filteredAndSortedJobs.length} of {jobs.length} jobs
               {selectedJobs.size > 0 && ` • ${selectedJobs.size} selected`}
             </p>
           </div>
-          <div className="flex gap-3">
-            <Button variant="secondary" onClick={handleExportCSV}>
+          <div className="flex gap-2 md:gap-3">
+            <Button
+              variant="secondary"
+              onClick={handleExportCSV}
+              className="flex-1 md:flex-none"
+              style={{ minHeight: '44px' }}
+            >
               Export CSV
             </Button>
-            <Link href="/jobs/new">
-              <Button>+ New Job</Button>
+            <Link href="/jobs/new" className="flex-1 md:flex-none">
+              <Button className="w-full" style={{ minHeight: '44px' }}>+ New Job</Button>
             </Link>
           </div>
         </div>
@@ -360,13 +360,15 @@ export function JobsClient({ jobs }: JobsClientProps) {
 
         {/* Table */}
         <Card padding="none">
-          <DataTable
-            data={paginatedJobs}
-            columns={columns}
-            keyExtractor={(job) => job.id}
-            onRowClick={(job) => router.push(`/jobs/${job.id}`)}
-            emptyMessage="No jobs found. Create your first job to get started."
-          />
+          <div className="p-4">
+            <ResponsiveTable
+              data={paginatedJobs}
+              columns={columns}
+              keyExtractor={(job) => job.id}
+              onRowClick={(job) => router.push(`/jobs/${job.id}`)}
+              emptyMessage="No jobs found. Create your first job to get started."
+            />
+          </div>
           {totalPages > 1 && (
             <Pagination
               currentPage={currentPage}

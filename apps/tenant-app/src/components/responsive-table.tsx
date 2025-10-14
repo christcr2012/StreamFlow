@@ -14,7 +14,7 @@ interface ResponsiveTableProps<T> {
   columns: Column<T>[];
   keyExtractor: (item: T) => string;
   onRowClick?: (item: T) => void;
-  emptyMessage?: string;
+  emptyMessage?: ReactNode;
 }
 
 export function ResponsiveTable<T>({

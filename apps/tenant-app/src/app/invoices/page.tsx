@@ -2,9 +2,9 @@ import { getAuthContext } from '@/lib/auth-context';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { InvoicesClient } from './invoices-client';
 
 async function getInvoices(orgId: string) {
   const invoices = await prisma.invoice.findMany({
@@ -31,15 +31,15 @@ export default async function InvoicesPage() {
   const invoices = await getInvoices(authContext.orgId);
 
   return (
-    <div className="min-h-screen p-8 bg-gray-50">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <div className="flex items-center justify-between">
+    <div className="min-h-screen p-4 md:p-8 bg-gray-50 dark:bg-gray-900">
+      <div className="max-w-7xl mx-auto space-y-4 md:space-y-6">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Invoices</h1>
-            <p className="text-gray-600 mt-1">Manage your invoices and payments</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">Invoices</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1 text-sm md:text-base">Manage your invoices and payments</p>
           </div>
           <Link href="/invoices/new">
-            <Button>+ New Invoice</Button>
+            <Button className="w-full md:w-auto" style={{ minHeight: '44px' }}>+ New Invoice</Button>
           </Link>
         </div>
 
@@ -79,54 +79,8 @@ export default async function InvoicesPage() {
         </div>
 
         <Card padding="none">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Invoice</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {invoices.length === 0 ? (
-                  <tr>
-                    <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                      No invoices yet. <Link href="/invoices/new" className="text-blue-600">Create your first invoice</Link>
-                    </td>
-                  </tr>
-                ) : (
-                  invoices.map((invoice) => (
-                    <tr key={invoice.id} className="hover:bg-gray-50 cursor-pointer">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <Link href={`/invoices/${invoice.id}`} className="font-medium text-blue-600 hover:text-blue-700">
-                          {invoice.number || 'Draft'}
-                        </Link>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {invoice.customer?.company || invoice.customer?.primaryName || 'No customer'}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        ${(Number(invoice.amount) / 100).toFixed(2)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <Badge variant={
-                          invoice.status === 'paid' ? 'success' :
-                          invoice.status === 'open' ? 'warning' : 'default'
-                        }>
-                          {invoice.status}
-                        </Badge>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(invoice.issuedAt).toLocaleDateString()}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+          <div className="p-4">
+            <InvoicesClient invoices={invoices} />
           </div>
         </Card>
       </div>
