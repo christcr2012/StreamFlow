@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { showToast } from '@/components/ui/toast';
 import { downloadInvoicePDF } from '@/lib/pdf-generator';
+import { PaymentModal } from '@/components/payment-modal';
 import Link from 'next/link';
 
 interface Invoice {
@@ -55,6 +56,7 @@ interface InvoiceDetailClientProps {
 export function InvoiceDetailClient({ invoice }: InvoiceDetailClientProps) {
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -147,9 +149,14 @@ export function InvoiceDetailClient({ invoice }: InvoiceDetailClientProps) {
                 Download PDF
               </Button>
               {invoice.status !== 'paid' && amountDue > 0 && (
-                <Button onClick={handleMarkAsPaid} loading={isProcessing} disabled={isProcessing}>
-                  Mark as Paid
-                </Button>
+                <>
+                  <Button variant="primary" onClick={() => setIsPaymentModalOpen(true)}>
+                    Pay Now
+                  </Button>
+                  <Button variant="secondary" onClick={handleMarkAsPaid} loading={isProcessing} disabled={isProcessing}>
+                    Mark as Paid
+                  </Button>
+                </>
               )}
             </div>
           </div>
@@ -322,6 +329,18 @@ export function InvoiceDetailClient({ invoice }: InvoiceDetailClientProps) {
           </Card>
         )}
       </div>
+
+      {/* Payment Modal */}
+      <PaymentModal
+        invoiceId={invoice.id}
+        amount={Math.round(amountDue * 100)}
+        invoiceNumber={invoice.number || 'DRAFT'}
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        onSuccess={() => {
+          router.refresh();
+        }}
+      />
     </div>
   );
 }
