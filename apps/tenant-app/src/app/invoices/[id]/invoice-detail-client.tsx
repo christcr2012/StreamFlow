@@ -9,6 +9,7 @@ import { showToast } from '@/components/ui/toast';
 import { downloadInvoicePDF } from '@/lib/pdf-generator';
 import { PaymentModal } from '@/components/payment-modal';
 import Link from 'next/link';
+import { formatDecimalCurrency } from '@/lib/currency';
 
 interface Invoice {
   id: string;
@@ -20,6 +21,7 @@ interface Invoice {
   taxAmount: number;
   discountAmount: number;
   amount: number;
+  currency: string;
   terms: string | null;
   notes: string | null;
   customer: {
@@ -44,6 +46,7 @@ interface Invoice {
   payments: Array<{
     id: string;
     amount: number;
+    currency: string;
     receivedAt: Date;
     method: string | null;
   }>;
@@ -236,10 +239,10 @@ export function InvoiceDetailClient({ invoice }: InvoiceDetailClientProps) {
                     <td className="px-6 py-4 text-sm text-gray-900">{item.description}</td>
                     <td className="px-6 py-4 text-sm text-gray-900 text-right">{item.quantity}</td>
                     <td className="px-6 py-4 text-sm text-gray-900 text-right">
-                      ${(item.unitPriceCents / 100).toFixed(2)}
+                      {formatDecimalCurrency(item.unitPriceCents / 100, invoice.currency)}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-900 text-right">
-                      ${(item.amountCents / 100).toFixed(2)}
+                      {formatDecimalCurrency(item.amountCents / 100, invoice.currency)}
                     </td>
                   </tr>
                 ))}
@@ -256,18 +259,18 @@ export function InvoiceDetailClient({ invoice }: InvoiceDetailClientProps) {
                 {invoice.discountAmount > 0 && (
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Discount:</span>
-                    <span className="font-medium text-green-600">-${(invoice.discountAmount / 100).toFixed(2)}</span>
+                    <span className="font-medium text-green-600">-{formatDecimalCurrency(invoice.discountAmount / 100, invoice.currency)}</span>
                   </div>
                 )}
                 {invoice.taxAmount > 0 && (
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Tax:</span>
-                    <span className="font-medium">${(invoice.taxAmount / 100).toFixed(2)}</span>
+                    <span className="font-medium">{formatDecimalCurrency(invoice.taxAmount / 100, invoice.currency)}</span>
                   </div>
                 )}
                 <div className="flex justify-between text-lg font-bold border-t pt-2">
                   <span>Total:</span>
-                  <span>${(invoice.amount / 100).toFixed(2)}</span>
+                  <span>{formatDecimalCurrency(invoice.amount / 100, invoice.currency)}</span>
                 </div>
                 {totalPaid > 0 && (
                   <>
@@ -277,7 +280,7 @@ export function InvoiceDetailClient({ invoice }: InvoiceDetailClientProps) {
                     </div>
                     <div className="flex justify-between text-lg font-bold text-red-600 border-t pt-2">
                       <span>Amount Due:</span>
-                      <span>${(amountDue / 100).toFixed(2)}</span>
+                      <span>{formatDecimalCurrency(amountDue / 100, invoice.currency)}</span>
                     </div>
                   </>
                 )}
@@ -316,7 +319,7 @@ export function InvoiceDetailClient({ invoice }: InvoiceDetailClientProps) {
                 {invoice.payments.map((payment) => (
                   <div key={payment.id} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
                     <div>
-                      <p className="text-sm font-medium">${(payment.amount / 100).toFixed(2)}</p>
+                      <p className="text-sm font-medium">{formatDecimalCurrency(payment.amount / 100, payment.currency)}</p>
                       <p className="text-xs text-gray-500">
                         {new Date(payment.receivedAt).toLocaleDateString()} • {payment.method || 'Manual'}
                       </p>

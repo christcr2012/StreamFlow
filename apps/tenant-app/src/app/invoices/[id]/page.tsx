@@ -55,11 +55,13 @@ async function getInvoice(id: string, orgId: string) {
     taxAmount: Number(invoice.taxAmount),
     discountAmount: Number(invoice.discountAmount),
     amount: Number(invoice.amount),
+    currency: invoice.currency,
     customer,
     job,
     payments: payments.map(p => ({
       ...p,
       amount: Number(p.amount),
+      currency: p.currency,
     })),
   };
 }

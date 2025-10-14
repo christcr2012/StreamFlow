@@ -8,6 +8,7 @@ import { Input, Textarea } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { showToast } from '@/components/ui/toast';
 import Link from 'next/link';
+import { getCurrencyOptions, formatAmount } from '@/lib/currency';
 
 interface Customer {
   id: string;
@@ -37,6 +38,7 @@ interface FormData {
   customerId?: string;
   jobId?: string;
   number?: string;
+  currency?: string;
   terms?: string;
   notes?: string;
   dueDate?: string;
@@ -54,6 +56,7 @@ export function NewInvoiceClient({ customers, jobs }: NewInvoiceClientProps) {
     customerId: '',
     jobId: '',
     number: '',
+    currency: 'USD',
     terms: '',
     notes: '',
     dueDate: '',
@@ -230,6 +233,17 @@ export function NewInvoiceClient({ customers, jobs }: NewInvoiceClientProps) {
                     fullWidth
                   />
 
+                  {/* Currency */}
+                  <Select
+                    label="Currency"
+                    name="currency"
+                    value={formData.currency}
+                    onChange={handleChange}
+                    options={getCurrencyOptions()}
+                    required
+                    fullWidth
+                  />
+
                   {/* Due Date */}
                   <Input
                     label="Due Date (Optional)"
@@ -336,7 +350,7 @@ export function NewInvoiceClient({ customers, jobs }: NewInvoiceClientProps) {
                     <div className="w-64 space-y-2">
                       <div className="flex justify-between text-lg font-bold">
                         <span>Total:</span>
-                        <span>${calculateSubtotal().toFixed(2)}</span>
+                        <span>{formatAmount(calculateSubtotal(), formData.currency || 'USD')}</span>
                       </div>
                     </div>
                   </div>
