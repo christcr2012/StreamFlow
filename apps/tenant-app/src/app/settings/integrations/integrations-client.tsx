@@ -456,10 +456,10 @@ export function IntegrationsClient({ settings }: IntegrationsClientProps) {
             </div>
 
             <div>
-              <h3 className="font-medium text-gray-900 mb-2">What happens if I don't configure these?</h3>
+              <h3 className="font-medium text-gray-900 mb-2">What happens if I don&apos;t configure these?</h3>
               <p className="text-sm text-gray-600">
-                Without email configuration, you won't be able to send automated notifications to customers.
-                Without Stripe configuration, customers won't be able to pay invoices online.
+                Without email configuration, you won&apos;t be able to send automated notifications to customers.
+                Without Stripe configuration, customers won&apos;t be able to pay invoices online.
                 You can still use Cortiware for job management, customer tracking, and manual invoicing.
               </p>
             </div>

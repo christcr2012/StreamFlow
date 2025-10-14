@@ -142,7 +142,7 @@ export function JobPhotoGallery({ jobId, initialPhotos, onPhotosChange }: JobPho
         {/* Photo Grid */}
         {photos.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
-            <p>No photos yet. Click "Add Photo" to upload your first photo.</p>
+            <p>No photos yet. Click &quot;Add Photo&quot; to upload your first photo.</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

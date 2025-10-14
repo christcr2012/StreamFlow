@@ -143,7 +143,7 @@ export function PageErrorBoundary({ children }: { children: React.ReactNode }) {
               </div>
 
               <p className="text-gray-700 mb-6">
-                We're sorry, but something went wrong while loading this page. 
+                We&apos;re sorry, but something went wrong while loading this page.
                 Please try refreshing the page or return to the dashboard.
               </p>
 
