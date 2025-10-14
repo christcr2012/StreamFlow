@@ -69,6 +69,31 @@ model Org {
   /// settingsJson stores arbitrary organization-level settings.  This can be used
   /// by owners to configure API keys or other preferences needed at runtime.
   settingsJson Json? @default("{}")
+
+  // Tenant-Level Integration Configuration
+  // Each tenant configures their own third-party service credentials
+
+  /// Email Service Configuration (SendGrid or Resend)
+  /// Tenant uses this to send emails to their customers (invoice notifications, job updates, etc.)
+  emailProvider     String? // "sendgrid" | "resend" | null
+  emailApiKey       String? // Encrypted API key for email service
+  emailFromAddress  String? // Sender email address (e.g., "noreply@contractorcompany.com")
+  emailFromName     String? // Sender name (e.g., "ABC Plumbing")
+  emailConfigured   Boolean @default(false) // Quick check if email is set up
+
+  /// Stripe Payment Configuration
+  /// Tenant uses this to collect payments from their customers
+  stripeAccountId        String? // Tenant's Stripe account ID (for Stripe Connect) OR null if using own keys
+  stripeSecretKey        String? // Encrypted Stripe secret key (if tenant provides own keys)
+  stripePublishableKey   String? // Stripe publishable key (safe to expose to client)
+  stripeWebhookSecret    String? // Encrypted webhook secret for payment events
+  stripeConfigured       Boolean @default(false) // Quick check if Stripe is set up
+
+  /// SMS Service Configuration (Future: Twilio, etc.)
+  smsProvider      String? // "twilio" | null
+  smsApiKey        String? // Encrypted API key
+  smsFromNumber    String? // Phone number for sending SMS
+  smsConfigured    Boolean @default(false)
 }
 
 model User {

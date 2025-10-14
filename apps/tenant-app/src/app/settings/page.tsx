@@ -2,6 +2,7 @@ import { getAuthContext } from '@/lib/auth-context';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { Card, CardHeader } from '@/components/ui/card';
+import Link from 'next/link';
 
 async function getOrgData(orgId: string) {
   const org = await prisma.org.findUnique({
@@ -117,6 +118,21 @@ export default async function SettingsPage() {
                 <p className="text-gray-900 font-mono text-sm mt-1">{authContext.userId}</p>
               </div>
             )}
+          </div>
+        </Card>
+
+        <Card>
+          <CardHeader title="Integrations" />
+          <div className="p-6">
+            <p className="text-sm text-gray-600 mb-4">
+              Configure third-party services to enable email notifications, payment processing, and more.
+            </p>
+            <Link
+              href="/settings/integrations"
+              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Manage Integrations →
+            </Link>
           </div>
         </Card>
       </div>

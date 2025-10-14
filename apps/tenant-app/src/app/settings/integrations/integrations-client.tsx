@@ -1,0 +1,349 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Card, CardHeader } from '@/components/ui/card';
+import { showToast } from '@/components/ui/toast';
+
+interface IntegrationsClientProps {
+  settings: {
+    emailProvider: string | null;
+    emailFromAddress: string | null;
+    emailFromName: string | null;
+    emailConfigured: boolean;
+    stripePublishableKey: string | null;
+    stripeConfigured: boolean;
+    smsProvider: string | null;
+    smsFromNumber: string | null;
+    smsConfigured: boolean;
+  };
+}
+
+export function IntegrationsClient({ settings }: IntegrationsClientProps) {
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Email configuration state
+  const [emailProvider, setEmailProvider] = useState(settings.emailProvider || 'sendgrid');
+  const [emailApiKey, setEmailApiKey] = useState('');
+  const [emailFromAddress, setEmailFromAddress] = useState(settings.emailFromAddress || '');
+  const [emailFromName, setEmailFromName] = useState(settings.emailFromName || '');
+
+  // Stripe configuration state
+  const [stripeSecretKey, setStripeSecretKey] = useState('');
+  const [stripePublishableKey, setStripePublishableKey] = useState(settings.stripePublishableKey || '');
+  const [stripeWebhookSecret, setStripeWebhookSecret] = useState('');
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/api/settings/integrations/email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          provider: emailProvider,
+          apiKey: emailApiKey,
+          fromAddress: emailFromAddress,
+          fromName: emailFromName,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to save email configuration');
+      }
+
+      showToast('Email configuration saved successfully', 'success');
+      setEmailApiKey(''); // Clear sensitive field
+      router.refresh();
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Failed to save email configuration', 'error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleStripeSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/api/settings/integrations/stripe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          secretKey: stripeSecretKey,
+          publishableKey: stripePublishableKey,
+          webhookSecret: stripeWebhookSecret,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to save Stripe configuration');
+      }
+
+      showToast('Stripe configuration saved successfully', 'success');
+      setStripeSecretKey(''); // Clear sensitive fields
+      setStripeWebhookSecret('');
+      router.refresh();
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Failed to save Stripe configuration', 'error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen p-8 bg-gray-50">
+      <div className="max-w-4xl mx-auto space-y-6">
+        {/* Header */}
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Integrations</h1>
+          <p className="text-gray-600 mt-1">
+            Configure third-party services to enable email notifications, payment processing, and more.
+          </p>
+        </div>
+
+        {/* Email Service Configuration */}
+        <Card>
+          <CardHeader
+            title="Email Service"
+            subtitle="Configure your email service to send invoice notifications, job updates, and customer communications."
+          />
+          <form onSubmit={handleEmailSubmit} className="p-6 space-y-4">
+            {/* Status Badge */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-gray-700">Status:</span>
+              {settings.emailConfigured ? (
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  ✓ Configured
+                </span>
+              ) : (
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                  ⚠ Not Configured
+                </span>
+              )}
+            </div>
+
+            {/* Provider Selection */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Email Provider
+              </label>
+              <select
+                value={emailProvider}
+                onChange={(e) => setEmailProvider(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              >
+                <option value="sendgrid">SendGrid</option>
+                <option value="resend">Resend</option>
+              </select>
+              <p className="text-xs text-gray-500 mt-1">
+                Choose your preferred email service provider
+              </p>
+            </div>
+
+            {/* API Key */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                API Key
+              </label>
+              <input
+                type="password"
+                value={emailApiKey}
+                onChange={(e) => setEmailApiKey(e.target.value)}
+                placeholder={settings.emailConfigured ? '••••••••••••••••' : 'Enter your API key'}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required={!settings.emailConfigured}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                {emailProvider === 'sendgrid' ? (
+                  <>Get your API key from <a href="https://app.sendgrid.com/settings/api_keys" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">SendGrid Dashboard</a></>
+                ) : (
+                  <>Get your API key from <a href="https://resend.com/api-keys" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Resend Dashboard</a></>
+                )}
+              </p>
+            </div>
+
+            {/* From Address */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                From Email Address
+              </label>
+              <input
+                type="email"
+                value={emailFromAddress}
+                onChange={(e) => setEmailFromAddress(e.target.value)}
+                placeholder="noreply@yourcompany.com"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                This email address will appear as the sender for all emails
+              </p>
+            </div>
+
+            {/* From Name */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                From Name
+              </label>
+              <input
+                type="text"
+                value={emailFromName}
+                onChange={(e) => setEmailFromName(e.target.value)}
+                placeholder="Your Company Name"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                This name will appear as the sender for all emails
+              </p>
+            </div>
+
+            {/* Submit Button */}
+            <div className="flex justify-end pt-4">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? 'Saving...' : settings.emailConfigured ? 'Update Configuration' : 'Save Configuration'}
+              </button>
+            </div>
+          </form>
+        </Card>
+
+        {/* Stripe Payment Configuration */}
+        <Card>
+          <CardHeader
+            title="Stripe Payment Processing"
+            subtitle="Configure your Stripe account to accept payments from customers on invoices."
+          />
+          <form onSubmit={handleStripeSubmit} className="p-6 space-y-4">
+            {/* Status Badge */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-gray-700">Status:</span>
+              {settings.stripeConfigured ? (
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  ✓ Configured
+                </span>
+              ) : (
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                  ⚠ Not Configured
+                </span>
+              )}
+            </div>
+
+            {/* Secret Key */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Secret Key
+              </label>
+              <input
+                type="password"
+                value={stripeSecretKey}
+                onChange={(e) => setStripeSecretKey(e.target.value)}
+                placeholder={settings.stripeConfigured ? '••••••••••••••••' : 'sk_live_...'}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required={!settings.stripeConfigured}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Get your secret key from <a href="https://dashboard.stripe.com/apikeys" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Stripe Dashboard</a>
+              </p>
+            </div>
+
+            {/* Publishable Key */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Publishable Key
+              </label>
+              <input
+                type="text"
+                value={stripePublishableKey}
+                onChange={(e) => setStripePublishableKey(e.target.value)}
+                placeholder="pk_live_..."
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                This key is safe to expose in your client-side code
+              </p>
+            </div>
+
+            {/* Webhook Secret */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Webhook Secret
+              </label>
+              <input
+                type="password"
+                value={stripeWebhookSecret}
+                onChange={(e) => setStripeWebhookSecret(e.target.value)}
+                placeholder={settings.stripeConfigured ? '••••••••••••••••' : 'whsec_...'}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required={!settings.stripeConfigured}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Configure webhook endpoint: <code className="bg-gray-100 px-1 py-0.5 rounded text-xs">/api/webhooks/stripe</code>
+              </p>
+            </div>
+
+            {/* Submit Button */}
+            <div className="flex justify-end pt-4">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? 'Saving...' : settings.stripeConfigured ? 'Update Configuration' : 'Save Configuration'}
+              </button>
+            </div>
+          </form>
+        </Card>
+
+        {/* Help Section */}
+        <Card>
+          <CardHeader title="Need Help?" />
+          <div className="p-6 space-y-4">
+            <div>
+              <h3 className="font-medium text-gray-900 mb-2">Why do I need to configure these services?</h3>
+              <p className="text-sm text-gray-600">
+                Cortiware is a platform that helps you run your business. To send emails to your customers and accept payments,
+                you need to connect your own third-party service accounts. This ensures that:
+              </p>
+              <ul className="list-disc list-inside text-sm text-gray-600 mt-2 space-y-1">
+                <li>Emails come from your domain (builds trust with customers)</li>
+                <li>Payments go directly to your bank account</li>
+                <li>You maintain control over your customer communications</li>
+                <li>You comply with email and payment regulations</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-medium text-gray-900 mb-2">Is my data secure?</h3>
+              <p className="text-sm text-gray-600">
+                Yes. All API keys and sensitive credentials are encrypted before being stored in our database.
+                We never have access to your actual keys, and they are only decrypted when needed to send emails or process payments on your behalf.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-medium text-gray-900 mb-2">What happens if I don't configure these?</h3>
+              <p className="text-sm text-gray-600">
+                Without email configuration, you won't be able to send automated notifications to customers.
+                Without Stripe configuration, customers won't be able to pay invoices online.
+                You can still use Cortiware for job management, customer tracking, and manual invoicing.
+              </p>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
