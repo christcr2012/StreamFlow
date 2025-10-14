@@ -2,6 +2,7 @@ import { getAuthContext } from '@/lib/auth-context';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { Card, CardHeader } from '@/components/ui/card';
+import { ThemeSwitcher } from '@/components/theme-switcher';
 import Link from 'next/link';
 
 async function getOrgData(orgId: string) {
@@ -118,6 +119,19 @@ export default async function SettingsPage() {
                 <p className="text-gray-900 font-mono text-sm mt-1">{authContext.userId}</p>
               </div>
             )}
+          </div>
+        </Card>
+
+        <Card>
+          <CardHeader title="Appearance" />
+          <div className="p-6">
+            <p className="text-sm text-gray-600 mb-4">
+              Choose your preferred theme. System preference will automatically switch between light and dark mode based on your device settings.
+            </p>
+            <div className="flex items-center gap-4">
+              <p className="text-sm font-medium text-gray-700">Theme:</p>
+              <ThemeSwitcher />
+            </div>
           </div>
         </Card>
 
