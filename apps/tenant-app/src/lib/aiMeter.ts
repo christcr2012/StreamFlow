@@ -155,7 +155,7 @@ export async function aiMeter<T>(
     // ATOMIC TRANSACTION: Ensure budget enforcement and accounting consistency
     const monthKey = new Date().toISOString().slice(0, 7);
     
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: any) => {
       // ATOMIC CHECKS: Re-verify both credit balance AND monthly budget within transaction
       const currentOrg = await tx.org.findUnique({
         where: { id: orgId },
