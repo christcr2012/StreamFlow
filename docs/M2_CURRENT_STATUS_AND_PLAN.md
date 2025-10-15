@@ -337,12 +337,34 @@ If a new agent needs to continue this work:
 
 ## 📚 Related Documentation
 
+### M2 Specific
 - `docs/M2_UI_MIGRATION_GUIDE.md` - Original migration guide
+- `docs/THEME_IMPROVEMENTS_TRACKER.md` - Theme system improvements tracker
 - `packages/ui/STYLE_PRESETS.md` - Style preset documentation
 - `packages/ui/README.md` - Component library README
 - `docs/THEME_ARCHITECTURE.md` - Theme system architecture
+
+### Broader Project Context
+- **`docs/ACTUAL_REMAINING_WORK.md`** - **ACTUAL remaining work based on codebase reality**
+- `docs/ARCHITECTURE_GAP_CLOSURE_PLAN.md` - Reference only (aspirational, not source of truth)
+- `docs/BINDER_1_IMPLEMENTATION_GUIDE.md` - Reference only (template, not requirement)
+- `docs/planning/ROADMAP.md` - Reference only (aspirational)
 - `docs/AI_AGENT_REFERENCE.md` - Agent guidelines and policies
 - `docs/VERCEL_BUILD_GUIDE.md` - Vercel deployment guide
+
+### ⚠️ CRITICAL: About "Remaining Work"
+**M2 is the ONLY confirmed remaining work.**
+
+**After M2**, remaining work depends on what the user actually wants:
+- Binder documents are **REFERENCE ONLY** (not a to-do list)
+- Architecture plans are **ASPIRATIONAL** (not requirements)
+- The **CODEBASE** and **USER** are the only sources of truth
+
+**See `docs/ACTUAL_REMAINING_WORK.md` for**:
+- What's actually implemented vs documented
+- What's disabled but could be enabled
+- What's stubbed but could be completed
+- Questions to ask the user about what they actually want
 
 ---
 
