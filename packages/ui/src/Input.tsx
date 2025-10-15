@@ -14,51 +14,58 @@ export interface InputProps {
   label?: string;
   placeholder?: string;
   type?: string;
-  value: string;
-  onChange: (value: string) => void;
+  value?: string;
+  onChange?: (value: string) => void;
   error?: string;
   hint?: string;
+  helperText?: string; // tenant-app alias for hint
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
   disabled?: boolean;
   required?: boolean;
   className?: string;
+  fullWidth?: boolean; // tenant-app support
 }
 
 export function Input({
   label,
   placeholder,
   type = 'text',
-  value,
+  value = '',
   onChange,
   error,
   hint,
+  helperText,
   leftIcon,
   rightIcon,
   disabled = false,
   required = false,
   className = '',
+  fullWidth = false,
 }: InputProps) {
   const hasError = !!error;
+  const hintText = hint || helperText; // Support both provider-portal (hint) and tenant-app (helperText)
   
   const inputClasses = `
     w-full px-4 py-3 rounded-lg
-    bg-[var(--surface-1)] 
+    bg-[var(--surface-1)]
     border-2 transition-all duration-200
     text-[var(--text-primary)]
     placeholder:text-[var(--text-muted)]
     focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent
     disabled:opacity-50 disabled:cursor-not-allowed
-    ${hasError 
-      ? 'border-[var(--accent-error)] focus:border-[var(--accent-error)] focus:ring-[var(--accent-error)]' 
+    ${hasError
+      ? 'border-[var(--accent-error)] focus:border-[var(--accent-error)] focus:ring-[var(--accent-error)]'
       : 'border-[var(--border-primary)] focus:border-[var(--brand-primary)] focus:ring-[var(--brand-primary)] hover:border-[var(--border-accent)]'
     }
     ${leftIcon ? 'pl-11' : ''}
     ${rightIcon ? 'pr-11' : ''}
   `;
-  
+
+  const containerClass = fullWidth ? 'w-full' : '';
+
   return (
-    <div className={`space-y-2 ${className}`}>
+    <div className={`space-y-2 ${containerClass} ${className}`}>
       {label && (
         <label className="block text-sm font-medium text-[var(--text-secondary)]">
           {label}
@@ -76,7 +83,7 @@ export function Input({
         <input
           type={type}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChange?.(e.target.value)}
           placeholder={placeholder}
           disabled={disabled}
           required={required}
@@ -99,8 +106,8 @@ export function Input({
         </p>
       )}
       
-      {hint && !error && (
-        <p className="text-sm text-[var(--text-tertiary)]">{hint}</p>
+      {hintText && !error && (
+        <p className="text-sm text-[var(--text-tertiary)]">{hintText}</p>
       )}
     </div>
   );

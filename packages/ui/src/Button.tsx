@@ -13,7 +13,7 @@
 import { ReactNode } from 'react';
 
 export interface ButtonProps {
-  variant?: 'solid' | 'outline' | 'ghost' | 'gradient';
+  variant?: 'solid' | 'outline' | 'ghost' | 'gradient' | 'primary' | 'secondary' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   loading?: boolean;
   disabled?: boolean;
@@ -23,6 +23,7 @@ export interface ButtonProps {
   onClick?: () => void;
   type?: 'button' | 'submit' | 'reset';
   className?: string;
+  fullWidth?: boolean;
 }
 
 export function Button({
@@ -36,23 +37,30 @@ export function Button({
   onClick,
   type = 'button',
   className = '',
+  fullWidth = false,
 }: ButtonProps) {
   const baseClasses = 'inline-flex items-center justify-center font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent disabled:opacity-50 disabled:cursor-not-allowed';
-  
+
+  // Support both provider-portal and tenant-app variant names
   const variantClasses = {
     solid: 'bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-secondary)] text-white hover:opacity-90 shadow-glow focus:ring-[var(--brand-primary)]',
+    primary: 'bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-secondary)] text-white hover:opacity-90 shadow-glow focus:ring-[var(--brand-primary)]', // tenant-app alias
     outline: 'border-2 border-[var(--border-accent)] text-[var(--text-accent)] hover:bg-[var(--surface-hover)] focus:ring-[var(--brand-primary)]',
+    secondary: 'border-2 border-[var(--border-primary)] text-[var(--text-secondary)] hover:bg-[var(--surface-hover)] focus:ring-[var(--brand-primary)]', // tenant-app alias
     ghost: 'text-[var(--text-accent)] hover:bg-[var(--surface-hover)] focus:ring-[var(--brand-primary)]',
     gradient: 'bg-[var(--brand-gradient)] text-white hover:shadow-glow-intense shadow-glow focus:ring-[var(--brand-primary)]',
+    danger: 'bg-gradient-to-r from-red-600 to-red-700 text-white hover:opacity-90 shadow-glow focus:ring-red-500', // tenant-app specific
   };
-  
+
   const sizeClasses = {
     sm: 'px-3 py-1.5 text-sm rounded-md gap-1.5',
     md: 'px-4 py-2.5 text-base rounded-lg gap-2',
     lg: 'px-6 py-3.5 text-lg rounded-xl gap-2.5',
   };
-  
-  const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
+
+  const widthClass = fullWidth ? 'w-full' : '';
+
+  const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${widthClass} ${className}`;
   
   return (
     <button
