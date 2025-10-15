@@ -1,8 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { z } from 'zod';
 import { generateEmailResponse } from '@/lib/aiHelper';
 import { checkAiBudget } from '@/lib/aiMeter';
 import { prisma } from '@/lib/prisma';
+
+// SECURITY: Input validation schema
+const emailResponseSchema = z.object({
+  customerName: z.string().min(1).max(200),
+  topic: z.string().min(1).max(500),
+  incomingEmail: z.string().max(10000).optional(),
+  tone: z.enum(['professional', 'friendly', 'formal']).default('professional'),
+  additionalContext: z.string().max(2000).optional(),
+  model: z.enum(['gpt-4o-mini', 'gpt-4o', 'gpt-3.5-turbo']).optional(),
+});
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,8 +35,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // SECURITY: Validate and parse request body
     const body = await req.json();
-    const { customerName, topic, incomingEmail, tone, additionalContext, model } = body;
+    const validationResult = emailResponseSchema.safeParse(body);
+
+    if (!validationResult.success) {
+      return NextResponse.json(
+        { ok: false, error: 'Invalid request data', details: validationResult.error.errors },
+        { status: 400 }
+      );
+    }
+
+    const { customerName, topic, incomingEmail, tone, additionalContext, model } = validationResult.data;
 
     // Generate email response
     const suggestion = await generateEmailResponse({

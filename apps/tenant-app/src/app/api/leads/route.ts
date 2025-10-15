@@ -1,6 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
+
+// SECURITY: Input validation schemas
+const createLeadSchema = z.object({
+  sourceType: z.enum([
+    'COLD', 'HOT', 'RFP', 'MANUAL_EMPLOYEE_REFERRAL', 'MANUAL_EXISTING_CUSTOMER',
+    'MANUAL_NEW_CUSTOMER', 'MANUAL_OTHER', 'SYSTEM', 'EMPLOYEE_REFERRAL', 'MANUAL', 'LSA'
+  ]),
+  company: z.string().max(200).optional(),
+  contactName: z.string().max(200).optional(),
+  email: z.string().email().max(200).optional(),
+  phoneE164: z.string().max(20).optional(),
+  website: z.string().url().max(500).optional().or(z.literal('')),
+  city: z.string().max(100).optional(),
+  state: z.string().max(50).optional(),
+  postalCode: z.string().max(20).optional(),
+  address: z.string().max(500).optional(),
+  notes: z.string().max(5000).optional(),
+  enrichAI: z.boolean().optional().default(false),
+});
 
 /**
  * GET /api/leads
@@ -96,7 +116,17 @@ export async function POST(req: NextRequest) {
     // Get orgId from session
     const orgId = session.value;
 
+    // SECURITY: Validate and parse request body
     const body = await req.json();
+    const validationResult = createLeadSchema.safeParse(body);
+
+    if (!validationResult.success) {
+      return NextResponse.json(
+        { error: 'Invalid request data', details: validationResult.error.errors },
+        { status: 400 }
+      );
+    }
+
     const {
       sourceType,
       company,
@@ -109,16 +139,8 @@ export async function POST(req: NextRequest) {
       postalCode,
       address,
       notes,
-      enrichAI = false, // Optional AI enrichment
-    } = body;
-
-    // Validation
-    if (!sourceType) {
-      return NextResponse.json(
-        { error: 'Missing required field: sourceType' },
-        { status: 400 }
-      );
-    }
+      enrichAI,
+    } = validationResult.data;
 
     // Generate identity hash for deduplication
     const identityParts = [
