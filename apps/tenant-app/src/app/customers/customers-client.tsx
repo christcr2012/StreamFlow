@@ -9,6 +9,11 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Select } from '@/components/ui/select';
 import { Pagination } from '@/components/ui/pagination';
+import { SwipeableListItem } from '@/components/swipeable-list-item';
+import { PullToRefreshIndicator } from '@/components/pull-to-refresh-indicator';
+import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
+import { useInfiniteScroll } from '@/hooks/use-infinite-scroll';
+import { useHapticFeedback, getHapticClasses } from '@/hooks/use-haptic-feedback';
 import Link from 'next/link';
 
 interface Customer {
@@ -28,16 +33,33 @@ interface CustomersClientProps {
   customers: Customer[];
 }
 
-export function CustomersClient({ customers }: CustomersClientProps) {
+export function CustomersClient({ customers: initialCustomers }: CustomersClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const [customers, setCustomers] = useState(initialCustomers);
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [sortBy, setSortBy] = useState(searchParams.get('sortBy') || 'createdAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>((searchParams.get('sortOrder') as 'asc' | 'desc') || 'desc');
   const [selectedCustomers, setSelectedCustomers] = useState<Set<string>>(new Set());
   const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page') || '1'));
+  const [useInfiniteScrollMode, setUseInfiniteScrollMode] = useState(false);
   const itemsPerPage = 20;
+
+  // Haptic feedback
+  const { triggerHaptic } = useHapticFeedback();
+
+  // Pull-to-refresh
+  const handleRefresh = async () => {
+    triggerHaptic('medium');
+    // Refresh data by reloading the page
+    router.refresh();
+  };
+
+  const pullToRefresh = usePullToRefresh({
+    onRefresh: handleRefresh,
+    enabled: true,
+  });
 
   // Update URL when filters change
   useEffect(() => {
@@ -93,17 +115,49 @@ export function CustomersClient({ customers }: CustomersClientProps) {
     return filtered;
   }, [customers, searchQuery, sortBy, sortOrder]);
 
-  // Pagination
+  // Infinite scroll
+  const infiniteScroll = useInfiniteScroll({
+    items: filteredAndSortedCustomers,
+    itemsPerPage,
+    enabled: useInfiniteScrollMode,
+  });
+
+  // Pagination (traditional)
   const totalPages = Math.ceil(filteredAndSortedCustomers.length / itemsPerPage);
   const paginatedCustomers = useMemo(() => {
+    if (useInfiniteScrollMode) {
+      return infiniteScroll.displayedItems;
+    }
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return filteredAndSortedCustomers.slice(startIndex, endIndex);
-  }, [filteredAndSortedCustomers, currentPage, itemsPerPage]);
+  }, [filteredAndSortedCustomers, currentPage, itemsPerPage, useInfiniteScrollMode, infiniteScroll.displayedItems]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Delete customer
+  const handleDeleteCustomer = async (customerId: string) => {
+    try {
+      triggerHaptic('heavy');
+      const response = await fetch(`/api/customers/${customerId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete customer');
+      }
+
+      // Remove customer from local state
+      setCustomers((prev) => prev.filter((c) => c.id !== customerId));
+      triggerHaptic('success');
+    } catch (error) {
+      console.error('Error deleting customer:', error);
+      triggerHaptic('error');
+      alert('Failed to delete customer. Please try again.');
+    }
   };
 
   const columns = [
@@ -188,30 +242,39 @@ export function CustomersClient({ customers }: CustomersClientProps) {
   };
 
   return (
-    <div className="min-h-screen p-4 md:p-8 bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-7xl mx-auto space-y-4 md:space-y-6">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">Customers</h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-1 text-sm md:text-base">
-              {filteredAndSortedCustomers.length} of {customers.length} customers
-            </p>
+    <>
+      {/* Pull-to-Refresh Indicator */}
+      <PullToRefreshIndicator
+        pullDistance={pullToRefresh.pullDistance}
+        threshold={pullToRefresh.threshold}
+        isRefreshing={pullToRefresh.isRefreshing}
+        isPulling={pullToRefresh.isPulling}
+      />
+
+      <div className="min-h-screen p-4 md:p-8 bg-gray-50 dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto space-y-4 md:space-y-6">
+          {/* Header */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">Customers</h1>
+              <p className="text-gray-600 dark:text-gray-400 mt-1 text-sm md:text-base">
+                {filteredAndSortedCustomers.length} of {customers.length} customers
+              </p>
+            </div>
+            <div className="flex gap-2 md:gap-3">
+              <Button
+                variant="secondary"
+                onClick={handleExportCSV}
+                className={`flex-1 md:flex-none ${getHapticClasses('light')}`}
+                style={{ minHeight: '44px' }}
+              >
+                Export CSV
+              </Button>
+              <Link href="/customers/new" className="flex-1 md:flex-none">
+                <Button className={`w-full ${getHapticClasses('medium')}`} style={{ minHeight: '44px' }}>+ New Customer</Button>
+              </Link>
+            </div>
           </div>
-          <div className="flex gap-2 md:gap-3">
-            <Button
-              variant="secondary"
-              onClick={handleExportCSV}
-              className="flex-1 md:flex-none"
-              style={{ minHeight: '44px' }}
-            >
-              Export CSV
-            </Button>
-            <Link href="/customers/new" className="flex-1 md:flex-none">
-              <Button className="w-full" style={{ minHeight: '44px' }}>+ New Customer</Button>
-            </Link>
-          </div>
-        </div>
 
         {/* Search and Filters */}
         <Card>
@@ -257,10 +320,12 @@ export function CustomersClient({ customers }: CustomersClientProps) {
               columns={columns}
               keyExtractor={(customer) => customer.id}
               onRowClick={(customer) => router.push(`/customers/${customer.id}`)}
+              onDelete={(customer) => handleDeleteCustomer(customer.id)}
+              deleteLabel="Delete Customer"
               emptyMessage="No customers found. Create your first customer to get started."
             />
           </div>
-          {totalPages > 1 && (
+          {!useInfiniteScrollMode && totalPages > 1 && (
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
@@ -269,9 +334,30 @@ export function CustomersClient({ customers }: CustomersClientProps) {
               itemsPerPage={itemsPerPage}
             />
           )}
+          {useInfiniteScrollMode && infiniteScroll.hasMore && (
+            <div ref={infiniteScroll.observerTarget} className="p-4 text-center">
+              {infiniteScroll.isLoading ? (
+                <div className="flex items-center justify-center gap-2 text-gray-600 dark:text-gray-400">
+                  <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  <span>Loading more...</span>
+                </div>
+              ) : (
+                <button
+                  onClick={infiniteScroll.loadMore}
+                  className="text-blue-600 dark:text-blue-400 hover:underline"
+                >
+                  Load more
+                </button>
+              )}
+            </div>
+          )}
         </Card>
       </div>
     </div>
+    </>
   );
 }
 

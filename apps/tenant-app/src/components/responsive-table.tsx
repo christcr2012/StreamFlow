@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactNode } from 'react';
+import { SwipeableListItem } from './swipeable-list-item';
 
 interface Column<T> {
   key: string;
@@ -14,6 +15,8 @@ interface ResponsiveTableProps<T> {
   columns: Column<T>[];
   keyExtractor: (item: T) => string;
   onRowClick?: (item: T) => void;
+  onDelete?: (item: T) => void; // Optional delete handler for swipe-to-delete
+  deleteLabel?: string; // Optional custom delete label
   emptyMessage?: ReactNode;
 }
 
@@ -22,6 +25,8 @@ export function ResponsiveTable<T>({
   columns,
   keyExtractor,
   onRowClick,
+  onDelete,
+  deleteLabel = 'Delete',
   emptyMessage = 'No data available',
 }: ResponsiveTableProps<T>) {
   if (data.length === 0) {
@@ -76,29 +81,45 @@ export function ResponsiveTable<T>({
 
       {/* Mobile Card View */}
       <div className="md:hidden space-y-4">
-        {data.map((item) => (
-          <div
-            key={keyExtractor(item)}
-            onClick={() => onRowClick?.(item)}
-            className={`${
-              onRowClick ? 'cursor-pointer active:bg-gray-100 dark:active:bg-gray-800' : ''
-            } bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm`}
-            style={{ minHeight: '44px' }} // Ensure touch target
-          >
-            <div className="space-y-3">
-              {columns.map((column) => (
-                <div key={column.key} className="flex justify-between items-start gap-2">
-                  <span className="text-sm font-medium text-gray-500 dark:text-gray-400 flex-shrink-0">
-                    {column.mobileLabel || column.label}:
-                  </span>
-                  <span className="text-sm text-gray-900 dark:text-gray-100 text-right">
-                    {column.render(item)}
-                  </span>
-                </div>
-              ))}
+        {data.map((item) => {
+          const cardContent = (
+            <div
+              onClick={() => onRowClick?.(item)}
+              className={`${
+                onRowClick ? 'cursor-pointer active:bg-gray-100 dark:active:bg-gray-800' : ''
+              } bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm`}
+              style={{ minHeight: '44px' }} // Ensure touch target
+            >
+              <div className="space-y-3">
+                {columns.map((column) => (
+                  <div key={column.key} className="flex justify-between items-start gap-2">
+                    <span className="text-sm font-medium text-gray-500 dark:text-gray-400 flex-shrink-0">
+                      {column.mobileLabel || column.label}:
+                    </span>
+                    <span className="text-sm text-gray-900 dark:text-gray-100 text-right">
+                      {column.render(item)}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+
+          // Wrap in SwipeableListItem if onDelete is provided
+          if (onDelete) {
+            return (
+              <SwipeableListItem
+                key={keyExtractor(item)}
+                onDelete={() => onDelete(item)}
+                deleteLabel={deleteLabel}
+              >
+                {cardContent}
+              </SwipeableListItem>
+            );
+          }
+
+          return <div key={keyExtractor(item)}>{cardContent}</div>;
+        })}
       </div>
     </>
   );
