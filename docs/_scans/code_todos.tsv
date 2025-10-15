@@ -1,0 +1,4 @@
+C:\Users\chris\Git Local\Cortiware\src\config\leadScoringConfig.ts	137	// TODO: Track conversion rates by source and adjust weights accordingly
+C:\Users\chris\Git Local\Cortiware\src\lib\entitlements.ts	43	// TODO: Replace with OIDC claims when FED_OIDC_ENABLED=true
+C:\Users\chris\Git Local\Cortiware\src\lib\federation-audit.ts	21	// TODO: Persist to AuditLog table or dedicated federation audit table
+C:\Users\chris\Git Local\Cortiware\src\lib\oidc.ts	45	// TODO: Implement JWT verification with IdP's public keys

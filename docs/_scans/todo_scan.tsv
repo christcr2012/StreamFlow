@@ -1,0 +1,40 @@
+C:\Users\chris\Git Local\Cortiware\docs\archive\COMPLETION_REPORT.md\t13\tAll requested work has been completed autonomously. The Cortiware system is now production-ready pending infrastructure setup (Redis, monitoring). All tests passing (42/42), zero TypeScript errors, successful build, comprehensive documentation, and production readiness tasks implemented.
+C:\Users\chris\Git Local\Cortiware\docs\archive\FINAL_COMPLETION_REPORT.md\t42\t5. **Billing Service TODO**
+C:\Users\chris\Git Local\Cortiware\docs\archive\FINAL_COMPLETION_REPORT.md\t43\t- Completed TODO in `src/services/provider/billing.service.ts`
+C:\Users\chris\Git Local\Cortiware\docs\archive\FINAL_COMPLETION_REPORT.md\t93\t2. `src/services/provider/billing.service.ts` - Completed TODO for unbilled leads filter
+C:\Users\chris\Git Local\Cortiware\docs\archive\FINAL_COMPLETION_REPORT.md\t124\t5. Billing service TODO
+C:\Users\chris\Git Local\Cortiware\docs\archive\FINAL_COMPLETION_REPORT.md\t207\t- ✅ Billing service TODO completed
+C:\Users\chris\Git Local\Cortiware\docs\archive\FINAL_COMPLETION_REPORT.md\t281\t- ✅ Billing service TODO completed
+C:\Users\chris\Git Local\Cortiware\docs\archive\FINAL_SUMMARY.md\t266\t- Audit/metrics writes disabled in tests (UNIT_TESTS=1)
+C:\Users\chris\Git Local\Cortiware\docs\archive\WORK_COMPLETE.md\t159\t### **Pending (After Deployment):**
+C:\Users\chris\Git Local\Cortiware\docs\archive\WORK_COMPLETE.md\t266\t- [ ] Deployments verified (pending)
+C:\Users\chris\Git Local\Cortiware\docs\archive\WORK_COMPLETE.md\t267\t- [ ] All tests passing (pending)
+C:\Users\chris\Git Local\Cortiware\docs\deployment\MANUAL_ENV_SETUP.md\t108\t**Note:** Emergency access is disabled by default (`EMERGENCY_LOGIN_ENABLED=false`). Only enable when SSO is down.
+C:\Users\chris\Git Local\Cortiware\docs\deployment\MANUAL_ENV_SETUP.md\t121\t- [ ] Emergency access is disabled (returns error when accessed)
+C:\Users\chris\Git Local\Cortiware\docs\deployment\MANUAL_ENV_SETUP.md\t162\t2. **Emergency access disabled by default** - Only enable during SSO outage
+C:\Users\chris\Git Local\Cortiware\docs\deployment\PHASE1_DEPLOYMENT_STATUS.md\t45\t## ⏳ Pending Manual Steps (Requires User Action)
+C:\Users\chris\Git Local\Cortiware\docs\deployment\PHASE1_DEPLOYMENT_STATUS.md\t186\t2. **Emergency access is disabled by default** - Only enable when SSO is down
+C:\Users\chris\Git Local\Cortiware\docs\Execute\MASTER_GUIDE.md\t6\t- No compliance frameworks at start (stubs only)
+C:\Users\chris\Git Local\Cortiware\docs\Execute\PROMPTS.md\t2\t(Planning and Implementation prompts; do not add routes beyond API_INDEX.json; apply PRISMA_DELTA.prisma; wallet+402 gates; stubs for compliance.)
+C:\Users\chris\Git Local\Cortiware\docs\Execute\SECURITY_STUBS.md\t1\t# Security Stubs — RLS, JWT audiences, rate limits, audit; no HIPAA/SOC2 enabled; toggles only
+C:\Users\chris\Git Local\Cortiware\docs\federation\api-contracts.md\t403\t**Status**: ⚠️ TODO (Issue #8)
+C:\Users\chris\Git Local\Cortiware\docs\federation\api-contracts.md\t421\t### Before (Stub Implementation)
+C:\Users\chris\Git Local\Cortiware\docs\federation\api-contracts.md\t432\t**Status**: 501 Not Implemented
+C:\Users\chris\Git Local\Cortiware\docs\federation\hosting-and-environments.md\t169\t**OIDC**: Disabled (use environment-based auth)
+C:\Users\chris\Git Local\Cortiware\docs\implementation\OPTION_C_PHASE_1_COMPLETE.md\t259\t- [ ] Dev mode flags are disabled in production
+C:\Users\chris\Git Local\Cortiware\docs\planning\HANDOFF_COMPLETION_2025-10-10.md\t39\t**Status:** Template implementation complete. Database integration pending (documented in Known Limitations).
+C:\Users\chris\Git Local\Cortiware\docs\planning\HANDOFF_COMPLETION_2025-10-10.md\t193\t1. **UI Components Integration** - Components ready, integration guide provided, actual wiring pending
+C:\Users\chris\Git Local\Cortiware\docs\planning\HANDOFF_COMPLETION_2025-10-10.md\t194\t2. **Database Loader Implementation** - Template scripts created, Prisma integration pending
+C:\Users\chris\Git Local\Cortiware\docs\roadmap\EMERGENCY_ACCESS_AND_FEDERATION_ROADMAP.md\t3\t> Current configuration context: Emergency access is DISABLED in Production, ENABLED in Development/Preview for testing; portals are read-only by default; no TOTP configured; Provider/Developer emergency credential hashes already set in Vercel.
+C:\Users\chris\Git Local\Cortiware\docs\roadmap\EMERGENCY_ACCESS_AND_FEDERATION_ROADMAP.md\t14\t- Emergency access is DISABLED in Production and ENABLED only in Development and Preview for testing
+C:\Users\chris\Git Local\Cortiware\docs\roadmap\EMERGENCY_ACCESS_AND_FEDERATION_ROADMAP.md\t76\t- Output: env validation, parsing utility, and design doc stub
+C:\Users\chris\Git Local\Cortiware\docs\roadmap\EMERGENCY_ACCESS_AND_FEDERATION_ROADMAP.md\t114\t- Non-blocking for Production emergency flows (Prod emergency remains disabled)
+C:\Users\chris\Git Local\Cortiware\docs\roadmap\EMERGENCY_ACCESS_AND_FEDERATION_ROADMAP.md\t145\t- Amend EMERGENCY_ACCESS_RUNBOOK.md to explicitly document current configuration: Production disabled; Development & Preview enabled for testing; no TOTP; read-only by default
+C:\Users\chris\Git Local\Cortiware\docs\roadmap\EMERGENCY_ACCESS_AND_FEDERATION_ROADMAP.md\t163\t- Clarify that Production remains disabled unless explicitly approved
+C:\Users\chris\Git Local\Cortiware\docs\roadmap\EMERGENCY_ACCESS_AND_FEDERATION_ROADMAP.md\t172\t- Ship behind a feature flag and disabled in Production
+C:\Users\chris\Git Local\Cortiware\docs\roadmap\EMERGENCY_ACCESS_AND_FEDERATION_ROADMAP.md\t177\t- Disabled in Production by default
+C:\Users\chris\Git Local\Cortiware\docs\roadmap\EMERGENCY_ACCESS_AND_FEDERATION_ROADMAP.md\t184\t- Disabled in Production unless explicitly enabled
+C:\Users\chris\Git Local\Cortiware\docs\security\INCIDENT_RESPONSE_2025-10-08.md\t127\t- **PENDING** - User updates Vercel environment variables
+C:\Users\chris\Git Local\Cortiware\docs\security\INCIDENT_RESPONSE_2025-10-08.md\t128\t- **PENDING** - Apps redeployed with new secrets
+C:\Users\chris\Git Local\Cortiware\docs\security\INCIDENT_RESPONSE_2025-10-08.md\t129\t- **PENDING** - Monitoring for unauthorized access
+C:\Users\chris\Git Local\Cortiware\docs\todos\option-c-todos.md\t1\t# TODOs / Issues: Option C

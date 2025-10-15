@@ -2,6 +2,12 @@
 
 **CRITICAL: READ THIS BEFORE MAKING ANY CHANGES**
 
+## Truth Policy (Read First)
+- The ONLY sources of truth are: 1) the codebase, and 2) the user.
+- Documentation (including binders, plans, roadmaps) is REFERENCE ONLY.
+- If a document claims something is done, DOUBLE-CHECK the codebase.
+- Do not treat old documentation as a to-do list. Use `docs/ACTUAL_REMAINING_WORK.md` and the codebase.
+
 ## Monorepo Structure
 
 ```
