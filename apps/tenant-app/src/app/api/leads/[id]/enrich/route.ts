@@ -81,6 +81,21 @@ export async function POST(
 
     // AI analysis succeeded - update lead with full analysis
     const analysis = result.analysis!;
+
+    // Get existing score history
+    const existingFactors = (lead.scoreFactors as any) || {};
+    const scoreHistory = Array.isArray(existingFactors.scoreHistory)
+      ? existingFactors.scoreHistory
+      : [];
+
+    // Add current score to history
+    scoreHistory.push({
+      score: analysis.qualityScore,
+      confidence: analysis.confidence,
+      timestamp: new Date().toISOString(),
+      creditsUsed: result.creditsUsed,
+    });
+
     await prisma.lead.update({
       where: { id },
       data: {
@@ -89,6 +104,7 @@ export async function POST(
           aiAnalysis: JSON.parse(JSON.stringify(analysis)), // Convert to plain object for Prisma Json type
           aiAnalysisFailed: false,
           enrichedAt: new Date().toISOString(),
+          scoreHistory, // Track score changes over time
         },
         updatedAt: new Date(),
       },

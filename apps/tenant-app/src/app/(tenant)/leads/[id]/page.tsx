@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { AIScoreBadge, AIScoreIndicator, UrgencyBadge } from '@/components/ai-score-badge';
+import { ScoreHistoryChart } from '@/components/score-history-chart';
 
 interface LeadDetail {
   id: string;
@@ -35,6 +36,7 @@ export default function LeadDetailPage() {
   const [lead, setLead] = useState<LeadDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [enriching, setEnriching] = useState(false);
 
   useEffect(() => {
     if (leadId) {
@@ -61,6 +63,39 @@ export default function LeadDetailPage() {
       setError(err.message || 'Failed to load lead');
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function enrichLead() {
+    if (!leadId) return;
+
+    try {
+      setEnriching(true);
+      setError('');
+
+      const res = await fetch(`/api/leads/${leadId}/enrich`, {
+        method: 'POST',
+      });
+      const data = await res.json();
+
+      if (!data.ok) {
+        setError(data.error || 'Failed to enrich lead');
+        return;
+      }
+
+      // Reload lead to show updated analysis
+      await loadLead();
+
+      // Show success message
+      if (data.enriched) {
+        alert(`Lead enriched successfully! Used ${data.creditsUsed} credits.`);
+      } else {
+        alert(`AI enrichment unavailable: ${data.reason}. Using basic scoring.`);
+      }
+    } catch (err: any) {
+      setError(err.message || 'Failed to enrich lead');
+    } finally {
+      setEnriching(false);
     }
   }
 
@@ -116,6 +151,13 @@ export default function LeadDetailPage() {
             <p className="text-gray-600 dark:text-gray-400">{lead.publicId}</p>
           </div>
           <div className="flex items-center gap-3">
+            <button
+              onClick={enrichLead}
+              disabled={enriching}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 text-sm font-medium"
+            >
+              {enriching ? 'Enriching...' : 'Enrich with AI'}
+            </button>
             <AIScoreBadge
               score={lead.aiScore}
               confidence={aiAnalysis?.confidence}
@@ -320,6 +362,16 @@ export default function LeadDetailPage() {
               showLabel={false}
             />
           </div>
+
+          {/* Score History Card */}
+          {lead.scoreFactors && (lead.scoreFactors as any).scoreHistory && (
+            <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                Score History
+              </h3>
+              <ScoreHistoryChart history={(lead.scoreFactors as any).scoreHistory} />
+            </div>
+          )}
 
           {/* Status Card */}
           <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
