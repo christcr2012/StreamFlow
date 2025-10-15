@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import ClientListTable from './ClientListTable';
 import ClientDetailsModal from './ClientDetailsModal';
 import ClientFilters from './ClientFilters';
@@ -19,7 +19,8 @@ export default function ProviderClientsPage() {
   const [sortOrder, setSortOrder] = useState('desc');
   const [activeTab, setActiveTab] = useState<'clients' | 'federation'>('clients');
 
-  const fetchClients = async () => {
+  // CODE QUALITY: Fixed useEffect dependency - wrapped fetchClients in useCallback
+  const fetchClients = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams({
@@ -42,11 +43,11 @@ export default function ProviderClientsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, limit, search, status, sortBy, sortOrder]);
 
   useEffect(() => {
     fetchClients();
-  }, [page, limit, search, status, sortBy, sortOrder]);
+  }, [fetchClients]);
 
   const handleRefresh = () => {
     fetchClients();

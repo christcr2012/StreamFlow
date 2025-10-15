@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 
 type Invoice = {
@@ -22,19 +22,16 @@ export default function InvoicesPage() {
   const [statusFilter, setStatusFilter] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    fetchInvoices();
-  }, [statusFilter]);
-
-  const fetchInvoices = async () => {
+  // CODE QUALITY: Fixed useEffect dependency - wrapped fetchInvoices in useCallback
+  const fetchInvoices = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
       if (statusFilter) params.append('status', statusFilter);
-      
+
       const res = await fetch(`/api/invoices?${params}`);
       if (!res.ok) throw new Error('Failed to fetch invoices');
-      
+
       const data = await res.json();
       setInvoices(data.items || []);
     } catch (err: any) {
@@ -42,7 +39,11 @@ export default function InvoicesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter]);
+
+  useEffect(() => {
+    fetchInvoices();
+  }, [fetchInvoices]);
 
   const filteredInvoices = invoices.filter((inv) => {
     if (searchQuery) {
@@ -239,11 +240,8 @@ function InvoiceDetailsModal({ invoiceId, onClose }: { invoiceId: string; onClos
   const [invoice, setInvoice] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchInvoiceDetails();
-  }, [invoiceId]);
-
-  const fetchInvoiceDetails = async () => {
+  // CODE QUALITY: Fixed useEffect dependency - wrapped fetchInvoiceDetails in useCallback
+  const fetchInvoiceDetails = useCallback(async () => {
     try {
       const res = await fetch(`/api/invoices/${invoiceId}`);
       if (!res.ok) throw new Error('Failed to fetch invoice details');
@@ -254,7 +252,11 @@ function InvoiceDetailsModal({ invoiceId, onClose }: { invoiceId: string; onClos
     } finally {
       setLoading(false);
     }
-  };
+  }, [invoiceId]);
+
+  useEffect(() => {
+    fetchInvoiceDetails();
+  }, [fetchInvoiceDetails]);
 
   const formatCurrency = (cents: number) => {
     return new Intl.NumberFormat('en-US', {
