@@ -1,134 +1,161 @@
 # M2: UI Component Migration Guide
 
+**Status**: Phase 5 Complete (with build errors) → Phase 6 In Progress
+**Last Updated**: 2025-01-15
+**See Also**: `docs/M2_CURRENT_STATUS_AND_PLAN.md` for detailed current status
+
 ## Overview
 
-This document outlines the migration strategy for consolidating UI components from both `tenant-app` and `provider-portal` into the shared `@cortiware/ui` package.
+This document outlines the migration strategy for consolidating UI components from both `tenant-app` and `provider-portal` into the shared `@cortiware/ui` package with support for multiple visual styles.
 
 ## Migration Status
 
 ### ✅ Phase 1-4 Complete
 - Database schema with `themeSettings` field
-- Shared `@cortiware/ui` package with 6 premium components
+- Shared `@cortiware/ui` package with 7 components (Button, Card, Input, Modal, Skeleton, EmptyState, Textarea)
 - Theme customization API routes
 - Theme settings UI pages
 - Dynamic theme loading in root layouts
+- 27 theme variants with CSS variables
 
-### 🔄 Phase 5: Component Migration (Strategic Approach)
+### ✅ Phase 5: Component Migration Complete (with TypeScript errors)
 
-Due to the extensive number of components across both apps, we're taking a **strategic partial migration** approach:
+**Approach**: Hybrid style system with `stylePreset` prop supporting both "business" (default) and "premium" visual styles.
 
-1. **Demonstrate the pattern** with key component migrations
-2. **Document the approach** for future incremental migration
-3. **Maintain backward compatibility** during transition
+**Key Decisions**:
+1. Default `stylePreset` changed from `'premium'` to `'business'`
+2. Business style uses CSS variables for theme integration (not hardcoded colors)
+3. Input `onChange` signature changed to `(value: string) => void`
+4. Button component does not accept `style` prop
+
+**Current Blocker**: TypeScript errors preventing Vercel deployment (see M2_CURRENT_STATUS_AND_PLAN.md)
 
 ## Component Inventory
 
-### @cortiware/ui (Shared Package)
-- ✅ Button (4 variants: solid, outline, ghost, gradient)
-- ✅ Card (4 variants: default, glass, elevated, glow)
-- ✅ Input (with icons, validation, error states)
-- ✅ Modal (with ConfirmModal preset)
-- ✅ Skeleton (SkeletonCard, SkeletonTable, SkeletonList)
-- ✅ EmptyState (NoResults, NoData, ErrorState)
+### @cortiware/ui (Shared Package) - Current Status
+| Component | Status | Style Presets | Default | Notes |
+|-----------|--------|---------------|---------|-------|
+| Button | ✅ Complete | business, premium | business | No `style` prop support |
+| Card | ✅ Complete | business, premium | business | Supports Header/Body subcomponents |
+| Input | ✅ Complete | business, premium | business | onChange: `(value: string) => void` |
+| Textarea | ✅ Complete | business, premium | business | NEW - Added in Phase 5 |
+| Modal | ⚠️ Needs Fix | business, premium | business | Missing "use client" directive |
+| Skeleton | ✅ Complete | N/A | N/A | Includes DetailSkeleton, TableSkeleton |
+| EmptyState | ✅ Complete | N/A | N/A | NoResults, NoData, ErrorState presets |
 
-### Tenant-App Local Components
-- `components/ui/button.tsx` - Different API than @cortiware/ui
-- `components/ui/card.tsx` - Card + CardHeader components
-- `components/ui/skeleton.tsx` - TableSkeleton, CardSkeleton
-- `components/ui/toast.tsx` - Toast notification system
-- `components/ui/Input.tsx` - Form input component
-- `components/ui/ThemeToggle.tsx` - Theme switcher
-- Many others...
+### Style Presets Explained
+- **business** (default): Clean, flat design with theme colors, no gradients/glow, subtle shadows
+- **premium**: Glass morphism with gradients, glow effects, backdrop blur, vibrant aesthetic
 
-### Provider-Portal Local Components
-- `components/ui/Button.tsx` - Matches @cortiware/ui API
-- `components/ui/Card.tsx` - Premium card component
-- `components/ui/Input.tsx` - Matches @cortiware/ui API
-- `components/ui/ThemeToggle.tsx` - Theme switcher
-- `components/common/EmptyState.tsx` - Matches @cortiware/ui
-- `components/common/Modal.tsx` - Matches @cortiware/ui
-- `components/common/Skeleton.tsx` - Matches @cortiware/ui
+### Tenant-App Migration Status
+- ✅ All pages migrated to `@cortiware/ui`
+- ✅ Local component files removed (Button, Card, Input, Modal, Skeleton)
+- ⚠️ TypeScript errors blocking Vercel build
+- ⏳ Remaining local components: toast, ThemeToggle, pagination (needs import fix)
+
+### Provider-Portal Migration Status
+- ✅ Already using `@cortiware/ui` (completed in earlier work)
+- ✅ All local component files removed
+- ⏳ Build status needs verification
 
 ## Migration Strategy
 
-### Immediate Actions (Phase 5)
+### Phase 5 Actions (COMPLETE)
 1. ✅ Create migration guide (this document)
 2. ✅ Identify components that match @cortiware/ui API
-3. ⏳ Migrate provider-portal components (easier - already match API)
-4. ⏳ Document tenant-app migration path (requires API updates)
+3. ✅ Migrate tenant-app to @cortiware/ui
+4. ✅ Add stylePreset support (business/premium)
+5. ✅ Change default stylePreset to 'business'
+6. ✅ Fix business style to use CSS variables
+7. ✅ Create Textarea component
+8. ✅ Add DetailSkeleton and TableSkeleton exports
+9. ⚠️ TypeScript errors discovered (blocking deployment)
 
-### Future Incremental Migration
-- Migrate components one at a time as they're touched
-- Update component APIs to match @cortiware/ui
-- Remove local duplicates after migration
-- Test thoroughly after each migration
+### Current Issues (Phase 6 Blockers)
+See `docs/M2_CURRENT_STATUS_AND_PLAN.md` for detailed error list and fixes needed:
+- Modal component needs "use client" directive
+- Pagination component has wrong button import
+- Button `style` props need removal (~8 files)
+- Input `onChange` handlers need signature update (~10+ files)
+- Event handler type errors (~5 files)
+- Implicit any errors (~3 files)
 
-## Provider-Portal Migration (Immediate)
+## API Changes & Breaking Changes
 
-The provider-portal components already match the @cortiware/ui API, making migration straightforward:
+### Input Component onChange Signature
+**BREAKING CHANGE**: Input onChange signature changed from event handler to value handler.
 
-### Files to Update
-1. Remove local component files:
-   - `apps/provider-portal/src/components/ui/Button.tsx` → Use `@cortiware/ui`
-   - `apps/provider-portal/src/components/ui/Input.tsx` → Use `@cortiware/ui`
-   - `apps/provider-portal/src/components/ui/Card.tsx` → Use `@cortiware/ui`
-   - `apps/provider-portal/src/components/common/EmptyState.tsx` → Use `@cortiware/ui`
-   - `apps/provider-portal/src/components/common/Modal.tsx` → Use `@cortiware/ui`
-   - `apps/provider-portal/src/components/common/Skeleton.tsx` → Use `@cortiware/ui`
-
-2. Update imports across provider-portal:
-   ```typescript
-   // Before
-   import { Button } from '@/components/ui/Button';
-   import { Card } from '@/components/ui/Card';
-   import { Input } from '@/components/ui/Input';
-   import { EmptyState } from '@/components/common/EmptyState';
-   import { Modal } from '@/components/common/Modal';
-   import { Skeleton } from '@/components/common/Skeleton';
-   
-   // After
-   import { Button, Card, Input, EmptyState, Modal, Skeleton } from '@cortiware/ui';
-   ```
-
-## Tenant-App Migration (Future)
-
-The tenant-app components have different APIs and require more careful migration:
-
-### API Differences
-
-**Button Component:**
 ```typescript
-// Tenant-app (current)
-<Button variant="primary" size="md" loading={false}>
+// OLD (no longer supported)
+<Input
+  value={name}
+  onChange={(e) => setName(e.target.value)}
+/>
+
+// NEW (required)
+<Input
+  value={name}
+  onChange={(value) => setName(value)}
+/>
+```
+
+**Impact**: All Input usages must be updated
+**Rationale**: Simpler API, less boilerplate, more intuitive
+
+### Button Component Style Prop
+**BREAKING CHANGE**: Button component does not accept `style` prop.
+
+```typescript
+// OLD (no longer supported)
+<Button style={{ minHeight: '48px' }}>
   Click Me
 </Button>
 
-// @cortiware/ui (target)
-<Button variant="solid" size="md" loading={false}>
+// NEW (use className instead)
+<Button className="min-h-[48px]">
   Click Me
 </Button>
 ```
 
-**Card Component:**
-```typescript
-// Tenant-app (current)
-<Card>
-  <CardHeader title="Title" />
-  <div className="p-6">Content</div>
-</Card>
+**Impact**: All Button `style` props must be removed
+**Rationale**: Encourages use of Tailwind utilities, maintains design consistency
 
-// @cortiware/ui (target)
-<Card variant="default">
-  <Card.Header>Title</Card.Header>
-  <Card.Body>Content</Card.Body>
-</Card>
+## Style Preset System
+
+### Using Style Presets
+
+All components support `stylePreset` prop with two options:
+
+```typescript
+// Business style (default) - Clean, flat, professional
+<Button stylePreset="business" variant="solid">
+  Save Changes
+</Button>
+
+// Premium style - Glass morphism, gradients, glow
+<Button stylePreset="premium" variant="solid">
+  Save Changes
+</Button>
 ```
 
-### Migration Path
-1. Create adapter components that wrap @cortiware/ui with tenant-app API
-2. Gradually update pages to use new API
-3. Remove adapters once all pages are updated
-4. Remove local component files
+### Business Style (Default)
+- **Visual**: Flat design, subtle shadows, no gradients
+- **Colors**: Uses CSS variables from theme system
+- **Use Case**: Professional business applications, clean corporate aesthetic
+- **Theme Integration**: Fully respects theme color customization
+
+### Premium Style
+- **Visual**: Glass morphism, gradients, glow effects, backdrop blur
+- **Colors**: Enhanced with gradients and glow overlays
+- **Use Case**: Modern, vibrant applications, consumer-facing products
+- **Theme Integration**: Applies theme colors with visual enhancements
+
+### Default Changed
+**Important**: Default `stylePreset` changed from `'premium'` to `'business'` in Phase 5.
+
+**Rationale**: Business style is more professional and suitable for default use across both apps.
+
+**Impact**: All components now default to clean, flat design unless explicitly set to `stylePreset="premium"`
 
 ## Testing Strategy
 
@@ -154,32 +181,61 @@ If migration causes issues:
 
 ## Success Criteria
 
-### Phase 5 Complete When:
+### Phase 5 Status
 - ✅ Migration guide created
-- ✅ Provider-portal uses @cortiware/ui exclusively
-- ✅ Tenant-app migration path documented
-- ✅ All typechecks passing
-- ✅ All builds successful on Vercel
-- ✅ No visual regressions
+- ✅ Tenant-app migrated to @cortiware/ui
+- ✅ Style preset system implemented
+- ✅ Business style uses CSS variables
+- ✅ Textarea component created
+- ✅ DetailSkeleton and TableSkeleton added
+- ⚠️ TypeScript errors blocking deployment
+- ⏳ All builds successful on Vercel (pending error fixes)
+
+### Phase 6 Criteria (In Progress)
+- ⏳ All TypeScript errors resolved
+- ⏳ All builds successful on Vercel
+- ⏳ Database migrations applied successfully
+- ⏳ Theme customization working end-to-end
+- ⏳ No visual regressions
+- ⏳ Documentation updated
 
 ### M2 Complete When:
-- ✅ All Phase 5 criteria met
-- ✅ Phase 6 validation complete
-- ✅ Theme customization working end-to-end
-- ✅ Documentation complete
+- ⏳ All Phase 6 criteria met
+- ⏳ Additional theme color adjustments complete (~5-7 themes)
+- ⏳ Final completion report created
 
-## Notes
+## Theme System Improvements (Phase 5)
 
-- **Incremental approach** is safer than big-bang migration
-- **Provider-portal first** because it's easier (API already matches)
-- **Tenant-app later** because it requires API updates
-- **Backward compatibility** maintained throughout
-- **Team can continue** incremental migration after M2
+### Input Field Fixes (CRITICAL)
+1. **Background Behavior**: Fixed input fields turning white on interaction in dark themes
+   - Changed from hardcoded `bg-white` to `bg-[var(--surface-1)]`
+   - Disabled state now uses same background color
+   - Impact: Dark theme usability dramatically improved
 
-## Related Files
+2. **Text Color Theming**: Input text now uses theme accent color
+   - Changed from `var(--text-primary)` to `var(--text-accent)`
+   - Better visual integration with theme aesthetic
 
-- `packages/ui/` - Shared UI components
-- `apps/provider-portal/src/components/` - Provider-portal components
-- `apps/tenant-app/src/components/` - Tenant-app components
-- `docs/COMPONENT_SPECS.md` - Component specifications
+3. **Cursor Color**: Added themed cursor color
+   - Added `caret-[var(--brand-primary)]` to both input styles
+   - Cursor color now matches theme
+
+### Theme Color Adjustments
+**Completed** (2 of ~7 themes):
+- ✅ Futuristic Green: Changed from neon `#00ff88` to muted `#10b981`
+- ✅ Neon Aqua → Professional Teal: Changed from `#2cf2ff` to `#14b8a6`
+
+**Remaining** (~5-7 themes need review):
+- Crimson Tech, Cyber Purple, Graphite Orange, Electric Blue, Hot Pink, Lime Green
+- Goal: Reduce brightness/saturation for better accessibility and reduced eye strain
+- Requirement: All text-on-color combinations must meet WCAG AA (4.5:1 contrast)
+
+## Related Documentation
+
+- `docs/M2_CURRENT_STATUS_AND_PLAN.md` - **Current status and action plan**
+- `packages/ui/STYLE_PRESETS.md` - Style preset documentation
+- `packages/ui/README.md` - Component library README
+- `docs/THEME_ARCHITECTURE.md` - Theme system architecture
+- `docs/AI_AGENT_REFERENCE.md` - Agent guidelines and policies
+- `docs/VERCEL_BUILD_GUIDE.md` - Vercel deployment guide
 
