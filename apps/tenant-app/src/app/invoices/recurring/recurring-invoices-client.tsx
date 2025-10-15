@@ -82,86 +82,110 @@ export default function RecurringInvoicesClient({ recurringInvoices, customers }
     return intervalCount === 1 ? base : `Every ${intervalCount} ${base}`;
   };
 
+  const columns = [
+    {
+      key: 'customer',
+      label: 'Customer',
+      render: (ri: RecurringInvoice) => (
+        <div>
+          <div className="font-medium text-gray-900 dark:text-gray-100">
+            {ri.customer.company || ri.customer.primaryName}
+          </div>
+          {ri.customer.primaryEmail && (
+            <div className="text-sm text-gray-500 dark:text-gray-400">{ri.customer.primaryEmail}</div>
+          )}
+        </div>
+      ),
+    },
+    {
+      key: 'frequency',
+      label: 'Frequency',
+      render: (ri: RecurringInvoice) => (
+        <span className="text-sm text-gray-900 dark:text-gray-100">
+          {getFrequencyLabel(ri.frequency, ri.intervalCount)}
+        </span>
+      ),
+    },
+    {
+      key: 'nextInvoiceDate',
+      label: 'Next Invoice',
+      render: (ri: RecurringInvoice) => (
+        <span className="text-sm text-gray-500 dark:text-gray-400">
+          {new Date(ri.nextInvoiceDate).toLocaleDateString()}
+        </span>
+      ),
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      render: (ri: RecurringInvoice) => (
+        <Badge variant={ri.active ? 'success' : 'default'}>
+          {ri.active ? 'Active' : 'Paused'}
+        </Badge>
+      ),
+    },
+    {
+      key: 'actions',
+      label: 'Actions',
+      render: (ri: RecurringInvoice) => (
+        <div className="flex flex-col md:flex-row gap-2">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleActive(ri.id, ri.active);
+            }}
+            disabled={loading === ri.id}
+            style={{ minHeight: '44px' }}
+          >
+            {ri.active ? 'Pause' : 'Resume'}
+          </Button>
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteRecurring(ri.id);
+            }}
+            disabled={loading === ri.id}
+            style={{ minHeight: '44px' }}
+          >
+            Delete
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Recurring Invoices</h1>
-        <Link
-          href="/invoices/recurring/new"
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
-          Create Recurring Invoice
+    <div className="p-4 md:p-6">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Recurring Invoices</h1>
+        <Link href="/invoices/recurring/new">
+          <Button className="w-full md:w-auto" style={{ minHeight: '44px' }}>
+            Create Recurring Invoice
+          </Button>
         </Link>
       </div>
 
       {recurringInvoices.length === 0 ? (
-        <div className="bg-white border rounded-lg p-12 text-center">
-          <p className="text-gray-600 mb-4">No recurring invoices yet</p>
-          <Link
-            href="/invoices/recurring/new"
-            className="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            Create Your First Recurring Invoice
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-12 text-center">
+          <p className="text-gray-600 dark:text-gray-400 mb-4">No recurring invoices yet</p>
+          <Link href="/invoices/recurring/new">
+            <Button style={{ minHeight: '44px' }}>
+              Create Your First Recurring Invoice
+            </Button>
           </Link>
         </div>
       ) : (
-        <div className="bg-white border rounded-lg overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Frequency</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Next Invoice</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {recurringInvoices.map((ri) => (
-                <tr key={ri.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
-                    <div className="font-medium">{ri.customer.company || ri.customer.primaryName}</div>
-                    {ri.customer.primaryEmail && (
-                      <div className="text-sm text-gray-500">{ri.customer.primaryEmail}</div>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 text-sm">
-                    {getFrequencyLabel(ri.frequency, ri.intervalCount)}
-                  </td>
-                  <td className="px-6 py-4 text-sm">
-                    {new Date(ri.nextInvoiceDate).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        ri.active
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-gray-100 text-gray-800'
-                      }`}
-                    >
-                      {ri.active ? 'Active' : 'Paused'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm space-x-2">
-                    <button
-                      onClick={() => toggleActive(ri.id, ri.active)}
-                      disabled={loading === ri.id}
-                      className="text-blue-600 hover:text-blue-800 disabled:opacity-50"
-                    >
-                      {ri.active ? 'Pause' : 'Resume'}
-                    </button>
-                    <button
-                      onClick={() => deleteRecurring(ri.id)}
-                      disabled={loading === ri.id}
-                      className="text-red-600 hover:text-red-800 disabled:opacity-50"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden p-4">
+          <ResponsiveTable
+            data={recurringInvoices}
+            columns={columns}
+            keyExtractor={(ri) => ri.id}
+            emptyMessage="No recurring invoices found."
+          />
         </div>
       )}
     </div>
