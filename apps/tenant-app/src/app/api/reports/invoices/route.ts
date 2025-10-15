@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
       days90plus: 0,
     };
 
-    invoices.forEach((invoice) => {
+    invoices.forEach((invoice: any) => {
       if (!invoice.dueDate) return;
 
       const dueDate = new Date(invoice.dueDate);
@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
       { bucket: '90+ Days', amount: Number(aging.days90plus.toFixed(2)) },
     ];
 
-    const totalOutstanding = agingData.reduce((sum, item) => sum + item.amount, 0);
+    const totalOutstanding = agingData.reduce((sum: any, item: any) => sum + item.amount, 0);
 
     return NextResponse.json({
       agingData,

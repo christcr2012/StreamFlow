@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
       select: { type: true, amount: true },
     });
 
-    const balance = allTransactions.reduce((sum, tx) => {
+    const balance = allTransactions.reduce((sum: any, tx: any) => {
       // LedgerType enum values: CONVERSION_FEE, PACK_PURCHASE
       // For now, treat PACK_PURCHASE as credit, CONVERSION_FEE as debit
       return tx.type === 'PACK_PURCHASE'

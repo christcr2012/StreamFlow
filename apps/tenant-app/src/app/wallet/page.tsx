@@ -11,7 +11,7 @@ async function getWalletData(orgId: string) {
     take: 50,
   });
 
-  const balance = transactions.reduce((sum, tx) => {
+  const balance = transactions.reduce((sum: any, tx: any) => {
     return tx.type === 'PACK_PURCHASE'
       ? sum + Number(tx.amount)
       : sum - Number(tx.amount);
@@ -65,7 +65,7 @@ export default async function WalletPage() {
                     </td>
                   </tr>
                 ) : (
-                  transactions.map((tx) => (
+                  transactions.map((tx: any) => (
                     <tr key={tx.id}>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <Badge variant={tx.type === 'PACK_PURCHASE' ? 'success' : 'warning'}>

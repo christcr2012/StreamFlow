@@ -41,14 +41,14 @@ async function getDashboardData(orgId: string) {
 
   // Calculate revenue metrics
   const totalRevenue = allInvoices
-    .filter((inv) => inv.status === 'paid')
-    .reduce((sum, inv) => sum + Number(inv.amount), 0);
+    .filter((inv: any) => inv.status === 'paid')
+    .reduce((sum: any, inv: any) => sum + Number(inv.amount), 0);
 
   const unpaidAmount = allInvoices
-    .filter((inv) => inv.status === 'open' || inv.status === 'draft')
-    .reduce((sum, inv) => sum + Number(inv.amount), 0);
+    .filter((inv: any) => inv.status === 'open' || inv.status === 'draft')
+    .reduce((sum: any, inv: any) => sum + Number(inv.amount), 0);
 
-  const totalInvoiceAmount = allInvoices.reduce((sum, inv) => sum + Number(inv.amount), 0);
+  const totalInvoiceAmount = allInvoices.reduce((sum: any, inv: any) => sum + Number(inv.amount), 0);
 
   return {
     stats: {

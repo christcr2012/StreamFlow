@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
     // Group by customer
     const customerRevenue: Record<string, { name: string; email: string; revenue: number; invoiceCount: number }> = {};
 
-    invoices.forEach((invoice) => {
+    invoices.forEach((invoice: any) => {
       if (!invoice.customerId) return;
 
       const key = invoice.customerId;

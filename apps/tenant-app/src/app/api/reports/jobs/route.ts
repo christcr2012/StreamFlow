@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
     // Status breakdown
     const statusCounts: Record<string, number> = {};
-    jobs.forEach((job) => {
+    jobs.forEach((job: any) => {
       statusCounts[job.status] = (statusCounts[job.status] || 0) + 1;
     });
 
@@ -30,11 +30,11 @@ export async function GET(request: NextRequest) {
     const completionRate = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
 
     // Calculate average completion time for completed jobs
-    const completedJobs = jobs.filter((job) => job.status === 'completed');
+    const completedJobs = jobs.filter((job: any) => job.status === 'completed');
     let avgCompletionTime = 0;
 
     if (completedJobs.length > 0) {
-      const totalTime = completedJobs.reduce((sum, job) => {
+      const totalTime = completedJobs.reduce((sum: any, job: any) => {
         const created = new Date(job.createdAt).getTime();
         const updated = new Date(job.updatedAt).getTime();
         return sum + (updated - created);

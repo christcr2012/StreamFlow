@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
     // Group by period
     const revenueData: Record<string, number> = {};
 
-    invoices.forEach((invoice) => {
+    invoices.forEach((invoice: any) => {
       if (!invoice.paidAt) return;
 
       let key: string;
@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       period,
       data: chartData,
-      total: chartData.reduce((sum, item) => sum + item.revenue, 0),
+      total: chartData.reduce((sum: any, item: any) => sum + item.revenue, 0),
     });
   } catch (error) {
     console.error('Error fetching revenue data:', error);

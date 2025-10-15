@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
     // This reduces API overhead by ~50% and improves response time
 
     // Prepare all lead data for batch analysis
-    const leadsData = leads.map(lead => ({
+    const leadsData = leads.map((lead: any) => ({
       id: lead.id,
       title: lead.company || '',
       description: lead.notes || '',
@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
 
       // Update all leads with their analyses
       const results = await Promise.all(
-        leads.map(async (lead, index) => {
+        leads.map(async (lead: any, index: number) => {
           try {
             const analysis = analyses[index];
 
@@ -133,8 +133,8 @@ export async function POST(req: NextRequest) {
       );
 
       // Calculate summary
-      const successful = results.filter((r) => r.success).length;
-      const failed = results.filter((r) => !r.success).length;
+      const successful = results.filter((r: { success: boolean }) => r.success).length;
+      const failed = results.filter((r: { success: boolean }) => !r.success).length;
 
       return NextResponse.json({
         ok: true,

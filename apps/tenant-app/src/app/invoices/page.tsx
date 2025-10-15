@@ -47,7 +47,7 @@ export default async function InvoicesPage() {
           <Card padding="sm">
             <div className="text-center">
               <p className="text-2xl font-bold text-gray-900">
-                {invoices.filter(i => i.status === 'draft').length}
+                {invoices.filter((i: any) => i.status === 'draft').length}
               </p>
               <p className="text-sm text-gray-600">Draft</p>
             </div>
@@ -55,7 +55,7 @@ export default async function InvoicesPage() {
           <Card padding="sm">
             <div className="text-center">
               <p className="text-2xl font-bold text-yellow-600">
-                {invoices.filter(i => i.status === 'open').length}
+                {invoices.filter((i: any) => i.status === 'open').length}
               </p>
               <p className="text-sm text-gray-600">Open</p>
             </div>
@@ -63,7 +63,7 @@ export default async function InvoicesPage() {
           <Card padding="sm">
             <div className="text-center">
               <p className="text-2xl font-bold text-green-600">
-                {invoices.filter(i => i.status === 'paid').length}
+                {invoices.filter((i: any) => i.status === 'paid').length}
               </p>
               <p className="text-sm text-gray-600">Paid</p>
             </div>
@@ -71,7 +71,7 @@ export default async function InvoicesPage() {
           <Card padding="sm">
             <div className="text-center">
               <p className="text-2xl font-bold text-gray-900">
-                ${invoices.reduce((sum, i) => sum + Number(i.amount), 0).toFixed(2)}
+                ${invoices.reduce((sum: any, i: any) => sum + Number(i.amount), 0).toFixed(2)}
               </p>
               <p className="text-sm text-gray-600">Total</p>
             </div>

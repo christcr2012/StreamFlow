@@ -56,7 +56,7 @@ async function getInvoice(id: string, orgId: string) {
     discountAmount: Number(invoice.discountAmount),
     amount: Number(invoice.amount),
     job,
-    payments: invoice.payments.map(p => ({
+    payments: invoice.payments.map((p: any) => ({
       ...p,
       amount: Number(p.amount),
     })),

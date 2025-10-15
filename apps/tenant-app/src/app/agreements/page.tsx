@@ -48,7 +48,7 @@ export default async function AgreementsPage() {
           <Card padding="sm">
             <div className="text-center">
               <p className="text-2xl font-bold text-gray-900">
-                {agreements.filter(a => a.status === 'draft').length}
+                {agreements.filter((a: { status: string }) => a.status === 'draft').length}
               </p>
               <p className="text-sm text-gray-600">Draft</p>
             </div>
@@ -56,7 +56,7 @@ export default async function AgreementsPage() {
           <Card padding="sm">
             <div className="text-center">
               <p className="text-2xl font-bold text-blue-600">
-                {agreements.filter(a => a.status === 'sent').length}
+                {agreements.filter((a: { status: string }) => a.status === 'sent').length}
               </p>
               <p className="text-sm text-gray-600">Sent</p>
             </div>
@@ -64,7 +64,7 @@ export default async function AgreementsPage() {
           <Card padding="sm">
             <div className="text-center">
               <p className="text-2xl font-bold text-green-600">
-                {agreements.filter(a => a.status === 'signed').length}
+                {agreements.filter((a: { status: string }) => a.status === 'signed').length}
               </p>
               <p className="text-sm text-gray-600">Signed</p>
             </div>
@@ -99,7 +99,7 @@ export default async function AgreementsPage() {
                     </td>
                   </tr>
                 ) : (
-                  agreements.map((agreement) => (
+                  agreements.map((agreement: any) => (
                     <tr key={agreement.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         <Link href={`/customers/${agreement.customer.id}`} className="text-blue-600 hover:text-blue-700">

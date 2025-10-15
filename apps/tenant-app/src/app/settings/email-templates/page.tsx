@@ -29,7 +29,7 @@ export default async function EmailTemplatesPage() {
 
   return (
     <EmailTemplatesClient
-      templates={templates.map(t => ({
+      templates={templates.map((t: any) => ({
         ...t,
         createdAt: t.createdAt.toISOString(),
         updatedAt: t.updatedAt.toISOString(),

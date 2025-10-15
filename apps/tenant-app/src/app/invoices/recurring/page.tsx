@@ -43,7 +43,7 @@ export default async function RecurringInvoicesPage() {
 
   return (
     <RecurringInvoicesClient
-      recurringInvoices={recurringInvoices.map((ri) => ({
+      recurringInvoices={recurringInvoices.map((ri: any) => ({
         ...ri,
         startDate: ri.startDate.toISOString(),
         endDate: ri.endDate?.toISOString() || null,
