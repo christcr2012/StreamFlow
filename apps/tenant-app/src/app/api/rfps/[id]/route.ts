@@ -22,11 +22,23 @@ export async function GET(
     const orgId = session.value;
     const { id } = await params;
 
-    // Fetch RFP
+    // PERFORMANCE: Fetch RFP with select to limit fields
     const rfp = await prisma.rfp.findFirst({
       where: {
         id,
         orgId,
+      },
+      select: {
+        id: true,
+        publicId: true,
+        title: true,
+        sourceSite: true,
+        dueDate: true,
+        docs: true,
+        aiBidFit: true,
+        aiPriceHint: true,
+        createdAt: true,
+        updatedAt: true,
       },
     });
 

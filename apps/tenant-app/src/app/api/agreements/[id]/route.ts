@@ -15,11 +15,26 @@ export async function GET(
 
     const { id } = await params;
 
+    // PERFORMANCE: Optimize query with select for related data
     const agreement = await prisma.agreement.findFirst({
       where: { id, orgId: authContext.orgId! },
       include: {
-        customer: true,
-        template: true,
+        customer: {
+          select: {
+            id: true,
+            company: true,
+            primaryName: true,
+            primaryEmail: true,
+            primaryPhone: true,
+          },
+        },
+        template: {
+          select: {
+            id: true,
+            name: true,
+            content: true,
+          },
+        },
       },
     });
 
