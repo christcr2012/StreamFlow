@@ -18,11 +18,35 @@ export async function GET(
     const invoice = await prisma.invoice.findFirst({
       where: { id, orgId: authContext.orgId! },
       include: {
-        customer: true,
+        customer: {
+          select: {
+            id: true,
+            company: true,
+            primaryName: true,
+            primaryEmail: true,
+            primaryPhone: true,
+          },
+        },
         lineItems: {
+          select: {
+            id: true,
+            description: true,
+            lineType: true,
+            quantity: true,
+            unitPriceCents: true,
+            amountCents: true,
+            createdAt: true,
+          },
           orderBy: { createdAt: 'asc' },
         },
         payments: {
+          select: {
+            id: true,
+            amount: true,
+            receivedAt: true,
+            method: true,
+            reference: true,
+          },
           orderBy: { receivedAt: 'desc' },
         },
       },
@@ -97,9 +121,35 @@ export async function PATCH(
       where: { id, orgId: authContext.orgId! },
       data: updateData,
       include: {
-        customer: true,
-        lineItems: true,
-        payments: true,
+        customer: {
+          select: {
+            id: true,
+            company: true,
+            primaryName: true,
+            primaryEmail: true,
+            primaryPhone: true,
+          },
+        },
+        lineItems: {
+          select: {
+            id: true,
+            description: true,
+            lineType: true,
+            quantity: true,
+            unitPriceCents: true,
+            amountCents: true,
+            createdAt: true,
+          },
+        },
+        payments: {
+          select: {
+            id: true,
+            amount: true,
+            receivedAt: true,
+            method: true,
+            reference: true,
+          },
+        },
       },
     });
 

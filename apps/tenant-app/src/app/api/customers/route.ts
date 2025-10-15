@@ -33,7 +33,15 @@ export async function GET(request: NextRequest) {
       prisma.customer.findMany({
         where,
         include: {
-          contacts: true,
+          contacts: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              phone: true,
+              role: true,
+            },
+          },
           _count: {
             select: { jobs: true, invoices: true },
           },

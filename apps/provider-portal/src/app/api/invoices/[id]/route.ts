@@ -18,6 +18,15 @@ const getHandler = async (req: NextRequest, { params }: { params: Promise<{ id: 
           select: { id: true, name: true },
         },
         lineItems: {
+          select: {
+            id: true,
+            description: true,
+            lineType: true,
+            quantity: true,
+            unitPriceCents: true,
+            amountCents: true,
+            createdAt: true,
+          },
           orderBy: { createdAt: 'asc' },
         },
       },

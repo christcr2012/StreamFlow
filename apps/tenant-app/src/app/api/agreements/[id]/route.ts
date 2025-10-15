@@ -75,8 +75,22 @@ export async function PATCH(
         renewalAt: data.renewalAt ? new Date(data.renewalAt) : undefined,
       },
       include: {
-        customer: true,
-        template: true,
+        customer: {
+          select: {
+            id: true,
+            company: true,
+            primaryName: true,
+            primaryEmail: true,
+            primaryPhone: true,
+          },
+        },
+        template: {
+          select: {
+            id: true,
+            name: true,
+            content: true,
+          },
+        },
       },
     });
 

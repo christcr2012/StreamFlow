@@ -18,11 +18,34 @@ export async function GET(
     const job = await prisma.job.findFirst({
       where: { id, orgId: authContext.orgId! },
       include: {
-        customer: true,
+        customer: {
+          select: {
+            id: true,
+            company: true,
+            primaryName: true,
+            primaryEmail: true,
+            primaryPhone: true,
+          },
+        },
         photos: {
+          select: {
+            id: true,
+            publicId: true,
+            url: true,
+            caption: true,
+            takenAt: true,
+          },
           orderBy: { takenAt: 'desc' },
         },
         timeline: {
+          select: {
+            id: true,
+            publicId: true,
+            eventType: true,
+            description: true,
+            metadata: true,
+            createdAt: true,
+          },
           orderBy: { createdAt: 'desc' },
         },
       },
@@ -63,7 +86,15 @@ export async function PATCH(
         scheduledAt: data.scheduledAt ? new Date(data.scheduledAt) : undefined,
       },
       include: {
-        customer: true,
+        customer: {
+          select: {
+            id: true,
+            company: true,
+            primaryName: true,
+            primaryEmail: true,
+            primaryPhone: true,
+          },
+        },
       },
     });
 

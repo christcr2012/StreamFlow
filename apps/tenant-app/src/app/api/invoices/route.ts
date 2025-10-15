@@ -38,8 +38,23 @@ export async function GET(request: NextRequest) {
           customer: {
             select: { id: true, company: true, primaryName: true },
           },
-          lineItems: true,
+          lineItems: {
+            select: {
+              id: true,
+              description: true,
+              lineType: true,
+              quantity: true,
+              unitPriceCents: true,
+              amountCents: true,
+            },
+          },
           payments: {
+            select: {
+              id: true,
+              amount: true,
+              receivedAt: true,
+              method: true,
+            },
             orderBy: { receivedAt: 'desc' },
           },
         },

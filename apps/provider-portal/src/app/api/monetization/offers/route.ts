@@ -14,7 +14,23 @@ const getHandler = async (req: NextRequest) => {
   if (active === 'true') where.active = true;
   if (active === 'false') where.active = false;
   const [items, total] = await Promise.all([
-    prisma.offer.findMany({ where, orderBy: { createdAt: 'desc' }, take: limit, skip: offset }),
+    prisma.offer.findMany({
+      where,
+      select: {
+        id: true,
+        name: true,
+        percentOff: true,
+        amountOffCents: true,
+        duration: true,
+        durationMonths: true,
+        active: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      orderBy: { createdAt: 'desc' },
+      take: limit,
+      skip: offset,
+    }),
     prisma.offer.count({ where }),
   ]);
   return NextResponse.json({ items, page: { total, limit, offset } });

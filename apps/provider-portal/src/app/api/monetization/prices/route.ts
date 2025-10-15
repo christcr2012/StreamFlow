@@ -22,6 +22,18 @@ export const GET = withProviderAuth(
 
       const items = await prisma.planPrice.findMany({
         where,
+        select: {
+          id: true,
+          planId: true,
+          currency: true,
+          unitAmountCents: true,
+          cadence: true,
+          trialDays: true,
+          active: true,
+          stripePriceId: true,
+          createdAt: true,
+          updatedAt: true,
+        },
         orderBy: [{ planId: 'asc' }, { cadence: 'asc' }, { unitAmountCents: 'asc' }],
       });
 
