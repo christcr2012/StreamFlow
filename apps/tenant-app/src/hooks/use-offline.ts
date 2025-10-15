@@ -118,13 +118,14 @@ export function useActionQueue() {
       });
       
       console.log('[ActionQueue] Action queued:', action.description || action.url);
-      
+
       // Update local state
       loadQueuedActions();
     } catch (error) {
       console.error('[ActionQueue] Failed to queue action:', error);
       throw error;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openDB]);
 
   // Load queued actions

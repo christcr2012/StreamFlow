@@ -28,12 +28,12 @@ export default function OfflinePage() {
 
         {/* Title */}
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-          You're Offline
+          You&apos;re Offline
         </h1>
 
         {/* Description */}
         <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
-          It looks like you've lost your internet connection. Don't worry, you can still access
+          It looks like you&apos;ve lost your internet connection. Don&apos;t worry, you can still access
           some features while offline.
         </p>
 
