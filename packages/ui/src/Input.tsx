@@ -37,7 +37,7 @@ export function Input({
   error,
   hint,
   helperText,
-  stylePreset = 'premium',
+  stylePreset = 'business',
   leftIcon,
   rightIcon,
   disabled = false,
@@ -65,17 +65,17 @@ export function Input({
     ${rightIcon ? 'pr-11' : ''}
   `;
 
-  // Business style: Clean, flat design
+  // Business style: Clean, flat design with theme colors
   const businessClasses = `
     w-full px-3 py-2 rounded-md
-    bg-white border
-    text-gray-900
-    placeholder:text-gray-400
+    bg-[var(--surface-1)] border
+    text-[var(--text-primary)]
+    placeholder:text-[var(--text-muted)]
     focus:outline-none focus:ring-2 focus:ring-offset-0
-    disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-100
+    disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-[var(--surface-disabled)]
     ${hasError
-      ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
-      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+      ? 'border-[var(--accent-error)] focus:border-[var(--accent-error)] focus:ring-[var(--accent-error)]'
+      : 'border-[var(--border-primary)] focus:border-[var(--brand-primary)] focus:ring-[var(--brand-primary)]'
     }
     ${leftIcon ? 'pl-10' : ''}
     ${rightIcon ? 'pr-10' : ''}

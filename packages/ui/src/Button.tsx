@@ -30,7 +30,7 @@ export interface ButtonProps {
 export function Button({
   variant = 'solid',
   size = 'md',
-  stylePreset = 'premium',
+  stylePreset = 'business',
   loading = false,
   disabled = false,
   iconLeft,
@@ -54,15 +54,15 @@ export function Button({
     danger: 'bg-gradient-to-r from-red-600 to-red-700 text-white hover:opacity-90 shadow-glow focus:ring-red-500',
   };
 
-  // Business style: Clean, flat, corporate design
+  // Business style: Clean, flat, corporate design with theme colors
   const businessVariants = {
     solid: 'bg-[var(--brand-primary)] text-white hover:brightness-110 focus:ring-[var(--brand-primary)]',
     primary: 'bg-[var(--brand-primary)] text-white hover:brightness-110 focus:ring-[var(--brand-primary)]',
     outline: 'border-2 border-[var(--brand-primary)] text-[var(--brand-primary)] hover:bg-[var(--brand-primary)] hover:text-white focus:ring-[var(--brand-primary)]',
-    secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500',
-    ghost: 'text-[var(--brand-primary)] hover:bg-gray-100 focus:ring-[var(--brand-primary)]',
+    secondary: 'bg-[var(--surface-2)] text-[var(--text-primary)] border-2 border-[var(--border-primary)] hover:bg-[var(--surface-hover)] focus:ring-[var(--brand-secondary)]',
+    ghost: 'text-[var(--brand-primary)] hover:bg-[var(--surface-hover)] focus:ring-[var(--brand-primary)]',
     gradient: 'bg-[var(--brand-primary)] text-white hover:brightness-110 focus:ring-[var(--brand-primary)]',
-    danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
+    danger: 'bg-[var(--accent-error)] text-white hover:brightness-110 focus:ring-[var(--accent-error)]',
   };
 
   const variantClasses = stylePreset === 'business' ? businessVariants : premiumVariants;

@@ -23,7 +23,7 @@ export function Card({
   children,
   variant = 'glass',
   padding = 'md',
-  stylePreset = 'premium',
+  stylePreset = 'business',
   className = '',
   hover = false,
 }: CardProps) {
@@ -35,12 +35,12 @@ export function Card({
     glow: 'glass-card border border-[var(--border-accent)] shadow-glow',
   };
 
-  // Business style: Clean, flat cards with subtle shadows
+  // Business style: Clean, flat cards with theme colors
   const businessVariants = {
-    default: 'bg-white border border-gray-200 shadow-sm',
-    glass: 'bg-white border border-gray-200 shadow-md',
-    elevated: 'bg-white border border-gray-200 shadow-lg',
-    glow: 'bg-white border border-gray-300 shadow-lg',
+    default: 'bg-[var(--surface-1)] border border-[var(--border-primary)] shadow-sm',
+    glass: 'bg-[var(--surface-1)] border border-[var(--border-primary)] shadow-md',
+    elevated: 'bg-[var(--surface-2)] border border-[var(--border-primary)] shadow-lg',
+    glow: 'bg-[var(--surface-2)] border border-[var(--border-accent)] shadow-lg',
   };
 
   const variantClasses = stylePreset === 'business' ? businessVariants : premiumVariants;
@@ -53,7 +53,7 @@ export function Card({
   };
 
   const premiumHover = 'transition-all duration-300 hover:shadow-glow-intense hover:border-[var(--border-glow)] hover:scale-[1.02]';
-  const businessHover = 'transition-all duration-200 hover:shadow-xl hover:border-gray-400';
+  const businessHover = 'transition-all duration-200 hover:shadow-xl hover:border-[var(--border-accent)]';
   const hoverClasses = hover ? (stylePreset === 'business' ? businessHover : premiumHover) : '';
 
   const backdropBlur = stylePreset === 'premium' ? 'backdrop-blur-xl' : '';
