@@ -2,6 +2,12 @@
 
 import React, { useState } from 'react';
 
+/**
+ * Email Response Assistant Component
+ *
+ * PERFORMANCE: Wrapped with React.memo to prevent unnecessary re-renders
+ * This component has expensive state management and API calls
+ */
 export interface EmailResponseAssistantProps {
   customerName?: string;
   topic?: string;
@@ -15,7 +21,7 @@ export interface EmailResponseAssistantProps {
   className?: string;
 }
 
-export function EmailResponseAssistant({
+export const EmailResponseAssistant = React.memo(function EmailResponseAssistant({
   customerName,
   topic,
   incomingEmail,
@@ -225,5 +231,5 @@ export function EmailResponseAssistant({
       )}
     </div>
   );
-}
+});
 

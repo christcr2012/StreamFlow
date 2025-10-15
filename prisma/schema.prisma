@@ -941,6 +941,7 @@ model AiUsageEvent {
 
   @@index([orgId, createdAt])
   @@index([orgId, feature])
+  @@index([orgId, feature, createdAt]) // PERFORMANCE: Composite index for feature-filtered time-series queries
 }
 
 // Monthly AI usage rollups for dashboard and billing

@@ -4,8 +4,11 @@ import React from 'react';
 
 /**
  * RFP Strategy Analysis Component
- * 
+ *
  * Displays AI-generated bidding strategy and recommendations
+ *
+ * PERFORMANCE: Wrapped with React.memo to prevent unnecessary re-renders
+ * when parent component state changes but props remain the same
  */
 export interface RFPStrategyProps {
   strategy: {
@@ -21,7 +24,7 @@ export interface RFPStrategyProps {
   className?: string;
 }
 
-export function RFPStrategyDisplay({ strategy, confidence, aiAnalysisFailed, className = '' }: RFPStrategyProps) {
+export const RFPStrategyDisplay = React.memo(function RFPStrategyDisplay({ strategy, confidence, aiAnalysisFailed, className = '' }: RFPStrategyProps) {
   if (aiAnalysisFailed) {
     return (
       <div className={`p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg ${className}`}>
@@ -146,7 +149,7 @@ export function RFPStrategyDisplay({ strategy, confidence, aiAnalysisFailed, cla
       </div>
     </div>
   );
-}
+});
 
 /**
  * Pricing Advice Component
