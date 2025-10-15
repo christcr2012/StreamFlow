@@ -19,10 +19,52 @@
 // - Estimated cost: $15-25/month for active cleaning business
 
 import OpenAI from "openai";
+import { createHash } from "crypto";
 
 // the newest OpenAI model is "gpt-5" which was released August 7, 2025. do not change this unless explicitly requested by the user
 // However, we use GPT-4o Mini for cost efficiency - 15x cheaper than GPT-5
 const MODEL = "gpt-4o-mini";
+
+// PERFORMANCE: AI Response Cache (24-hour TTL)
+// Caches AI responses by content hash to avoid repeated identical calls
+// Estimated savings: 30-40% reduction in AI costs
+const aiCache = new Map<string, { data: any; timestamp: number }>();
+const AI_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
+
+/**
+ * Generate cache key from prompt content
+ * Uses SHA-256 hash for consistent, collision-resistant keys
+ */
+function generateCacheKey(prefix: string, content: string): string {
+  const hash = createHash('sha256').update(content).digest('hex');
+  return `ai:${prefix}:${hash}`;
+}
+
+/**
+ * Get cached AI response if available and not expired
+ */
+function getCachedResponse<T>(key: string): T | null {
+  const cached = aiCache.get(key);
+  if (!cached) return null;
+
+  const now = Date.now();
+  if (now - cached.timestamp > AI_CACHE_TTL) {
+    aiCache.delete(key);
+    return null;
+  }
+
+  return cached.data as T;
+}
+
+/**
+ * Cache AI response with timestamp
+ */
+function setCachedResponse<T>(key: string, data: T): void {
+  aiCache.set(key, {
+    data,
+    timestamp: Date.now(),
+  });
+}
 
 // Supported AI models for multi-model management
 export type AIModel = 'gpt-4o-mini' | 'gpt-4o' | 'gpt-3.5-turbo';
@@ -81,6 +123,8 @@ export interface PricingAdvice {
 /**
  * Analyze lead quality and provide actionable business intelligence
  * Enhances basic lead scoring with AI insights about opportunity and strategy
+ *
+ * PERFORMANCE: Cached by content hash (24h TTL) to avoid repeated identical calls
  */
 export async function analyzeLead(leadData: {
   title?: string;
@@ -92,6 +136,16 @@ export async function analyzeLead(leadData: {
   requirements?: string;
 }): Promise<LeadAnalysis> {
   try {
+    // Generate cache key from lead data
+    const cacheContent = JSON.stringify(leadData);
+    const cacheKey = generateCacheKey('lead-analysis', cacheContent);
+
+    // Check cache first
+    const cached = getCachedResponse<LeadAnalysis>(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const prompt = `
 As an expert cleaning services business consultant, analyze this lead and provide actionable intelligence:
 
@@ -130,11 +184,11 @@ Respond with JSON in this exact format:
     });
 
     const analysis = JSON.parse(response.choices[0].message.content || '{}');
-    
+
     // Validate and provide defaults
-    return {
+    const result: LeadAnalysis = {
       qualityScore: Math.max(1, Math.min(100, analysis.qualityScore || 50)),
-      urgencyLevel: ['immediate', 'high', 'medium', 'low'].includes(analysis.urgencyLevel) 
+      urgencyLevel: ['immediate', 'high', 'medium', 'low'].includes(analysis.urgencyLevel)
         ? analysis.urgencyLevel : 'medium',
       keyOpportunities: Array.isArray(analysis.keyOpportunities) ? analysis.keyOpportunities : [],
       potentialChallenges: Array.isArray(analysis.potentialChallenges) ? analysis.potentialChallenges : [],
@@ -142,6 +196,11 @@ Respond with JSON in this exact format:
       estimatedValue: analysis.estimatedValue || 'Unable to estimate',
       confidence: Math.max(0, Math.min(1, analysis.confidence || 0.7))
     };
+
+    // Cache the result
+    setCachedResponse(cacheKey, result);
+
+    return result;
 
   } catch (error) {
     console.error('AI lead analysis error:', error);
@@ -162,6 +221,8 @@ Respond with JSON in this exact format:
 /**
  * Generate RFP bidding strategy and response recommendations
  * Provides competitive intelligence and positioning advice
+ *
+ * PERFORMANCE: Cached by content hash (24h TTL) to avoid repeated identical calls
  */
 export async function analyzeRFP(rfpData: {
   title?: string;
@@ -173,6 +234,16 @@ export async function analyzeRFP(rfpData: {
   location?: string;
 }): Promise<RFPStrategy> {
   try {
+    // Generate cache key from RFP data
+    const cacheContent = JSON.stringify(rfpData);
+    const cacheKey = generateCacheKey('rfp-analysis', cacheContent);
+
+    // Check cache first
+    const cached = getCachedResponse<RFPStrategy>(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const prompt = `
 As a government contracting expert for cleaning services, analyze this RFP and provide a winning strategy:
 
@@ -211,8 +282,8 @@ Respond with JSON in this exact format:
     });
 
     const strategy = JSON.parse(response.choices[0].message.content || '{}');
-    
-    return {
+
+    const result: RFPStrategy = {
       competitiveLandscape: strategy.competitiveLandscape || 'Analysis not available',
       keyRequirements: Array.isArray(strategy.keyRequirements) ? strategy.keyRequirements : [],
       pricingStrategy: strategy.pricingStrategy || 'Competitive pricing recommended',
@@ -220,6 +291,11 @@ Respond with JSON in this exact format:
       riskFactors: Array.isArray(strategy.riskFactors) ? strategy.riskFactors : [],
       responseTemplate: strategy.responseTemplate || 'Standard RFP response template'
     };
+
+    // Cache the result
+    setCachedResponse(cacheKey, result);
+
+    return result;
 
   } catch (error) {
     console.error('AI RFP analysis error:', error);
@@ -237,6 +313,8 @@ Respond with JSON in this exact format:
 /**
  * Generate pricing recommendations based on project details
  * Considers market rates, project complexity, and competitive factors
+ *
+ * PERFORMANCE: Cached by content hash (24h TTL) to avoid repeated identical calls
  */
 export async function generatePricingAdvice(projectData: {
   serviceType?: string;
@@ -248,6 +326,16 @@ export async function generatePricingAdvice(projectData: {
   clientType?: string;
 }): Promise<PricingAdvice> {
   try {
+    // Generate cache key from project data
+    const cacheContent = JSON.stringify(projectData);
+    const cacheKey = generateCacheKey('pricing-advice', cacheContent);
+
+    // Check cache first
+    const cached = getCachedResponse<PricingAdvice>(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const prompt = `
 As a commercial cleaning pricing expert in Northern Colorado, provide pricing recommendations:
 
@@ -285,8 +373,8 @@ Respond with JSON in this exact format:
     });
 
     const pricing = JSON.parse(response.choices[0].message.content || '{}');
-    
-    return {
+
+    const result: PricingAdvice = {
       suggestedRange: {
         min: pricing.suggestedRange?.min || 1000,
         max: pricing.suggestedRange?.max || 5000
@@ -296,6 +384,11 @@ Respond with JSON in this exact format:
       valueProposition: pricing.valueProposition || 'Quality service at competitive rates',
       negotiationTips: Array.isArray(pricing.negotiationTips) ? pricing.negotiationTips : []
     };
+
+    // Cache the result
+    setCachedResponse(cacheKey, result);
+
+    return result;
 
   } catch (error) {
     console.error('AI pricing analysis error:', error);
