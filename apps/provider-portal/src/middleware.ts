@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import {
+  getProviderSession as getProviderSessionShared,
+  getDeveloperSession as getDeveloperSessionShared
+} from '@cortiware/auth-service';
 
 /**
  * Provider Portal Middleware
- * 
+ *
  * Enforces authentication and role-based access control for:
  * - Provider routes (/provider/*)
  * - Developer routes (/developer/*)
@@ -18,47 +22,40 @@ export type DeveloperRole = 'developer';
 
 /**
  * Extract provider session from cookies
+ *
+ * Uses shared auth-service package for consistent session extraction
  */
 function getProviderSession(request: NextRequest): { email: string; role?: ProviderRole } | null {
-  const cookies = request.cookies;
-  
-  // Check for provider session cookies
-  const providerCookie = cookies.get('rs_provider') || cookies.get('ws_provider') || cookies.get('provider-session');
-  
-  if (providerCookie) {
-    try {
-      const email = decodeURIComponent(providerCookie.value);
-      // TODO: In production, decode JWT to get role
-      // For now, assume provider_admin for any authenticated provider
-      return { email, role: 'provider_admin' };
-    } catch {
-      return null;
-    }
+  const session = getProviderSessionShared(request);
+
+  if (!session) {
+    return null;
   }
-  
-  return null;
+
+  return {
+    email: session.email,
+    role: (session.role as ProviderRole) || 'provider_admin',
+  };
 }
 
 /**
  * Extract developer session from cookies
+ *
+ * Uses shared auth-service package for consistent session extraction
  */
 function getDeveloperSession(request: NextRequest): { email: string } | null {
-  const cookies = request.cookies;
-  
-  // Check for developer session cookies
-  const devCookie = cookies.get('rs_developer') || cookies.get('ws_developer') || cookies.get('developer-session');
-  
-  if (devCookie) {
-    try {
-      const email = decodeURIComponent(devCookie.value);
-      return { email };
-    } catch {
-      return null;
-    }
+  const session = getDeveloperSessionShared(request);
+
+  if (!session) {
+    return null;
   }
-  
-  return null;
+
+  return {
+    email: session.email,
+  };
 }
+
+
 
 /**
  * Check if provider has required role

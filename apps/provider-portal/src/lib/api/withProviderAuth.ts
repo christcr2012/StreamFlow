@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { ProviderRole } from '@/lib/rbac/roles';
 import { hasPermission, type Permission } from '@/lib/rbac/roles';
+import { getProviderSession as getProviderSessionShared } from '@cortiware/auth-service';
 
 /**
  * Provider session extracted from request
@@ -13,29 +14,22 @@ export interface ProviderSession {
 
 /**
  * Extract provider session from request cookies
+ *
+ * Uses shared auth-service package for consistent session extraction
  */
 export function getProviderSession(request: NextRequest): ProviderSession | null {
-  const cookies = request.cookies;
-  
-  // Check for provider session cookies
-  const providerCookie = cookies.get('rs_provider') || cookies.get('ws_provider') || cookies.get('provider-session');
-  
-  if (providerCookie) {
-    try {
-      const email = decodeURIComponent(providerCookie.value);
-      // TODO: In production, decode JWT to get role and providerId
-      // For now, assume provider_admin for any authenticated provider
-      return { 
-        email, 
-        role: 'provider_admin',
-        providerId: undefined 
-      };
-    } catch {
-      return null;
-    }
+  const session = getProviderSessionShared(request);
+
+  if (!session) {
+    return null;
   }
-  
-  return null;
+
+  // Map to provider-portal specific session type
+  return {
+    email: session.email,
+    role: (session.role as ProviderRole) || 'provider_admin',
+    providerId: session.providerId,
+  };
 }
 
 /**

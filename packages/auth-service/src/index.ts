@@ -61,3 +61,33 @@ export {
   generateSessionId,
 } from './refresh-token';
 
+// Export auth context utilities
+export type {
+  AuthMode,
+  AuthRole,
+  AuthContext,
+  GetAuthContextOptions,
+} from './context';
+
+export {
+  getAuthContext,
+  isDirectAccessMode,
+  requireAuth,
+  requireRole,
+} from './context';
+
+// Export session extraction utilities
+export type {
+  ProviderSession,
+  DeveloperSession,
+  TenantSession,
+} from './session';
+
+export {
+  getProviderSession,
+  getDeveloperSession,
+  getTenantSession,
+  getAccountantSession,
+  getVendorSession,
+} from './session';
+
