@@ -14,6 +14,9 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { FileUpload } from './components/FileUpload';
+import { ProgressTracker, type ImportJob as ImportJobType } from './components/ProgressTracker';
+import { TemplateManager, type ImportTemplate } from './components/TemplateManager';
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
@@ -28,6 +31,10 @@ interface ImportJob {
   errorCount: number;
   skipCount: number;
   progressPercent: number;
+  totalRows?: number;
+  currentBatch?: number;
+  totalBatches?: number;
+  errorSummary?: string;
 }
 
 export function ImportWizard() {
@@ -76,10 +83,7 @@ export function ImportWizard() {
   }, [step, importJobId]);
 
   // Step 1: Upload Sample
-  async function handleSampleUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  async function handleSampleUpload(file: File) {
     setFileName(file.name);
     setFileSize(file.size);
     setError('');
@@ -175,11 +179,46 @@ export function ImportWizard() {
     }
   }
 
-  // Step 5: Upload Full File
-  async function handleFullUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // Template Management
+  async function handleSelectTemplate(template: ImportTemplate) {
+    setMappings(template.fieldMappings || []);
+    setSuggestions({
+      mappings: template.fieldMappings,
+      transforms: template.transformRules,
+      validations: template.validationRules,
+    });
+    setStep(3);
+  }
 
+  async function handleSaveTemplate(
+    name: string,
+    mappings: any[],
+    transforms?: any[],
+    validations?: any[]
+  ) {
+    const res = await fetch('/api/owner/import', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'save-template',
+        name,
+        entityType,
+        sourceFormat: fileName.split('.').pop()?.toLowerCase() || 'csv',
+        fieldMappings: mappings,
+        transformRules: transforms,
+        validationRules: validations,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!data.ok) {
+      throw new Error(data.error || 'Failed to save template');
+    }
+  }
+
+  // Step 5: Upload Full File
+  async function handleFullUpload(file: File) {
     setError('');
     setLoading(true);
 
@@ -204,7 +243,7 @@ export function ImportWizard() {
         const data = await res.json();
 
         if (!data.ok) {
-          setError(data.error || 'Import execution failed');
+          setError(data.message || data.error || 'Import execution failed');
           setLoading(false);
           return;
         }
@@ -275,52 +314,57 @@ export function ImportWizard() {
 
       {/* Step 1: Upload Sample */}
       {step === 1 && (
-        <div className="bg-white rounded-lg shadow p-6 space-y-4">
-          <h2 className="text-xl font-semibold">Step 1: Upload Sample File</h2>
-          <p className="text-gray-600">
-            Upload a sample of your data (first 100 rows) for analysis
-          </p>
+        <div className="space-y-6">
+          <div className="bg-white rounded-lg shadow p-6 space-y-4">
+            <h2 className="text-xl font-semibold">Step 1: Upload Sample File</h2>
+            <p className="text-gray-600">
+              Upload a sample of your data (first 100 rows) for analysis
+            </p>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Entity Type
-            </label>
-            <select
-              value={entityType}
-              onChange={(e) => setEntityType(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-            >
-              <option value="CUSTOMERS">Customers</option>
-              <option value="JOBS">Jobs/Projects</option>
-              <option value="INVOICES">Invoices</option>
-              <option value="ESTIMATES">Estimates/Quotes</option>
-            </select>
-          </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Entity Type
+              </label>
+              <select
+                value={entityType}
+                onChange={(e) => setEntityType(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              >
+                <option value="CUSTOMERS">Customers</option>
+                <option value="JOBS">Jobs/Projects</option>
+                <option value="INVOICES">Invoices</option>
+                <option value="ESTIMATES">Estimates/Quotes</option>
+              </select>
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Sample File (CSV, Excel, JSON, XML)
-            </label>
-            <input
-              type="file"
+            <FileUpload
               accept=".csv,.xlsx,.xls,.json,.xml"
-              onChange={handleSampleUpload}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              maxSizeMB={50}
+              onFileSelect={handleSampleUpload}
+              label="Sample File"
+              description="Drag and drop your file here, or click to browse"
             />
+
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="aiAssist"
+                checked={aiAssist}
+                onChange={(e) => setAiAssist(e.target.checked)}
+                className="rounded"
+              />
+              <label htmlFor="aiAssist" className="text-sm text-gray-700">
+                Use AI Assistant (recommended - saves 20-40 minutes)
+              </label>
+            </div>
           </div>
 
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="aiAssist"
-              checked={aiAssist}
-              onChange={(e) => setAiAssist(e.target.checked)}
-              className="rounded"
-            />
-            <label htmlFor="aiAssist" className="text-sm text-gray-700">
-              Use AI Assistant (recommended - saves 20-40 minutes)
-            </label>
-          </div>
+          {/* Template Manager */}
+          <TemplateManager
+            entityType={entityType}
+            onSelectTemplate={handleSelectTemplate}
+            onSaveTemplate={handleSaveTemplate}
+          />
         </div>
       )}
 
@@ -353,40 +397,52 @@ export function ImportWizard() {
 
       {/* Step 3: Map Fields */}
       {step === 3 && (
-        <div className="bg-white rounded-lg shadow p-6 space-y-4">
-          <h2 className="text-xl font-semibold">Step 3: Map Fields</h2>
-          <p className="text-gray-600">
-            Review and adjust field mappings
-          </p>
+        <div className="space-y-6">
+          <div className="bg-white rounded-lg shadow p-6 space-y-4">
+            <h2 className="text-xl font-semibold">Step 3: Map Fields</h2>
+            <p className="text-gray-600">
+              Review and adjust field mappings
+            </p>
 
-          {mappings.length > 0 && (
-            <div className="space-y-2">
-              {mappings.map((mapping, idx) => (
-                <div key={idx} className="flex items-center space-x-4 p-3 bg-gray-50 rounded">
-                  <div className="flex-1">
-                    <span className="text-sm font-medium">{mapping.source}</span>
+            {mappings.length > 0 && (
+              <div className="space-y-2">
+                {mappings.map((mapping, idx) => (
+                  <div key={idx} className="flex items-center space-x-4 p-3 bg-gray-50 rounded">
+                    <div className="flex-1">
+                      <span className="text-sm font-medium">{mapping.source}</span>
+                    </div>
+                    <div className="text-gray-400">→</div>
+                    <div className="flex-1">
+                      <span className="text-sm font-medium text-blue-600">{mapping.target}</span>
+                    </div>
+                    <div className="flex-1">
+                      <span className="text-xs text-gray-500">
+                        {Math.round(mapping.confidence * 100)}% confident
+                      </span>
+                    </div>
                   </div>
-                  <div className="text-gray-400">→</div>
-                  <div className="flex-1">
-                    <span className="text-sm font-medium text-blue-600">{mapping.target}</span>
-                  </div>
-                  <div className="flex-1">
-                    <span className="text-xs text-gray-500">
-                      {Math.round(mapping.confidence * 100)}% confident
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
 
-          <button
-            onClick={handleSaveMappings}
-            disabled={loading}
-            className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
-          >
-            {loading ? 'Saving...' : 'Continue'}
-          </button>
+            <button
+              onClick={handleSaveMappings}
+              disabled={loading}
+              className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
+            >
+              {loading ? 'Saving...' : 'Continue'}
+            </button>
+          </div>
+
+          {/* Template Manager for saving current mappings */}
+          <TemplateManager
+            entityType={entityType}
+            onSelectTemplate={handleSelectTemplate}
+            onSaveTemplate={handleSaveTemplate}
+            currentMappings={mappings}
+            currentTransforms={suggestions?.transforms}
+            currentValidations={suggestions?.validations}
+          />
         </div>
       )}
 
@@ -415,63 +471,34 @@ export function ImportWizard() {
             Upload your complete export file
           </p>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Full Export File
-            </label>
-            <input
-              type="file"
-              accept=".csv,.xlsx,.xls,.json,.xml"
-              onChange={handleFullUpload}
-              disabled={loading}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-            />
-          </div>
+          <FileUpload
+            accept=".csv,.xlsx,.xls,.json,.xml"
+            maxSizeMB={50}
+            onFileSelect={handleFullUpload}
+            disabled={loading}
+            label="Full Export File"
+            description="Drag and drop your complete file here, or click to browse"
+          />
 
           {loading && (
-            <div className="text-center text-gray-600">
-              Uploading and starting import...
+            <div className="flex items-center justify-center space-x-3 py-4">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+              <span className="text-gray-600">Uploading and starting import...</span>
             </div>
           )}
         </div>
       )}
 
       {/* Step 6: Processing */}
-      {step === 6 && job && (
-        <div className="bg-white rounded-lg shadow p-6 space-y-4">
-          <h2 className="text-xl font-semibold">Step 6: Processing</h2>
-          <p className="text-gray-600">
-            Import in progress...
-          </p>
-
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span>Progress</span>
-              <span>{job.progressPercent}%</span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div
-                className="bg-blue-600 h-2 rounded-full transition-all"
-                style={{ width: `${job.progressPercent}%` }}
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-4 text-center">
-            <div className="p-3 bg-green-50 rounded">
-              <div className="text-2xl font-bold text-green-600">{job.successCount}</div>
-              <div className="text-xs text-gray-600">Success</div>
-            </div>
-            <div className="p-3 bg-red-50 rounded">
-              <div className="text-2xl font-bold text-red-600">{job.errorCount}</div>
-              <div className="text-xs text-gray-600">Errors</div>
-            </div>
-            <div className="p-3 bg-yellow-50 rounded">
-              <div className="text-2xl font-bold text-yellow-600">{job.skipCount}</div>
-              <div className="text-xs text-gray-600">Skipped</div>
-            </div>
-          </div>
-        </div>
+      {step === 6 && importJobId && (
+        <ProgressTracker
+          importJobId={importJobId}
+          onComplete={(completedJob) => {
+            setJob(completedJob as any);
+            setStep(7);
+          }}
+          onError={(err) => setError(err)}
+        />
       )}
 
       {/* Step 7: Results */}
