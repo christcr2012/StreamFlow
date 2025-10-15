@@ -1,0 +1,69 @@
+# Canonical planned work ledger (machine-readable)
+# Policy: items remain proposed until user confirms; codebase is source of truth.
+
+items:
+  - id: M2-Phase6-TypeScript
+    title: Fix TypeScript build blockers for Vercel
+    status: proposed
+    priority: high
+    needs_confirmation: true
+    last_code_check: fail
+    sources:
+      - path: docs/M2_CURRENT_STATUS_AND_PLAN.md
+    tasks:
+      - packages/ui/src/Modal.tsx: add "use client"
+      - apps/tenant-app/src/components/ui/pagination.tsx: import { Button } from '@cortiware/ui'
+      - tenant-app: remove Button inline style props (~8 files)
+      - tenant-app: update Input onChange to (value: string) (~10+)
+      - tenant-app: fix event handler types and implicit any
+
+  - id: Theme-Tuning-Variety
+    title: Theme refinements for WCAG + variety
+    status: proposed
+    priority: medium
+    needs_confirmation: true
+    last_code_check: n_a
+    sources:
+      - path: docs/THEME_IMPROVEMENTS_TRACKER.md
+
+  - id: OptionC-Deployment-Secrets
+    title: Add required secrets for auth flows
+    status: proposed
+    priority: medium
+    needs_confirmation: true
+    last_code_check: n_a
+    sources:
+      - path: docs/todos/option-c-todos.md
+
+  - id: Disabled-Features-Selection
+    title: Decide which disabled features to enable next
+    status: proposed
+    priority: medium
+    needs_confirmation: true
+    last_code_check: n_a
+    sources:
+      - path: docs/ACTUAL_REMAINING_WORK.md
+
+  - id: API-v2-Endpoints
+    title: Design and implement /api/v2 endpoints
+    status: proposed
+    priority: medium
+    needs_confirmation: true
+    last_code_check: fail
+    sources:
+      - note: Verified missing via code scan; referenced in handoff docs (2025-10-10 week)
+
+  - id: Code-TODOs-Core
+    title: Address core code TODOs
+    status: proposed
+    priority: low
+    needs_confirmation: true
+    last_code_check: n_a
+    sources:
+      - path: docs/_scans/code_todos.tsv
+    notes:
+      - leadScoringConfig.ts: track conversion rates by source
+      - entitlements.ts: replace with OIDC claims when FED_OIDC_ENABLED=true
+      - federation-audit.ts: persist to AuditLog
+      - oidc.ts: implement JWT verification with IdP keys
+
