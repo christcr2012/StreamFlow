@@ -52,29 +52,31 @@ export function Modal({
 
   const modalContent = (
     <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex min-h-screen items-center justify-center p-4">
+      <div className="flex min-h-screen items-center justify-center p-0 md:p-4">
         {/* Backdrop */}
         <div
           className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
           onClick={onClose}
         />
 
-        {/* Modal */}
+        {/* Modal - Full screen on mobile, centered on desktop */}
         <div
           ref={modalRef}
-          className={`relative bg-white rounded-lg shadow-xl ${sizeClasses[size]} w-full`}
+          className={`relative bg-white dark:bg-gray-900 rounded-none md:rounded-lg shadow-xl ${sizeClasses[size]} w-full min-h-screen md:min-h-0 md:max-h-[90vh] overflow-y-auto`}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
           {(title || showCloseButton) && (
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+            <div className="flex items-center justify-between px-4 md:px-6 py-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-900 z-10">
               {title && (
-                <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
               )}
               {showCloseButton && (
                 <button
                   onClick={onClose}
-                  className="text-gray-400 hover:text-gray-500 focus:outline-none"
+                  className="text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 focus:outline-none p-2"
+                  style={{ minWidth: '44px', minHeight: '44px' }}
+                  aria-label="Close modal"
                 >
                   <svg
                     className="h-6 w-6"
@@ -95,7 +97,7 @@ export function Modal({
           )}
 
           {/* Content */}
-          <div className="px-6 py-4">{children}</div>
+          <div className="px-4 md:px-6 py-4">{children}</div>
         </div>
       </div>
     </div>
@@ -111,7 +113,7 @@ export interface ModalFooterProps {
 
 export function ModalFooter({ children, className = '' }: ModalFooterProps) {
   return (
-    <div className={`flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 ${className}`}>
+    <div className={`flex flex-col md:flex-row items-stretch md:items-center justify-end gap-3 px-4 md:px-6 py-4 border-t border-gray-200 dark:border-gray-700 sticky bottom-0 bg-white dark:bg-gray-900 ${className}`}>
       {children}
     </div>
   );
