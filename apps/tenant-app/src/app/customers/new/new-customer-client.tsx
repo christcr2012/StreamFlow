@@ -90,22 +90,22 @@ export function NewCustomerClient() {
   };
 
   return (
-    <div className="min-h-screen p-8 bg-gray-50">
-      <div className="max-w-3xl mx-auto space-y-6">
+    <div className="min-h-screen p-4 md:p-8 bg-gray-50 dark:bg-gray-900">
+      <div className="max-w-3xl mx-auto space-y-4 md:space-y-6">
         {/* Header */}
         <div>
-          <Link href="/customers" className="text-sm text-blue-600 hover:text-blue-700 mb-2 inline-block">
+          <Link href="/customers" className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-2 inline-block">
             ← Back to Customers
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">New Customer</h1>
-          <p className="text-gray-600 mt-1">Add a new customer to your organization</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">New Customer</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1 text-sm md:text-base">Add a new customer to your organization</p>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit}>
           <Card>
             <CardHeader title="Customer Information" />
-            <div className="p-6 space-y-6">
+            <div className="p-4 md:p-6 space-y-4 md:space-y-6">
               {/* Company Name */}
               <Input
                 label="Company Name"
@@ -166,13 +166,25 @@ export function NewCustomerClient() {
               />
 
               {/* Form Actions */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
-                <Link href="/customers">
-                  <Button type="button" variant="secondary" disabled={isSubmitting}>
+              <div className="flex flex-col md:flex-row items-stretch md:items-center justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <Link href="/customers" className="w-full md:w-auto">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    disabled={isSubmitting}
+                    className="w-full"
+                    style={{ minHeight: '44px' }}
+                  >
                     Cancel
                   </Button>
                 </Link>
-                <Button type="submit" loading={isSubmitting} disabled={isSubmitting}>
+                <Button
+                  type="submit"
+                  loading={isSubmitting}
+                  disabled={isSubmitting}
+                  className="w-full md:w-auto"
+                  style={{ minHeight: '44px' }}
+                >
                   {isSubmitting ? 'Creating...' : 'Create Customer'}
                 </Button>
               </div>
