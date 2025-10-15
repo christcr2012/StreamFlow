@@ -26,3 +26,5 @@ if (process.env.NODE_ENV !== 'production') {
 
 export type { Prisma } from '@prisma/client-provider';
 
+// Export error handling utilities
+export * from './errors';
