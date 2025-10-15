@@ -4,7 +4,6 @@
  */
 
 import { NextResponse } from 'next/server';
-import { Prisma } from '@prisma/client';
 
 export type ErrorResponse = {
   error: string;
@@ -13,10 +12,23 @@ export type ErrorResponse = {
 };
 
 /**
+ * Type guard for Prisma errors
+ */
+function isPrismaError(error: unknown): error is { code: string; meta?: any; message: string } {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    typeof (error as any).code === 'string' &&
+    (error as any).code.startsWith('P')
+  );
+}
+
+/**
  * Maps Prisma error codes to user-friendly messages
  */
 export function mapPrismaError(error: unknown): ErrorResponse {
-  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+  if (isPrismaError(error)) {
     switch (error.code) {
       case 'P2002':
         // Unique constraint violation
@@ -112,21 +124,24 @@ export function mapPrismaError(error: unknown): ErrorResponse {
     }
   }
 
-  if (error instanceof Prisma.PrismaClientValidationError) {
+  // Check for validation errors (constructor name check)
+  if (error && typeof error === 'object' && error.constructor.name === 'PrismaClientValidationError') {
     return {
       error: 'Invalid data provided. Please check your input and try again.',
       code: 'VALIDATION_ERROR',
     };
   }
 
-  if (error instanceof Prisma.PrismaClientInitializationError) {
+  // Check for initialization errors (constructor name check)
+  if (error && typeof error === 'object' && error.constructor.name === 'PrismaClientInitializationError') {
     return {
       error: 'Unable to connect to the database. Please try again later.',
       code: 'CONNECTION_ERROR',
     };
   }
 
-  if (error instanceof Prisma.PrismaClientRustPanicError) {
+  // Check for Rust panic errors (constructor name check)
+  if (error && typeof error === 'object' && error.constructor.name === 'PrismaClientRustPanicError') {
     return {
       error: 'A system error occurred. Please contact support.',
       code: 'SYSTEM_ERROR',
