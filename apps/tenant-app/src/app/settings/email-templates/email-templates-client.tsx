@@ -56,67 +56,69 @@ export default function EmailTemplatesClient({ templates, templateTypes }: Props
   };
 
   return (
-    <div className="min-h-screen p-8 bg-gray-50">
-      <div className="max-w-6xl mx-auto space-y-6">
+    <div className="min-h-screen p-4 md:p-8 bg-gray-50 dark:bg-gray-900">
+      <div className="max-w-6xl mx-auto space-y-4 md:space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Email Templates</h1>
-          <p className="text-gray-600 mt-2">Customize email templates sent to your customers</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">Email Templates</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm md:text-base">Customize email templates sent to your customers</p>
         </div>
 
-        <div className="bg-blue-50 border border-blue-200 rounded p-4">
-          <h3 className="font-medium text-blue-900 mb-2">📧 Template Variables</h3>
-          <p className="text-sm text-blue-800 mb-2">
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded p-4">
+          <h3 className="font-medium text-blue-900 dark:text-blue-200 mb-2">📧 Template Variables</h3>
+          <p className="text-sm text-blue-800 dark:text-blue-300 mb-2">
             You can use the following variables in your templates:
           </p>
-          <div className="grid grid-cols-2 gap-2 text-sm text-blue-800">
-            <code className="bg-blue-100 px-2 py-1 rounded">{'{{customerName}}'}</code>
-            <code className="bg-blue-100 px-2 py-1 rounded">{'{{invoiceNumber}}'}</code>
-            <code className="bg-blue-100 px-2 py-1 rounded">{'{{amount}}'}</code>
-            <code className="bg-blue-100 px-2 py-1 rounded">{'{{dueDate}}'}</code>
-            <code className="bg-blue-100 px-2 py-1 rounded">{'{{jobTitle}}'}</code>
-            <code className="bg-blue-100 px-2 py-1 rounded">{'{{status}}'}</code>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-blue-800 dark:text-blue-300">
+            <code className="bg-blue-100 dark:bg-blue-900/40 px-2 py-1 rounded">{'{{customerName}}'}</code>
+            <code className="bg-blue-100 dark:bg-blue-900/40 px-2 py-1 rounded">{'{{invoiceNumber}}'}</code>
+            <code className="bg-blue-100 dark:bg-blue-900/40 px-2 py-1 rounded">{'{{amount}}'}</code>
+            <code className="bg-blue-100 dark:bg-blue-900/40 px-2 py-1 rounded">{'{{dueDate}}'}</code>
+            <code className="bg-blue-100 dark:bg-blue-900/40 px-2 py-1 rounded">{'{{jobTitle}}'}</code>
+            <code className="bg-blue-100 dark:bg-blue-900/40 px-2 py-1 rounded">{'{{status}}'}</code>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow">
-          <div className="p-6 border-b">
-            <h2 className="text-xl font-semibold">Available Templates</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+          <div className="p-4 md:p-6 border-b border-gray-200 dark:border-gray-700">
+            <h2 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-gray-100">Available Templates</h2>
           </div>
-          <div className="divide-y">
+          <div className="divide-y divide-gray-200 dark:divide-gray-700">
             {templateTypes.map((templateType) => {
               const template = getTemplate(templateType.type);
               return (
-                <div key={templateType.type} className="p-6 hover:bg-gray-50">
-                  <div className="flex items-start justify-between">
+                <div key={templateType.type} className="p-4 md:p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                     <div className="flex-1">
-                      <h3 className="text-lg font-medium">{templateType.name}</h3>
-                      <p className="text-sm text-gray-600 mt-1">{templateType.description}</p>
+                      <h3 className="text-base md:text-lg font-medium text-gray-900 dark:text-gray-100">{templateType.name}</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{templateType.description}</p>
                       {template && (
-                        <div className="mt-2 flex items-center gap-2">
+                        <div className="mt-2 flex flex-wrap items-center gap-2">
                           <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            template.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                            template.active ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200' : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
                           }`}>
                             {template.active ? 'Active' : 'Inactive'}
                           </span>
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-gray-500 dark:text-gray-400">
                             Last updated: {new Date(template.updatedAt).toLocaleDateString()}
                           </span>
                         </div>
                       )}
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col md:flex-row gap-2">
                       {template ? (
                         <>
                           <Link
                             href={`/settings/email-templates/${templateType.type}`}
-                            className="px-4 py-2 text-sm border rounded hover:bg-gray-50"
+                            className="px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-50 dark:hover:bg-gray-700 text-center"
+                            style={{ minHeight: '44px' }}
                           >
                             Edit
                           </Link>
                           <button
                             onClick={() => deleteTemplate(templateType.type)}
                             disabled={loading === templateType.type}
-                            className="px-4 py-2 text-sm border border-red-300 text-red-700 rounded hover:bg-red-50 disabled:opacity-50"
+                            className="px-4 py-2 text-sm border border-red-300 dark:border-red-700 text-red-700 dark:text-red-400 rounded hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-50"
+                            style={{ minHeight: '44px' }}
                           >
                             {loading === templateType.type ? 'Deleting...' : 'Delete'}
                           </button>
@@ -124,7 +126,8 @@ export default function EmailTemplatesClient({ templates, templateTypes }: Props
                       ) : (
                         <Link
                           href={`/settings/email-templates/${templateType.type}`}
-                          className="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+                          className="px-4 py-2 text-sm bg-blue-600 dark:bg-blue-500 text-white rounded hover:bg-blue-700 dark:hover:bg-blue-600 text-center"
+                          style={{ minHeight: '44px' }}
                         >
                           Create Custom Template
                         </Link>
@@ -137,9 +140,9 @@ export default function EmailTemplatesClient({ templates, templateTypes }: Props
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-4">Default Templates</h2>
-          <p className="text-sm text-gray-600">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 md:p-6">
+          <h2 className="text-lg md:text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Default Templates</h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             If you don&apos;t create a custom template, the system will use the default template for each email type.
             Default templates are professional and include all necessary information, but custom templates allow you
             to add your brand voice and specific messaging.
