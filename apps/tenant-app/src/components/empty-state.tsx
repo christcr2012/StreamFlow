@@ -1,4 +1,4 @@
-import { Button } from './ui/button';
+import { Button } from '@cortiware/ui';
 import Link from 'next/link';
 
 interface EmptyStateProps {

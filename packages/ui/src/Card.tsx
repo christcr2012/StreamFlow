@@ -14,6 +14,7 @@ export interface CardProps {
   children: ReactNode;
   variant?: 'default' | 'glass' | 'elevated' | 'glow';
   padding?: 'none' | 'sm' | 'md' | 'lg';
+  stylePreset?: 'premium' | 'business'; // Visual style: premium (glass morphism) or business (clean corporate)
   className?: string;
   hover?: boolean;
 }
@@ -22,27 +23,43 @@ export function Card({
   children,
   variant = 'glass',
   padding = 'md',
+  stylePreset = 'premium',
   className = '',
   hover = false,
 }: CardProps) {
-  const variantClasses = {
+  // Premium style: Glass morphism with backdrop blur and glow effects
+  const premiumVariants = {
     default: 'bg-[var(--surface-1)] border border-[var(--border-primary)]',
     glass: 'glass-card border border-[var(--glass-border)]',
     elevated: 'bg-[var(--surface-2)] border border-[var(--border-primary)] shadow-xl',
     glow: 'glass-card border border-[var(--border-accent)] shadow-glow',
   };
-  
+
+  // Business style: Clean, flat cards with subtle shadows
+  const businessVariants = {
+    default: 'bg-white border border-gray-200 shadow-sm',
+    glass: 'bg-white border border-gray-200 shadow-md',
+    elevated: 'bg-white border border-gray-200 shadow-lg',
+    glow: 'bg-white border border-gray-300 shadow-lg',
+  };
+
+  const variantClasses = stylePreset === 'business' ? businessVariants : premiumVariants;
+
   const paddingClasses = {
     none: '',
     sm: 'p-4',
     md: 'p-6',
     lg: 'p-8',
   };
-  
-  const hoverClasses = hover ? 'transition-all duration-300 hover:shadow-glow-intense hover:border-[var(--border-glow)] hover:scale-[1.02]' : '';
-  
+
+  const premiumHover = 'transition-all duration-300 hover:shadow-glow-intense hover:border-[var(--border-glow)] hover:scale-[1.02]';
+  const businessHover = 'transition-all duration-200 hover:shadow-xl hover:border-gray-400';
+  const hoverClasses = hover ? (stylePreset === 'business' ? businessHover : premiumHover) : '';
+
+  const backdropBlur = stylePreset === 'premium' ? 'backdrop-blur-xl' : '';
+
   return (
-    <div className={`rounded-xl backdrop-blur-xl ${variantClasses[variant]} ${paddingClasses[padding]} ${hoverClasses} ${className}`}>
+    <div className={`rounded-xl ${backdropBlur} ${variantClasses[variant]} ${paddingClasses[padding]} ${hoverClasses} ${className}`}>
       {children}
     </div>
   );

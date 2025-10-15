@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Card, CardHeader } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
+import { Card, CardHeader } from '@cortiware/ui';
+import { Button } from '@cortiware/ui';
+import { Input } from '@cortiware/ui';
 import { showToast } from './ui/toast';
 import Image from 'next/image';
 

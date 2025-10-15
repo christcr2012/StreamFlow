@@ -19,6 +19,7 @@ export interface InputProps {
   error?: string;
   hint?: string;
   helperText?: string; // tenant-app alias for hint
+  stylePreset?: 'premium' | 'business'; // Visual style: premium (glass morphism) or business (clean corporate)
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
   disabled?: boolean;
@@ -36,6 +37,7 @@ export function Input({
   error,
   hint,
   helperText,
+  stylePreset = 'premium',
   leftIcon,
   rightIcon,
   disabled = false,
@@ -45,8 +47,9 @@ export function Input({
 }: InputProps) {
   const hasError = !!error;
   const hintText = hint || helperText; // Support both provider-portal (hint) and tenant-app (helperText)
-  
-  const inputClasses = `
+
+  // Premium style: Glass morphism with CSS variables
+  const premiumClasses = `
     w-full px-4 py-3 rounded-lg
     bg-[var(--surface-1)]
     border-2 transition-all duration-200
@@ -61,6 +64,24 @@ export function Input({
     ${leftIcon ? 'pl-11' : ''}
     ${rightIcon ? 'pr-11' : ''}
   `;
+
+  // Business style: Clean, flat design
+  const businessClasses = `
+    w-full px-3 py-2 rounded-md
+    bg-white border
+    text-gray-900
+    placeholder:text-gray-400
+    focus:outline-none focus:ring-2 focus:ring-offset-0
+    disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-100
+    ${hasError
+      ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
+      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+    }
+    ${leftIcon ? 'pl-10' : ''}
+    ${rightIcon ? 'pr-10' : ''}
+  `;
+
+  const inputClasses = stylePreset === 'business' ? businessClasses : premiumClasses;
 
   const containerClass = fullWidth ? 'w-full' : '';
 

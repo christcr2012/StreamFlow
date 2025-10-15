@@ -1,4 +1,4 @@
-import { DetailSkeleton } from '@/components/ui/skeleton';
+import { DetailSkeleton } from '@cortiware/ui';
 
 export default function JobDetailLoading() {
   return (

@@ -1,4 +1,4 @@
-import { TableSkeleton } from '@/components/ui/skeleton';
+import { TableSkeleton } from '@cortiware/ui';
 
 export default function JobsLoading() {
   return (

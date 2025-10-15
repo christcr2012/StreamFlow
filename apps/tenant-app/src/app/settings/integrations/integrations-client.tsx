@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardHeader } from '@/components/ui/card';
+import { Card, CardHeader } from '@cortiware/ui';
 import { showToast } from '@/components/ui/toast';
 
 interface IntegrationsClientProps {

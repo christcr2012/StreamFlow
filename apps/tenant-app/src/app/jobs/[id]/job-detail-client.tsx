@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardHeader } from '@/components/ui/card';
+import { Card, CardHeader } from '@cortiware/ui';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Button } from '@cortiware/ui';
 import { Timeline } from '@/components/ui/timeline';
 import { Select } from '@/components/ui/select';
 import { JobPhotoGallery } from '@/components/job-photo-gallery';

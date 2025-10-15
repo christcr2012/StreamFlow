@@ -1,8 +1,8 @@
 import { getAuthContext } from '@/lib/auth-context';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card } from '@cortiware/ui';
+import { Button } from '@cortiware/ui';
 import Link from 'next/link';
 import { InvoicesClient } from './invoices-client';
 

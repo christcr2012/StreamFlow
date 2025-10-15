@@ -1,16 +1,17 @@
 # @cortiware/ui
 
-Shared UI components library for Cortiware applications.
+Shared UI components library for Cortiware applications with multiple visual style presets.
 
 ## Overview
 
 This package provides reusable React components that can be used across all Cortiware apps. It serves as a foundation for:
-- Common UI primitives (Button, Input, Card, etc.)
-- shadcn/ui component re-exports
-- Custom Cortiware-specific components
+- Common UI primitives (Button, Input, Card, Modal, Skeleton, EmptyState)
+- Premium glass morphism design system
+- Clean business/corporate design system
+- Flexible theming via CSS variables
 - Consistent design system implementation
 
-**Current Status**: Placeholder package with basic Button component. Will be populated with shadcn/ui components and custom components as needed.
+**Current Status**: Fully implemented with 6 core components supporting both premium and business visual styles.
 
 ## Installation
 
@@ -24,27 +25,106 @@ This is an internal package in the Cortiware monorepo.
 }
 ```
 
+## Style Presets
+
+All components support multiple visual styles via the `stylePreset` prop:
+
+- **`premium`** (default): Glass morphism with gradients, glow effects, and backdrop blur
+- **`business`**: Clean, corporate design with flat colors and subtle shadows
+
+See [STYLE_PRESETS.md](./STYLE_PRESETS.md) for detailed documentation.
+
 ## Available Components
 
 ### Button
+Premium button with 7 variants supporting both provider-portal and tenant-app naming conventions.
 
-Basic button component (placeholder).
+**Variants:** `solid`, `primary`, `outline`, `secondary`, `ghost`, `gradient`, `danger`
 
 ```typescript
 import { Button } from '@cortiware/ui';
 
-export default function MyComponent() {
-  return (
-    <Button onClick={() => console.log('clicked')}>
-      Click Me
-    </Button>
-  );
-}
+// Premium style (default)
+<Button variant="solid" onClick={handleClick}>Save Changes</Button>
+
+// Business style
+<Button variant="primary" stylePreset="business" onClick={handleClick}>Save Changes</Button>
 ```
 
-## Planned Components
+### Card
+Glass morphism card with header/body/footer subcomponents.
 
-This package will be expanded to include:
+**Variants:** `default`, `glass`, `elevated`, `glow`
+
+```typescript
+import { Card, CardHeader, CardBody, CardFooter } from '@cortiware/ui';
+
+<Card variant="glass">
+  <CardHeader>Dashboard</CardHeader>
+  <CardBody>Content here</CardBody>
+  <CardFooter>Footer content</CardFooter>
+</Card>
+```
+
+### Input
+Premium input with icons, validation states, and error/hint display.
+
+```typescript
+import { Input } from '@cortiware/ui';
+
+<Input
+  label="Email"
+  value={email}
+  onChange={setEmail}
+  placeholder="Enter your email"
+  error={errors.email}
+  hint="We'll never share your email"
+  leftIcon={<MailIcon />}
+/>
+```
+
+### Modal
+Accessible modal with focus trap and keyboard navigation.
+
+```typescript
+import { Modal, ConfirmModal } from '@cortiware/ui';
+
+<Modal isOpen={isOpen} onClose={handleClose} title="Settings">
+  <p>Modal content</p>
+</Modal>
+
+<ConfirmModal
+  isOpen={showConfirm}
+  onClose={() => setShowConfirm(false)}
+  onConfirm={handleDelete}
+  title="Delete Item"
+  message="Are you sure you want to delete this item?"
+  confirmText="Delete"
+  variant="danger"
+/>
+```
+
+### Skeleton
+Loading skeletons for different content types.
+
+```typescript
+import { Skeleton, SkeletonCard, SkeletonTable, SkeletonList } from '@cortiware/ui';
+
+<SkeletonCard />
+<SkeletonTable rows={5} columns={4} />
+<SkeletonList items={3} />
+```
+
+### EmptyState
+Empty state components for different scenarios.
+
+```typescript
+import { EmptyState, NoResults, NoData, ErrorState } from '@cortiware/ui';
+
+<NoResults searchTerm="widgets" onClear={handleClear} />
+<NoData message="No items found" actionText="Create Item" onAction={handleCreate} />
+<ErrorState message="Failed to load data" onRetry={handleRetry} />
+```
 
 ### Primitives
 - Button (variants: primary, secondary, outline, ghost, link)

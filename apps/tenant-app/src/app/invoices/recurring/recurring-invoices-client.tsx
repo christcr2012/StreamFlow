@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ResponsiveTable } from '@/components/responsive-table';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Button } from '@cortiware/ui';
 import { PullToRefreshIndicator } from '@/components/pull-to-refresh-indicator';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { useHapticFeedback, getHapticClasses } from '@/hooks/use-haptic-feedback';

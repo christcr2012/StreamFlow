@@ -15,6 +15,7 @@ import { ReactNode } from 'react';
 export interface ButtonProps {
   variant?: 'solid' | 'outline' | 'ghost' | 'gradient' | 'primary' | 'secondary' | 'danger';
   size?: 'sm' | 'md' | 'lg';
+  stylePreset?: 'premium' | 'business'; // Visual style: premium (glass morphism) or business (clean corporate)
   loading?: boolean;
   disabled?: boolean;
   iconLeft?: ReactNode;
@@ -29,6 +30,7 @@ export interface ButtonProps {
 export function Button({
   variant = 'solid',
   size = 'md',
+  stylePreset = 'premium',
   loading = false,
   disabled = false,
   iconLeft,
@@ -41,16 +43,29 @@ export function Button({
 }: ButtonProps) {
   const baseClasses = 'inline-flex items-center justify-center font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent disabled:opacity-50 disabled:cursor-not-allowed';
 
-  // Support both provider-portal and tenant-app variant names
-  const variantClasses = {
+  // Premium style: Glass morphism with gradients and glow effects
+  const premiumVariants = {
     solid: 'bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-secondary)] text-white hover:opacity-90 shadow-glow focus:ring-[var(--brand-primary)]',
-    primary: 'bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-secondary)] text-white hover:opacity-90 shadow-glow focus:ring-[var(--brand-primary)]', // tenant-app alias
+    primary: 'bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-secondary)] text-white hover:opacity-90 shadow-glow focus:ring-[var(--brand-primary)]',
     outline: 'border-2 border-[var(--border-accent)] text-[var(--text-accent)] hover:bg-[var(--surface-hover)] focus:ring-[var(--brand-primary)]',
-    secondary: 'border-2 border-[var(--border-primary)] text-[var(--text-secondary)] hover:bg-[var(--surface-hover)] focus:ring-[var(--brand-primary)]', // tenant-app alias
+    secondary: 'border-2 border-[var(--border-primary)] text-[var(--text-secondary)] hover:bg-[var(--surface-hover)] focus:ring-[var(--brand-primary)]',
     ghost: 'text-[var(--text-accent)] hover:bg-[var(--surface-hover)] focus:ring-[var(--brand-primary)]',
     gradient: 'bg-[var(--brand-gradient)] text-white hover:shadow-glow-intense shadow-glow focus:ring-[var(--brand-primary)]',
-    danger: 'bg-gradient-to-r from-red-600 to-red-700 text-white hover:opacity-90 shadow-glow focus:ring-red-500', // tenant-app specific
+    danger: 'bg-gradient-to-r from-red-600 to-red-700 text-white hover:opacity-90 shadow-glow focus:ring-red-500',
   };
+
+  // Business style: Clean, flat, corporate design
+  const businessVariants = {
+    solid: 'bg-[var(--brand-primary)] text-white hover:brightness-110 focus:ring-[var(--brand-primary)]',
+    primary: 'bg-[var(--brand-primary)] text-white hover:brightness-110 focus:ring-[var(--brand-primary)]',
+    outline: 'border-2 border-[var(--brand-primary)] text-[var(--brand-primary)] hover:bg-[var(--brand-primary)] hover:text-white focus:ring-[var(--brand-primary)]',
+    secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500',
+    ghost: 'text-[var(--brand-primary)] hover:bg-gray-100 focus:ring-[var(--brand-primary)]',
+    gradient: 'bg-[var(--brand-primary)] text-white hover:brightness-110 focus:ring-[var(--brand-primary)]',
+    danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
+  };
+
+  const variantClasses = stylePreset === 'business' ? businessVariants : premiumVariants;
 
   const sizeClasses = {
     sm: 'px-3 py-1.5 text-sm rounded-md gap-1.5',

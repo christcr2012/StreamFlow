@@ -1,7 +1,7 @@
 import { getAuthContext } from '@/lib/auth-context';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
-import { Card, CardHeader } from '@/components/ui/card';
+import { Card, CardHeader } from '@cortiware/ui';
 import { Badge } from '@/components/ui/badge';
 
 async function getWalletData(orgId: string) {

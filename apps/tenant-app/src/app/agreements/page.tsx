@@ -1,9 +1,9 @@
 import { getAuthContext } from '@/lib/auth-context';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
-import { Card } from '@/components/ui/card';
+import { Card } from '@cortiware/ui';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Button } from '@cortiware/ui';
 import Link from 'next/link';
 
 async function getAgreements(orgId: string) {

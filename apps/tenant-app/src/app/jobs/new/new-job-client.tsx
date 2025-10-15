@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input, Textarea } from '@/components/ui/input';
+import { Card, CardHeader } from '@cortiware/ui';
+import { Button } from '@cortiware/ui';
+import { Input, Textarea } from '@cortiware/ui';
 import { Select } from '@/components/ui/select';
 import { showToast } from '@/components/ui/toast';
 import Link from 'next/link';

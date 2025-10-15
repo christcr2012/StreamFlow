@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useSSE } from '@/hooks/use-sse';
 import { showToast } from '@/components/ui/toast';
-import { Card, CardHeader } from '@/components/ui/card';
+import { Card, CardHeader } from '@cortiware/ui';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 

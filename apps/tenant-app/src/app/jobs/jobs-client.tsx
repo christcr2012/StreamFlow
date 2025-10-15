@@ -3,11 +3,11 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ResponsiveTable } from '@/components/responsive-table';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from '@cortiware/ui';
+import { Input } from '@cortiware/ui';
 import { Select } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
+import { Card } from '@cortiware/ui';
 import { Pagination } from '@/components/ui/pagination';
 import { showToast } from '@/components/ui/toast';
 import { PullToRefreshIndicator } from '@/components/pull-to-refresh-indicator';
