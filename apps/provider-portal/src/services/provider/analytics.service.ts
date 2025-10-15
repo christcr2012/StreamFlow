@@ -51,7 +51,7 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
     }),
   ]);
 
-  const totalRevenueCents = payments.reduce((sum, p) =>
+  const totalRevenueCents = payments.reduce((sum: any, p: any) =>
     sum + Math.round(parseFloat(p.amount.toString()) * 100), 0
   );
 
@@ -89,7 +89,7 @@ export async function getRevenueTrend(days: number = 30): Promise<TrendData[]> {
   });
 
   // Group by date
-  const grouped = payments.reduce((acc, p) => {
+  const grouped = payments.reduce((acc: any, p: any) => {
     const date = p.receivedAt.toISOString().split('T')[0];
     if (!acc[date]) acc[date] = 0;
     const amountCents = Math.round(parseFloat(p.amount.toString()) * 100);
@@ -97,7 +97,7 @@ export async function getRevenueTrend(days: number = 30): Promise<TrendData[]> {
     return acc;
   }, {} as Record<string, number>);
 
-  return Object.entries(grouped).map(([date, value]) => ({
+  return (Object.entries(grouped) as [string, number][]).map(([date, value]) => ({
     date,
     value: value / 100, // Convert to dollars
     label: `$${(value / 100).toFixed(2)}`,
@@ -122,7 +122,7 @@ export async function getUserGrowthTrend(days: number = 30): Promise<TrendData[]
   });
 
   // Group by date and calculate cumulative
-  const grouped = users.reduce((acc, u) => {
+  const grouped = users.reduce((acc: any, u: any) => {
     const date = u.createdAt.toISOString().split('T')[0];
     if (!acc[date]) acc[date] = 0;
     acc[date] += 1;
@@ -130,7 +130,7 @@ export async function getUserGrowthTrend(days: number = 30): Promise<TrendData[]
   }, {} as Record<string, number>);
 
   let cumulative = 0;
-  return Object.entries(grouped)
+  return (Object.entries(grouped) as [string, number][])
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([date, value]) => {
       cumulative += value;
@@ -217,7 +217,7 @@ export async function getCohortAnalysis(): Promise<CohortData[]> {
     });
 
     data.activeCount = activeUsers > 0 ? data.orgIds.length : 0; // Simplified
-    data.revenueCents = payments.reduce((sum, p) =>
+    data.revenueCents = payments.reduce((sum: any, p: any) =>
       sum + Math.round(parseFloat(p.amount.toString()) * 100), 0
     );
   }
@@ -299,7 +299,7 @@ export async function getTopOrgs(limit: number = 10): Promise<Array<{
       }),
     ]);
 
-    const revenueCents = payments.reduce((sum, p) =>
+    const revenueCents = payments.reduce((sum: any, p: any) =>
       sum + Math.round(parseFloat(p.amount.toString()) * 100), 0
     );
 

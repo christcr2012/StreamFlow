@@ -101,7 +101,7 @@ export function buildTextSearchFilter(
   const searchTerm = query.trim();
   
   return {
-    OR: fields.map((field) => ({
+    OR: fields.map((field: any) => ({
       [field]: {
         contains: searchTerm,
         mode: 'insensitive' as Prisma.QueryMode,
@@ -159,7 +159,7 @@ export function buildStatusFilter(
  * Combine filters with AND logic
  */
 export function combineFilters(...filters: (any | undefined)[]): any {
-  const validFilters = filters.filter((f) => f !== undefined && f !== null);
+  const validFilters = filters.filter((f: any) => f !== undefined && f !== null);
   
   if (validFilters.length === 0) return undefined;
   if (validFilters.length === 1) return validFilters[0];
@@ -186,7 +186,7 @@ export function calculatePercentage(
  */
 export function calculateAverage(values: number[]): number {
   if (values.length === 0) return 0;
-  const sum = values.reduce((acc, val) => acc + val, 0);
+  const sum = values.reduce((acc: any, val: any) => acc + val, 0);
   return sum / values.length;
 }
 
@@ -197,7 +197,7 @@ export function groupBy<T, K extends string | number>(
   items: T[],
   keyFn: (item: T) => K
 ): Record<K, T[]> {
-  return items.reduce((acc, item) => {
+  return items.reduce((acc: any, item: any) => {
     const key = keyFn(item);
     if (!acc[key]) {
       acc[key] = [];

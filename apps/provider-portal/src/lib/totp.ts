@@ -160,7 +160,7 @@ export async function verifyBackupCode(
 export function countUnusedBackupCodes(hashedCodesJson: string): number {
   try {
     const codes = JSON.parse(hashedCodesJson) as Array<{ hash: string; used: boolean }>;
-    return codes.filter((c) => !c.used).length;
+    return codes.filter((c: any) => !c.used).length;
   } catch (error) {
     return 0;
   }

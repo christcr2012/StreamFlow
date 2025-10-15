@@ -242,7 +242,7 @@ export async function getActiveWorkflows(): Promise<ProvisioningWorkflow[]> {
     'Failed to fetch active provisioning workflows'
   );
 
-  return customers.map((customer, idx) => {
+  return customers.map((customer: any, idx: number) => {
     const templates = ['tpl_starter', 'tpl_professional', 'tpl_enterprise'];
     const statuses: ProvisioningWorkflow['status'][] = ['completed', 'in_progress', 'awaiting_approval', 'pending', 'failed'];
     const templateId = templates[idx % templates.length];
@@ -291,7 +291,7 @@ export async function getWorkflowStats() {
   
   const avgCompletionTime = workflows
     .filter(w => w.status === 'completed' && w.completedAt)
-    .reduce((sum, w) => sum + (w.completedAt!.getTime() - w.startedAt.getTime()), 0) / (completed || 1);
+    .reduce((sum: any, w: any) => sum + (w.completedAt!.getTime() - w.startedAt.getTime()), 0) / (completed || 1);
 
   return {
     total,

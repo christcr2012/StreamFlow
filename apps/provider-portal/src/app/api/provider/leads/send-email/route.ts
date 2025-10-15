@@ -87,8 +87,8 @@ export async function POST(request: NextRequest) {
       })
     );
 
-    const successful = results.filter((r) => r.status === 'fulfilled').length;
-    const failed = results.filter((r) => r.status === 'rejected').length;
+    const successful = results.filter((r: any) => r.status === 'fulfilled').length;
+    const failed = results.filter((r: any) => r.status === 'rejected').length;
 
     return NextResponse.json({
       success: true,

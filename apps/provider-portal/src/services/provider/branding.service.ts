@@ -146,7 +146,7 @@ export async function getAllBrandingConfigs() {
     'Failed to fetch all branding configurations'
   );
 
-  return orgs.map((org) => {
+  return orgs.map((org: any) => {
     const brandConfig = (org.brandConfig as BrandConfig) || {};
     return {
       id: org.id,
@@ -311,12 +311,12 @@ export async function getBrandingStats() {
     'Failed to fetch organizations for branding stats'
   );
 
-  const orgsWithLogo = allOrgs.filter((org) => {
+  const orgsWithLogo = allOrgs.filter((org: any) => {
     const config = org.brandConfig as BrandConfig;
     return config && config.logoUrl;
   }).length;
 
-  const orgsWithCustomColors = allOrgs.filter((org) => {
+  const orgsWithCustomColors = allOrgs.filter((org: any) => {
     const config = org.brandConfig as BrandConfig;
     return config && config.primaryColor;
   }).length;

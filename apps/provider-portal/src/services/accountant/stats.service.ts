@@ -171,9 +171,8 @@ export async function getRevenueByOrg(): Promise<Array<{
       },
     });
 
-    return orgs.map((org) => {
-      const totalRevenue = org.invoices.reduce(
-        (sum, invoice) => sum + Number(invoice.amount),
+    return orgs.map((org: any) => {
+      const totalRevenue = org.invoices.reduce((sum: any, invoice: any) => sum + Number(invoice.amount),
         0
       );
 
@@ -183,7 +182,7 @@ export async function getRevenueByOrg(): Promise<Array<{
         totalRevenue,
         invoiceCount: org.invoices.length,
       };
-    }).filter((org) => org.totalRevenue > 0);
+    }).filter((org: any) => org.totalRevenue > 0);
   } catch (error) {
     console.error('[AccountantStats] Error fetching revenue by org:', error);
     return [];

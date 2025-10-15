@@ -85,7 +85,7 @@ async function getUserPermCodes(userId: string, legacyRole?: string | null): Pro
     select: { roleId: true },
   });
 
-  const roleIds = roleLinks.map((r) => r.roleId);
+  const roleIds = roleLinks.map((r: any) => r.roleId);
   const perms = roleIds.length
     ? await db.rbacRolePermission.findMany({
         where: { roleId: { in: roleIds } },
@@ -93,7 +93,7 @@ async function getUserPermCodes(userId: string, legacyRole?: string | null): Pro
       })
     : [];
 
-  const codes = new Set<string>(perms.map((rp) => rp.permission.code));
+  const codes = new Set<string>(perms.map((rp: any) => rp.permission.code));
 
   // Legacy role convenience (non-blocking): give sensible defaults
   switch ((legacyRole || "").toUpperCase()) {

@@ -46,13 +46,13 @@ export async function getUsageSummary(): Promise<UsageSummary> {
     }),
   ]);
 
-  const totalQuantity = meters.reduce((sum, m) => sum + (m._sum.quantity || 0), 0);
+  const totalQuantity = meters.reduce((sum: any, m: any) => sum + (m._sum.quantity || 0), 0);
 
   return {
     totalMeters,
     totalQuantity,
     uniqueOrgs: uniqueOrgs.length,
-    topMeters: meters.map((m) => ({
+    topMeters: meters.map((m: any) => ({
       meter: m.meter,
       quantity: m._sum.quantity || 0,
     })),
@@ -98,7 +98,7 @@ export async function listUsageMeters(params: {
   const nextCursor = hasMore ? items[items.length - 1].id : null;
 
   return {
-    items: items.map((m) => ({
+    items: items.map((m: any) => ({
       id: m.id,
       orgId: m.orgId,
       orgName: m.org.name,
@@ -124,7 +124,7 @@ export async function getMeterRatingSummary(): Promise<MeterRatingSummary[]> {
     orderBy: { _sum: { quantity: 'desc' } },
   });
 
-  return summary.map((s) => ({
+  return summary.map((s: any) => ({
     meter: s.meter,
     totalQuantity: s._sum.quantity || 0,
     orgCount: s._count.orgId,
@@ -158,7 +158,7 @@ export async function getBillableTotals(params: {
   });
 
   // Group by org and meter
-  const grouped = meters.reduce((acc, m) => {
+  const grouped = meters.reduce((acc: any, m: any) => {
     const key = `${m.orgId}:${m.meter}`;
     if (!acc[key]) {
       acc[key] = {
@@ -175,7 +175,7 @@ export async function getBillableTotals(params: {
   // Apply simple rating (TODO: Replace with actual pricing rules)
   const RATE_PER_UNIT = 10; // 10 cents per unit (example)
 
-  return Object.values(grouped).map((item) => ({
+  return Object.values(grouped).map((item: any) => ({
     ...item,
     estimatedCents: item.quantity * RATE_PER_UNIT,
   }));
@@ -206,14 +206,14 @@ export async function getUsageTrend(params: {
   });
 
   // Group by date
-  const grouped = meters.reduce((acc, m) => {
+  const grouped = meters.reduce((acc: any, m: any) => {
     const date = m.windowStart.toISOString().split('T')[0];
     if (!acc[date]) acc[date] = 0;
     acc[date] += m.quantity;
     return acc;
   }, {} as Record<string, number>);
 
-  return Object.entries(grouped).map(([date, quantity]) => ({
+  return (Object.entries(grouped) as [string, number][]).map(([date, quantity]) => ({
     date,
     quantity,
   }));

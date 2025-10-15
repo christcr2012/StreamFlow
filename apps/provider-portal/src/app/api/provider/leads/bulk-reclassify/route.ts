@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
     });
 
     await Promise.all(
-      leads.map((lead) =>
+      leads.map((lead: any) =>
         prisma.auditLog.create({
           data: {
             orgId: lead.orgId,

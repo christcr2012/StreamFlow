@@ -9,7 +9,7 @@ export async function listInvoiceLines(invoiceId: string) {
     where: { invoiceId },
     orderBy: { createdAt: "asc" },
   });
-  return lines.map((l) => ({
+  return lines.map((l: any) => ({
     id: l.id,
     description: l.description,
     lineType: l.lineType,
@@ -43,7 +43,7 @@ export async function addInvoiceLine(invoiceId: string, data: {
 
 export async function recalcInvoiceTotal(invoiceId: string) {
   const lines = await prisma.invoiceLine.findMany({ where: { invoiceId }, select: { amountCents: true } });
-  const totalCents = lines.reduce((sum, l) => sum + l.amountCents, 0);
+  const totalCents = lines.reduce((sum: any, l: any) => sum + l.amountCents, 0);
   await prisma.invoice.update({
     where: { id: invoiceId },
     data: { amount: (totalCents / 100) as any },
@@ -57,7 +57,7 @@ export async function exportInvoiceHtml(invoiceId: string) {
   });
   if (!invoice) return "<html><body><h1>Invoice not found</h1></body></html>";
   const rows = invoice.lineItems
-    .map((li) => `<tr><td>${li.description}</td><td>${li.quantity}</td><td>$${(li.unitPriceCents / 100).toFixed(2)}</td><td>$${(li.amountCents / 100).toFixed(2)}</td></tr>`) 
+    .map((li: any) => `<tr><td>${li.description}</td><td>${li.quantity}</td><td>$${(li.unitPriceCents / 100).toFixed(2)}</td><td>$${(li.amountCents / 100).toFixed(2)}</td></tr>`) 
     .join("");
   return `<!doctype html><html><head><meta charset=\"utf-8\"/><title>Invoice ${invoice.id}</title></head>
   <body style=\"font-family: ui-sans-serif, system-ui; padding:24px\"> 
@@ -99,7 +99,7 @@ export async function exportInvoicePdfBuffer(invoiceId: string): Promise<Buffer>
     if (items.length === 0) {
       doc.text("No line items.");
     } else {
-      items.forEach((li) => {
+      items.forEach((li: any) => {
         doc.text(`${li.description}  x${li.quantity}  $${(li.unitPriceCents / 100).toFixed(2)}  =  $${(li.amountCents / 100).toFixed(2)}`);
       });
     }

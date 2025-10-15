@@ -46,7 +46,7 @@ export async function getSubscriptionSummary(): Promise<SubscriptionSummary> {
   ]);
 
   // Calculate MRR (sum of all active subscription prices)
-  const mrrCents = allActive.reduce((sum, sub) => sum + sub.priceCents, 0);
+  const mrrCents = allActive.reduce((sum: any, sub: any) => sum + sub.priceCents, 0);
   const arrCents = mrrCents * 12;
 
   // Calculate churn rate (canceled / total)
@@ -95,7 +95,7 @@ export async function listSubscriptions(params: {
   const nextCursor = hasMore ? items[items.length - 1].id : null;
 
   return {
-    items: items.map((sub) => ({
+    items: items.map((sub: any) => ({
       id: sub.id,
       orgId: sub.orgId,
       orgName: sub.org.name,
@@ -156,7 +156,7 @@ export async function getPlanChangeHistory(orgId: string): Promise<SubscriptionL
     },
   });
 
-  return subs.map((sub) => ({
+  return subs.map((sub: any) => ({
     id: sub.id,
     orgId: sub.orgId,
     orgName: sub.org.name,
@@ -193,7 +193,7 @@ export async function getUpcomingRenewals(): Promise<SubscriptionListItem[]> {
     },
   });
 
-  return subs.map((sub) => ({
+  return subs.map((sub: any) => ({
     id: sub.id,
     orgId: sub.orgId,
     orgName: sub.org.name,

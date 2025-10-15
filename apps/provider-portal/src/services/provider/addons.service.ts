@@ -109,7 +109,7 @@ export async function listAddonPurchases(params: {
   const nextCursor = hasMore ? items[items.length - 1].id : null;
 
   return {
-    items: items.map((p) => ({
+    items: items.map((p: any) => ({
       id: p.id,
       orgId: p.orgId,
       orgName: p.org.name,
@@ -192,7 +192,7 @@ export async function getRecentRefunds(days: number = 7): Promise<AddonPurchaseI
     },
   });
 
-  return refunds.map((p) => ({
+  return refunds.map((p: any) => ({
     id: p.id,
     orgId: p.orgId,
     orgName: p.org.name,
@@ -219,7 +219,7 @@ export async function getOrgPurchases(orgId: string): Promise<AddonPurchaseItem[
     },
   });
 
-  return purchases.map((p) => ({
+  return purchases.map((p: any) => ({
     id: p.id,
     orgId: p.orgId,
     orgName: p.org.name,

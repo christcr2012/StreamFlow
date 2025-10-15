@@ -98,7 +98,7 @@ export async function getRevenueMetrics(): Promise<RevenueMetrics> {
       'Failed to fetch active subscriptions'
     );
 
-  const mrrCents = activeSubscriptions.reduce((sum, sub) => sum + sub.priceCents, 0);
+  const mrrCents = activeSubscriptions.reduce((sum: any, sub: any) => sum + sub.priceCents, 0);
   const arrCents = mrrCents * 12;
 
   // Get last month's MRR for MoM growth
@@ -114,7 +114,7 @@ export async function getRevenueMetrics(): Promise<RevenueMetrics> {
     select: { priceCents: true },
   });
 
-  const lastMonthMrr = lastMonthSubs.reduce((sum, sub) => sum + sub.priceCents, 0);
+  const lastMonthMrr = lastMonthSubs.reduce((sum: any, sub: any) => sum + sub.priceCents, 0);
   const momGrowthPercent = lastMonthMrr > 0 ? ((mrrCents - lastMonthMrr) / lastMonthMrr) * 100 : 0;
 
   // Get last year's MRR for YoY growth
@@ -130,7 +130,7 @@ export async function getRevenueMetrics(): Promise<RevenueMetrics> {
     select: { priceCents: true },
   });
 
-  const lastYearMrr = lastYearSubs.reduce((sum, sub) => sum + sub.priceCents, 0);
+  const lastYearMrr = lastYearSubs.reduce((sum: any, sub: any) => sum + sub.priceCents, 0);
   const yoyGrowthPercent = lastYearMrr > 0 ? ((mrrCents - lastYearMrr) / lastYearMrr) * 100 : 0;
 
   // Get total revenue from payments
@@ -139,8 +139,7 @@ export async function getRevenueMetrics(): Promise<RevenueMetrics> {
     select: { amount: true },
   });
 
-  const totalRevenueCents = payments.reduce(
-    (sum, p) => sum + Math.round(parseFloat(p.amount.toString()) * 100),
+  const totalRevenueCents = payments.reduce((sum: any, p: any) => sum + Math.round(parseFloat(p.amount.toString()) * 100),
     0
   );
 
@@ -196,7 +195,7 @@ export async function getRevenueForecast(months: number = 6): Promise<RevenueFor
       select: { priceCents: true },
     });
 
-    const mrr = subs.reduce((sum, sub) => sum + sub.priceCents, 0);
+    const mrr = subs.reduce((sum: any, sub: any) => sum + sub.priceCents, 0);
     historicalData.push({
       month: monthStart.toISOString().substring(0, 7),
       mrrCents: mrr,
@@ -206,7 +205,7 @@ export async function getRevenueForecast(months: number = 6): Promise<RevenueFor
   // Simple linear regression
   const n = historicalData.length;
   const sumX = (n * (n - 1)) / 2;
-  const sumY = historicalData.reduce((sum, d) => sum + d.mrrCents, 0);
+  const sumY = historicalData.reduce((sum: any, d: any) => sum + d.mrrCents, 0);
   const sumXY = historicalData.reduce((sum, d, i) => sum + i * d.mrrCents, 0);
   const sumX2 = (n * (n - 1) * (2 * n - 1)) / 6;
 
@@ -284,7 +283,7 @@ export async function getCohortAnalysis(): Promise<CohortData[]> {
       return Math.round((retained / customersAcquired) * 100);
     };
 
-    const totalRevenue = cohortCustomers.reduce((sum, c) => sum + c.priceCents, 0);
+    const totalRevenue = cohortCustomers.reduce((sum: any, c: any) => sum + c.priceCents, 0);
 
     cohorts.push({
       cohortMonth,
@@ -374,7 +373,7 @@ export async function getChurnImpact(): Promise<ChurnImpact> {
     select: { priceCents: true, meta: true },
   });
 
-  const churnedMrr = churnedSubs.reduce((sum, sub) => sum + sub.priceCents, 0);
+  const churnedMrr = churnedSubs.reduce((sum: any, sub: any) => sum + sub.priceCents, 0);
   const churnedCustomers = churnedSubs.length;
 
   // Get total active for churn rate
@@ -495,7 +494,7 @@ export async function getRevenueWaterfall(): Promise<RevenueWaterfall> {
     select: { priceCents: true },
   });
 
-  const startingMrr = lastMonthSubs.reduce((sum, sub) => sum + sub.priceCents, 0);
+  const startingMrr = lastMonthSubs.reduce((sum: any, sub: any) => sum + sub.priceCents, 0);
 
   // New MRR (new subscriptions this month)
   const newSubs = await prisma.subscription.findMany({
@@ -506,7 +505,7 @@ export async function getRevenueWaterfall(): Promise<RevenueWaterfall> {
     select: { priceCents: true },
   });
 
-  const newMrr = newSubs.reduce((sum, sub) => sum + sub.priceCents, 0);
+  const newMrr = newSubs.reduce((sum: any, sub: any) => sum + sub.priceCents, 0);
 
   // Get expansion and churn metrics
   const expansion = await getExpansionMetrics();

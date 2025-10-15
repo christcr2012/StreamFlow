@@ -205,7 +205,7 @@ async function calculateSupportMetrics(tenantId: string): Promise<TenantHealthSc
   // Calculate average resolution time
   const resolvedIncidents = incidents.filter(i => i.resolvedAt);
   const avgResolutionMs = resolvedIncidents.length > 0
-    ? resolvedIncidents.reduce((sum, i) => sum + (i.resolvedAt!.getTime() - i.createdAt.getTime()), 0) / resolvedIncidents.length
+    ? resolvedIncidents.reduce((sum: any, i: any) => sum + (i.resolvedAt!.getTime() - i.createdAt.getTime()), 0) / resolvedIncidents.length
     : 0;
   const avgResolutionDays = avgResolutionMs / (1000 * 60 * 60 * 24);
   

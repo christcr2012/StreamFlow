@@ -34,7 +34,7 @@ export async function POST(
     }
 
     // Calculate total paid so far
-    const totalPaid = invoice.payments.reduce((sum: number, p: { amount: number }) => sum + Number(p.amount), 0);
+    const totalPaid = invoice.payments.reduce((sum, p) => sum + Number(p.amount), 0);
     const remainingAmount = Number(invoice.amount) - totalPaid;
 
     if (data.amount > remainingAmount) {

@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
         });
         
         await Promise.all(
-          leads.map((lead) =>
+          leads.map((lead: any) =>
             prisma.lead.update({
               where: { id: lead.id },
               data: {

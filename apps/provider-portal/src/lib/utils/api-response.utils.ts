@@ -184,8 +184,7 @@ export function validateRequiredFields(
   data: Record<string, any>,
   requiredFields: string[]
 ): void {
-  const missing = requiredFields.filter(
-    (field) => data[field] === undefined || data[field] === null || data[field] === ''
+  const missing = requiredFields.filter((field: any) => data[field] === undefined || data[field] === null || data[field] === ''
   );
 
   if (missing.length > 0) {
@@ -215,7 +214,7 @@ export function extractQueryParams(
   url: URL,
   params: string[]
 ): Record<string, string | undefined> {
-  return params.reduce((acc, param) => {
+  return params.reduce((acc: any, param: any) => {
     acc[param] = url.searchParams.get(param) || undefined;
     return acc;
   }, {} as Record<string, string | undefined>);

@@ -47,12 +47,12 @@ export async function GET(request: NextRequest) {
     });
 
     // Transform to include permissions array
-    const rolesWithPermissions = roles.map((role) => ({
+    const rolesWithPermissions = roles.map((role: any) => ({
       id: role.id,
       name: role.name,
       slug: role.slug,
       isSystem: role.isSystem,
-      permissions: role.rolePerms.map((rp) => ({
+      permissions: role.rolePerms.map((rp: any) => ({
         id: rp.permission.id,
         code: rp.permission.code,
         description: rp.permission.description,
@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
         name: role.name,
         slug: role.slug,
         isSystem: role.isSystem,
-        permissions: role.rolePerms.map((rp) => ({
+        permissions: role.rolePerms.map((rp: any) => ({
           id: rp.permission.id,
           code: rp.permission.code,
           description: rp.permission.description,

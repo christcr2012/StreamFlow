@@ -10,7 +10,7 @@ export async function getDunningCandidates(limit = 20) {
     take: limit,
     select: { id: true, orgId: true, amount: true, status: true },
   });
-  return invoices.map((i) => ({ invoiceId: i.id, orgId: i.orgId, amountCents: Math.round(Number(i.amount) * 100), status: i.status }));
+  return invoices.map((i: any) => ({ invoiceId: i.id, orgId: i.orgId, amountCents: Math.round(Number(i.amount) * 100), status: i.status }));
 }
 
 export async function runDunningCycle(limit = 10) {

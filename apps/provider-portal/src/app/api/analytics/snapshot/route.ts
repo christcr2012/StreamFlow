@@ -45,7 +45,7 @@ const postHandler = async (req: NextRequest) => {
     });
 
     let mrrCents = 0;
-    subscriptions.forEach((sub) => {
+    subscriptions.forEach((sub: any) => {
       // priceCents is already monthly, so just sum
       mrrCents += sub.priceCents;
     });
@@ -100,7 +100,7 @@ const postHandler = async (req: NextRequest) => {
     });
 
     let totalRevenue = 0;
-    payments.forEach((payment) => {
+    payments.forEach((payment: any) => {
       const amount = (payment.meta as any)?.amount || 0;
       totalRevenue += amount;
     });

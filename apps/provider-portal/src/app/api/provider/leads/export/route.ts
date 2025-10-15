@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
         'Notes',
       ];
 
-      const rows = leads.map((lead) => [
+      const rows = leads.map((lead: any) => [
         lead.id,
         lead.publicId,
         lead.company || '',
@@ -136,7 +136,7 @@ export async function POST(request: NextRequest) {
 
       const csvContent = [
         headers.map(escapeCsvValue).join(','),
-        ...rows.map((row) => row.map(escapeCsvValue).join(',')),
+        ...rows.map((row: any) => row.map(escapeCsvValue).join(',')),
       ].join('\n');
 
       // Create audit event

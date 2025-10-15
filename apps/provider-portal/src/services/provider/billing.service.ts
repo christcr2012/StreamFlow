@@ -162,7 +162,7 @@ export async function getUnbilledLeads(): Promise<UnbilledLead[]> {
     });
     const orgMap = new Map(orgs.map(o => [o.id, o.name]));
 
-    return leads.map((lead) => ({
+    return leads.map((lead: any) => ({
       id: lead.id,
       orgId: lead.orgId,
       orgName: orgMap.get(lead.orgId) || 'Unknown',
@@ -196,7 +196,7 @@ export async function getAiReconciliationGaps(): Promise<ReconciliationGap[]> {
       select: { costUsd: true },
     });
 
-    const totalUsedCents = events.reduce((sum, evt) =>
+    const totalUsedCents = events.reduce((sum: any, evt: any) =>
       sum + Math.round(parseFloat(evt.costUsd.toString()) * 100), 0
     );
     const creditValueCents = org.aiCreditBalance * 5; // 1 credit = $0.05
@@ -260,7 +260,7 @@ export async function getDunningQueue(): Promise<Array<{
     const attemptMap = new Map<string, number>();
     for (const a of attempts) attemptMap.set(a.invoiceId!, (attemptMap.get(a.invoiceId!) || 0) + 1);
 
-    return invoices.map((inv) => ({
+    return invoices.map((inv: any) => ({
       invoiceId: inv.id,
       orgId: inv.orgId,
       orgName: orgMap.get(inv.orgId) || 'Unknown',
@@ -311,7 +311,7 @@ export async function exportBillingCsv(params: {
 
   // Generate CSV
   const headers = ['Date', 'Org', 'Invoice', 'Amount', 'Method'];
-  const rows = payments.map((p) => [
+  const rows = payments.map((p: any) => [
     p.receivedAt.toISOString().split('T')[0],
     orgMap.get(p.orgId) || 'Unknown',
     p.invoiceId || 'N/A',
@@ -319,6 +319,6 @@ export async function exportBillingCsv(params: {
     p.method,
   ]);
 
-  return [headers, ...rows].map((row) => row.join(',')).join('\n');
+  return [headers, ...rows].map((row: any) => row.join(',')).join('\n');
 }
 

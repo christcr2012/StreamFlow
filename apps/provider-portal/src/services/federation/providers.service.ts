@@ -66,7 +66,7 @@ export const providerFederationService: ProviderFederationService = {
     });
 
     return {
-      items: items.map((org) => ({
+      items: items.map((org: any) => ({
         id: org.id,
         name: org.name,
         createdAt: org.createdAt.toISOString(),

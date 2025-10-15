@@ -6,7 +6,7 @@ export const leadScoringService = {
     return { score: Math.min(100, (JSON.stringify(lead).length % 100) + 1), reasons: [] };
   },
   async scoreLeads(leads: LeadData[], opts: any) {
-    const results = await Promise.all(leads.map((l) => this.scoreLead(l, opts)));
+    const results = await Promise.all(leads.map((l: any) => this.scoreLead(l, opts)));
     return results;
   },
 };

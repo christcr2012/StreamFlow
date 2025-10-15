@@ -22,7 +22,7 @@ export async function listNotifications(params?: { audience?: string; orgId?: st
     orderBy: { createdAt: 'desc' },
     take: limit,
   });
-  return items.map((n) => ({
+  return items.map((n: any) => ({
     id: n.id,
     orgId: n.orgId ?? null,
     audience: n.audience,

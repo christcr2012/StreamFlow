@@ -33,6 +33,6 @@ export async function auditLog(_req: NextApiRequest, _entry: Record<string, any>
 export function generateTemporaryPassword(length = 12): string {
   // Simple random hex password (placeholder)
   const bytes = Array.from(crypto.getRandomValues(new Uint8Array(length)));
-  return bytes.map((b) => (b % 16).toString(16)).join('');
+  return bytes.map((b: any) => (b % 16).toString(16)).join('');
 }
 

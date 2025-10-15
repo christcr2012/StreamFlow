@@ -47,7 +47,7 @@ export async function getAiOverview(): Promise<AiOverview> {
         costUsd: Number(totalsAgg._sum.costUsd || 0),
         callCount: totalsAgg._sum.callCount || 0,
       },
-      topOrgs: top.map((t) => ({
+      topOrgs: top.map((t: any) => ({
         orgId: t.orgId,
         orgName: t.org?.name || t.orgId,
         creditsUsed: t.creditsUsed,
@@ -55,7 +55,7 @@ export async function getAiOverview(): Promise<AiOverview> {
         tokensOut: t.tokensOut,
         costUsd: Number(t.costUsd),
       })),
-      recent: recentEvents.map((e) => ({
+      recent: recentEvents.map((e: any) => ({
         id: e.id,
         orgId: e.orgId,
         orgName: (e as any).org?.name || e.orgId,

@@ -264,10 +264,10 @@ function getDefaultRateLimits(tenantId: string): RateLimitConfig[] {
 export async function getGlobalApiMetrics() {
   const allUsage = await getAllTenantsApiUsage();
 
-  const totalRequests = allUsage.reduce((sum, u) => sum + u.totalRequests, 0);
-  const totalRequestsLast24h = allUsage.reduce((sum, u) => sum + u.requestsLast24h, 0);
-  const avgErrorRate = allUsage.reduce((sum, u) => sum + u.errorRate, 0) / allUsage.length;
-  const avgResponseTime = allUsage.reduce((sum, u) => sum + u.avgResponseTime, 0) / allUsage.length;
+  const totalRequests = allUsage.reduce((sum: any, u: any) => sum + u.totalRequests, 0);
+  const totalRequestsLast24h = allUsage.reduce((sum: any, u: any) => sum + u.requestsLast24h, 0);
+  const avgErrorRate = allUsage.reduce((sum: any, u: any) => sum + u.errorRate, 0) / allUsage.length;
+  const avgResponseTime = allUsage.reduce((sum: any, u: any) => sum + u.avgResponseTime, 0) / allUsage.length;
 
   // Top tenants by usage
   const topTenants = allUsage

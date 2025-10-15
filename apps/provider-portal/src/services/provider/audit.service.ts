@@ -125,7 +125,7 @@ export async function listAuditEvents(params: {
   const nextCursor = hasMore ? items[items.length - 1].id : null;
 
   return {
-    items: items.map((evt) => ({
+    items: items.map((evt: any) => ({
       id: evt.id,
       actorUserId: evt.actorUserId,
       entity: evt.entity,
@@ -164,7 +164,7 @@ export async function getEntityAuditTrail(params: {
     },
   });
 
-  return events.map((evt) => ({
+  return events.map((evt: any) => ({
     id: evt.id,
     actorUserId: evt.actorUserId,
     entity: evt.entity,
@@ -194,7 +194,7 @@ export async function getOrgActivityTimeline(orgId: string, limit: number = 50):
     },
   });
 
-  return events.map((evt) => ({
+  return events.map((evt: any) => ({
     id: evt.id,
     actorUserId: evt.actorUserId,
     entity: evt.entity,
@@ -236,7 +236,7 @@ export async function searchAuditLogs(params: {
     },
   });
 
-  return events.map((evt) => ({
+  return events.map((evt: any) => ({
     id: evt.id,
     actorUserId: evt.actorUserId,
     entity: evt.entity,
@@ -273,7 +273,7 @@ export async function getAuditStatsByPeriod(days: number = 7): Promise<Array<{
   });
 
   // Group by date
-  const grouped = events.reduce((acc, evt) => {
+  const grouped = events.reduce((acc: any, evt: any) => {
     const date = evt.createdAt.toISOString().split('T')[0];
     if (!acc[date]) {
       acc[date] = { count: 0, users: new Set<string>() };
@@ -283,7 +283,7 @@ export async function getAuditStatsByPeriod(days: number = 7): Promise<Array<{
     return acc;
   }, {} as Record<string, { count: number; users: Set<string> }>);
 
-  return Object.entries(grouped)
+  return (Object.entries(grouped) as [string, { count: number; users: Set<string> }][])
     .map(([date, data]) => ({
       date,
       count: data.count,

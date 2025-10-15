@@ -42,11 +42,11 @@ export async function GET(request: NextRequest) {
     });
 
     // Transform to include roles array
-    const usersWithRoles = users.map((u) => ({
+    const usersWithRoles = users.map((u: any) => ({
       id: u.id,
       email: u.email,
       name: u.name,
-      roles: u.rbacUserRoles.map((ur) => ({
+      roles: u.rbacUserRoles.map((ur: any) => ({
         id: ur.role.id,
         name: ur.role.name,
         slug: ur.role.slug,

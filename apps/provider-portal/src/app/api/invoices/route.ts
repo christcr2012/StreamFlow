@@ -35,7 +35,7 @@ const getHandler = async (req: NextRequest) => {
       prisma.invoice.count({ where }),
     ]);
 
-    const items = invoices.map((inv) => ({
+    const items = invoices.map((inv: any) => ({
       id: inv.id,
       orgId: inv.orgId,
       orgName: inv.org.name,
