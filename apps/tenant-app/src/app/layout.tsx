@@ -3,6 +3,7 @@ import { DirectAccessBanner } from '@/components/DirectAccessBanner';
 import { getAuthContext } from '@/lib/auth-context';
 import { ToastContainer } from '@/components/ui/toast';
 import { ClientLayoutWrapper } from '@/components/client-layout-wrapper';
+import { loadOrgTheme, generateThemeCSS } from '@/lib/theme-loader';
 import '../styles/globals.css';
 import { DEFAULT_THEME } from '@cortiware/themes';
 
@@ -16,8 +17,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const cookieStore = await cookies();
   const clientTheme = cookieStore.get('rs_client_theme')?.value || DEFAULT_THEME;
 
+  // Load organization-specific theme settings
+  let themeCSS = '';
+  if (authContext.orgId) {
+    const orgTheme = await loadOrgTheme(authContext.orgId);
+    themeCSS = generateThemeCSS(orgTheme);
+  }
+
   return (
     <html lang="en" data-theme={clientTheme} suppressHydrationWarning>
+      <head>
+        {themeCSS && (
+          <style dangerouslySetInnerHTML={{ __html: themeCSS }} />
+        )}
+      </head>
       <body>
         <ClientLayoutWrapper>
           {authContext.isDirectAccess && authContext.role && authContext.email && (

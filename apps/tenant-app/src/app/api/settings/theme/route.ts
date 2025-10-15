@@ -20,8 +20,8 @@ export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   try {
     // Authenticate and get org context
-    const auth = await requireAuth({ request, prismaClient: prisma });
-    
+    const auth = await requireAuth({ prisma });
+
     if (!auth.orgId) {
       return createErrorResponse('unauthorized', 'Organization context required');
     }
@@ -68,8 +68,8 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Authenticate and get org context
-    const auth = await requireAuth({ request, prismaClient: prisma });
-    
+    const auth = await requireAuth({ prisma });
+
     if (!auth.orgId) {
       return createErrorResponse('unauthorized', 'Organization context required');
     }
