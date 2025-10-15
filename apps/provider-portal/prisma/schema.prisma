@@ -667,6 +667,7 @@ model ProviderConfig {
   samApiKey       String?
   stripeSecretKey String?
   otherConfig     Json?    @default("{}")
+  themeSettings   Json     @default("{\"variant\":\"premium-dark\",\"primaryColor\":\"#00ff88\",\"accentColor\":\"#3aa8ff\"}")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }

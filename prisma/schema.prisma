@@ -16,6 +16,9 @@ model Org {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
+  // Theme Customization - Per-organization UI theme settings
+  themeSettings Json     @default("{\"variant\":\"premium-dark\",\"primaryColor\":\"#00ff88\",\"accentColor\":\"#3aa8ff\"}")
+
   // AI Cost Control & Monetization - PROVIDER MODEL
   aiMonthlyBudgetCents Int      @default(5000)  // $50 provider cost limit
   aiCreditBalance     Int      @default(1000)   // 1k credits = $50 worth (1 credit = $0.05 client-facing)
