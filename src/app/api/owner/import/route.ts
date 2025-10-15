@@ -10,7 +10,7 @@ import { ImportStatus, ImportEntityType } from '@prisma/client';
 
 /**
  * Import Wizard API - Single consolidated endpoint
- * 
+ *
  * Actions:
  * - analyze: AI-powered field mapping with cost estimation
  * - map: Save field mappings and transformations
@@ -18,6 +18,8 @@ import { ImportStatus, ImportEntityType } from '@prisma/client';
  * - status: Get import job status and progress
  * - errors: Download error report (JSON or CSV)
  * - cancel: Cancel running import job
+ * - templates: List import templates for entity type
+ * - save-template: Save current mappings as reusable template
  */
 
 export async function POST(req: NextRequest) {
@@ -61,6 +63,10 @@ export async function POST(req: NextRequest) {
         return await handleErrors(body, userId, orgId);
       case 'cancel':
         return await handleCancel(body, userId, orgId);
+      case 'templates':
+        return await handleTemplates(body, userId, orgId);
+      case 'save-template':
+        return await handleSaveTemplate(body, userId, orgId);
       default:
         return NextResponse.json(
           { ok: false, error: 'unsupported_action' },
@@ -544,6 +550,90 @@ async function handleCancel(body: any, userId: string, orgId: string) {
     ok: true,
     importJobId,
     status: 'CANCELLED',
+  });
+}
+
+/**
+ * Action: templates
+ * List import templates for entity type
+ */
+async function handleTemplates(body: any, userId: string, orgId: string) {
+  const { entityType } = body;
+
+  const where: any = { orgId };
+  if (entityType) {
+    where.entityType = entityType as ImportEntityType;
+  }
+
+  const templates = await prisma.importMapping.findMany({
+    where,
+    orderBy: [
+      { useCount: 'desc' },
+      { lastUsedAt: 'desc' },
+    ],
+    take: 50,
+  });
+
+  return NextResponse.json({
+    ok: true,
+    templates: templates.map(t => ({
+      id: t.id,
+      name: t.name,
+      entityType: t.entityType,
+      sourceFormat: t.sourceFormat,
+      fieldMappings: t.fieldMappings,
+      transformRules: t.transformRules,
+      validationRules: t.validationRules,
+      useCount: t.useCount,
+      lastUsedAt: t.lastUsedAt,
+      createdAt: t.createdAt,
+    })),
+  });
+}
+
+/**
+ * Action: save-template
+ * Save current mappings as reusable template
+ */
+async function handleSaveTemplate(body: any, userId: string, orgId: string) {
+  const {
+    name,
+    entityType,
+    sourceFormat,
+    fieldMappings,
+    transformRules,
+    validationRules,
+  } = body;
+
+  if (!name || !entityType || !sourceFormat || !fieldMappings) {
+    return NextResponse.json(
+      { ok: false, error: 'missing_required_fields' },
+      { status: 400 }
+    );
+  }
+
+  const template = await prisma.importMapping.create({
+    data: {
+      orgId,
+      name,
+      entityType: entityType as ImportEntityType,
+      sourceFormat,
+      fieldMappings,
+      transformRules: transformRules || [],
+      validationRules: validationRules || [],
+      isTemplate: true,
+      useCount: 0,
+    },
+  });
+
+  return NextResponse.json({
+    ok: true,
+    template: {
+      id: template.id,
+      name: template.name,
+      entityType: template.entityType,
+      sourceFormat: template.sourceFormat,
+    },
   });
 }
 
