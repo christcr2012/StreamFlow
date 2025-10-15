@@ -6,6 +6,10 @@ import { useRouter } from 'next/navigation';
 import { ResponsiveTable } from '@/components/responsive-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { PullToRefreshIndicator } from '@/components/pull-to-refresh-indicator';
+import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
+import { useHapticFeedback, getHapticClasses } from '@/hooks/use-haptic-feedback';
+import { showToast } from '@/components/ui/toast';
 
 interface Customer {
   id: string;
@@ -35,9 +39,24 @@ interface Props {
   customers: Customer[];
 }
 
-export default function RecurringInvoicesClient({ recurringInvoices, customers }: Props) {
+export default function RecurringInvoicesClient({ recurringInvoices: initialRecurringInvoices, customers }: Props) {
   const router = useRouter();
+  const [recurringInvoices, setRecurringInvoices] = useState(initialRecurringInvoices);
   const [loading, setLoading] = useState<string | null>(null);
+
+  // Haptic feedback
+  const { triggerHaptic } = useHapticFeedback();
+
+  // Pull-to-refresh
+  const handleRefresh = async () => {
+    triggerHaptic('medium');
+    router.refresh();
+  };
+
+  const pullToRefresh = usePullToRefresh({
+    onRefresh: handleRefresh,
+    enabled: true,
+  });
 
   const toggleActive = async (id: string, currentActive: boolean) => {
     setLoading(id);
@@ -59,19 +78,23 @@ export default function RecurringInvoicesClient({ recurringInvoices, customers }
   };
 
   const deleteRecurring = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this recurring invoice?')) return;
-
     setLoading(id);
     try {
+      triggerHaptic('heavy');
       const res = await fetch(`/api/invoices/recurring/${id}`, {
         method: 'DELETE',
       });
 
       if (!res.ok) throw new Error('Failed to delete');
-      router.refresh();
+
+      // Remove from local state
+      setRecurringInvoices((prev) => prev.filter((ri) => ri.id !== id));
+      triggerHaptic('success');
+      showToast('Recurring invoice deleted successfully', 'success');
     } catch (error) {
       console.error('Error deleting recurring invoice:', error);
-      alert('Failed to delete recurring invoice');
+      triggerHaptic('error');
+      showToast('Failed to delete recurring invoice', 'error');
     } finally {
       setLoading(null);
     }
@@ -159,36 +182,48 @@ export default function RecurringInvoicesClient({ recurringInvoices, customers }
   ];
 
   return (
-    <div className="p-4 md:p-6">
-      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Recurring Invoices</h1>
-        <Link href="/invoices/recurring/new">
-          <Button className="w-full md:w-auto" style={{ minHeight: '44px' }}>
-            Create Recurring Invoice
-          </Button>
-        </Link>
-      </div>
+    <>
+      {/* Pull-to-Refresh Indicator */}
+      <PullToRefreshIndicator
+        pullDistance={pullToRefresh.pullDistance}
+        threshold={pullToRefresh.threshold}
+        isRefreshing={pullToRefresh.isRefreshing}
+        isPulling={pullToRefresh.isPulling}
+      />
 
-      {recurringInvoices.length === 0 ? (
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-12 text-center">
-          <p className="text-gray-600 dark:text-gray-400 mb-4">No recurring invoices yet</p>
+      <div className="p-4 md:p-6">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Recurring Invoices</h1>
           <Link href="/invoices/recurring/new">
-            <Button style={{ minHeight: '44px' }}>
-              Create Your First Recurring Invoice
+            <Button className={`w-full md:w-auto ${getHapticClasses('medium')}`} style={{ minHeight: '44px' }}>
+              Create Recurring Invoice
             </Button>
           </Link>
         </div>
-      ) : (
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden p-4">
-          <ResponsiveTable
-            data={recurringInvoices}
-            columns={columns}
-            keyExtractor={(ri) => ri.id}
-            emptyMessage="No recurring invoices found."
-          />
-        </div>
-      )}
-    </div>
+
+        {recurringInvoices.length === 0 ? (
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-12 text-center">
+            <p className="text-gray-600 dark:text-gray-400 mb-4">No recurring invoices yet</p>
+            <Link href="/invoices/recurring/new">
+              <Button className={getHapticClasses('medium')} style={{ minHeight: '44px' }}>
+                Create Your First Recurring Invoice
+              </Button>
+            </Link>
+          </div>
+        ) : (
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden p-4">
+            <ResponsiveTable
+              data={recurringInvoices}
+              columns={columns}
+              keyExtractor={(ri) => ri.id}
+              onDelete={(ri) => deleteRecurring(ri.id)}
+              deleteLabel="Delete Recurring Invoice"
+              emptyMessage="No recurring invoices found."
+            />
+          </div>
+        )}
+      </div>
+    </>
   );
 }
 
