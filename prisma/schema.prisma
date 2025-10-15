@@ -47,6 +47,7 @@ model Org {
   pricingPlan   PricingPlan?    @relation("OrgPricingPlan")
   aiUsageEvents AiUsageEvent[]  @relation("OrgAiUsageEvents")
   aiMonthlySummaries AiMonthlySummary[] @relation("OrgAiMonthlySummaries")
+  aiModelTests  AiModelTest[]  @relation("OrgAiModelTests")
   recurringInvoices RecurringInvoice[]
   emailTemplates    EmailTemplate[]
 
@@ -959,6 +960,48 @@ model AiMonthlySummary {
 
   @@unique([orgId, monthKey])
   @@index([monthKey])
+}
+
+// A/B Testing for AI Model Performance Comparison
+model AiModelTest {
+  id            String   @id @default(cuid())
+  orgId         String
+  testName      String   // Descriptive name for the test
+  feature       String   // Which feature is being tested (e.g., 'lead_analysis', 'email_response')
+  modelA        String   // First model being tested (e.g., 'gpt-4o-mini')
+  modelB        String   // Second model being tested (e.g., 'gpt-4o')
+  status        String   @default("active") // 'active', 'paused', 'completed'
+  trafficSplit  Int      @default(50) // Percentage of traffic to model A (0-100)
+  startedAt     DateTime @default(now())
+  endedAt       DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  org           Org      @relation("OrgAiModelTests", fields: [orgId], references: [id])
+  results       AiModelTestResult[]
+
+  @@index([orgId, status])
+  @@index([orgId, feature])
+}
+
+// Results from A/B tests
+model AiModelTestResult {
+  id            String   @id @default(cuid())
+  testId        String
+  model         String   // Which model was used
+  feature       String   // Which feature was tested
+  tokensIn      Int
+  tokensOut     Int
+  costUsd       Decimal  @db.Decimal(8, 6)
+  latencyMs     Int      // Response time in milliseconds
+  userRating    Int?     // Optional user feedback (1-5 stars)
+  success       Boolean  @default(true) // Whether the request succeeded
+  createdAt     DateTime @default(now())
+
+  test          AiModelTest @relation(fields: [testId], references: [id], onDelete: Cascade)
+
+  @@index([testId, model])
+  @@index([testId, createdAt])
 }
 
 // ============================================================================

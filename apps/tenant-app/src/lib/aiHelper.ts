@@ -24,6 +24,16 @@ import OpenAI from "openai";
 // However, we use GPT-4o Mini for cost efficiency - 15x cheaper than GPT-5
 const MODEL = "gpt-4o-mini";
 
+// Supported AI models for multi-model management
+export type AIModel = 'gpt-4o-mini' | 'gpt-4o' | 'gpt-3.5-turbo';
+
+// Model cost per 1M tokens (input/output)
+export const MODEL_COSTS: Record<AIModel, { input: number; output: number }> = {
+  'gpt-4o-mini': { input: 0.15, output: 0.60 },
+  'gpt-4o': { input: 5.00, output: 15.00 },
+  'gpt-3.5-turbo': { input: 0.50, output: 1.50 },
+};
+
 const openai = new OpenAI({ 
   apiKey: process.env.OPENAI_API_KEY 
 });
@@ -311,7 +321,7 @@ export async function testAIConnection(): Promise<{
     });
 
     const result = JSON.parse(response.choices[0].message.content || '{}');
-    
+
     return {
       success: true,
       message: result.message || 'AI connection verified',
@@ -323,5 +333,110 @@ export async function testAIConnection(): Promise<{
       message: `AI connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
       model: MODEL
     };
+  }
+}
+
+/**
+ * Email Response Assistant
+ * Generate AI-powered email response suggestions with context awareness
+ */
+export interface EmailResponseSuggestion {
+  subject: string;
+  body: string;
+  tone: 'professional' | 'friendly' | 'formal';
+  confidence: number;
+}
+
+export async function generateEmailResponse(context: {
+  incomingEmail?: string;
+  customerName?: string;
+  topic?: string;
+  tone?: 'professional' | 'friendly' | 'formal';
+  additionalContext?: string;
+  model?: AIModel;
+}): Promise<EmailResponseSuggestion> {
+  try {
+    const selectedModel = context.model || MODEL;
+    const tone = context.tone || 'professional';
+
+    const prompt = `
+As a professional customer service representative for a cleaning services company, generate an email response:
+
+INCOMING EMAIL:
+${context.incomingEmail || 'N/A'}
+
+CUSTOMER: ${context.customerName || 'Valued Customer'}
+TOPIC: ${context.topic || 'General Inquiry'}
+DESIRED TONE: ${tone}
+ADDITIONAL CONTEXT: ${context.additionalContext || 'None'}
+
+Generate a ${tone} email response that:
+1. Addresses the customer's concerns or questions
+2. Maintains a ${tone} tone throughout
+3. Provides clear next steps or action items
+4. Includes appropriate closing
+
+Return JSON with this structure:
+{
+  "subject": "Email subject line",
+  "body": "Full email body with proper formatting",
+  "tone": "${tone}",
+  "confidence": 0.85
+}`;
+
+    const response = await openai.chat.completions.create({
+      model: selectedModel,
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.7,
+      max_tokens: 500
+    });
+
+    const result = JSON.parse(response.choices[0].message.content || '{}');
+
+    return {
+      subject: result.subject || 'Re: Your Inquiry',
+      body: result.body || 'Thank you for your inquiry. We will get back to you shortly.',
+      tone: result.tone || tone,
+      confidence: result.confidence || 0.7
+    };
+  } catch (error) {
+    console.error('Email response generation failed:', error);
+    return {
+      subject: 'Re: Your Inquiry',
+      body: 'Thank you for contacting us. We have received your message and will respond shortly.',
+      tone: context.tone || 'professional',
+      confidence: 0.5
+    };
+  }
+}
+
+/**
+ * Select optimal AI model based on task complexity and budget
+ */
+export function selectOptimalModel(params: {
+  taskComplexity: 'simple' | 'medium' | 'complex';
+  budgetRemaining: number;
+  estimatedTokens: number;
+}): AIModel {
+  const { taskComplexity, budgetRemaining, estimatedTokens } = params;
+
+  // Calculate cost for each model
+  const costs = Object.entries(MODEL_COSTS).map(([model, pricing]) => {
+    const estimatedCost = (estimatedTokens / 1000000) * (pricing.input + pricing.output) / 2;
+    return { model: model as AIModel, cost: estimatedCost };
+  });
+
+  // If budget is very low, use cheapest model
+  if (budgetRemaining < 1) {
+    return 'gpt-3.5-turbo';
+  }
+
+  // Select based on complexity and budget
+  if (taskComplexity === 'complex' && budgetRemaining > 5) {
+    return 'gpt-4o';
+  } else if (taskComplexity === 'medium' && budgetRemaining > 2) {
+    return 'gpt-4o-mini';
+  } else {
+    return 'gpt-3.5-turbo';
   }
 }
