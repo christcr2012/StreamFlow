@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import FederationAnalyticsSection from './FederationAnalyticsSection';
 
@@ -9,11 +9,8 @@ export default function ProviderAnalyticsPage() {
   const [loading, setLoading] = useState(true);
   const [range, setRange] = useState('30');
 
-  useEffect(() => {
-    fetchAnalytics();
-  }, [range]);
-
-  const fetchAnalytics = async () => {
+  // CODE QUALITY: Fixed useEffect dependency - wrapped fetchAnalytics in useCallback
+  const fetchAnalytics = useCallback(async () => {
     setLoading(true);
     try {
       const res = await fetch(`/api/analytics?range=${range}`);
@@ -26,7 +23,11 @@ export default function ProviderAnalyticsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [range]);
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, [fetchAnalytics]);
 
   const exportCSV = () => {
     if (!data) return;

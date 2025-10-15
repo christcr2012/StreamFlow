@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { AlertTriangle, CheckCircle, Clock, GitBranch, Rocket, RotateCcw, Filter } from 'lucide-react';
 
 type EscalationTicket = {
@@ -21,11 +21,8 @@ export default function FederationEscalationsSection() {
   const [stateFilter, setStateFilter] = useState<string>('all');
   const [severityFilter, setSeverityFilter] = useState<string>('all');
 
-  useEffect(() => {
-    fetchEscalations();
-  }, [stateFilter, severityFilter]);
-
-  const fetchEscalations = async () => {
+  // CODE QUALITY: Fixed useEffect dependency - wrapped fetchEscalations in useCallback
+  const fetchEscalations = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -42,7 +39,11 @@ export default function FederationEscalationsSection() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [stateFilter, severityFilter]);
+
+  useEffect(() => {
+    fetchEscalations();
+  }, [fetchEscalations]);
 
   const handleStateTransition = async (id: string, newState: string) => {
     try {

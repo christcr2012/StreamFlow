@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 interface ClientDetailsModalProps {
   clientId: string;
@@ -15,11 +15,8 @@ export default function ClientDetailsModal({ clientId, onClose, onRefresh }: Cli
   const [deleting, setDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  useEffect(() => {
-    fetchClientDetails();
-  }, [clientId]);
-
-  const fetchClientDetails = async () => {
+  // CODE QUALITY: Fixed useEffect dependency - wrapped fetchClientDetails in useCallback
+  const fetchClientDetails = useCallback(async () => {
     setLoading(true);
     try {
       const res = await fetch(`/api/provider/clients/${clientId}`);
@@ -33,7 +30,11 @@ export default function ClientDetailsModal({ clientId, onClose, onRefresh }: Cli
     } finally {
       setLoading(false);
     }
-  };
+  }, [clientId]);
+
+  useEffect(() => {
+    fetchClientDetails();
+  }, [fetchClientDetails]);
 
   const handleSave = async () => {
     setSaving(true);

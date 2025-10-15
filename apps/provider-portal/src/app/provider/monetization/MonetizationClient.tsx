@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -42,8 +42,8 @@ export default function MonetizationClient() {
   const [couponPageMeta, setCouponPageMeta] = useState<{ total: number; limit: number; offset: number }|null>(null);
   const [offerPageMeta, setOfferPageMeta] = useState<{ total: number; limit: number; offset: number }|null>(null);
 
-
-  async function loadAll() {
+  // CODE QUALITY: Fixed useEffect dependency - wrapped loadAll in useCallback
+  const loadAll = useCallback(async () => {
     setError(null);
     try {
       const couponQS = new URLSearchParams();
@@ -74,7 +74,8 @@ export default function MonetizationClient() {
     } catch (e:any) {
       setError(String(e?.message||e));
     }
-  }
+  }, [couponFilter, couponLimit, couponPage, offerFilter, offerLimit, offerPage]);
+
   useEffect(() => {
     (async () => {
       try {
@@ -87,8 +88,7 @@ export default function MonetizationClient() {
     })();
   }, []);
 
-
-  useEffect(() => { loadAll(); }, []);
+  useEffect(() => { loadAll(); }, [loadAll]);
 
   const planOptions = useMemo(() => plans.map((p:any)=>({ id:p.id, name:p.name })), [plans]);
   const priceOptions = useMemo(() => prices.map((p:any)=>({ id:p.id, label:`${p.cadence.toLowerCase()} • $${(p.unitAmountCents/100).toFixed(2)}` })), [prices]);

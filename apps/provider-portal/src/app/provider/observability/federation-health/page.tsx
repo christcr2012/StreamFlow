@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 type FederationMetrics = {
   totalKeys: number;
@@ -30,11 +30,8 @@ export default function FederationHealthPage() {
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState('24h');
 
-  useEffect(() => {
-    fetchMetrics();
-  }, [timeRange]);
-
-  const fetchMetrics = async () => {
+  // CODE QUALITY: Fixed useEffect dependency - wrapped fetchMetrics in useCallback
+  const fetchMetrics = useCallback(async () => {
     setLoading(true);
     try {
       const res = await fetch(`/api/observability/federation?range=${timeRange}`);
@@ -69,7 +66,11 @@ export default function FederationHealthPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [timeRange]);
+
+  useEffect(() => {
+    fetchMetrics();
+  }, [fetchMetrics]);
 
   return (
     <div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { DollarSign, TrendingUp, Webhook, Key, Activity } from 'lucide-react';
 
 type FederatedClient = {
@@ -23,11 +23,8 @@ export default function FederatedClientsSection() {
   const [loading, setLoading] = useState(true);
   const [planFilter, setPlanFilter] = useState<string>('all');
 
-  useEffect(() => {
-    fetchClients();
-  }, [planFilter]);
-
-  const fetchClients = async () => {
+  // CODE QUALITY: Fixed useEffect dependency - wrapped fetchClients in useCallback
+  const fetchClients = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -43,7 +40,11 @@ export default function FederatedClientsSection() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [planFilter]);
+
+  useEffect(() => {
+    fetchClients();
+  }, [fetchClients]);
 
   const stats = {
     total: clients.length,

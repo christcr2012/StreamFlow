@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Plus, AlertCircle, CheckCircle, Clock, XCircle, Filter, Download, Bell, Zap, Calendar, Search } from 'lucide-react';
 import FederationEscalationsSection from './FederationEscalationsSection';
 
@@ -47,11 +47,8 @@ export default function IncidentsClient() {
   const [showTemplateModal, setShowTemplateModal] = useState(false);
   const [showEscalationModal, setShowEscalationModal] = useState(false);
 
-  useEffect(() => {
-    fetchIncidents();
-  }, [filter, severityFilter, dateRangeStart, dateRangeEnd]);
-
-  const fetchIncidents = async () => {
+  // CODE QUALITY: Fixed useEffect dependency - wrapped fetchIncidents in useCallback
+  const fetchIncidents = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -71,7 +68,11 @@ export default function IncidentsClient() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter, severityFilter, dateRangeStart, dateRangeEnd]);
+
+  useEffect(() => {
+    fetchIncidents();
+  }, [fetchIncidents]);
 
   // Filter incidents based on search and tenant filter
   const filteredIncidents = incidents.filter(incident => {
@@ -856,11 +857,8 @@ function IncidentDetailsModal({ incidentId, onClose, onRefresh }: { incidentId: 
   const [deleting, setDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  useEffect(() => {
-    fetchIncidentDetails();
-  }, [incidentId]);
-
-  const fetchIncidentDetails = async () => {
+  // CODE QUALITY: Fixed useEffect dependency - wrapped fetchIncidentDetails in useCallback
+  const fetchIncidentDetails = useCallback(async () => {
     try {
       setLoading(true);
       const res = await fetch(`/api/provider/incidents/${incidentId}`);
@@ -880,7 +878,11 @@ function IncidentDetailsModal({ incidentId, onClose, onRefresh }: { incidentId: 
     } finally {
       setLoading(false);
     }
-  };
+  }, [incidentId]);
+
+  useEffect(() => {
+    fetchIncidentDetails();
+  }, [fetchIncidentDetails]);
 
   const handleSave = async () => {
     setSaving(true);

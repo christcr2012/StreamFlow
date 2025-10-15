@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 type Permission = {
   id: string;
@@ -42,14 +42,11 @@ export default function RBACAdminPage() {
   const [selectedUser, setSelectedUser] = useState<string>('');
   const [selectedRole, setSelectedRole] = useState<string>('');
 
-  useEffect(() => {
-    fetchData();
-  }, [activeTab]);
-
-  async function fetchData() {
+  // CODE QUALITY: Fixed useEffect dependency - wrapped fetchData in useCallback
+  const fetchData = useCallback(async () => {
     setLoading(true);
     setError('');
-    
+
     try {
       if (activeTab === 'roles') {
         const res = await fetch('/api/provider/rbac/roles');
@@ -69,7 +66,11 @@ export default function RBACAdminPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [activeTab]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   async function createRole() {
     setError('');

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 type UsageMetrics = {
   totalRequests: number;
@@ -16,11 +16,8 @@ export default function UsageDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState('7d');
 
-  useEffect(() => {
-    fetchMetrics();
-  }, [timeRange]);
-
-  const fetchMetrics = async () => {
+  // CODE QUALITY: Fixed useEffect dependency - wrapped fetchMetrics in useCallback
+  const fetchMetrics = useCallback(async () => {
     setLoading(true);
     try {
       const res = await fetch(`/api/developer/usage?range=${timeRange}`);
@@ -54,7 +51,11 @@ export default function UsageDashboardPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [timeRange]);
+
+  useEffect(() => {
+    fetchMetrics();
+  }, [fetchMetrics]);
 
   const successRate = metrics
     ? ((metrics.successfulRequests / metrics.totalRequests) * 100).toFixed(1)
