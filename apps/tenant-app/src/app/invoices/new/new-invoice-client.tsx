@@ -170,25 +170,25 @@ export function NewInvoiceClient({ customers, jobs }: NewInvoiceClientProps) {
   };
 
   return (
-    <div className="min-h-screen p-8 bg-gray-50">
-      <div className="max-w-4xl mx-auto space-y-6">
+    <div className="min-h-screen p-4 md:p-8 bg-gray-50 dark:bg-gray-900">
+      <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
         {/* Header */}
         <div>
-          <Link href="/invoices" className="text-sm text-blue-600 hover:text-blue-700 mb-2 inline-block">
+          <Link href="/invoices" className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-2 inline-block">
             ← Back to Invoices
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">New Invoice</h1>
-          <p className="text-gray-600 mt-1">Create a new invoice for a customer</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">New Invoice</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1 text-sm md:text-base">Create a new invoice for a customer</p>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit}>
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
             {/* Invoice Details */}
             <Card>
               <CardHeader title="Invoice Details" />
-              <div className="p-6 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="p-4 md:p-6 space-y-4 md:space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   {/* Customer Selection */}
                   <Select
                     label="Customer"
@@ -359,13 +359,25 @@ export function NewInvoiceClient({ customers, jobs }: NewInvoiceClientProps) {
             </Card>
 
             {/* Form Actions */}
-            <div className="flex items-center justify-end gap-3">
-              <Link href="/invoices">
-                <Button type="button" variant="secondary" disabled={isSubmitting}>
+            <div className="flex flex-col md:flex-row items-stretch md:items-center justify-end gap-3">
+              <Link href="/invoices" className="w-full md:w-auto">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  disabled={isSubmitting}
+                  className="w-full"
+                  style={{ minHeight: '44px' }}
+                >
                   Cancel
                 </Button>
               </Link>
-              <Button type="submit" loading={isSubmitting} disabled={isSubmitting}>
+              <Button
+                type="submit"
+                loading={isSubmitting}
+                disabled={isSubmitting}
+                className="w-full md:w-auto"
+                style={{ minHeight: '44px' }}
+              >
                 {isSubmitting ? 'Creating...' : 'Create Invoice'}
               </Button>
             </div>
