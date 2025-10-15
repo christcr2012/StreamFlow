@@ -53,11 +53,8 @@ export async function GET(request: NextRequest) {
       pages: Math.ceil(total / filter.limit),
     });
   } catch (error: any) {
-    console.error('GET /api/customers error:', error);
-    return NextResponse.json(
-      { error: error.message || 'Internal server error' },
-      { status: 500 }
-    );
+    const { createSafeErrorResponse } = await import('@/lib/error-handler');
+    return createSafeErrorResponse(error, 'GET /api/customers');
   }
 }
 
