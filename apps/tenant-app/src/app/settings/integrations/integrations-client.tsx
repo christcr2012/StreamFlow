@@ -132,12 +132,12 @@ export function IntegrationsClient({ settings }: IntegrationsClientProps) {
   };
 
   return (
-    <div className="min-h-screen p-8 bg-gray-50">
-      <div className="max-w-4xl mx-auto space-y-6">
+    <div className="min-h-screen p-4 md:p-8 bg-gray-50 dark:bg-gray-900">
+      <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Integrations</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">Integrations</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1 text-sm md:text-base">
             Configure third-party services to enable email notifications, payment processing, and more.
           </p>
         </div>
@@ -148,16 +148,16 @@ export function IntegrationsClient({ settings }: IntegrationsClientProps) {
             title="Email Service"
             subtitle="Configure your email service to send invoice notifications, job updates, and customer communications."
           />
-          <form onSubmit={handleEmailSubmit} className="p-6 space-y-4">
+          <form onSubmit={handleEmailSubmit} className="p-4 md:p-6 space-y-4">
             {/* Status Badge */}
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-gray-700">Status:</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Status:</span>
               {settings.emailConfigured ? (
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200">
                   ✓ Configured
                 </span>
               ) : (
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200">
                   ⚠ Not Configured
                 </span>
               )}
@@ -165,19 +165,20 @@ export function IntegrationsClient({ settings }: IntegrationsClientProps) {
 
             {/* Provider Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Email Provider
               </label>
               <select
                 value={emailProvider}
                 onChange={(e) => setEmailProvider(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
+                style={{ minHeight: '44px' }}
               >
                 <option value="sendgrid">SendGrid</option>
                 <option value="resend">Resend</option>
               </select>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 Choose your preferred email service provider
               </p>
             </div>
@@ -245,7 +246,8 @@ export function IntegrationsClient({ settings }: IntegrationsClientProps) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full md:w-auto px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-md hover:bg-blue-700 dark:hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ minHeight: '44px' }}
               >
                 {isSubmitting ? 'Saving...' : settings.emailConfigured ? 'Update Configuration' : 'Save Configuration'}
               </button>
@@ -259,7 +261,7 @@ export function IntegrationsClient({ settings }: IntegrationsClientProps) {
             title="Stripe Payment Processing"
             subtitle="Configure your Stripe account to accept payments from customers on invoices."
           />
-          <form onSubmit={handleStripeSubmit} className="p-6 space-y-4">
+          <form onSubmit={handleStripeSubmit} className="p-4 md:p-6 space-y-4">
             {/* Status Badge */}
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium text-gray-700">Status:</span>
