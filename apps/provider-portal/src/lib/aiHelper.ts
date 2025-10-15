@@ -24,9 +24,18 @@ import OpenAI from "openai";
 // However, we use GPT-4o Mini for cost efficiency - 15x cheaper than GPT-5
 const MODEL = "gpt-4o-mini";
 
-const openai = new OpenAI({ 
-  apiKey: process.env.OPENAI_API_KEY 
-});
+// Lazy-load OpenAI client to avoid build-time initialization
+// This prevents "Missing credentials" errors during Next.js build
+let openaiClient: OpenAI | null = null;
+
+function getOpenAIClient(): OpenAI {
+  if (!openaiClient) {
+    openaiClient = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY
+    });
+  }
+  return openaiClient;
+}
 
 // AI-Enhanced Lead Analysis
 export interface LeadAnalysis {
@@ -102,7 +111,7 @@ Respond with JSON in this exact format:
 }
 `;
 
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAIClient().chat.completions.create({
       model: MODEL,
       messages: [{ role: "user", content: prompt }],
       response_format: { type: "json_object" },
@@ -182,7 +191,7 @@ Respond with JSON in this exact format:
 }
 `;
 
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAIClient().chat.completions.create({
       model: MODEL,
       messages: [{ role: "user", content: prompt }],
       response_format: { type: "json_object" },
@@ -256,7 +265,7 @@ Respond with JSON in this exact format:
 }
 `;
 
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAIClient().chat.completions.create({
       model: MODEL,
       messages: [{ role: "user", content: prompt }],
       response_format: { type: "json_object" },
@@ -298,11 +307,11 @@ export async function testAIConnection(): Promise<{
   model: string; 
 }> {
   try {
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAIClient().chat.completions.create({
       model: MODEL,
-      messages: [{ 
-        role: "user", 
-        content: "Respond with JSON: {\"status\": \"working\", \"message\": \"AI integration successful\"}" 
+      messages: [{
+        role: "user",
+        content: "Respond with JSON: {\"status\": \"working\", \"message\": \"AI integration successful\"}"
       }],
       response_format: { type: "json_object" },
       max_tokens: 100
