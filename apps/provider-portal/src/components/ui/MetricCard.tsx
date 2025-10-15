@@ -9,7 +9,7 @@
  */
 
 import { ReactNode } from 'react';
-import { Card } from './Card';
+import { Card } from '@cortiware/ui';
 
 export interface MetricCardProps {
   label: string;
