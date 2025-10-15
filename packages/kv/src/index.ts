@@ -238,3 +238,9 @@ export async function resetRateLimit(key: string): Promise<void> {
   await kv.del(`ratelimit:${key}`);
 }
 
+/**
+ * AI Caching Operations
+ * Export all AI cache functions for use across apps
+ */
+export * from './ai-cache';
+

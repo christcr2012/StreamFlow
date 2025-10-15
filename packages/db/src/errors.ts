@@ -215,14 +215,14 @@ export function createErrorResponse(
 ): NextResponse<ErrorResponse> {
   // Try Prisma error mapping first
   const prismaError = mapPrismaError(error);
-  if (prismaError.code !== 'UNKNOWN_ERROR') {
+  if (prismaError.code && prismaError.code !== 'UNKNOWN_ERROR') {
     const statusCode = getStatusCodeForError(prismaError.code);
     return NextResponse.json(prismaError, { status: statusCode });
   }
 
   // Try application error mapping
   const appError = mapApplicationError(error);
-  if (appError.code !== 'UNKNOWN_ERROR') {
+  if (appError.code && appError.code !== 'UNKNOWN_ERROR') {
     const statusCode = getStatusCodeForError(appError.code);
     return NextResponse.json(appError, { status: statusCode });
   }
