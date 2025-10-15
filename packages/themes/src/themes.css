@@ -550,13 +550,13 @@ html, body {
   --text-secondary: #b8c5d0;
   --text-tertiary: #8b98a5;
   --text-muted: #6e7b88;
-  --text-accent: #00ff88;
+  --text-accent: #10b981;
 
-  /* Brand Colors - Green accent */
-  --brand-primary: #00ff88;
-  --brand-secondary: #00cc6a;
-  --brand-tertiary: #33ffaa;
-  --brand-gradient: linear-gradient(135deg, #00ff88 0%, #00cc6a 50%, #00aa55 100%);
+  /* Brand Colors - Muted professional green */
+  --brand-primary: #10b981;
+  --brand-secondary: #059669;
+  --brand-tertiary: #34d399;
+  --brand-gradient: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
 
   /* Accent Colors */
   --accent-success: #18c964;
@@ -725,12 +725,12 @@ html, body {
   --glass-border-accent: rgba(44, 242, 255, 0.35);
 
   --text-primary: #e6f3f5;
-  --text-accent: #2cf2ff;
+  --text-accent: #14b8a6;
 
-  --brand-primary: #2cf2ff;
-  --brand-secondary: #23c2cc;
-  --brand-tertiary: #50f5ff;
-  --brand-gradient: linear-gradient(135deg, #2cf2ff 0%, #23c2cc 50%, #1aa2aa 100%);
+  --brand-primary: #14b8a6;
+  --brand-secondary: #0d9488;
+  --brand-tertiary: #2dd4bf;
+  --brand-gradient: linear-gradient(135deg, #14b8a6 0%, #0d9488 50%, #0f766e 100%);
 
   --border-primary: rgba(44, 242, 255, 0.12);
   --border-accent: rgba(44, 242, 255, 0.35);

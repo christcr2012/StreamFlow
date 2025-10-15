@@ -53,10 +53,11 @@ export function Input({
     w-full px-4 py-3 rounded-lg
     bg-[var(--surface-1)]
     border-2 transition-all duration-200
-    text-[var(--text-primary)]
+    text-[var(--text-accent)]
     placeholder:text-[var(--text-muted)]
     focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent
-    disabled:opacity-50 disabled:cursor-not-allowed
+    disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-[var(--surface-1)]
+    caret-[var(--brand-primary)]
     ${hasError
       ? 'border-[var(--accent-error)] focus:border-[var(--accent-error)] focus:ring-[var(--accent-error)]'
       : 'border-[var(--border-primary)] focus:border-[var(--brand-primary)] focus:ring-[var(--brand-primary)] hover:border-[var(--border-accent)]'
@@ -69,10 +70,11 @@ export function Input({
   const businessClasses = `
     w-full px-3 py-2 rounded-md
     bg-[var(--surface-1)] border
-    text-[var(--text-primary)]
+    text-[var(--text-accent)]
     placeholder:text-[var(--text-muted)]
     focus:outline-none focus:ring-2 focus:ring-offset-0
-    disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-[var(--surface-disabled)]
+    disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-[var(--surface-1)]
+    caret-[var(--brand-primary)]
     ${hasError
       ? 'border-[var(--accent-error)] focus:border-[var(--accent-error)] focus:ring-[var(--accent-error)]'
       : 'border-[var(--border-primary)] focus:border-[var(--brand-primary)] focus:ring-[var(--brand-primary)]'
