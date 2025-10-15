@@ -38,10 +38,10 @@ export const providerFederationService: ProviderFederationService = {
     const limit = Math.min(params.limit || 10, 100);
     const cursor = params.cursor;
 
-    // Query orgs with cursor pagination
+    // PERFORMANCE: Query orgs with cursor pagination using id (prevents data skipping)
     const orgs = await prisma.org.findMany({
-      where: cursor ? { createdAt: { lt: new Date(cursor) } } : undefined,
-      orderBy: { createdAt: 'desc' },
+      where: cursor ? { id: { lt: cursor } } : undefined,
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       take: limit + 1,
       select: {
         id: true,
@@ -55,7 +55,7 @@ export const providerFederationService: ProviderFederationService = {
 
     const hasMore = orgs.length > limit;
     const items = orgs.slice(0, limit);
-    const nextCursor = hasMore ? items[items.length - 1].createdAt.toISOString() : null;
+    const nextCursor = hasMore ? items[items.length - 1].id : null;
 
     // Log audit event
     await logFederationAudit({
