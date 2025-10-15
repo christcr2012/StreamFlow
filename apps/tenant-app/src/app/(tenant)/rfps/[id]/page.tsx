@@ -28,14 +28,8 @@ export default function RFPDetailPage() {
   const [analyzing, setAnalyzing] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'strategy' | 'pricing'>('overview');
 
-  useEffect(() => {
-    if (rfpId) {
-      loadRFP();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rfpId]);
-
-  async function loadRFP() {
+  // CODE QUALITY: Fixed useEffect dependency - wrapped loadRFP in useCallback
+  const loadRFP = React.useCallback(async () => {
     try {
       setLoading(true);
       setError('');
@@ -54,13 +48,20 @@ export default function RFPDetailPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [rfpId]);
+
+  useEffect(() => {
+    if (rfpId) {
+      loadRFP();
+    }
+  }, [rfpId, loadRFP]);
 
   async function analyzeRFP() {
     if (!rfpId) return;
 
     try {
       setAnalyzing(true);
+      setError(''); // Clear any previous errors
       const res = await fetch(`/api/rfps/${rfpId}/analyze`, { method: 'POST' });
       const data = await res.json();
 
@@ -68,10 +69,12 @@ export default function RFPDetailPage() {
         alert(`RFP analyzed successfully! Used ${data.creditsUsed} credits.`);
         await loadRFP();
       } else if (data.error) {
-        alert(`Analysis failed: ${data.error}`);
+        // UX: User-friendly error message
+        setError(`Analysis failed: ${data.error}`);
       }
     } catch (err: any) {
-      alert(`Analysis failed: ${err.message}`);
+      // UX: User-friendly error message
+      setError(`Analysis failed. Please try again.`);
     } finally {
       setAnalyzing(false);
     }

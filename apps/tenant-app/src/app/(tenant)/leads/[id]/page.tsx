@@ -38,14 +38,8 @@ export default function LeadDetailPage() {
   const [error, setError] = useState('');
   const [enriching, setEnriching] = useState(false);
 
-  useEffect(() => {
-    if (leadId) {
-      loadLead();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [leadId]);
-
-  async function loadLead() {
+  // CODE QUALITY: Fixed useEffect dependency - wrapped loadLead in useCallback
+  const loadLead = React.useCallback(async () => {
     try {
       setLoading(true);
       setError('');
@@ -64,7 +58,13 @@ export default function LeadDetailPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [leadId]);
+
+  useEffect(() => {
+    if (leadId) {
+      loadLead();
+    }
+  }, [leadId, loadLead]);
 
   async function enrichLead() {
     if (!leadId) return;
@@ -79,7 +79,8 @@ export default function LeadDetailPage() {
       const data = await res.json();
 
       if (!data.ok) {
-        setError(data.error || 'Failed to enrich lead');
+        // UX: User-friendly error message
+        setError('Failed to enrich lead. Please try again.');
         return;
       }
 
@@ -93,7 +94,8 @@ export default function LeadDetailPage() {
         alert(`AI enrichment unavailable: ${data.reason}. Using basic scoring.`);
       }
     } catch (err: any) {
-      setError(err.message || 'Failed to enrich lead');
+      // UX: User-friendly error message
+      setError('Failed to enrich lead. Please try again.');
     } finally {
       setEnriching(false);
     }

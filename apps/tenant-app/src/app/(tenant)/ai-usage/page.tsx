@@ -22,12 +22,8 @@ export default function AIUsagePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    loadUsage();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  async function loadUsage() {
+  // CODE QUALITY: Fixed useEffect dependency - wrapped loadUsage in useCallback
+  const loadUsage = React.useCallback(async () => {
     try {
       setLoading(true);
       setError('');
@@ -46,7 +42,11 @@ export default function AIUsagePage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
+
+  useEffect(() => {
+    loadUsage();
+  }, [loadUsage]);
 
   if (loading) {
     return (

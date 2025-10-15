@@ -1,11 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { meteredAnalyzeRFP, meteredGeneratePricingAdvice } from '@/lib/aiMeteredHelper';
+
+// SECURITY: Input validation schema for RFP analysis
+const analyzeRFPSchema = z.object({
+  // Optional parameters for future extensibility
+  forceReanalyze: z.boolean().optional(),
+  includeDetailedPricing: z.boolean().optional(),
+});
 
 /**
  * POST /api/rfps/[id]/analyze
  * Trigger AI analysis for an RFP
+ *
+ * SECURITY: Validates request body with Zod schema
  */
 export async function POST(
   req: NextRequest,
@@ -22,6 +32,20 @@ export async function POST(
     // Get orgId from session
     const orgId = session.value;
     const { id } = await params;
+
+    // SECURITY: Validate request body (even if empty, ensures no malicious data)
+    const body = await req.json().catch(() => ({}));
+    const validationResult = analyzeRFPSchema.safeParse(body);
+
+    if (!validationResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Invalid request data',
+          details: validationResult.error.errors
+        },
+        { status: 400 }
+      );
+    }
 
     // Fetch RFP
     const rfp = await prisma.rfp.findFirst({

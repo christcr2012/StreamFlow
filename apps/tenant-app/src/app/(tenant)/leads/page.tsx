@@ -30,21 +30,17 @@ export default function LeadsPage() {
   const [statusFilter, setStatusFilter] = useState('');
   const [sourceFilter, setSourceFilter] = useState('');
 
-  useEffect(() => {
-    loadLeads();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [statusFilter, sourceFilter]);
-
-  async function loadLeads() {
+  // CODE QUALITY: Fixed useEffect dependency - wrapped loadLeads in useCallback
+  const loadLeads = React.useCallback(async () => {
     try {
       setLoading(true);
       setError('');
 
       const params = new URLSearchParams();
-      if (statusFilter) params.set('status', statusFilter);
-      if (sourceFilter) params.set('sourceType', sourceFilter);
+      if (statusFilter) params.append('status', statusFilter);
+      if (sourceFilter) params.append('sourceType', sourceFilter);
 
-      const res = await fetch(`/api/leads?${params.toString()}`);
+      const res = await fetch(`/api/leads?${params}`);
       const data = await res.json();
 
       if (!data.ok) {
@@ -52,13 +48,17 @@ export default function LeadsPage() {
         return;
       }
 
-      setLeads(data.items || []);
+      setLeads(data.leads || []);
     } catch (err: any) {
       setError(err.message || 'Failed to load leads');
     } finally {
       setLoading(false);
     }
-  }
+  }, [statusFilter, sourceFilter]);
+
+  useEffect(() => {
+    loadLeads();
+  }, [loadLeads]);
 
   // Check if any lead has aiAnalysisFailed
   const hasAIFailures = leads.some(
