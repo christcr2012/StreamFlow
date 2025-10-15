@@ -77,10 +77,10 @@ export function useActionQueue() {
   const openDB = useCallback((): Promise<IDBDatabase> => {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open('CortiwareOffline', 1);
-      
+
       request.onerror = () => reject(request.error);
       request.onsuccess = () => resolve(request.result);
-      
+
       request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
         if (!db.objectStoreNames.contains('queuedActions')) {
@@ -92,6 +92,25 @@ export function useActionQueue() {
       };
     });
   }, []);
+
+  // CODE QUALITY: Load queued actions (moved before queueAction to fix dependency order)
+  const loadQueuedActions = useCallback(async () => {
+    try {
+      const db = await openDB();
+      const transaction = db.transaction(['queuedActions'], 'readonly');
+      const store = transaction.objectStore('queuedActions');
+
+      const actions = await new Promise<any[]>((resolve, reject) => {
+        const request = store.getAll();
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+
+      setQueuedActions(actions);
+    } catch (error) {
+      console.error('[ActionQueue] Failed to load queued actions:', error);
+    }
+  }, [openDB]);
 
   // Queue an action
   const queueAction = useCallback(async (action: {
@@ -105,18 +124,18 @@ export function useActionQueue() {
       const db = await openDB();
       const transaction = db.transaction(['queuedActions'], 'readwrite');
       const store = transaction.objectStore('queuedActions');
-      
+
       const actionWithTimestamp = {
         ...action,
         timestamp: Date.now(),
       };
-      
+
       await new Promise((resolve, reject) => {
         const request = store.add(actionWithTimestamp);
         request.onsuccess = () => resolve(request.result);
         request.onerror = () => reject(request.error);
       });
-      
+
       console.log('[ActionQueue] Action queued:', action.description || action.url);
 
       // Update local state
@@ -125,27 +144,7 @@ export function useActionQueue() {
       console.error('[ActionQueue] Failed to queue action:', error);
       throw error;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openDB]);
-
-  // Load queued actions
-  const loadQueuedActions = useCallback(async () => {
-    try {
-      const db = await openDB();
-      const transaction = db.transaction(['queuedActions'], 'readonly');
-      const store = transaction.objectStore('queuedActions');
-      
-      const actions = await new Promise<any[]>((resolve, reject) => {
-        const request = store.getAll();
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-      });
-      
-      setQueuedActions(actions);
-    } catch (error) {
-      console.error('[ActionQueue] Failed to load queued actions:', error);
-    }
-  }, [openDB]);
+  }, [openDB, loadQueuedActions]);
 
   // Execute queued actions
   const executeQueuedActions = useCallback(async () => {

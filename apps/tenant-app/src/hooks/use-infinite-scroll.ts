@@ -90,9 +90,10 @@ export function useInfiniteScroll<T>({
     };
   }, [enabled, hasMore, loadMore, threshold]);
 
-  // Reset when items change
+  // CODE QUALITY: Reset when items change (fixed dependency array)
   useEffect(() => {
     setCurrentPage(1);
+    setDisplayedItems(items.slice(0, itemsPerPage));
     setHasMore(items.length > itemsPerPage);
     loadingRef.current = false;
   }, [items, itemsPerPage]);
