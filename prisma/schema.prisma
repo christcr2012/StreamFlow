@@ -1522,6 +1522,7 @@ model ImportMapping {
 
   @@index([orgId, entityType])
   @@index([orgId, isTemplate])
+  @@index([isTemplate, useCount]) // For finding popular templates
 }
 
 model ImportError {

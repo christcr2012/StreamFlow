@@ -37,6 +37,7 @@ export interface LeadAnalysis {
   recommendedAction: string;      // Next steps
   estimatedValue: string;         // Project value estimate
   confidence: number;             // AI confidence in analysis (0-1)
+  aiAnalysisFailed?: boolean;     // True if AI service was unavailable
 }
 
 // RFP Bidding Strategy Analysis
@@ -125,7 +126,7 @@ Respond with JSON in this exact format:
 
   } catch (error) {
     console.error('AI lead analysis error:', error);
-    // Return safe defaults if AI fails
+    // Return safe defaults if AI fails - with indicator that AI was unavailable
     return {
       qualityScore: 50,
       urgencyLevel: 'medium',
@@ -133,7 +134,8 @@ Respond with JSON in this exact format:
       potentialChallenges: ['Limited information available'],
       recommendedAction: 'Contact lead for more details',
       estimatedValue: 'Requires assessment',
-      confidence: 0.3
+      confidence: 0.3,
+      aiAnalysisFailed: true // Indicate AI service was unavailable
     };
   }
 }

@@ -8,18 +8,36 @@ export default async function ProviderAiPage() {
     redirect('/provider/login');
   }
 
-  // Handle build-time gracefully (no DATABASE_URL available)
-  let overview: AiOverview = {
-    monthKey: new Date().toISOString().slice(0, 7),
-    totals: { creditsUsed: 0, callCount: 0, tokensIn: 0, tokensOut: 0, costUsd: 0 },
-    topOrgs: [],
-    recent: []
-  };
+  // Fetch real AI usage data - fail fast if database unavailable
+  let overview: AiOverview;
 
   try {
     overview = await getAiOverview();
   } catch (error) {
-    console.log('AI page: Database not available during build, using empty data');
+    console.error('AI page: Failed to load AI usage data:', error);
+
+    // In production, show error page instead of stub data
+    if (process.env.NODE_ENV === 'production') {
+      return (
+        <div className="space-y-8">
+          <header>
+            <h1 className="text-3xl font-bold text-red-600">AI Usage Dashboard Unavailable</h1>
+            <p className="text-sm text-gray-600 mt-2">Unable to load AI usage data. Please check database connection.</p>
+          </header>
+          <div className="rounded-xl p-8 bg-red-50 border border-red-200">
+            <p className="text-red-800">Database connection failed. Please contact system administrator.</p>
+          </div>
+        </div>
+      );
+    }
+
+    // In development, use empty data for build-time
+    overview = {
+      monthKey: new Date().toISOString().slice(0, 7),
+      totals: { creditsUsed: 0, callCount: 0, tokensIn: 0, tokensOut: 0, costUsd: 0 },
+      topOrgs: [],
+      recent: []
+    };
   }
 
   return (

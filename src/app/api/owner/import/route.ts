@@ -69,8 +69,13 @@ export async function POST(req: NextRequest) {
     }
   } catch (error: any) {
     console.error('Import API error:', error);
+    // Return production-safe error message
     return NextResponse.json(
-      { ok: false, error: error.message || 'internal_error' },
+      {
+        ok: false,
+        error: 'internal_error',
+        message: 'An unexpected error occurred. Please try again or contact support.'
+      },
       { status: 500 }
     );
   }
@@ -110,8 +115,13 @@ async function handleAnalyze(body: any, userId: string, orgId: string) {
   try {
     parsed = parseSample(fileName, fileContent, 10);
   } catch (error: any) {
+    console.error('File parsing error:', error);
     return NextResponse.json(
-      { ok: false, error: 'file_parsing_failed', details: error.message },
+      {
+        ok: false,
+        error: 'file_parsing_failed',
+        message: 'Unable to parse file. Please check the file format and try again.'
+      },
       { status: 400 }
     );
   }
@@ -203,7 +213,7 @@ async function handleAnalyze(body: any, userId: string, orgId: string) {
     });
   } catch (error: any) {
     console.error('AI analysis error:', error);
-    
+
     // Update job status to failed
     await prisma.importJob.update({
       where: { id: importJob.id },
@@ -213,8 +223,13 @@ async function handleAnalyze(body: any, userId: string, orgId: string) {
       },
     });
 
+    // Return production-safe error message (don't expose internal details)
     return NextResponse.json(
-      { ok: false, error: 'ai_analysis_failed', details: error.message },
+      {
+        ok: false,
+        error: 'ai_analysis_failed',
+        message: 'AI analysis could not be completed. Please try again or contact support if the issue persists.'
+      },
       { status: 500 }
     );
   }
