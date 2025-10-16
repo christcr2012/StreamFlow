@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     const template = await prisma.emailTemplate.findFirst({
       where: {
         orgId: authContext.orgId,
-        type,
+        templateType: type,
       },
     });
 

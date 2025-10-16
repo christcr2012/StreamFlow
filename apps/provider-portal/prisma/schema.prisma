@@ -683,6 +683,9 @@ model ProviderConfig {
   // Integration Settings
   integrationSettings   Json?    @default("{\"stripeConfigured\":false,\"samGovConfigured\":false,\"apiRateLimit\":1000}")
 
+  // Provider-Level Feature Flags
+  featureFlags          Json?    @default("{\"analytics-v2\":true,\"action-center\":true,\"api-key-management\":true,\"advanced-monitoring\":false,\"multi-region\":false}")
+
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 }
@@ -1468,3 +1471,119 @@ model CustomFieldValue {
   @@unique([fieldId, entityId])
   @@index([entityType, entityId])
 }
+
+/// ============================================================================
+/// COMPLIANCE & SECURITY TRACKING
+/// ============================================================================
+
+/// ComplianceFramework tracks compliance status for various frameworks
+model ComplianceFramework {
+  id                String   @id @default(cuid())
+  framework         String   // 'SOC2' | 'HIPAA' | 'GDPR' | 'PCI-DSS'
+  status            String   // 'compliant' | 'partial' | 'non-compliant'
+  lastAuditDate     DateTime?
+  nextAuditDate     DateTime?
+  certificationUrl  String?  // URL to certification document
+  notes             String?  @db.Text
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  audits            ComplianceAudit[]
+  findings          ComplianceFinding[]
+
+  @@unique([framework])
+  @@index([status])
+}
+
+/// ComplianceAudit tracks individual compliance audits
+model ComplianceAudit {
+  id                String   @id @default(cuid())
+  frameworkId       String
+  framework         ComplianceFramework @relation(fields: [frameworkId], references: [id], onDelete: Cascade)
+  auditDate         DateTime
+  auditor           String   // Name of auditing firm/person
+  result            String   // 'pass' | 'pass_with_findings' | 'fail'
+  reportUrl         String?  // URL to audit report
+  notes             String?  @db.Text
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  findings          ComplianceFinding[]
+
+  @@index([frameworkId, auditDate])
+}
+
+/// ComplianceFinding tracks individual findings from audits
+model ComplianceFinding {
+  id                String   @id @default(cuid())
+  frameworkId       String
+  framework         ComplianceFramework @relation(fields: [frameworkId], references: [id], onDelete: Cascade)
+  auditId           String?
+  audit             ComplianceAudit? @relation(fields: [auditId], references: [id], onDelete: SetNull)
+  severity          String   // 'critical' | 'high' | 'medium' | 'low'
+  title             String
+  description       String   @db.Text
+  remediation       String?  @db.Text
+  status            String   // 'open' | 'in_progress' | 'resolved' | 'accepted_risk'
+  dueDate           DateTime?
+  resolvedDate      DateTime?
+  assignedTo        String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([frameworkId, status])
+  @@index([severity, status])
+}
+
+/// DataRetentionPolicy defines data retention rules
+model DataRetentionPolicy {
+  id                String   @id @default(cuid())
+  dataType          String   // 'audit_logs' | 'customer_data' | 'payment_records' | etc
+  retentionDays     Int      // Number of days to retain data
+  autoDelete        Boolean  @default(false)
+  lastReviewDate    DateTime?
+  nextReviewDate    DateTime?
+  notes             String?  @db.Text
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@unique([dataType])
+  @@index([autoDelete])
+}
+
+/// EncryptionConfig tracks encryption status for various components
+model EncryptionConfig {
+  id                String   @id @default(cuid())
+  component         String   // 'database' | 'api_keys' | 'backups' | 'file_storage' | etc
+  encrypted         Boolean  @default(true)
+  algorithm         String   // 'AES-256-GCM' | 'RSA-2048' | etc
+  keyRotationDate   DateTime?
+  nextRotationDate  DateTime?
+  notes             String?  @db.Text
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@unique([component])
+  @@index([encrypted])
+}
+
+/// VulnerabilityScan tracks security vulnerability scans
+model VulnerabilityScan {
+  id                String   @id @default(cuid())
+  scanDate          DateTime
+  scanner           String   // 'Snyk' | 'Dependabot' | 'Manual' | etc
+  totalVulns        Int      @default(0)
+  criticalVulns     Int      @default(0)
+  highVulns         Int      @default(0)
+  mediumVulns       Int      @default(0)
+  lowVulns          Int      @default(0)
+  resolvedVulns     Int      @default(0)
+  reportUrl         String?
+  notes             String?  @db.Text
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([scanDate])
+}
+
+

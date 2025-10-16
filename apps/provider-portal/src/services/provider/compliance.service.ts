@@ -161,156 +161,136 @@ export async function getSecurityMetrics(): Promise<SecurityMetrics> {
  * Get compliance status for various frameworks
  */
 export async function getComplianceStatus(): Promise<ComplianceStatus[]> {
-  // In a real implementation, this would query actual compliance data
-  // For now, we'll return mock data with realistic structure
-  return [
-    {
-      framework: 'SOC2',
-      status: 'compliant',
-      lastAudit: new Date('2024-09-15'),
-      nextAudit: new Date('2025-03-15'),
-      findings: 2,
-      criticalFindings: 0,
-    },
-    {
-      framework: 'HIPAA',
-      status: 'partial',
-      lastAudit: new Date('2024-08-01'),
-      nextAudit: new Date('2025-02-01'),
-      findings: 5,
-      criticalFindings: 1,
-    },
-    {
-      framework: 'GDPR',
-      status: 'compliant',
-      lastAudit: new Date('2024-10-01'),
-      nextAudit: new Date('2025-04-01'),
-      findings: 1,
-      criticalFindings: 0,
-    },
-    {
-      framework: 'PCI-DSS',
-      status: 'non-compliant',
-      lastAudit: new Date('2024-07-15'),
-      nextAudit: new Date('2025-01-15'),
-      findings: 8,
-      criticalFindings: 3,
-    },
-  ];
+  const frameworks = await safeQuery(
+    () => prisma.complianceFramework.findMany({
+      include: {
+        findings: {
+          where: {
+            status: {
+              in: ['open', 'in_progress'],
+            },
+          },
+        },
+      },
+    }),
+    [],
+    'Failed to fetch compliance frameworks'
+  );
+
+  return frameworks.map((framework) => {
+    const criticalFindings = framework.findings.filter(
+      (f) => f.severity === 'critical'
+    ).length;
+
+    return {
+      framework: framework.framework as 'SOC2' | 'HIPAA' | 'GDPR' | 'PCI-DSS',
+      status: framework.status as 'compliant' | 'partial' | 'non-compliant',
+      lastAudit: framework.lastAuditDate,
+      nextAudit: framework.nextAuditDate,
+      findings: framework.findings.length,
+      criticalFindings,
+    };
+  });
 }
 
 /**
  * Get data retention policies
  */
 export async function getDataRetentionPolicies(): Promise<DataRetentionPolicy[]> {
-  return [
-    {
-      dataType: 'Audit Logs',
-      retentionPeriod: 365,
-      autoDelete: true,
-      lastReview: new Date('2024-09-01'),
-    },
-    {
-      dataType: 'User Data',
-      retentionPeriod: 730,
-      autoDelete: false,
-      lastReview: new Date('2024-10-01'),
-    },
-    {
-      dataType: 'Transaction Records',
-      retentionPeriod: 2555, // 7 years
-      autoDelete: false,
-      lastReview: new Date('2024-08-15'),
-    },
-    {
-      dataType: 'Session Data',
-      retentionPeriod: 30,
-      autoDelete: true,
-      lastReview: new Date('2024-11-01'),
-    },
-    {
-      dataType: 'Backup Data',
-      retentionPeriod: 90,
-      autoDelete: true,
-      lastReview: new Date('2024-10-15'),
-    },
-  ];
+  const policies = await safeQuery(
+    () => prisma.dataRetentionPolicy.findMany({
+      orderBy: {
+        dataType: 'asc',
+      },
+    }),
+    [],
+    'Failed to fetch data retention policies'
+  );
+
+  return policies.map((policy) => ({
+    dataType: policy.dataType,
+    retentionPeriod: policy.retentionDays,
+    autoDelete: policy.autoDelete,
+    lastReview: policy.lastReviewDate,
+  }));
 }
 
 /**
  * Get encryption status for various components
  */
 export async function getEncryptionStatus(): Promise<EncryptionStatus[]> {
-  return [
-    {
-      component: 'Database',
-      encrypted: true,
-      algorithm: 'AES-256',
-      keyRotation: new Date('2024-10-01'),
-    },
-    {
-      component: 'File Storage',
-      encrypted: true,
-      algorithm: 'AES-256',
-      keyRotation: new Date('2024-09-15'),
-    },
-    {
-      component: 'Backups',
-      encrypted: true,
-      algorithm: 'AES-256',
-      keyRotation: new Date('2024-10-01'),
-    },
-    {
-      component: 'API Communications',
-      encrypted: true,
-      algorithm: 'TLS 1.3',
-      keyRotation: new Date('2024-11-01'),
-    },
-    {
-      component: 'Session Tokens',
-      encrypted: true,
-      algorithm: 'JWT + RS256',
-      keyRotation: new Date('2024-10-15'),
-    },
-  ];
+  const configs = await safeQuery(
+    () => prisma.encryptionConfig.findMany({
+      orderBy: {
+        component: 'asc',
+      },
+    }),
+    [],
+    'Failed to fetch encryption configurations'
+  );
+
+  return configs.map((config) => ({
+    component: config.component,
+    encrypted: config.encrypted,
+    algorithm: config.algorithm,
+    keyRotation: config.keyRotationDate,
+  }));
 }
 
 /**
  * Get vulnerability scan results
  */
 export async function getVulnerabilityScans(): Promise<VulnerabilityScan[]> {
+  const scans = await safeQuery(
+    () => prisma.vulnerabilityScan.findMany({
+      orderBy: {
+        scanDate: 'desc',
+      },
+      take: 10, // Get last 10 scans
+    }),
+    [],
+    'Failed to fetch vulnerability scans'
+  );
+
+  // Transform database scans into the format expected by the UI
+  // Group by severity for the most recent scan
+  const latestScan = scans[0];
+  if (!latestScan) {
+    return [];
+  }
+
   return [
     {
-      id: 'scan_001',
-      scanDate: new Date('2024-11-01'),
+      id: `${latestScan.id}_critical`,
+      scanDate: latestScan.scanDate,
       severity: 'critical',
-      vulnerabilities: 2,
-      resolved: 1,
-      pending: 1,
+      vulnerabilities: latestScan.criticalVulns,
+      resolved: latestScan.resolvedVulns,
+      pending: latestScan.criticalVulns - Math.min(latestScan.resolvedVulns, latestScan.criticalVulns),
     },
     {
-      id: 'scan_002',
-      scanDate: new Date('2024-11-01'),
+      id: `${latestScan.id}_high`,
+      scanDate: latestScan.scanDate,
       severity: 'high',
-      vulnerabilities: 5,
-      resolved: 3,
-      pending: 2,
+      vulnerabilities: latestScan.highVulns,
+      resolved: Math.max(0, latestScan.resolvedVulns - latestScan.criticalVulns),
+      pending: latestScan.highVulns - Math.max(0, latestScan.resolvedVulns - latestScan.criticalVulns),
     },
     {
-      id: 'scan_003',
-      scanDate: new Date('2024-11-01'),
+      id: `${latestScan.id}_medium`,
+      scanDate: latestScan.scanDate,
       severity: 'medium',
-      vulnerabilities: 12,
-      resolved: 8,
-      pending: 4,
+      vulnerabilities: latestScan.mediumVulns,
+      resolved: Math.max(0, latestScan.resolvedVulns - latestScan.criticalVulns - latestScan.highVulns),
+      pending: latestScan.mediumVulns - Math.max(0, latestScan.resolvedVulns - latestScan.criticalVulns - latestScan.highVulns),
     },
     {
-      id: 'scan_004',
-      scanDate: new Date('2024-11-01'),
+      id: `${latestScan.id}_low`,
+      scanDate: latestScan.scanDate,
       severity: 'low',
-      vulnerabilities: 23,
-      resolved: 20,
-      pending: 3,
+      vulnerabilities: latestScan.lowVulns,
+      resolved: Math.max(0, latestScan.resolvedVulns - latestScan.criticalVulns - latestScan.highVulns - latestScan.mediumVulns),
+      pending: latestScan.lowVulns - Math.max(0, latestScan.resolvedVulns - latestScan.criticalVulns - latestScan.highVulns - latestScan.mediumVulns),
     },
   ];
 }
