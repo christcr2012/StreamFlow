@@ -1,0 +1,21 @@
+{
+  "org_id": "demo-rolloff-org",
+  "rules": [
+    {
+      "name": "Daily Rental After Grace",
+      "when": {
+        "event": "rolloff.idle_days",
+        "filters": { "gt": 30 }
+      },
+      "action": {
+        "type": "per_unit",
+        "unit_cents": 100
+      },
+      "settlement": {
+        "mode": "wallet",
+        "memo": "Daily rental charge (beyond 30-day grace period)"
+      }
+    }
+  ]
+}
+

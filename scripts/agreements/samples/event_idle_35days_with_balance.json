@@ -1,0 +1,12 @@
+{
+  "event": "rolloff.idle_days",
+  "value": 35,
+  "metadata": {
+    "asset_id": "ROLLOFF-001",
+    "customer_id": "CUST-123"
+  },
+  "wallet": {
+    "balance_cents": 5000
+  }
+}
+
