@@ -663,13 +663,28 @@ model RbacUserRole {
 /// Stripe secrets used when billing clients.  Only one row is typically used.  Use a simple
 /// admin interface to update these values.
 model ProviderConfig {
-  id              String   @id @default(cuid())
-  samApiKey       String?
-  stripeSecretKey String?
-  otherConfig     Json?    @default("{}")
-  themeSettings   Json     @default("{\"variant\":\"premium-dark\",\"primaryColor\":\"#00ff88\",\"accentColor\":\"#3aa8ff\"}")
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id                    String   @id @default(cuid())
+  samApiKey             String?
+  stripeSecretKey       String?
+  otherConfig           Json?    @default("{}")
+  themeSettings         Json     @default("{\"variant\":\"premium-dark\",\"primaryColor\":\"#00ff88\",\"accentColor\":\"#3aa8ff\"}")
+
+  // General Settings
+  providerName          String?
+  contactEmail          String?
+  supportUrl            String?
+
+  // Notification Settings
+  notificationSettings  Json?    @default("{\"emailAlerts\":true,\"slackNotifications\":false,\"weeklyReports\":true,\"monthlyReports\":true}")
+
+  // Security Settings
+  securitySettings      Json?    @default("{\"twoFactorEnabled\":false,\"sessionTimeoutMinutes\":30,\"ipWhitelist\":[]}")
+
+  // Integration Settings
+  integrationSettings   Json?    @default("{\"stripeConfigured\":false,\"samGovConfigured\":false,\"apiRateLimit\":1000}")
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 }
 
 /// PricingPlan defines how an organization is billed for leads. Each org can have only
