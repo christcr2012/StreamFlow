@@ -1,0 +1,115 @@
+name: Go-Live Cutover Runbook
+version: "1.0"
+purpose: |
+  Clean cutover from Staging DB(s) (used during build/testing) to new Production DB(s)
+  with identical schema and no carryover of test data.
+owners:
+  - role: engineering_lead
+  - role: on_call_engineer
+approvers:
+  - role: product_founder
+scope:
+  apps:
+    - project: cortiware-tenant-app
+      root: apps/tenant-app
+      envVars:
+        - key: DATABASE_URL
+    - project: cortiware-provider-portal
+      root: apps/provider-portal
+      envVars:
+        - key: DATABASE_URL
+  databases:
+    - name: neon-prod-tenant
+      schema: tenant
+    - name: neon-prod-provider
+      schema: provider
+assumptions:
+  - prisma_migrations_committed: true
+  - seeds_disabled_in_prod: true
+  - backups_enabled: true
+
+phases:
+  - id: provision-prod-dbs
+    title: Provision Production Databases
+    steps:
+      - description: Create two Neon databases/branches for tenant and provider
+        output:
+          - DATABASE_URL_TENANT
+          - DATABASE_URL_PROVIDER
+  - id: prewarm-schema
+    title: Pre-warm Schema (optional)
+    steps:
+      - description: Apply migrations to prod DBs (no seeds)
+        commands:
+          - cmd: npx prisma migrate deploy
+            env:
+              DATABASE_URL: ${DATABASE_URL_TENANT}
+          - cmd: npx prisma generate
+            env:
+              DATABASE_URL: ${DATABASE_URL_TENANT}
+          - cmd: npx prisma migrate deploy
+            env:
+              DATABASE_URL: ${DATABASE_URL_PROVIDER}
+          - cmd: npx prisma generate
+            env:
+              DATABASE_URL: ${DATABASE_URL_PROVIDER}
+  - id: configure-vercel-prod-env
+    title: Configure Vercel Production Environment Variables
+    steps:
+      - description: Set Production DATABASE_URL for tenant-app
+        project: cortiware-tenant-app
+        env:
+          DATABASE_URL: ${DATABASE_URL_TENANT}
+      - description: Set Production DATABASE_URL for provider-portal
+        project: cortiware-provider-portal
+        env:
+          DATABASE_URL: ${DATABASE_URL_PROVIDER}
+  - id: deploy
+    title: Trigger Production Deployments
+    steps:
+      - description: Save env vars to trigger deploys; wait for READY
+        verifications:
+          - type: vercel_deploy_ready
+            project: cortiware-tenant-app
+          - type: vercel_deploy_ready
+            project: cortiware-provider-portal
+  - id: smoke-tests
+    title: Post-Deployment Smoke Tests
+    steps:
+      - description: Tenant App flows
+        checks:
+          - login
+          - create_customer
+          - create_job
+          - create_invoice
+          - theme_settings_get_post
+      - description: Provider Portal flows
+        checks:
+          - login
+          - provider_config_get_post
+  - id: post-cutover
+    title: Post-Cutover Actions
+    steps:
+      - description: Announce live status
+      - description: Keep staging DB(s) for grace period (7-14 days)
+      - description: Schedule decommission of staging DB(s)
+
+guardrails:
+  - id: no-destructive-migrations
+    description: Block cutover if a migration contains DROP TABLE/COLUMN without explicit approval
+    patterns:
+      - "DROP TABLE"
+      - "DROP COLUMN"
+  - id: seeds-off-in-prod
+    description: Seeds must not run implicitly in Production
+
+rollback:
+  - id: env-revert
+    description: Switch Production DATABASE_URL(s) back to previous DB(s); redeploy
+  - id: promote-previous-vercel
+    description: Promote previous READY deployment if needed
+
+notes:
+  - Agents MUST follow docs/AI_AGENT_REFERENCE.md policies
+  - Never run `prisma migrate reset` in Production
+

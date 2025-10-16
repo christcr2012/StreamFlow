@@ -9,6 +9,14 @@
 - Do not treat old documentation as a to-do list. Use `docs/ACTUAL_REMAINING_WORK.md` and the codebase.
 - Planned work that remains valid is centralized in `docs/PLANNED_WORK_BACKLOG.md` (with machine-readable `docs/planned_work.backlog.yml`) and the M-series plan: `docs/M_SERIES_MASTER_PLAN.md` (`docs/m_series.plan.yml`).
 
+## Runbooks (Follow These for Deployment/Cutover)
+
+- Go-Live Cutover Runbook (human-readable): `docs/runbooks/GO_LIVE_RUNBOOK.md`
+- Go-Live Runbook (machine-readable for agents): `docs/runbooks/go_live.runbook.yml`
+
+Agents MUST consult the runbook before changing environment variables or database connections. Production must point to a fresh Neon DB at go-live to avoid carrying test data. Preview/Development should remain on Staging DB(s).
+
+
 ## Monorepo Structure
 
 ```
@@ -87,19 +95,19 @@ git push origin main
 ## Common Mistakes & Fixes
 
 ### Mistake 1: "Cannot find module 'autoprefixer'"
-**Cause**: autoprefixer in `devDependencies`  
+**Cause**: autoprefixer in `devDependencies`
 **Fix**: Move to `dependencies` in app's package.json
 
 ### Mistake 2: No UI/styling visible
-**Cause**: Importing `theme.css` instead of `globals.css`  
+**Cause**: Importing `theme.css` instead of `globals.css`
 **Fix**: Import `globals.css` in root layout
 
 ### Mistake 3: TypeScript config errors
-**Cause**: Wrong extends path in tsconfig.json  
+**Cause**: Wrong extends path in tsconfig.json
 **Fix**: Use relative path `../../packages/config/tsconfig.base.json`
 
 ### Mistake 4: Build works locally but fails on Vercel
-**Cause**: Different dependency resolution in Vercel environment  
+**Cause**: Different dependency resolution in Vercel environment
 **Fix**: Ensure all build-time deps are in `dependencies`, not `devDependencies`
 
 ## Provider Portal Specifics
