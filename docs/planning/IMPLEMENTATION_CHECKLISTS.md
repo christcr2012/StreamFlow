@@ -6,7 +6,7 @@ Cross-refs: ./ROADMAP.md, ./TEST_PLANS.md, ./ARCHITECTURE.md
 - [x] packages/verticals: add minimal packs for remaining verticals (placeholders are fine but export shape must be stable)
 - [x] importers: add schema validation (headers present, basic type checks)
 - [x] add golden fixtures under tests/fixtures/importers/** and compare outputs
-- [ ] docs: update docs/PHASE1_RUN.md with extended usage (pending)
+- [x] docs: update docs/PHASE1_RUN.md with extended usage (complete)
 
 ## Phase-3: Agreements Engine Settlement & Wallet Flows
 - [ ] packages/agreements: add rule-eval module (pure function)

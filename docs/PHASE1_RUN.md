@@ -44,10 +44,16 @@
 - Wallet/HTTP 402 observed for costed actions (settlement glue)
 - No paid services called by default
 
-## Phase-2 Enhancements (Importers Hardening)
-- Schema validation: importers now validate required columns and throw clear errors
-- Golden fixtures: tests/fixtures/importers/ contains reference inputs and expected outputs
-- Automated testing: importer tests run as part of npm run test:unit
+## Phase-2 Enhancements (Importers Hardening + Vertical Packs)
+- **Schema validation**: Zod entity schemas (CUSTOMERS, JOBS, INVOICES) validate mapped records before rule-based checks
+  - Location: `src/lib/import/schemas.ts`
+  - Integration: batch processor validates against schema, logs structured errors with field pointers
+  - Tests: `tests/unit/importers_schema.test.ts` (all passing)
+- **Golden fixtures**: `tests/fixtures/importers/` contains reference inputs and expected outputs
+- **Automated testing**: importer tests run as part of `npm run test:unit` (79/79 passing)
+- **Vertical packs**: `packages/verticals/` exports stable registry and helpers for 18 service verticals
+  - See `packages/verticals/README.md` for usage (getVerticalByKey, getVerticalsByCategory, etc.)
+  - Concrete-lifting-and-leveling pack includes graceful fallback for missing assets
 
 ## Phase-3 Enhancements (Agreements Engine & Wallet)
 - Rule evaluation: packages/agreements provides pure function rule-eval module
