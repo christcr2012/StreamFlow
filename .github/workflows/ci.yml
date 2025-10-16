@@ -56,6 +56,9 @@ jobs:
       - name: Route Count Check (36-route cap)
         run: npx tsx scripts/ci/verify_route_count.ts
 
+      - name: Migration Safety Check
+        run: npx tsx scripts/ci/verify_migrations.ts
+
   # ============================================================================
   # CONTRACT VALIDATION - Run only on PRs
   # ============================================================================
