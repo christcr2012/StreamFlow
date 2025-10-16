@@ -754,6 +754,12 @@ function IntegrationSettings() {
         </div>
       </div>
 
+          {/* Provider Email (Gmail OAuth) */}
+          <div className="mt-2">
+            <a href="/provider/settings/email" className="btn-secondary touch-target">Configure Provider Email (Gmail OAuth)</a>
+          </div>
+
+
       {/* API Configuration */}
       <div className="premium-card spacing-responsive-sm">
         <h2 className="text-responsive-lg font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>API Configuration</h2>

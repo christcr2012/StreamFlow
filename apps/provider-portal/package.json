@@ -19,6 +19,8 @@
     "@cortiware/db": "file:../../packages/db",
     "@cortiware/themes": "file:../../packages/themes",
     "@next/bundle-analyzer": "^15.5.5",
+    "@cortiware/kv": "file:../../packages/kv",
+
     "@prisma/client": "^6.16.2",
     "@prisma/nextjs-monorepo-workaround-plugin": "^5.20.0",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
