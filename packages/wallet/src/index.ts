@@ -95,3 +95,6 @@ export async function debitOrInvoice(
   }
 }
 
+// Export database-backed implementation
+export { PrismaWalletStore, type PrismaClient } from './PrismaWalletStore';
+
