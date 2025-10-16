@@ -4,6 +4,18 @@
     {
       "path": "/api/billing/invoices.create?range=d30",
       "schedule": "0 10 1 * *"
+    },
+    {
+      "path": "/api/cleaning/schedules/expand",
+      "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cleaning/billing/generate-invoices",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cleaning/inspections/create-scheduled",
+      "schedule": "0 8 * * *"
     }
   ]
 }
