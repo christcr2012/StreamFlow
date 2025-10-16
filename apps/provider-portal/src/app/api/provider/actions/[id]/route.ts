@@ -15,18 +15,18 @@ const ActionSchema = z.object({
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = getProviderSession(request);
-    
+
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
     const validationResult = ActionSchema.safeParse(body);
-    
+
     if (!validationResult.success) {
       return NextResponse.json(
         { error: 'Validation failed', details: validationResult.error.errors },
@@ -35,7 +35,7 @@ export async function POST(
     }
 
     const { action } = validationResult.data;
-    const actionId = params.id;
+    const { id: actionId } = await params;
 
     // Get user for activity logging
     const user = await prisma.user.findUnique({
