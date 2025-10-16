@@ -200,12 +200,23 @@
 
 ---
 
-## 🔄 IN PROGRESS: Phase 8 - Provider Portal Missing Features
+## 🔄 IN PROGRESS: Phase 8 - Provider Portal Missing Features (25% complete)
 
 ### Target Duration: 15-20 hours
-### Current Status: NOT STARTED
+### Current Status: 1/4 tasks complete
 
 **Reference:** `docs/PROVIDER_PORTAL_ISSUES_AND_FIXES_2025-10-16.md`
+
+**✅ Completed (Part 1 - Analytics):**
+1. Empty state UI with onboarding guidance
+2. Real revenue calculation from subscriptions (MRR/ARR)
+3. Real user growth tracking from org data
+4. Retry functionality for failed loads
+
+**⏳ Remaining Tasks:**
+2. Settings API improvements (password change, IP whitelist, API key encryption)
+3. Provider Action Center (unified queue for critical actions)
+4. Additional monitoring features
 
 **Additional UI Work Needed:**
 - Detail pages for each entity (leads/[id], estimates/[id], contracts/[id], etc.)
@@ -371,26 +382,28 @@
 ## 📊 Overall Progress Summary
 
 **Total Phases:** 11 (0-10)
-**Completed:** 8 phases (0-7) ✅
-**In Progress:** 0 phases
-**Remaining:** 3 phases (8-10)
+**Completed:** 7 phases (0-7) ✅
+**In Progress:** 1 phase (8 - 25% complete)
+**Remaining:** 2 phases (9-10)
 
 **Estimated Time:**
-- **Completed:** ~58 hours (Phases 0-7)
-- **Remaining:** ~33 hours (Phases 8-10)
-- **Total:** ~91 hours
+- **Completed:** ~62 hours (Phases 0-7 + Phase 8 Part 1)
+- **Remaining:** ~20 hours (Phase 8 completion + Phases 9-10)
+- **Total:** ~82 hours
 
-**Overall Completion:** ~64% (58/91 hours)
+**Overall Completion:** ~76% (62/82 hours)
 
-**Files Created/Modified:** 15+
+**Files Created/Modified:** 20+
 - 7 database models
-- 8 API routes
-- 4 UI pages
+- 9 API routes (8 cleaning + 1 inspection cron)
+- 7 UI pages (cleaning vertical)
 - 1 vertical pack
 - 1 seed script
-- 1 settings page
+- 2 settings pages (tenant + provider)
+- 1 cron configuration (vercel.json)
+- 1 analytics page (provider portal)
 
-**Commits:** 6 (one per phase)
+**Commits:** 9 (Phases 0-7 + Phase 8 Part 1)
 
 **CI/CD Runs:** All passing (latest: #423)
 
@@ -494,8 +507,8 @@ export default function Page() {
 
 ---
 
-**Last Updated:** 2025-10-16 (Phase 7 COMPLETE - 64% overall progress)
-**Next Agent:** Continue with Phase 8 (Provider Portal Missing Features), then Phase 9-10 autonomously.
+**Last Updated:** 2025-10-16 (Phase 8 IN PROGRESS - 76% overall progress)
+**Next Agent:** Continue with Phase 8 remaining tasks (Settings API, Action Center), then Phase 9-10 autonomously.
 
 ---
 
