@@ -155,24 +155,22 @@ export default function RecurringInvoicesClient({ recurringInvoices: initialRecu
           <Button
             variant="secondary"
             size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
+            onClick={() => {
               toggleActive(ri.id, ri.active);
             }}
             disabled={loading === ri.id}
-            style={{ minHeight: '44px' }}
+
           >
             {ri.active ? 'Pause' : 'Resume'}
           </Button>
           <Button
             variant="danger"
             size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
+            onClick={() => {
               deleteRecurring(ri.id);
             }}
             disabled={loading === ri.id}
-            style={{ minHeight: '44px' }}
+
           >
             Delete
           </Button>
@@ -195,7 +193,7 @@ export default function RecurringInvoicesClient({ recurringInvoices: initialRecu
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Recurring Invoices</h1>
           <Link href="/invoices/recurring/new">
-            <Button className={`w-full md:w-auto ${getHapticClasses('medium')}`} style={{ minHeight: '44px' }}>
+            <Button className={`w-full md:w-auto ${getHapticClasses('medium')}`}>
               Create Recurring Invoice
             </Button>
           </Link>
@@ -205,7 +203,7 @@ export default function RecurringInvoicesClient({ recurringInvoices: initialRecu
           <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-12 text-center">
             <p className="text-gray-600 dark:text-gray-400 mb-4">No recurring invoices yet</p>
             <Link href="/invoices/recurring/new">
-              <Button className={getHapticClasses('medium')} style={{ minHeight: '44px' }}>
+              <Button className={getHapticClasses('medium')}>
                 Create Your First Recurring Invoice
               </Button>
             </Link>

@@ -39,7 +39,7 @@ export default async function InvoicesPage() {
             <p className="text-gray-600 dark:text-gray-400 mt-1 text-sm md:text-base">Manage your invoices and payments</p>
           </div>
           <Link href="/invoices/new">
-            <Button className="w-full md:w-auto" style={{ minHeight: '44px' }}>+ New Invoice</Button>
+            <Button className="w-full md:w-auto">+ New Invoice</Button>
           </Link>
         </div>
 

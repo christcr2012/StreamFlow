@@ -266,12 +266,12 @@ export function CustomersClient({ customers: initialCustomers }: CustomersClient
                 variant="secondary"
                 onClick={handleExportCSV}
                 className={`flex-1 md:flex-none ${getHapticClasses('light')}`}
-                style={{ minHeight: '44px' }}
+
               >
                 Export CSV
               </Button>
               <Link href="/customers/new" className="flex-1 md:flex-none">
-                <Button className={`w-full ${getHapticClasses('medium')}`} style={{ minHeight: '44px' }}>+ New Customer</Button>
+                <Button className={`w-full ${getHapticClasses('medium')}`}>+ New Customer</Button>
               </Link>
             </div>
           </div>
@@ -285,7 +285,7 @@ export function CustomersClient({ customers: initialCustomers }: CustomersClient
                   type="search"
                   placeholder="Search customers by name, company, or email..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(value) => setSearchQuery(value)}
                   fullWidth
                 />
               </div>

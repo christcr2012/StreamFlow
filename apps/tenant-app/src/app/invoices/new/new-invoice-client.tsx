@@ -226,9 +226,9 @@ export function NewInvoiceClient({ customers, jobs }: NewInvoiceClientProps) {
                   {/* Invoice Number */}
                   <Input
                     label="Invoice Number (Optional)"
-                    name="number"
-                    value={formData.number}
-                    onChange={handleChange}
+
+                    value={formData.number || ''}
+                    onChange={(value) => setFormData(prev => ({ ...prev, number: value }))}
                     placeholder="INV-001"
                     fullWidth
                   />
@@ -247,10 +247,10 @@ export function NewInvoiceClient({ customers, jobs }: NewInvoiceClientProps) {
                   {/* Due Date */}
                   <Input
                     label="Due Date (Optional)"
-                    name="dueDate"
+
                     type="date"
-                    value={formData.dueDate}
-                    onChange={handleChange}
+                    value={formData.dueDate || ''}
+                    onChange={(value) => setFormData(prev => ({ ...prev, dueDate: value }))}
                     fullWidth
                   />
                 </div>
@@ -258,23 +258,23 @@ export function NewInvoiceClient({ customers, jobs }: NewInvoiceClientProps) {
                 {/* Terms */}
                 <Textarea
                   label="Payment Terms (Optional)"
-                  name="terms"
-                  value={formData.terms}
-                  onChange={handleChange}
+
+                  value={formData.terms || ''}
+                  onChange={(value) => setFormData(prev => ({ ...prev, terms: value }))}
                   placeholder="Net 30 days"
                   rows={2}
-                  fullWidth
+
                 />
 
                 {/* Notes */}
                 <Textarea
                   label="Notes (Optional)"
-                  name="notes"
-                  value={formData.notes}
-                  onChange={handleChange}
+
+                  value={formData.notes || ''}
+                  onChange={(value) => setFormData(prev => ({ ...prev, notes: value }))}
                   placeholder="Additional notes or instructions..."
                   rows={3}
-                  fullWidth
+
                 />
               </div>
             </Card>
@@ -297,7 +297,7 @@ export function NewInvoiceClient({ customers, jobs }: NewInvoiceClientProps) {
                         <Input
                           placeholder="Description"
                           value={item.description}
-                          onChange={(e) => handleLineItemChange(item.id, 'description', e.target.value)}
+                          onChange={(value) => handleLineItemChange(item.id, 'description', value)}
                           fullWidth
                         />
                       </div>
@@ -305,10 +305,10 @@ export function NewInvoiceClient({ customers, jobs }: NewInvoiceClientProps) {
                         <Input
                           type="number"
                           placeholder="Qty"
-                          value={item.quantity}
-                          onChange={(e) => handleLineItemChange(item.id, 'quantity', parseFloat(e.target.value) || 0)}
-                          min="0"
-                          step="0.01"
+                          value={String(item.quantity)}
+                          onChange={(value) => handleLineItemChange(item.id, 'quantity', parseFloat(value) || 0)}
+
+
                           fullWidth
                         />
                       </div>
@@ -316,10 +316,10 @@ export function NewInvoiceClient({ customers, jobs }: NewInvoiceClientProps) {
                         <Input
                           type="number"
                           placeholder="Price"
-                          value={item.unitPrice}
-                          onChange={(e) => handleLineItemChange(item.id, 'unitPrice', parseFloat(e.target.value) || 0)}
-                          min="0"
-                          step="0.01"
+                          value={String(item.unitPrice)}
+                          onChange={(value) => handleLineItemChange(item.id, 'unitPrice', parseFloat(value) || 0)}
+
+
                           fullWidth
                         />
                       </div>
@@ -366,7 +366,7 @@ export function NewInvoiceClient({ customers, jobs }: NewInvoiceClientProps) {
                   variant="secondary"
                   disabled={isSubmitting}
                   className="w-full"
-                  style={{ minHeight: '44px' }}
+
                 >
                   Cancel
                 </Button>
@@ -376,7 +376,7 @@ export function NewInvoiceClient({ customers, jobs }: NewInvoiceClientProps) {
                 loading={isSubmitting}
                 disabled={isSubmitting}
                 className="w-full md:w-auto"
-                style={{ minHeight: '44px' }}
+
               >
                 {isSubmitting ? 'Creating...' : 'Create Invoice'}
               </Button>

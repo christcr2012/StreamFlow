@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get or create provider config
-    let config = await prisma.providerConfig.findFirst();
+    let config: any = await prisma.providerConfig.findFirst();
 
     if (!config) {
       // Create new config with theme settings
@@ -114,8 +114,8 @@ export async function POST(request: NextRequest) {
             variant,
             primaryColor,
             accentColor,
-          } as any, // Type assertion: themeSettings will exist after migration
-        },
+          }
+        } as any,
         select: {
           id: true,
           themeSettings: true,
@@ -130,8 +130,8 @@ export async function POST(request: NextRequest) {
             variant,
             primaryColor,
             accentColor,
-          } as any, // Type assertion: themeSettings will exist after migration
-        },
+          }
+        } as any,
         select: {
           id: true,
           themeSettings: true,

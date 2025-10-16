@@ -1,6 +1,8 @@
+'use client';
+
 /**
  * Modal Component
- * 
+ *
  * Reusable modal/dialog component with backdrop, animations, and accessibility
  * Used for confirmations, forms, and detailed views
  */
@@ -11,28 +13,28 @@ import { X } from 'lucide-react';
 export interface ModalProps {
   /** Whether the modal is open */
   isOpen: boolean;
-  
+
   /** Callback when modal should close */
   onClose: () => void;
-  
+
   /** Modal title */
   title: string;
-  
+
   /** Modal content */
   children: React.ReactNode;
-  
+
   /** Footer content (typically buttons) */
   footer?: React.ReactNode;
-  
+
   /** Maximum width of modal */
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '4xl';
-  
+
   /** Whether clicking backdrop closes modal */
   closeOnBackdropClick?: boolean;
-  
+
   /** Whether to show close button */
   showCloseButton?: boolean;
-  
+
   /** Custom className for modal content */
   className?: string;
 }
@@ -176,7 +178,7 @@ export function Modal({
 
 /**
  * ConfirmModal Component
- * 
+ *
  * Pre-configured modal for confirmation dialogs
  */
 export interface ConfirmModalProps {

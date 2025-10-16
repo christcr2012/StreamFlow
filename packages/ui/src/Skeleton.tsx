@@ -200,5 +200,5 @@ export function DetailSkeleton() {
 
 // Alias exports for compatibility
 export { SkeletonTable as TableSkeleton };
-export { DetailSkeleton };
+
 

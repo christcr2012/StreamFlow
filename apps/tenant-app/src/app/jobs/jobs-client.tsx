@@ -298,12 +298,12 @@ export function JobsClient({ jobs: initialJobs }: JobsClientProps) {
                 variant="secondary"
                 onClick={handleExportCSV}
                 className={`flex-1 md:flex-none ${getHapticClasses('light')}`}
-                style={{ minHeight: '44px' }}
+
               >
                 Export CSV
               </Button>
               <Link href="/jobs/new" className="flex-1 md:flex-none">
-                <Button className={`w-full ${getHapticClasses('medium')}`} style={{ minHeight: '44px' }}>+ New Job</Button>
+                <Button className={`w-full ${getHapticClasses('medium')}`}>+ New Job</Button>
               </Link>
             </div>
           </div>
@@ -317,7 +317,7 @@ export function JobsClient({ jobs: initialJobs }: JobsClientProps) {
                   type="search"
                   placeholder="Search jobs by title or customer..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(value) => setSearchQuery(value)}
                   fullWidth
                 />
               </div>

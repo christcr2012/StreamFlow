@@ -119,9 +119,9 @@ export function NewJobClient({ customers }: NewJobClientProps) {
               {/* Job Title */}
               <Input
                 label="Job Title"
-                name="title"
+
                 value={formData.title}
-                onChange={handleChange}
+                onChange={(value) => setFormData(prev => ({ ...prev, title: value }))}
                 error={errors.title}
                 placeholder="Kitchen Renovation"
                 required
@@ -131,13 +131,13 @@ export function NewJobClient({ customers }: NewJobClientProps) {
               {/* Description */}
               <Textarea
                 label="Description"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
+
+                value={formData.description || ''}
+                onChange={(value) => setFormData(prev => ({ ...prev, description: value }))}
                 error={errors.description}
                 placeholder="Detailed description of the work to be performed..."
                 rows={4}
-                fullWidth
+
               />
 
               {/* Customer Selection */}
@@ -174,10 +174,10 @@ export function NewJobClient({ customers }: NewJobClientProps) {
               {/* Scheduled Date/Time */}
               <Input
                 label="Scheduled Date & Time"
-                name="scheduledAt"
+
                 type="datetime-local"
                 value={formData.scheduledAt}
-                onChange={handleChange}
+                onChange={(value) => setFormData(prev => ({ ...prev, scheduledAt: value }))}
                 error={errors.scheduledAt}
                 fullWidth
               />
@@ -185,13 +185,13 @@ export function NewJobClient({ customers }: NewJobClientProps) {
               {/* Notes */}
               <Textarea
                 label="Notes"
-                name="notes"
-                value={formData.notes}
-                onChange={handleChange}
+
+                value={formData.notes || ''}
+                onChange={(value) => setFormData(prev => ({ ...prev, notes: value }))}
                 error={errors.notes}
                 placeholder="Additional notes or special instructions..."
                 rows={3}
-                fullWidth
+
               />
 
               {/* Form Actions */}
@@ -202,7 +202,7 @@ export function NewJobClient({ customers }: NewJobClientProps) {
                     variant="secondary"
                     disabled={isSubmitting}
                     className="w-full"
-                    style={{ minHeight: '44px' }}
+
                   >
                     Cancel
                   </Button>
@@ -212,7 +212,7 @@ export function NewJobClient({ customers }: NewJobClientProps) {
                   loading={isSubmitting}
                   disabled={isSubmitting}
                   className="w-full md:w-auto"
-                  style={{ minHeight: '44px' }}
+
                 >
                   {isSubmitting ? 'Creating...' : 'Create Job'}
                 </Button>

@@ -110,8 +110,8 @@ export async function POST(request: NextRequest) {
           variant,
           primaryColor,
           accentColor,
-        } as any, // Type assertion: themeSettings will exist after migration
-      },
+        }
+      } as any,
       select: {
         id: true,
         name: true,

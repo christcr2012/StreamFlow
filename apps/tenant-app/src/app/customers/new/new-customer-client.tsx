@@ -109,9 +109,9 @@ export function NewCustomerClient() {
               {/* Company Name */}
               <Input
                 label="Company Name"
-                name="company"
-                value={formData.company}
-                onChange={handleChange}
+
+                value={formData.company || ''}
+                onChange={(value) => setFormData(prev => ({ ...prev, company: value }))}
                 error={errors.company}
                 placeholder="Acme Corporation"
                 fullWidth
@@ -120,9 +120,9 @@ export function NewCustomerClient() {
               {/* Primary Contact Name */}
               <Input
                 label="Primary Contact Name"
-                name="primaryName"
+
                 value={formData.primaryName}
-                onChange={handleChange}
+                onChange={(value) => setFormData(prev => ({ ...prev, primaryName: value }))}
                 error={errors.primaryName}
                 placeholder="John Doe"
                 required
@@ -133,9 +133,9 @@ export function NewCustomerClient() {
               <Input
                 label="Primary Email"
                 type="email"
-                name="primaryEmail"
-                value={formData.primaryEmail}
-                onChange={handleChange}
+
+                value={formData.primaryEmail || ''}
+                onChange={(value) => setFormData(prev => ({ ...prev, primaryEmail: value }))}
                 error={errors.primaryEmail}
                 placeholder="john@acme.com"
                 fullWidth
@@ -145,9 +145,9 @@ export function NewCustomerClient() {
               <Input
                 label="Primary Phone"
                 type="tel"
-                name="primaryPhone"
-                value={formData.primaryPhone}
-                onChange={handleChange}
+
+                value={formData.primaryPhone || ''}
+                onChange={(value) => setFormData(prev => ({ ...prev, primaryPhone: value }))}
                 error={errors.primaryPhone}
                 placeholder="+1 (555) 123-4567"
                 fullWidth
@@ -156,13 +156,13 @@ export function NewCustomerClient() {
               {/* Notes */}
               <Textarea
                 label="Notes"
-                name="notes"
-                value={formData.notes}
-                onChange={handleChange}
+
+                value={formData.notes || ''}
+                onChange={(value) => setFormData(prev => ({ ...prev, notes: value }))}
                 error={errors.notes}
                 placeholder="Additional information about this customer..."
                 rows={4}
-                fullWidth
+
               />
 
               {/* Form Actions */}
@@ -173,7 +173,7 @@ export function NewCustomerClient() {
                     variant="secondary"
                     disabled={isSubmitting}
                     className="w-full"
-                    style={{ minHeight: '44px' }}
+
                   >
                     Cancel
                   </Button>
@@ -183,7 +183,7 @@ export function NewCustomerClient() {
                   loading={isSubmitting}
                   disabled={isSubmitting}
                   className="w-full md:w-auto"
-                  style={{ minHeight: '44px' }}
+
                 >
                   {isSubmitting ? 'Creating...' : 'Create Customer'}
                 </Button>

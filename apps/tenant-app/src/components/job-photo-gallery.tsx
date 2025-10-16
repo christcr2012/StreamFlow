@@ -133,7 +133,7 @@ export function JobPhotoGallery({ jobId, initialPhotos, onPhotosChange }: JobPho
           <Input
             placeholder="Photo caption (optional)"
             value={caption}
-            onChange={(e) => setCaption(e.target.value)}
+            onChange={(value) => setCaption(value)}
             disabled={isUploading}
             fullWidth
           />
@@ -170,8 +170,7 @@ export function JobPhotoGallery({ jobId, initialPhotos, onPhotosChange }: JobPho
                   <Button
                     variant="danger"
                     size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
+                    onClick={() => {
                       handleDelete(photo.id);
                     }}
                     className="opacity-0 group-hover:opacity-100 transition-opacity"
