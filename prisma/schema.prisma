@@ -17,56 +17,64 @@ model Org {
   updatedAt    DateTime @updatedAt
 
   // Theme Customization - Per-organization UI theme settings
-  themeSettings Json     @default("{\"variant\":\"premium-dark\",\"primaryColor\":\"#00ff88\",\"accentColor\":\"#3aa8ff\"}")
+  themeSettings Json @default("{\"variant\":\"premium-dark\",\"primaryColor\":\"#00ff88\",\"accentColor\":\"#3aa8ff\"}")
 
   // AI Cost Control & Monetization - PROVIDER MODEL
-  aiMonthlyBudgetCents Int      @default(5000)  // $50 provider cost limit
-  aiCreditBalance     Int      @default(1000)   // 1k credits = $50 worth (1 credit = $0.05 client-facing)
-  aiPlan              AiPlan   @default(BASE)   // Client subscription tier
-  aiAlerts            Json     @default("{}")   // Usage alert thresholds
+  aiMonthlyBudgetCents Int    @default(5000) // $50 provider cost limit
+  aiCreditBalance      Int    @default(1000) // 1k credits = $50 worth (1 credit = $0.05 client-facing)
+  aiPlan               AiPlan @default(BASE) // Client subscription tier
+  aiAlerts             Json   @default("{}") // Usage alert thresholds
 
   // Stripe Subscription Management
-  stripeCustomerId      String?   // Stripe customer ID for billing
-  stripeSubscriptionId  String?   // Current active subscription ID
-  subscriptionStatus    String?   // active, past_due, canceled, etc
+  stripeCustomerId      String? // Stripe customer ID for billing
+  stripeSubscriptionId  String? // Current active subscription ID
+  subscriptionStatus    String? // active, past_due, canceled, etc
   subscriptionStartDate DateTime? // When subscription started
   subscriptionEndDate   DateTime? // When subscription ends/ended
 
   // Back-relations
-  auditLogs     AuditLog[]
-  ledger        BillingLedger[]
-  customers     Customer[]
-  invoices      Invoice[]
-  jobs          Job[]
-  leads         Lead[]
-  opportunities Opportunity[]
-  payments      Payment[]
-  referrals     Referral[]
-  rfps          Rfp[]
-  users         User[]
-  rbacRoles     RbacRole[]      @relation("OrgRbacRoles")
-  rbacUserRoles RbacUserRole[]  @relation("OrgRbacUserRoles")
-  leadInvoices  LeadInvoice[]   @relation("OrgLeadInvoices")
-  pricingPlan   PricingPlan?    @relation("OrgPricingPlan")
-  aiUsageEvents AiUsageEvent[]  @relation("OrgAiUsageEvents")
+  auditLogs          AuditLog[]
+  ledger             BillingLedger[]
+  customers          Customer[]
+  invoices           Invoice[]
+  jobs               Job[]
+  leads              Lead[]
+  opportunities      Opportunity[]
+  payments           Payment[]
+  referrals          Referral[]
+  rfps               Rfp[]
+  users              User[]
+  rbacRoles          RbacRole[]         @relation("OrgRbacRoles")
+  rbacUserRoles      RbacUserRole[]     @relation("OrgRbacUserRoles")
+  leadInvoices       LeadInvoice[]      @relation("OrgLeadInvoices")
+  pricingPlan        PricingPlan?       @relation("OrgPricingPlan")
+  aiUsageEvents      AiUsageEvent[]     @relation("OrgAiUsageEvents")
   aiMonthlySummaries AiMonthlySummary[] @relation("OrgAiMonthlySummaries")
-  aiModelTests  AiModelTest[]  @relation("OrgAiModelTests")
-  recurringInvoices RecurringInvoice[]
-  emailTemplates    EmailTemplate[]
+  aiModelTests       AiModelTest[]      @relation("OrgAiModelTests")
+  recurringInvoices  RecurringInvoice[]
+  emailTemplates     EmailTemplate[]
 
   // Provider Operations Relations
-  activities      Activity[]       @relation("OrgActivities")
-  subscriptions   Subscription[]   @relation("OrgSubscriptions")
-  usageMeters     UsageMeter[]     @relation("OrgUsageMeters")
-  addonPurchases  AddonPurchase[]  @relation("OrgAddonPurchases")
+  activities     Activity[]      @relation("OrgActivities")
+  subscriptions  Subscription[]  @relation("OrgSubscriptions")
+  usageMeters    UsageMeter[]    @relation("OrgUsageMeters")
+  addonPurchases AddonPurchase[] @relation("OrgAddonPurchases")
 
-  tenantOverrides  TenantPriceOverride[]
+  tenantOverrides TenantPriceOverride[]
 
-  incidents      Incident[]      @relation("OrgIncidents")
-  notifications  Notification[]  @relation("OrgNotifications")
+  incidents     Incident[]     @relation("OrgIncidents")
+  notifications Notification[] @relation("OrgNotifications")
 
   importJobs     ImportJob[]     @relation("OrgImportJobs")
   importMappings ImportMapping[] @relation("OrgImportMappings")
+
+  // Cleaning Vertical Relations
+  cleaningLeads              CleaningLead[]              @relation("OrgCleaningLeads")
+  cleaningEstimates          CleaningEstimate[]          @relation("OrgCleaningEstimates")
+  cleaningContracts          CleaningContract[]          @relation("OrgCleaningContracts")
+  cleaningWorkOrders         CleaningWorkOrder[]         @relation("OrgCleaningWorkOrders")
+  cleaningInspections        CleaningInspection[]        @relation("OrgCleaningInspections")
+  cleaningChecklistTemplates CleaningChecklistTemplate[] @relation("OrgCleaningChecklistTemplates")
 
   /// brandConfig stores white-label brand settings such as name, colors, and logo URL.
   /// It is JSON to allow arbitrary keys like { name: "Mountain Vista", color: "#123456", logoUrl: "https://..." }
@@ -81,25 +89,25 @@ model Org {
 
   /// Email Service Configuration (SendGrid or Resend)
   /// Tenant uses this to send emails to their customers (invoice notifications, job updates, etc.)
-  emailProvider     String? // "sendgrid" | "resend" | null
-  emailApiKey       String? // Encrypted API key for email service
-  emailFromAddress  String? // Sender email address (e.g., "noreply@contractorcompany.com")
-  emailFromName     String? // Sender name (e.g., "ABC Plumbing")
-  emailConfigured   Boolean @default(false) // Quick check if email is set up
+  emailProvider    String? // "sendgrid" | "resend" | null
+  emailApiKey      String? // Encrypted API key for email service
+  emailFromAddress String? // Sender email address (e.g., "noreply@contractorcompany.com")
+  emailFromName    String? // Sender name (e.g., "ABC Plumbing")
+  emailConfigured  Boolean @default(false) // Quick check if email is set up
 
   /// Stripe Payment Configuration
   /// Tenant uses this to collect payments from their customers
-  stripeAccountId        String? // Tenant's Stripe account ID (for Stripe Connect) OR null if using own keys
-  stripeSecretKey        String? // Encrypted Stripe secret key (if tenant provides own keys)
-  stripePublishableKey   String? // Stripe publishable key (safe to expose to client)
-  stripeWebhookSecret    String? // Encrypted webhook secret for payment events
-  stripeConfigured       Boolean @default(false) // Quick check if Stripe is set up
+  stripeAccountId      String? // Tenant's Stripe account ID (for Stripe Connect) OR null if using own keys
+  stripeSecretKey      String? // Encrypted Stripe secret key (if tenant provides own keys)
+  stripePublishableKey String? // Stripe publishable key (safe to expose to client)
+  stripeWebhookSecret  String? // Encrypted webhook secret for payment events
+  stripeConfigured     Boolean @default(false) // Quick check if Stripe is set up
 
   /// SMS Service Configuration (Future: Twilio, etc.)
-  smsProvider      String? // "twilio" | null
-  smsApiKey        String? // Encrypted API key
-  smsFromNumber    String? // Phone number for sending SMS
-  smsConfigured    Boolean @default(false)
+  smsProvider   String? // "twilio" | null
+  smsApiKey     String? // Encrypted API key
+  smsFromNumber String? // Phone number for sending SMS
+  smsConfigured Boolean @default(false)
 }
 
 model User {
@@ -115,30 +123,30 @@ model User {
   updatedAt          DateTime @updatedAt
 
   // Unified Auth System - Security Fields
-  isActive              Boolean   @default(true)
-  isLocked              Boolean   @default(false)
-  lockedUntil           DateTime?
-  failedLoginAttempts   Int       @default(0)
-  lastFailedLogin       DateTime?
-  lastSuccessfulLogin   DateTime?
-  lastPasswordChange    DateTime?
+  isActive            Boolean   @default(true)
+  isLocked            Boolean   @default(false)
+  lockedUntil         DateTime?
+  failedLoginAttempts Int       @default(0)
+  lastFailedLogin     DateTime?
+  lastSuccessfulLogin DateTime?
+  lastPasswordChange  DateTime?
 
   // Two-Factor Authentication (TOTP)
-  totpSecret            String?
-  totpEnabled           Boolean   @default(false)
-  backupCodesHash       String?   // JSON array of hashed backup codes
+  totpSecret      String?
+  totpEnabled     Boolean @default(false)
+  backupCodesHash String? // JSON array of hashed backup codes
 
   org           Org            @relation(fields: [orgId], references: [id])
   rbacUserRoles RbacUserRole[] @relation("UserRbacUserRoles")
 
   // Unified Auth System - Relations
-  recoveryCodes         UserRecoveryCode[]
-  breakglassAccount     UserBreakglassAccount?
-  securityQuestions     UserSecurityQuestion[]
-  loginHistory          UserLoginHistory[]
-  deviceFingerprints    UserDeviceFingerprint[]
+  recoveryCodes      UserRecoveryCode[]
+  breakglassAccount  UserBreakglassAccount?
+  securityQuestions  UserSecurityQuestion[]
+  loginHistory       UserLoginHistory[]
+  deviceFingerprints UserDeviceFingerprint[]
 
-  importJobs            ImportJob[]        @relation("UserImportJobs")
+  importJobs ImportJob[] @relation("UserImportJobs")
 
   @@index([orgId, status, isActive])
   @@index([orgId, role])
@@ -153,11 +161,11 @@ model User {
 model UserRecoveryCode {
   id        String    @id @default(cuid())
   userId    String
-  codeHash  String    // Bcrypt hashed recovery code
+  codeHash  String // Bcrypt hashed recovery code
   usedAt    DateTime?
-  usedFrom  String?   // IP address where code was used
+  usedFrom  String? // IP address where code was used
   createdAt DateTime  @default(now())
-  expiresAt DateTime  // Valid for 1 year by default
+  expiresAt DateTime // Valid for 1 year by default
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -167,11 +175,11 @@ model UserRecoveryCode {
 
 /// Security questions for additional verification (Layer 2)
 model UserSecurityQuestion {
-  id           String   @id @default(cuid())
-  userId       String
-  question     String   // "What was your first pet's name?"
-  answerHash   String   // Bcrypt hashed answer (case-insensitive)
-  createdAt    DateTime @default(now())
+  id         String   @id @default(cuid())
+  userId     String
+  question   String // "What was your first pet's name?"
+  answerHash String // Bcrypt hashed answer (case-insensitive)
+  createdAt  DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -180,24 +188,24 @@ model UserSecurityQuestion {
 
 /// Breakglass account for automated emergency access (Layer 3)
 model UserBreakglassAccount {
-  id                    String    @id @default(cuid())
-  userId                String    @unique
-  orgId                 String
+  id     String @id @default(cuid())
+  userId String @unique
+  orgId  String
 
   // Encrypted credentials (AES-256-GCM with per-user key derived from master)
   encryptedEmail        String
   encryptedPasswordHash String
-  encryptionIV          String    // Initialization vector for decryption
+  encryptionIV          String // Initialization vector for decryption
 
   // Usage tracking
-  createdAt             DateTime  @default(now())
-  lastActivatedAt       DateTime?
-  activationCount       Int       @default(0)
+  createdAt       DateTime  @default(now())
+  lastActivatedAt DateTime?
+  activationCount Int       @default(0)
 
   // Automated security
-  isEnabled             Boolean   @default(true)
-  canAutoActivate       Boolean   @default(true)  // Can activate without manual approval
-  minDelayMinutes       Int       @default(0)     // Minimum delay before activation (risk-based)
+  isEnabled       Boolean @default(true)
+  canAutoActivate Boolean @default(true) // Can activate without manual approval
+  minDelayMinutes Int     @default(0) // Minimum delay before activation (risk-based)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -207,22 +215,22 @@ model UserBreakglassAccount {
 
 /// Device fingerprinting for trust scoring
 model UserDeviceFingerprint {
-  id              String   @id @default(cuid())
-  userId          String
+  id     String @id @default(cuid())
+  userId String
 
   // Device identification
-  fingerprint     String   // Hash of: User-Agent + Screen Resolution + Timezone + Canvas fingerprint
-  ipAddress       String
-  userAgent       String
+  fingerprint String // Hash of: User-Agent + Screen Resolution + Timezone + Canvas fingerprint
+  ipAddress   String
+  userAgent   String
 
   // Trust level
-  isTrusted       Boolean  @default(false)
-  trustScore      Int      @default(0)  // 0-100
+  isTrusted  Boolean @default(false)
+  trustScore Int     @default(0) // 0-100
 
   // Metadata
-  firstSeenAt     DateTime @default(now())
-  lastSeenAt      DateTime @default(now())
-  loginCount      Int      @default(1)
+  firstSeenAt DateTime @default(now())
+  lastSeenAt  DateTime @default(now())
+  loginCount  Int      @default(1)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -233,26 +241,26 @@ model UserDeviceFingerprint {
 
 /// Comprehensive login history for audit trail
 model UserLoginHistory {
-  id              String   @id @default(cuid())
-  userId          String
+  id     String @id @default(cuid())
+  userId String
 
   // Login details
-  success         Boolean
-  method          String   // "password", "recovery_code", "breakglass", "totp"
-  ipAddress       String
-  userAgent       String
+  success           Boolean
+  method            String // "password", "recovery_code", "breakglass", "totp"
+  ipAddress         String
+  userAgent         String
   deviceFingerprint String?
 
   // Risk assessment
-  riskScore       Int      @default(0)  // 0-100
-  riskFactors     String?  // JSON array of risk factors
+  riskScore   Int     @default(0) // 0-100
+  riskFactors String? // JSON array of risk factors
 
   // Geolocation (optional)
-  country         String?
-  city            String?
+  country String?
+  city    String?
 
   // Metadata
-  timestamp       DateTime @default(now())
+  timestamp DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -263,33 +271,33 @@ model UserLoginHistory {
 
 /// Breakglass activation log for automated actions
 model BreakglassActivationLog {
-  id                String   @id @default(cuid())
-  userId            String
-  orgId             String
+  id     String @id @default(cuid())
+  userId String
+  orgId  String
 
   // Activation details
-  reason            String   // "password_reset", "account_locked", "lost_access"
-  method            String   // "email_verification", "recovery_code", "security_questions"
+  reason String // "password_reset", "account_locked", "lost_access"
+  method String // "email_verification", "recovery_code", "security_questions"
 
   // Risk assessment
-  riskScore         Int      // 0-100
-  riskFactors       String   // JSON array
-  delayMinutes      Int      // How long user had to wait
+  riskScore    Int // 0-100
+  riskFactors  String // JSON array
+  delayMinutes Int // How long user had to wait
 
   // Verification
-  verificationSteps String   // JSON array of completed verification steps
+  verificationSteps String // JSON array of completed verification steps
   ipAddress         String
   userAgent         String
 
   // Outcome
-  success           Boolean
-  errorMessage      String?
+  success      Boolean
+  errorMessage String?
 
   // Notifications sent
-  notifiedAdmins    String   // JSON array of admin emails notified
+  notifiedAdmins String // JSON array of admin emails notified
 
   // Metadata
-  timestamp         DateTime @default(now())
+  timestamp DateTime @default(now())
 
   @@index([userId, timestamp])
   @@index([orgId, timestamp])
@@ -298,30 +306,30 @@ model BreakglassActivationLog {
 
 /// Pending recovery requests with automated delay timers
 model RecoveryRequest {
-  id                String    @id @default(cuid())
-  userId            String
-  orgId             String
+  id     String @id @default(cuid())
+  userId String
+  orgId  String
 
   // Request details
-  type              String    // "password_reset", "breakglass_activation", "unlock_account"
-  status            String    // "pending", "verified", "completed", "expired", "denied"
+  type   String // "password_reset", "breakglass_activation", "unlock_account"
+  status String // "pending", "verified", "completed", "expired", "denied"
 
   // Verification
   verificationToken String    @unique
-  verificationCode  String?   // 6-digit code sent via email/SMS
+  verificationCode  String? // 6-digit code sent via email/SMS
   codeExpiresAt     DateTime?
   codeAttempts      Int       @default(0)
 
   // Risk-based delay
-  riskScore         Int
-  delayUntil        DateTime  // When the request can be processed
+  riskScore  Int
+  delayUntil DateTime // When the request can be processed
 
   // Metadata
-  ipAddress         String
-  userAgent         String
-  createdAt         DateTime  @default(now())
-  expiresAt         DateTime  // Request expires after 24 hours
-  completedAt       DateTime?
+  ipAddress   String
+  userAgent   String
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime // Request expires after 24 hours
+  completedAt DateTime?
 
   @@index([userId])
   @@index([verificationToken])
@@ -329,45 +337,46 @@ model RecoveryRequest {
 }
 
 model Lead {
-  id              String     @id @default(cuid())
-  orgId           String
-  publicId        String     @unique
-  sourceType      LeadSource
-  identityHash    String
-  company         String?
-  contactName     String?
-  email           String?
-  phoneE164       String?
-  website         String?
-  serviceCode     String?
-  zip             String?
-  enrichmentJson  Json       @default("{}")
-  aiScore         Int        @default(0)
-  scoreFactors    Json       @default("{}")
+  id                    String     @id @default(cuid())
+  orgId                 String
+  publicId              String     @unique
+  sourceType            LeadSource
+  identityHash          String
+  company               String?
+  contactName           String?
+  email                 String?
+  phoneE164             String?
+  website               String?
+  serviceCode           String?
+  zip                   String?
+  enrichmentJson        Json       @default("{}")
+  aiScore               Int        @default(0)
+  scoreFactors          Json       @default("{}")
   /// systemGenerated: true if lead came from SAM/automated import
-  systemGenerated Boolean    @default(false)
+  systemGenerated       Boolean    @default(false)
   /// convertedAt: timestamp when lead was converted (if status changes to converted)
-  convertedAt     DateTime?
+  convertedAt           DateTime?
   convertedToCustomerId String?
   /// rfp: raw RFP metadata from SAM.gov
-  rfp             Json?
+  rfp                   Json?
   /// Status of the lead. Stored as an enum rather than string for consistency.
-  status          LeadStatus @default(NEW)
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @default(now()) @updatedAt
-  city            String?
-  notes           String?
-  sourceDetail    String?
-  state           String?
-  postalCode      String?    @db.VarChar(20)
-  address         String?
-  addressLine1    String?
-  addressLine2    String?
-  country         String?
-  customFields    Json       @default("{}")
+  status                LeadStatus @default(NEW)
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime   @default(now()) @updatedAt
+  city                  String?
+  notes                 String?
+  sourceDetail          String?
+  state                 String?
+  postalCode            String?    @db.VarChar(20)
+  address               String?
+  addressLine1          String?
+  addressLine2          String?
+  country               String?
+  customFields          Json       @default("{}")
 
   org             Org               @relation(fields: [orgId], references: [id])
   LeadInvoiceLine LeadInvoiceLine[]
+
   @@index([orgId, createdAt])
   @@index([orgId, convertedAt])
   @@index([orgId, status])
@@ -377,20 +386,20 @@ model Lead {
 }
 
 model Customer {
-  id           String   @id @default(cuid())
-  orgId        String
-  publicId     String   @unique
-  company      String?
-  primaryName  String?
-  primaryEmail String?
-  primaryPhone String?
-  notes        String?
-  tags         String[] @default([])
-  billingSettings Json  @default("{}")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id              String   @id @default(cuid())
+  orgId           String
+  publicId        String   @unique
+  company         String?
+  primaryName     String?
+  primaryEmail    String?
+  primaryPhone    String?
+  notes           String?
+  tags            String[] @default([])
+  billingSettings Json     @default("{}")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  org               Org                 @relation(fields: [orgId], references: [id])
+  org               Org                @relation(fields: [orgId], references: [id])
   invoices          Invoice[]
   jobs              Job[]
   opportunities     Opportunity[]
@@ -437,33 +446,33 @@ model Opportunity {
 }
 
 model Invoice {
-  id          String   @id @default(cuid())
-  orgId       String
-  customerId  String?
-  jobId       String?
-  number      String?  @unique
-  amount      Decimal  @db.Decimal(12, 2)
-  subtotal    Decimal  @db.Decimal(12, 2) @default(0)
-  taxAmount   Decimal  @db.Decimal(12, 2) @default(0)
-  discountAmount Decimal @db.Decimal(12, 2) @default(0)
-  currency    String   @default("USD") // ISO 4217 currency code (USD, EUR, GBP, CAD, AUD, etc.)
-  status      String   @default("draft")
-  dueDate     DateTime?
-  issuedAt    DateTime @default(now())
-  paidAt      DateTime?
-  items       Json     @default("[]")
-  terms       String?
-  notes       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String    @id @default(cuid())
+  orgId          String
+  customerId     String?
+  jobId          String?
+  number         String?   @unique
+  amount         Decimal   @db.Decimal(12, 2)
+  subtotal       Decimal   @default(0) @db.Decimal(12, 2)
+  taxAmount      Decimal   @default(0) @db.Decimal(12, 2)
+  discountAmount Decimal   @default(0) @db.Decimal(12, 2)
+  currency       String    @default("USD") // ISO 4217 currency code (USD, EUR, GBP, CAD, AUD, etc.)
+  status         String    @default("draft")
+  dueDate        DateTime?
+  issuedAt       DateTime  @default(now())
+  paidAt         DateTime?
+  items          Json      @default("[]")
+  terms          String?
+  notes          String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   // Payment link fields (Priority 6.4)
-  paymentLinkToken      String?   @unique
-  paymentLinkExpiresAt  DateTime?
-  paymentLinkViews      Int       @default(0)
+  paymentLinkToken     String?   @unique
+  paymentLinkExpiresAt DateTime?
+  paymentLinkViews     Int       @default(0)
 
-  lineItems   InvoiceLine[]
-  reminders   InvoiceReminder[]
+  lineItems InvoiceLine[]
+  reminders InvoiceReminder[]
 
   customer Customer? @relation(fields: [customerId], references: [id])
   org      Org       @relation(fields: [orgId], references: [id])
@@ -477,24 +486,24 @@ model Invoice {
 
 /// Recurring invoice template (Priority 6.3)
 model RecurringInvoice {
-  id              String   @id @default(cuid())
+  id              String    @id @default(cuid())
   orgId           String
   customerId      String
-  frequency       String   // 'weekly' | 'monthly' | 'quarterly' | 'annually'
-  intervalCount   Int      @default(1) // e.g., every 2 months
+  frequency       String // 'weekly' | 'monthly' | 'quarterly' | 'annually'
+  intervalCount   Int       @default(1) // e.g., every 2 months
   startDate       DateTime
   endDate         DateTime?
   nextInvoiceDate DateTime
-  active          Boolean  @default(true)
+  active          Boolean   @default(true)
 
   // Invoice template data
-  items           Json     @default("[]")
-  terms           String?
-  notes           String?
-  currency        String   @default("USD")
+  items    Json    @default("[]")
+  terms    String?
+  notes    String?
+  currency String  @default("USD")
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   customer Customer @relation(fields: [customerId], references: [id])
   org      Org      @relation(fields: [orgId], references: [id])
@@ -505,13 +514,13 @@ model RecurringInvoice {
 
 /// Invoice reminder tracking (Priority 6.5)
 model InvoiceReminder {
-  id           String   @id @default(cuid())
+  id           String    @id @default(cuid())
   invoiceId    String
-  reminderType String   // 'overdue_3days' | 'overdue_7days' | 'overdue_14days'
-  status       String   @default("pending") // 'pending' | 'sent' | 'failed'
+  reminderType String // 'overdue_3days' | 'overdue_7days' | 'overdue_14days'
+  status       String    @default("pending") // 'pending' | 'sent' | 'failed'
   sentAt       DateTime?
   error        String?
-  createdAt    DateTime @default(now())
+  createdAt    DateTime  @default(now())
 
   invoice Invoice @relation(fields: [invoiceId], references: [id])
 
@@ -523,7 +532,7 @@ model InvoiceReminder {
 model EmailTemplate {
   id           String   @id @default(cuid())
   orgId        String
-  templateType String   // 'invoice_sent' | 'payment_received' | 'job_status_update' | 'job_completed'
+  templateType String // 'invoice_sent' | 'payment_received' | 'job_status_update' | 'job_completed'
   subject      String
   htmlBody     String   @db.Text
   textBody     String   @db.Text
@@ -548,12 +557,12 @@ model Payment {
   reference  String?
 
   // Enhancements for Stripe/dunning
-  status                 String   @default("succeeded") // 'pending' | 'succeeded' | 'failed' | 'refunded'
-  stripePaymentIntentId  String?
-  stripeChargeId         String?
-  failureReason          String?
-  retryCount             Int      @default(0)
-  lastRetryAt            DateTime?
+  status                String    @default("succeeded") // 'pending' | 'succeeded' | 'failed' | 'refunded'
+  stripePaymentIntentId String?
+  stripeChargeId        String?
+  failureReason         String?
+  retryCount            Int       @default(0)
+  lastRetryAt           DateTime?
 
   invoice Invoice? @relation(fields: [invoiceId], references: [id])
   org     Org      @relation(fields: [orgId], references: [id])
@@ -581,27 +590,27 @@ model Rfp {
 }
 
 model Job {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   orgId       String
   customerId  String?
   rfpId       String?
   title       String
   description String?
-  status      String   @default("scheduled")
-  schedule    Json     @default("{}")
+  status      String    @default("scheduled")
+  schedule    Json      @default("{}")
   scheduledAt DateTime?
   completedAt DateTime?
   assignedTo  String?
-  assignees   String[] @default([])
-  location    Json?    // { lat, lng, address }
-  checklist   Json     @default("[]")
+  assignees   String[]  @default([])
+  location    Json? // { lat, lng, address }
+  checklist   Json      @default("[]")
   notes       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  customer Customer?  @relation(fields: [customerId], references: [id])
-  org      Org        @relation(fields: [orgId], references: [id])
-  rfp      Rfp?       @relation(fields: [rfpId], references: [id])
+  customer Customer?     @relation(fields: [customerId], references: [id])
+  org      Org           @relation(fields: [orgId], references: [id])
+  rfp      Rfp?          @relation(fields: [rfpId], references: [id])
   photos   JobPhoto[]
   timeline JobTimeline[]
 
@@ -676,19 +685,19 @@ model AgreementTemplate {
 }
 
 model Agreement {
-  id          String    @id @default(cuid())
-  orgId       String
-  customerId  String
-  templateId  String
-  status      String    @default("draft")
-  content     String    @db.Text
-  variables   Json      @default("{}")
-  signUrl     String?
-  signedAt    DateTime?
-  signedBy    String?
-  renewalAt   DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id         String    @id @default(cuid())
+  orgId      String
+  customerId String
+  templateId String
+  status     String    @default("draft")
+  content    String    @db.Text
+  variables  Json      @default("{}")
+  signUrl    String?
+  signedAt   DateTime?
+  signedBy   String?
+  renewalAt  DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
   customer Customer          @relation(fields: [customerId], references: [id])
   template AgreementTemplate @relation(fields: [templateId], references: [id])
@@ -921,23 +930,23 @@ enum LeadStatus {
 
 // AI Plan Tiers for Monetization - CLIENT SUBSCRIPTION TIERS
 enum AiPlan {
-  BASE    // MVP: Free lead generation, $100/conversion only
-  PRO     // $97/month: Advanced AI, unlimited leads, priority support
-  ELITE   // $297/month: Market intelligence, priority RFPs, dedicated support
+  BASE // MVP: Free lead generation, $100/conversion only
+  PRO // $97/month: Advanced AI, unlimited leads, priority support
+  ELITE // $297/month: Market intelligence, priority RFPs, dedicated support
 }
 
 // Individual AI API call tracking for cost monitoring and analytics
 model AiUsageEvent {
   id          String   @id @default(cuid())
   orgId       String
-  userId      String?  // Optional user who triggered the call
-  feature     String   // 'lead_analysis', 'rfp_strategy', 'pricing', 'response_gen'
-  model       String   // 'gpt-4o-mini', etc
-  tokensIn    Int      // Input tokens consumed
-  tokensOut   Int      // Output tokens generated
-  costUsd     Decimal  @db.Decimal(8, 6)  // Actual cost in USD (precise to $0.000001)
-  creditsUsed Int      // Credits deducted from user's balance
-  requestId   String?  // For request correlation and debugging
+  userId      String? // Optional user who triggered the call
+  feature     String // 'lead_analysis', 'rfp_strategy', 'pricing', 'response_gen'
+  model       String // 'gpt-4o-mini', etc
+  tokensIn    Int // Input tokens consumed
+  tokensOut   Int // Output tokens generated
+  costUsd     Decimal  @db.Decimal(8, 6) // Actual cost in USD (precise to $0.000001)
+  creditsUsed Int // Credits deducted from user's balance
+  requestId   String? // For request correlation and debugging
   createdAt   DateTime @default(now())
 
   org Org @relation("OrgAiUsageEvents", fields: [orgId], references: [id])
@@ -951,10 +960,10 @@ model AiUsageEvent {
 model AiMonthlySummary {
   id          String   @id @default(cuid())
   orgId       String
-  monthKey    String   // Format: "2025-01" for January 2025
+  monthKey    String // Format: "2025-01" for January 2025
   tokensIn    Int      @default(0)
   tokensOut   Int      @default(0)
-  costUsd     Decimal  @db.Decimal(8, 2)  @default(0)
+  costUsd     Decimal  @default(0) @db.Decimal(8, 2)
   creditsUsed Int      @default(0)
   callCount   Int      @default(0)
   createdAt   DateTime @default(now())
@@ -968,21 +977,21 @@ model AiMonthlySummary {
 
 // A/B Testing for AI Model Performance Comparison
 model AiModelTest {
-  id            String   @id @default(cuid())
-  orgId         String
-  testName      String   // Descriptive name for the test
-  feature       String   // Which feature is being tested (e.g., 'lead_analysis', 'email_response')
-  modelA        String   // First model being tested (e.g., 'gpt-4o-mini')
-  modelB        String   // Second model being tested (e.g., 'gpt-4o')
-  status        String   @default("active") // 'active', 'paused', 'completed'
-  trafficSplit  Int      @default(50) // Percentage of traffic to model A (0-100)
-  startedAt     DateTime @default(now())
-  endedAt       DateTime?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id           String    @id @default(cuid())
+  orgId        String
+  testName     String // Descriptive name for the test
+  feature      String // Which feature is being tested (e.g., 'lead_analysis', 'email_response')
+  modelA       String // First model being tested (e.g., 'gpt-4o-mini')
+  modelB       String // Second model being tested (e.g., 'gpt-4o')
+  status       String    @default("active") // 'active', 'paused', 'completed'
+  trafficSplit Int       @default(50) // Percentage of traffic to model A (0-100)
+  startedAt    DateTime  @default(now())
+  endedAt      DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
-  org           Org      @relation("OrgAiModelTests", fields: [orgId], references: [id])
-  results       AiModelTestResult[]
+  org     Org                 @relation("OrgAiModelTests", fields: [orgId], references: [id])
+  results AiModelTestResult[]
 
   @@index([orgId, status])
   @@index([orgId, feature])
@@ -990,19 +999,19 @@ model AiModelTest {
 
 // Results from A/B tests
 model AiModelTestResult {
-  id            String   @id @default(cuid())
-  testId        String
-  model         String   // Which model was used
-  feature       String   // Which feature was tested
-  tokensIn      Int
-  tokensOut     Int
-  costUsd       Decimal  @db.Decimal(8, 6)
-  latencyMs     Int      // Response time in milliseconds
-  userRating    Int?     // Optional user feedback (1-5 stars)
-  success       Boolean  @default(true) // Whether the request succeeded
-  createdAt     DateTime @default(now())
+  id         String   @id @default(cuid())
+  testId     String
+  model      String // Which model was used
+  feature    String // Which feature was tested
+  tokensIn   Int
+  tokensOut  Int
+  costUsd    Decimal  @db.Decimal(8, 6)
+  latencyMs  Int // Response time in milliseconds
+  userRating Int? // Optional user feedback (1-5 stars)
+  success    Boolean  @default(true) // Whether the request succeeded
+  createdAt  DateTime @default(now())
 
-  test          AiModelTest @relation(fields: [testId], references: [id], onDelete: Cascade)
+  test AiModelTest @relation(fields: [testId], references: [id], onDelete: Cascade)
 
   @@index([testId, model])
   @@index([testId, createdAt])
@@ -1017,11 +1026,11 @@ model AiModelTestResult {
 model Activity {
   id         String   @id @default(cuid())
   orgId      String
-  actorType  String   // 'system' | 'user' | 'machine'
+  actorType  String // 'system' | 'user' | 'machine'
   actorId    String?
-  entityType String   // 'lead' | 'invoice' | 'incident' | 'subscription' | etc.
+  entityType String // 'lead' | 'invoice' | 'incident' | 'subscription' | etc.
   entityId   String
-  action     String   // 'created' | 'updated' | 'converted' | 'paid' | etc.
+  action     String // 'created' | 'updated' | 'converted' | 'paid' | etc.
   meta       Json     @default("{}")
   createdAt  DateTime @default(now())
 
@@ -1040,12 +1049,12 @@ model Activity {
 model Subscription {
   id         String    @id @default(cuid())
   orgId      String
-  plan       String    // Plan identifier (e.g., 'starter', 'professional', 'enterprise')
-  status     String    // 'trialing' | 'active' | 'past_due' | 'canceled'
+  plan       String // Plan identifier (e.g., 'starter', 'professional', 'enterprise')
+  status     String // 'trialing' | 'active' | 'past_due' | 'canceled'
   startedAt  DateTime
   canceledAt DateTime?
   renewsAt   DateTime?
-  priceCents Int       // Monthly price in cents
+  priceCents Int // Monthly price in cents
   meta       Json      @default("{}")
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
@@ -1065,8 +1074,8 @@ model Subscription {
 model UsageMeter {
   id          String   @id @default(cuid())
   orgId       String
-  meter       String   // Meter identifier (e.g., 'emails_sent', 'api_calls', 'storage_gb')
-  quantity    Int      // Raw quantity for the window
+  meter       String // Meter identifier (e.g., 'emails_sent', 'api_calls', 'storage_gb')
+  quantity    Int // Raw quantity for the window
   windowStart DateTime // Start of measurement window
   windowEnd   DateTime // End of measurement window
   createdAt   DateTime @default(now())
@@ -1086,9 +1095,9 @@ model UsageMeter {
 model AddonPurchase {
   id          String    @id @default(cuid())
   orgId       String
-  sku         String    // SKU identifier (e.g., 'extra_storage_100gb', 'priority_support')
+  sku         String // SKU identifier (e.g., 'extra_storage_100gb', 'priority_support')
   amount      Decimal   @db.Decimal(12, 2)
-  status      String    // 'purchased' | 'refunded'
+  status      String // 'purchased' | 'refunded'
   purchasedAt DateTime  @default(now())
   refundedAt  DateTime?
   meta        Json      @default("{}")
@@ -1107,10 +1116,10 @@ model AddonPurchase {
 /// Used for secure machine-to-machine authentication
 model FederationKey {
   id         String    @id @default(cuid())
-  tenantId   String    // Tenant identifier (orgId or external ID)
+  tenantId   String // Tenant identifier (orgId or external ID)
   keyId      String    @unique // Public key identifier
-  secretHash String    // Hashed secret for HMAC verification
-  scope      String    // 'events' | 'usage' | 'billing' | 'all'
+  secretHash String // Hashed secret for HMAC verification
+  scope      String // 'events' | 'usage' | 'billing' | 'all'
   createdAt  DateTime  @default(now())
   disabledAt DateTime? // When key was disabled (soft delete)
   rotatedAt  DateTime? // When key was last rotated
@@ -1122,32 +1131,32 @@ model FederationKey {
 
 /// OIDCConfig stores OIDC/OAuth provider configuration for federation
 model OIDCConfig {
-  id            String    @id @default(cuid())
-  enabled       Boolean   @default(false)
-  issuerUrl     String    // OIDC issuer URL
-  clientId      String    // OAuth client ID
-  clientSecret  String    // Encrypted OAuth client secret
-  scopes        String    @default("openid profile email") // Space-separated scopes
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  lastTestedAt  DateTime? // Last successful connection test
+  id           String    @id @default(cuid())
+  enabled      Boolean   @default(false)
+  issuerUrl    String // OIDC issuer URL
+  clientId     String // OAuth client ID
+  clientSecret String // Encrypted OAuth client secret
+  scopes       String    @default("openid profile email") // Space-separated scopes
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  lastTestedAt DateTime? // Last successful connection test
 }
 
 /// ProviderIntegration tracks external provider connections
 model ProviderIntegration {
-  id                  String    @id @default(cuid())
-  name                String    // Provider name (e.g., "Acme Corp")
-  url                 String?   // Provider URL for connectivity tests
-  type                String    // 'oidc' | 'saml' | 'api_key' | 'oauth'
-  config              Json      @default("{}") // Provider-specific configuration
-  enabled             Boolean   @default(true)
-  healthStatus        String?   // 'healthy' | 'degraded' | 'down' | 'unknown'
-  syncStatus          String?   // 'success' | 'failed' | 'pending' | 'never'
-  errorMessage        String?   // Last error message if any
-  lastSyncAt          DateTime? // Last successful sync
-  lastHealthCheckAt   DateTime? // Last health check timestamp
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
+  id                String    @id @default(cuid())
+  name              String // Provider name (e.g., "Acme Corp")
+  url               String? // Provider URL for connectivity tests
+  type              String // 'oidc' | 'saml' | 'api_key' | 'oauth'
+  config            Json      @default("{}") // Provider-specific configuration
+  enabled           Boolean   @default(true)
+  healthStatus      String? // 'healthy' | 'degraded' | 'down' | 'unknown'
+  syncStatus        String? // 'success' | 'failed' | 'pending' | 'never'
+  errorMessage      String? // Last error message if any
+  lastSyncAt        DateTime? // Last successful sync
+  lastHealthCheckAt DateTime? // Last health check timestamp
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
   @@index([type, enabled])
   @@index([healthStatus])
@@ -1156,16 +1165,16 @@ model ProviderIntegration {
 
 /// AuditEvent stores provider-side audit trail
 model AuditEvent {
-  id          String   @id @default(cuid())
-  actorType   String   // 'provider' | 'system' | 'user'
-  actorId     String?  // Provider user ID or system identifier
-  action      String   // 'create' | 'update' | 'delete' | 'access'
-  entityType  String   // 'federation_key' | 'oidc_config' | 'client' | etc.
-  entityId    String?  // ID of affected entity
-  metadata    Json     @default("{}") // Additional context (redacted PII)
-  ipAddress   String?
-  userAgent   String?
-  createdAt   DateTime @default(now())
+  id         String   @id @default(cuid())
+  actorType  String // 'provider' | 'system' | 'user'
+  actorId    String? // Provider user ID or system identifier
+  action     String // 'create' | 'update' | 'delete' | 'access'
+  entityType String // 'federation_key' | 'oidc_config' | 'client' | etc.
+  entityId   String? // ID of affected entity
+  metadata   Json     @default("{}") // Additional context (redacted PII)
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
 
   @@index([actorId, createdAt])
   @@index([entityType, entityId, createdAt])
@@ -1174,16 +1183,16 @@ model AuditEvent {
 
 /// AnalyticsSnapshot stores daily aggregated metrics for caching
 model AnalyticsSnapshot {
-  id              String   @id @default(cuid())
-  snapshotDate    DateTime @db.Date // Date of snapshot
-  mrrCents        Int      @default(0) // Monthly Recurring Revenue in cents
-  arrCents        Int      @default(0) // Annual Recurring Revenue in cents
-  activeClients   Int      @default(0)
-  newClients      Int      @default(0)
-  churnedClients  Int      @default(0)
-  totalRevenue    Int      @default(0) // Total revenue in cents
-  metricsJson     Json     @default("{}") // Additional metrics
-  createdAt       DateTime @default(now())
+  id             String   @id @default(cuid())
+  snapshotDate   DateTime @db.Date // Date of snapshot
+  mrrCents       Int      @default(0) // Monthly Recurring Revenue in cents
+  arrCents       Int      @default(0) // Annual Recurring Revenue in cents
+  activeClients  Int      @default(0)
+  newClients     Int      @default(0)
+  churnedClients Int      @default(0)
+  totalRevenue   Int      @default(0) // Total revenue in cents
+  metricsJson    Json     @default("{}") // Additional metrics
+  createdAt      DateTime @default(now())
 
   @@unique([snapshotDate])
   @@index([snapshotDate])
@@ -1195,20 +1204,20 @@ model AnalyticsSnapshot {
 
 /// Incident lifecycle tracking with SLA fields
 model Incident {
-  id                   String   @id @default(cuid())
-  orgId                String
-  severity             IncidentSeverity
-  status               IncidentStatus    @default(OPEN)
-  title                String
-  description          String
-  assigneeUserId       String?
-  slaResponseDeadline  DateTime?
-  slaResolveDeadline   DateTime?
-  acknowledgedAt       DateTime?
-  resolvedAt           DateTime?
-  closedAt             DateTime?
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  id                  String           @id @default(cuid())
+  orgId               String
+  severity            IncidentSeverity
+  status              IncidentStatus   @default(OPEN)
+  title               String
+  description         String
+  assigneeUserId      String?
+  slaResponseDeadline DateTime?
+  slaResolveDeadline  DateTime?
+  acknowledgedAt      DateTime?
+  resolvedAt          DateTime?
+  closedAt            DateTime?
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
 
   org Org @relation("OrgIncidents", fields: [orgId], references: [id])
 
@@ -1218,16 +1227,16 @@ model Incident {
 
 /// InvoiceLine ties granular charges to Invoices
 model InvoiceLine {
-  id              String   @id @default(cuid())
-  invoiceId       String
-  description     String
-  lineType        InvoiceLineType
-  quantity        Int      @default(1)
-  unitPriceCents  Int
-  amountCents     Int
-  sourceType      String?
-  sourceId        String?
-  createdAt       DateTime @default(now())
+  id             String          @id @default(cuid())
+  invoiceId      String
+  description    String
+  lineType       InvoiceLineType
+  quantity       Int             @default(1)
+  unitPriceCents Int
+  amountCents    Int
+  sourceType     String?
+  sourceId       String?
+  createdAt      DateTime        @default(now())
 
   invoice Invoice @relation(fields: [invoiceId], references: [id])
 
@@ -1237,15 +1246,15 @@ model InvoiceLine {
 
 /// Provider in-app notifications
 model Notification {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   orgId     String?
-  audience  String   // 'provider' | 'developer'
+  audience  String // 'provider' | 'developer'
   type      String
   title     String
   body      String
-  severity  String   // 'info' | 'warning' | 'error'
+  severity  String // 'info' | 'warning' | 'error'
   readAt    DateTime?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
 
   org Org? @relation("OrgNotifications", fields: [orgId], references: [id])
 
@@ -1273,7 +1282,6 @@ enum InvoiceLineType {
   one_time
 }
 
-
 // ============================================================================
 // MONETIZATION CORE (Plans, Prices, Offers, Coupons, Overrides, Global Config)
 // ============================================================================
@@ -1290,36 +1298,36 @@ enum OverrideType {
 }
 
 model PricePlan {
-  id          String      @id @default(cuid())
-  key         String      @unique           // e.g. "starter", "pro", "enterprise"
+  id          String   @id @default(cuid())
+  key         String   @unique // e.g. "starter", "pro", "enterprise"
   name        String
   description String?
-  active      Boolean     @default(true)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  prices      PlanPrice[]
-  offers      Offer[]
-  overrides   TenantPriceOverride[]
+  prices       PlanPrice[]
+  offers       Offer[]
+  overrides    TenantPriceOverride[]
   asDefaultFor GlobalMonetizationConfig[]
-  invites     OnboardingInvite[]
+  invites      OnboardingInvite[]
 }
 
 model PlanPrice {
-  id              String         @id @default(cuid())
+  id              String                     @id @default(cuid())
   planId          String
-  currency        String         @default("usd")
-  unitAmountCents Int            // 999 = $9.99
-  cadence         BillingCadence @default(MONTHLY)
-  trialDays       Int?           @default(0)
-  active          Boolean        @default(true)
-  stripePriceId   String?        // optional mapping
-  createdAt       DateTime       @default(now())
-  overrides   TenantPriceOverride[]
-  asDefaultFor GlobalMonetizationConfig[]
-  invites     OnboardingInvite[]
+  currency        String                     @default("usd")
+  unitAmountCents Int // 999 = $9.99
+  cadence         BillingCadence             @default(MONTHLY)
+  trialDays       Int?                       @default(0)
+  active          Boolean                    @default(true)
+  stripePriceId   String? // optional mapping
+  createdAt       DateTime                   @default(now())
+  overrides       TenantPriceOverride[]
+  asDefaultFor    GlobalMonetizationConfig[]
+  invites         OnboardingInvite[]
 
-  updatedAt       DateTime       @updatedAt
+  updatedAt DateTime @updatedAt
 
   plan PricePlan @relation(fields: [planId], references: [id], onDelete: Cascade)
 
@@ -1328,57 +1336,57 @@ model PlanPrice {
 }
 
 model Offer {
-  id              String      @id @default(cuid())
+  id              String    @id @default(cuid())
   name            String
-  percentOff      Int?        // 1..100
+  percentOff      Int? // 1..100
   amountOffCents  Int?
-  duration        String?     // 'once' | 'repeating' | 'forever'
+  duration        String? // 'once' | 'repeating' | 'forever'
   durationMonths  Int?
   appliesToPlanId String?
   startsAt        DateTime?
   endsAt          DateTime?
-  active          Boolean     @default(true)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  active          Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
-  appliesToPlan PricePlan? @relation(fields: [appliesToPlanId], references: [id])
+  appliesToPlan PricePlan?         @relation(fields: [appliesToPlanId], references: [id])
   invites       OnboardingInvite[]
 }
 
 model Coupon {
-  id              String      @id @default(cuid())
-  code            String      @unique
-  name            String?
-  percentOff      Int?
-  amountOffCents  Int?
-  duration        String?     // 'once' | 'repeating' | 'forever'
-  durationMonths  Int?
-  startsAt        DateTime?
-  endsAt          DateTime?
-  maxRedemptions  Int?
-  active          Boolean     @default(true)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  id             String    @id @default(cuid())
+  code           String    @unique
+  name           String?
+  percentOff     Int?
+  amountOffCents Int?
+  duration       String? // 'once' | 'repeating' | 'forever'
+  durationMonths Int?
+  startsAt       DateTime?
+  endsAt         DateTime?
+  maxRedemptions Int?
+  active         Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
-  invites       OnboardingInvite[]
+  invites OnboardingInvite[]
 }
 
 model TenantPriceOverride {
-  id              String        @id @default(cuid())
-  orgId           String
-  planId          String?
-  priceId         String?
-  type            OverrideType  @default(DISCOUNT)
-  percentOff      Int?
-  amountOffCents  Int?
-  priceCents      Int?
-  startsAt        DateTime?
-  endsAt          DateTime?
-  reason          String?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  id             String       @id @default(cuid())
+  orgId          String
+  planId         String?
+  priceId        String?
+  type           OverrideType @default(DISCOUNT)
+  percentOff     Int?
+  amountOffCents Int?
+  priceCents     Int?
+  startsAt       DateTime?
+  endsAt         DateTime?
+  reason         String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 
-  org   Org       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  org   Org        @relation(fields: [orgId], references: [id], onDelete: Cascade)
   plan  PricePlan? @relation(fields: [planId], references: [id])
   price PlanPrice? @relation(fields: [priceId], references: [id])
 
@@ -1401,18 +1409,18 @@ model GlobalMonetizationConfig {
 }
 
 model OnboardingInvite {
-  id         String   @id @default(cuid())
-  token      String   @unique
-  email      String?
-  planId     String?
-  priceId    String?
-  offerId    String?
-  couponId   String?
-  trialDays  Int?     @default(0)
-  expiresAt  DateTime
-  usedAt     DateTime?
-  note       String?
-  createdAt  DateTime @default(now())
+  id        String    @id @default(cuid())
+  token     String    @unique
+  email     String?
+  planId    String?
+  priceId   String?
+  offerId   String?
+  couponId  String?
+  trialDays Int?      @default(0)
+  expiresAt DateTime
+  usedAt    DateTime?
+  note      String?
+  createdAt DateTime  @default(now())
 
   plan   PricePlan? @relation(fields: [planId], references: [id])
   price  PlanPrice? @relation(fields: [priceId], references: [id])
@@ -1469,11 +1477,11 @@ enum RecommendationStatus {
 }
 
 model InfrastructureMetric {
-  id        String                 @id @default(cuid())
+  id        String                @id @default(cuid())
   service   InfrastructureService
   metric    MetricType
   value     Float
-  timestamp DateTime               @default(now())
+  timestamp DateTime              @default(now())
   metadata  Json?
 
   @@index([service, metric, timestamp])
@@ -1481,15 +1489,15 @@ model InfrastructureMetric {
 }
 
 model InfrastructureLimit {
-  id              String                 @id @default(cuid())
+  id              String                @id @default(cuid())
   service         InfrastructureService
   metric          MetricType
   currentPlan     String
   limitValue      Float
-  warningPercent  Float                  @default(75)  // Warning threshold percentage
-  criticalPercent Float                  @default(90)  // Critical threshold percentage
-  createdAt       DateTime               @default(now())
-  updatedAt       DateTime               @updatedAt
+  warningPercent  Float                 @default(75) // Warning threshold percentage
+  criticalPercent Float                 @default(90) // Critical threshold percentage
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
 
   @@unique([service, metric, currentPlan])
 }
@@ -1516,56 +1524,56 @@ enum ImportEntityType {
 }
 
 model ImportJob {
-  id              String            @id @default(cuid())
-  orgId           String
-  org             Org               @relation("OrgImportJobs", fields: [orgId], references: [id])
-  userId          String
-  user            User              @relation("UserImportJobs", fields: [userId], references: [id])
-  entityType      ImportEntityType
-  status          ImportStatus      @default(PENDING)
-  fileName        String
-  fileSize        Int               // bytes
-  totalRecords    Int               @default(0)
+  id               String           @id @default(cuid())
+  orgId            String
+  org              Org              @relation("OrgImportJobs", fields: [orgId], references: [id])
+  userId           String
+  user             User             @relation("UserImportJobs", fields: [userId], references: [id])
+  entityType       ImportEntityType
+  status           ImportStatus     @default(PENDING)
+  fileName         String
+  fileSize         Int // bytes
+  totalRecords     Int              @default(0)
   processedRecords Int              @default(0)
-  successCount    Int               @default(0)
-  errorCount      Int               @default(0)
-  skipCount       Int               @default(0)
-  mappingId       String?
-  mapping         ImportMapping?    @relation(fields: [mappingId], references: [id])
-  sampleData      Json?             // First 10 rows for preview
-  fieldMappings   Json?             // Field mapping configuration
-  transformRules  Json?             // Data transformation rules
-  validationRules Json?             // Validation configuration
-  progressPercent Int               @default(0)
-  startedAt       DateTime?
-  completedAt     DateTime?
-  errorSummary    String?
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
+  successCount     Int              @default(0)
+  errorCount       Int              @default(0)
+  skipCount        Int              @default(0)
+  mappingId        String?
+  mapping          ImportMapping?   @relation(fields: [mappingId], references: [id])
+  sampleData       Json? // First 10 rows for preview
+  fieldMappings    Json? // Field mapping configuration
+  transformRules   Json? // Data transformation rules
+  validationRules  Json? // Validation configuration
+  progressPercent  Int              @default(0)
+  startedAt        DateTime?
+  completedAt      DateTime?
+  errorSummary     String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
 
-  errors          ImportError[]
+  errors ImportError[]
 
   @@index([orgId, status, createdAt])
   @@index([userId, createdAt])
 }
 
 model ImportMapping {
-  id              String            @id @default(cuid())
+  id              String           @id @default(cuid())
   orgId           String
-  org             Org               @relation("OrgImportMappings", fields: [orgId], references: [id])
-  name            String            // User-friendly name (e.g., "QuickBooks Customer Import")
+  org             Org              @relation("OrgImportMappings", fields: [orgId], references: [id])
+  name            String // User-friendly name (e.g., "QuickBooks Customer Import")
   entityType      ImportEntityType
-  sourceFormat    String            // csv, excel, json, xml
-  fieldMappings   Json              // Source field → Cortiware field mappings
-  transformRules  Json              // Data transformation rules
-  validationRules Json              // Validation configuration
-  isTemplate      Boolean           @default(false)
-  useCount        Int               @default(0)
+  sourceFormat    String // csv, excel, json, xml
+  fieldMappings   Json // Source field → Cortiware field mappings
+  transformRules  Json // Data transformation rules
+  validationRules Json // Validation configuration
+  isTemplate      Boolean          @default(false)
+  useCount        Int              @default(0)
   lastUsedAt      DateTime?
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 
-  jobs            ImportJob[]
+  jobs ImportJob[]
 
   @@index([orgId, entityType])
   @@index([orgId, isTemplate])
@@ -1573,47 +1581,47 @@ model ImportMapping {
 }
 
 model ImportError {
-  id              String      @id @default(cuid())
-  importJobId     String
-  importJob       ImportJob   @relation(fields: [importJobId], references: [id], onDelete: Cascade)
-  rowNumber       Int
-  fieldName       String?
-  errorType       String      // validation, transformation, duplicate, missing_required
-  errorMessage    String
-  rawData         Json?       // Original row data for debugging
-  createdAt       DateTime    @default(now())
+  id           String    @id @default(cuid())
+  importJobId  String
+  importJob    ImportJob @relation(fields: [importJobId], references: [id], onDelete: Cascade)
+  rowNumber    Int
+  fieldName    String?
+  errorType    String // validation, transformation, duplicate, missing_required
+  errorMessage String
+  rawData      Json? // Original row data for debugging
+  createdAt    DateTime  @default(now())
 
   @@index([importJobId, errorType])
   @@index([importJobId, rowNumber])
 }
 
 model UpgradeRecommendation {
-  id                String                  @id @default(cuid())
-  service           InfrastructureService
-  currentPlan       String
-  recommendedPlan   String
-  priority          RecommendationPriority
-  status            RecommendationStatus    @default(PENDING)
-  reason            String
-  currentUsage      Float?                  // Current usage value
-  limitValue        Float?                  // Limit value for the metric
-  usagePercent      Float?                  // Usage as percentage
-  daysToLimit       Int?                    // Days until limit is reached
-  currentCost       Float?                  // Current monthly cost
-  projectedCost     Float?                  // Projected monthly cost
-  upgradeCost       Float?                  // Upgraded plan monthly cost
-  revenueImpact     Float?                  // Estimated revenue impact
-  profitImpact      Float?                  // Estimated profit impact
-  roi               Float?                  // Return on investment percentage
-  benefits          String?                 // Benefits of upgrading
-  risks             String?                 // Risks of not upgrading
-  estimatedCostUsd  Float?                  // Deprecated: use currentCost
-  estimatedSavings  Float?                  // Deprecated: use revenueImpact
-  roiMonths         Int?                    // Deprecated: use roi
-  createdAt         DateTime                @default(now())
-  updatedAt         DateTime                @updatedAt
-  acknowledgedAt    DateTime?
-  implementedAt     DateTime?
+  id               String                 @id @default(cuid())
+  service          InfrastructureService
+  currentPlan      String
+  recommendedPlan  String
+  priority         RecommendationPriority
+  status           RecommendationStatus   @default(PENDING)
+  reason           String
+  currentUsage     Float? // Current usage value
+  limitValue       Float? // Limit value for the metric
+  usagePercent     Float? // Usage as percentage
+  daysToLimit      Int? // Days until limit is reached
+  currentCost      Float? // Current monthly cost
+  projectedCost    Float? // Projected monthly cost
+  upgradeCost      Float? // Upgraded plan monthly cost
+  revenueImpact    Float? // Estimated revenue impact
+  profitImpact     Float? // Estimated profit impact
+  roi              Float? // Return on investment percentage
+  benefits         String? // Benefits of upgrading
+  risks            String? // Risks of not upgrading
+  estimatedCostUsd Float? // Deprecated: use currentCost
+  estimatedSavings Float? // Deprecated: use revenueImpact
+  roiMonths        Int? // Deprecated: use roi
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+  acknowledgedAt   DateTime?
+  implementedAt    DateTime?
 
   @@index([service, status])
   @@index([priority, status])
@@ -1622,18 +1630,251 @@ model UpgradeRecommendation {
 /// RefreshToken stores long-lived refresh tokens for token rotation
 /// Used with short-lived access tokens for improved security
 model RefreshToken {
-  id         String   @id @default(cuid())
-  sessionId  String   @unique
-  userId     String
-  email      String
-  role       String
-  expiresAt  DateTime
-  revoked    Boolean  @default(false)
-  revokedAt  DateTime?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id        String    @id @default(cuid())
+  sessionId String    @unique
+  userId    String
+  email     String
+  role      String
+  expiresAt DateTime
+  revoked   Boolean   @default(false)
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@index([userId])
   @@index([sessionId])
   @@index([expiresAt])
+}
+
+// ============================================================================
+// CLEANING VERTICAL - COMPLETE WORKFLOW MODELS
+// ============================================================================
+
+/// CleaningLead captures initial customer inquiries for cleaning services
+model CleaningLead {
+  id    String @id @default(cuid())
+  orgId String
+  org   Org    @relation("OrgCleaningLeads", fields: [orgId], references: [id])
+
+  // Contact info
+  company     String?
+  contactName String
+  email       String?
+  phone       String?
+
+  // Site info
+  address String
+  city    String
+  state   String
+  zip     String
+  lat     Decimal? @db.Decimal(10, 7)
+  lon     Decimal? @db.Decimal(10, 7)
+
+  // Service details
+  spaceType  String // residential, commercial, post-construction
+  squareFeet Int?
+  frequency  String? // one-time, weekly, bi-weekly, monthly
+
+  // Status
+  status String @default("NEW") // NEW, CONTACTED, ESTIMATED, WON, LOST
+
+  // AI estimate
+  aiEstimateJson Json?
+  aiTokensUsed   Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  estimates CleaningEstimate[]
+
+  @@index([orgId, status])
+  @@index([orgId, createdAt])
+}
+
+/// CleaningEstimate provides pricing options (Good/Better/Best) for cleaning services
+model CleaningEstimate {
+  id     String        @id @default(cuid())
+  orgId  String
+  org    Org           @relation("OrgCleaningEstimates", fields: [orgId], references: [id])
+  leadId String?
+  lead   CleaningLead? @relation(fields: [leadId], references: [id])
+
+  // Estimate details
+  version    Int    @default(1)
+  spaceType  String
+  squareFeet Int
+  frequency  String
+
+  // Pricing (3 options: Good, Better, Best)
+  optionsJson Json // [{tier, price, scope, features}]
+
+  // Status
+  status         String  @default("DRAFT") // DRAFT, SENT, ACCEPTED, REJECTED
+  acceptedOption String? // good, better, best
+
+  // E-signature
+  signedAt     DateTime?
+  signedBy     String?
+  signatureUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  contract CleaningContract?
+
+  @@index([orgId, status])
+  @@index([leadId])
+}
+
+/// CleaningContract manages recurring cleaning agreements with RRULE scheduling
+model CleaningContract {
+  id         String           @id @default(cuid())
+  orgId      String
+  org        Org              @relation("OrgCleaningContracts", fields: [orgId], references: [id])
+  estimateId String           @unique
+  estimate   CleaningEstimate @relation(fields: [estimateId], references: [id])
+
+  // Contract details
+  customerId  String? // Link to Customer model if exists
+  siteAddress String
+  spaceType   String
+  squareFeet  Int
+
+  // Recurrence (RRULE)
+  recurrenceRule String? // RRULE format
+  frequency      String // one-time, weekly, bi-weekly, monthly
+  startDate      DateTime
+  endDate        DateTime?
+
+  // Pricing
+  basePrice    Decimal  @db.Decimal(12, 2)
+  taxRate      Decimal? @db.Decimal(5, 2)
+  escalatorPct Decimal? @db.Decimal(5, 2) // Annual price increase %
+
+  // SLA
+  slaResponseHours   Int?
+  slaCompletionHours Int?
+
+  // Status
+  status String @default("ACTIVE") // ACTIVE, PAUSED, CANCELLED, COMPLETED
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  workOrders CleaningWorkOrder[]
+
+  @@index([orgId, status])
+  @@index([orgId, startDate])
+}
+
+/// CleaningWorkOrder represents individual cleaning jobs with scheduling and execution tracking
+model CleaningWorkOrder {
+  id         String            @id @default(cuid())
+  orgId      String
+  org        Org               @relation("OrgCleaningWorkOrders", fields: [orgId], references: [id])
+  contractId String?
+  contract   CleaningContract? @relation(fields: [contractId], references: [id])
+
+  // Work order details
+  publicId    String @unique
+  siteAddress String
+  spaceType   String
+  squareFeet  Int
+
+  // Scheduling
+  scheduledDate  DateTime
+  scheduledStart DateTime
+  scheduledEnd   DateTime
+
+  // Assignment
+  assignedTo String? // User ID
+  assignedAt DateTime?
+
+  // Execution
+  actualStart DateTime?
+  actualEnd   DateTime?
+
+  // Status
+  status String @default("SCHEDULED") // SCHEDULED, ASSIGNED, IN_PROGRESS, COMPLETED, CANCELLED
+
+  // Checklist
+  checklistJson Json? // SOP checklist with completion status
+
+  // QA
+  inspectionId String?
+
+  // Photos/signatures
+  photosJson   Json? // [{url, timestamp, type}]
+  signatureUrl String?
+  signedBy     String?
+  signedAt     DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  events     CleaningWorkOrderEvent[]
+  inspection CleaningInspection?      @relation(fields: [inspectionId], references: [id])
+
+  @@index([orgId, status])
+  @@index([orgId, scheduledDate])
+  @@index([assignedTo, scheduledDate])
+}
+
+/// CleaningWorkOrderEvent tracks timeline/audit trail for work order lifecycle
+model CleaningWorkOrderEvent {
+  id          String            @id @default(cuid())
+  workOrderId String
+  workOrder   CleaningWorkOrder @relation(fields: [workOrderId], references: [id])
+
+  eventType String // CREATED, ASSIGNED, STARTED, PAUSED, RESUMED, COMPLETED, CANCELLED
+  userId    String?
+  timestamp DateTime @default(now())
+  metadata  Json?
+
+  @@index([workOrderId, timestamp])
+}
+
+/// CleaningInspection manages QA scoring and defect tracking for completed work
+model CleaningInspection {
+  id          String              @id @default(cuid())
+  orgId       String
+  org         Org                 @relation("OrgCleaningInspections", fields: [orgId], references: [id])
+  workOrderId String              @unique
+  workOrders  CleaningWorkOrder[]
+
+  // Inspection details
+  inspectorId String? // User ID
+  inspectedAt DateTime?
+
+  // Scoring
+  checklistJson Json // [{item, passed, notes, photo}]
+  score         Decimal? @db.Decimal(5, 2) // 0-100
+  defectsCount  Int      @default(0)
+
+  // Status
+  status String @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([orgId, status])
+  @@index([orgId, inspectedAt])
+}
+
+/// CleaningChecklistTemplate defines reusable QA checklists by space type
+model CleaningChecklistTemplate {
+  id    String @id @default(cuid())
+  orgId String
+  org   Org    @relation("OrgCleaningChecklistTemplates", fields: [orgId], references: [id])
+
+  name      String
+  spaceType String // residential, commercial, post-construction
+  itemsJson Json // [{category, item, required, photo_required}]
+
+  isDefault Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([orgId, spaceType])
 }
