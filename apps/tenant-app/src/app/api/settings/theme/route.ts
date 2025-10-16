@@ -8,7 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@cortiware/auth-service';
-import { createErrorResponse } from '@cortiware/db';
+import { createErrorResponse } from '@cortiware/db/src/errors';
 
 export const dynamic = 'force-dynamic';
 
