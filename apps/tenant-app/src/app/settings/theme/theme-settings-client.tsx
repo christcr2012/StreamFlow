@@ -90,7 +90,7 @@ export default function ThemeSettingsClient() {
             Theme Customization
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1 text-sm md:text-base">
-            Customize your organization's UI theme with custom colors
+            Customize your organization&apos;s UI theme with custom colors
           </p>
         </div>
 
