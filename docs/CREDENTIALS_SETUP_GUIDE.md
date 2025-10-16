@@ -1,6 +1,6 @@
 # Cortiware Credentials & Configuration Setup Guide
 
-**Last Updated:** January 13, 2025  
+**Last Updated:** January 13, 2025
 **Version:** 1.0.0
 
 This comprehensive guide documents all third-party services, API keys, tokens, and configuration required to set up and deploy the Cortiware monorepo (Tenant App + Provider Portal).
@@ -45,9 +45,9 @@ This comprehensive guide documents all third-party services, API keys, tokens, a
 
 ### 1. **Vercel** (Deployment Platform)
 
-**Purpose:** Hosting, deployment, serverless functions, edge network  
-**Account URL:** https://vercel.com/signup  
-**Required Plan:** Hobby (Free) or Pro ($20/month per user)  
+**Purpose:** Hosting, deployment, serverless functions, edge network
+**Account URL:** https://vercel.com/signup
+**Required Plan:** Hobby (Free) or Pro ($20/month per user)
 **Why Needed:** Primary deployment platform for both Tenant App and Provider Portal
 
 **Features Used:**
@@ -71,9 +71,9 @@ This comprehensive guide documents all third-party services, API keys, tokens, a
 
 ### 2. **Neon Database** (PostgreSQL)
 
-**Purpose:** Primary PostgreSQL database for all application data  
-**Account URL:** https://neon.tech/  
-**Required Plan:** Free tier (0.5 GB storage) or Pro ($19/month)  
+**Purpose:** Primary PostgreSQL database for all application data
+**Account URL:** https://neon.tech/
+**Required Plan:** Free tier (0.5 GB storage) or Pro ($19/month)
 **Why Needed:** Stores all tenant data, jobs, customers, invoices, users, etc.
 
 **Features Used:**
@@ -101,9 +101,9 @@ postgresql://[user]:[password]@[host]/[database]?sslmode=require
 
 ### 3. **Vercel KV** (Redis)
 
-**Purpose:** Session storage, nonce tracking, rate limiting, caching  
-**Account URL:** https://vercel.com/dashboard (integrated with Vercel)  
-**Required Plan:** Hobby (Free - 256 MB) or Pro ($10/month - 512 MB)  
+**Purpose:** Session storage, nonce tracking, rate limiting, caching
+**Account URL:** https://vercel.com/dashboard (integrated with Vercel)
+**Required Plan:** Hobby (Free - 256 MB) or Pro ($10/month - 512 MB)
 **Why Needed:** Distributed session management, SSO ticket replay protection
 
 **Features Used:**
@@ -134,9 +134,9 @@ If not configured, the app uses an in-memory fallback (NOT suitable for producti
 
 ### 4. **Vercel Blob** (File Storage)
 
-**Purpose:** Cloud storage for job photos and file uploads  
-**Account URL:** https://vercel.com/dashboard (integrated with Vercel)  
-**Required Plan:** Hobby (Free - 1 GB) or Pro ($0.15/GB/month)  
+**Purpose:** Cloud storage for job photos and file uploads
+**Account URL:** https://vercel.com/dashboard (integrated with Vercel)
+**Required Plan:** Hobby (Free - 1 GB) or Pro ($0.15/GB/month)
 **Why Needed:** Job photo uploads, document storage
 
 **Features Used:**
@@ -162,9 +162,9 @@ If not configured, the app uses an in-memory fallback (NOT suitable for producti
 
 ### 5. **Email Service** (Resend or SendGrid)
 
-**Purpose:** Transactional emails (invoice notifications, job updates)  
-**Account URL:** https://resend.com/ or https://sendgrid.com/  
-**Required Plan:** Resend Free (100 emails/day) or SendGrid Free (100 emails/day)  
+**Purpose:** Transactional emails (invoice notifications, job updates)
+**Account URL:** https://resend.com/ or https://sendgrid.com/
+**Required Plan:** Resend Free (100 emails/day) or SendGrid Free (100 emails/day)
 **Why Needed:** Email notifications for invoices, job status changes
 
 **Features Blocked:**
@@ -195,9 +195,9 @@ If not configured, the app uses an in-memory fallback (NOT suitable for producti
 
 ### 6. **Stripe** (Payment Processing) - OPTIONAL
 
-**Purpose:** Payment processing for invoices (future feature)  
-**Account URL:** https://stripe.com/  
-**Required Plan:** Free (2.9% + $0.30 per transaction)  
+**Purpose:** Payment processing for invoices (future feature)
+**Account URL:** https://stripe.com/
+**Required Plan:** Free (2.9% + $0.30 per transaction)
 **Why Needed:** Online invoice payments, subscription billing
 
 **Features (Future):**
@@ -218,6 +218,35 @@ If not configured, the app uses an in-memory fallback (NOT suitable for producti
 **Current Status:** ❌ **NOT CONFIGURED** (Not yet implemented)
 
 ---
+
+### 6. Gmail API (Provider Email via OAuth)
+
+Purpose: Allow the Provider Portal to send emails via your Google Workspace mailbox using Gmail OAuth (gmail.send scope only).
+
+Setup Steps:
+1) Enable Gmail API in Google Cloud Console
+2) Configure OAuth consent (External or Internal for Workspace)
+3) Create OAuth Client (Web application)
+   - Authorized JavaScript origins: https://provider.yourdomain.com
+   - Authorized redirect URIs: https://provider.yourdomain.com/api/provider/email/connect/callback
+4) Copy credentials into Vercel → Provider Portal project
+   - GOOGLE_CLIENT_ID
+   - GOOGLE_CLIENT_SECRET
+5) (Optional) Set NEXT_PUBLIC_PROVIDER_URL to your provider hostname
+6) Connect in app: Provider Portal → Settings → Email → Connect Gmail
+
+Environment Variables (Provider Portal):
+```bash
+GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+NEXT_PUBLIC_PROVIDER_URL=https://provider.yourdomain.com
+ENCRYPTION_MASTER_KEY=your-strong-random-secret-32B+
+```
+
+Security & Storage:
+- Refresh tokens are AES-256-GCM encrypted at rest using ENCRYPTION_MASTER_KEY and stored in Vercel KV.
+- Only gmail.send scope is requested (no mailbox read).
+
 
 ## 📝 Environment Variables Reference
 
@@ -682,7 +711,7 @@ git push origin main
 
 ---
 
-**Document Version:** 1.0.0  
-**Last Updated:** January 13, 2025  
+**Document Version:** 1.0.0
+**Last Updated:** January 13, 2025
 **Maintained By:** Development Team
 

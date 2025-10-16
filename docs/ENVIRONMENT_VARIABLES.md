@@ -53,6 +53,25 @@ STRIPE_WEBHOOK_SECRET=whsec_xxx
 OPENAI_API_KEY=sk-xxx
 ```
 
+### Provider Email via Gmail OAuth
+
+```bash
+# Gmail OAuth Web Client
+GOOGLE_CLIENT_ID=100459931667-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+
+# Optional: Public base URL for Provider Portal (used for OAuth redirect when origin not present)
+NEXT_PUBLIC_PROVIDER_URL=https://provider.yourdomain.com
+
+# Encryption master key (used to encrypt refresh tokens stored in KV)
+ENCRYPTION_MASTER_KEY=your-strong-random-secret-32B+
+```
+
+Notes:
+- Refresh tokens are encrypted with AES-256-GCM and stored in Vercel KV.
+- Vercel KV connection variables (KV_URL/KV_TOKEN) are auto-added by Vercel when you link a KV database.
+
+
 ### Redis/KV (Optional - Phase 2)
 
 ```bash
