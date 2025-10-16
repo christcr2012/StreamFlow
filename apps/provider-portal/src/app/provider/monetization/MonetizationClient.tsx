@@ -274,6 +274,11 @@ export default function MonetizationClient() {
       {/* Quick Create Plan */}
       <div className="rounded-xl p-4" style={{ background:'var(--glass-bg)', border:'1px solid var(--border-accent)' }}>
         <div className="font-semibold mb-3" style={{ color:'var(--text-primary)' }}>Create Plan</div>
+        <div className="mb-2"><HelpDrawer title="What is a Plan?">
+          <p>Plans are named bundles of features and prices. Assign tenants to a plan to give them a baseline set of capabilities and pricing.</p>
+          <p>Creating a plan does not change existing tenants until you assign it or update defaults.</p>
+        </HelpDrawer></div>
+
         <div className="grid gap-3 md:grid-cols-3">
           <Field label="Key"><input value={planForm.key} onChange={e=>setPlanForm(v=>({...v,key:e.target.value}))} className="w-full px-3 py-2 rounded border" style={{ background:'var(--glass-bg)', borderColor:'var(--border-accent)' }} /></Field>
           <Field label="Name"><input value={planForm.name} onChange={e=>setPlanForm(v=>({...v,name:e.target.value}))} className="w-full px-3 py-2 rounded border" style={{ background:'var(--glass-bg)', borderColor:'var(--border-accent)' }} /></Field>
@@ -287,6 +292,10 @@ export default function MonetizationClient() {
             Confirm Create Plan
           </ConfirmDialog>
         </div>
+        <div className="mb-2"><HelpDrawer title="What is a Price?">
+          <p>Prices belong to a plan and define how much is charged per billing cycle (monthly or yearly). They don’t affect existing tenants until applied.</p>
+        </HelpDrawer></div>
+
       </div>
 
       {/* Quick Create Price */}
@@ -312,6 +321,7 @@ export default function MonetizationClient() {
           <ConfirmDialog
             summary={`Create price $${((Number(priceForm.unitAmountCents||0))/100).toFixed(2)}/${(priceForm.cadence||'MONTHLY').toLowerCase()} for plan ${priceForm.planId||'(none)'} at scope: ${scope.type}${impact ? ` · preview shows ${impact.tenantsAffected} tenant(s)` : ''}`}
             onConfirm={createPrice}
+
           >
             Confirm Create Price
           </ConfirmDialog>
@@ -321,9 +331,14 @@ export default function MonetizationClient() {
       {/* Generate Invite */}
       <div className="rounded-xl p-4" style={{ background:'var(--glass-bg)', border:'1px solid var(--border-accent)' }}>
         <div className="font-semibold mb-3" style={{ color:'var(--text-primary)' }}>Generate Onboarding Invite</div>
+        <div className="mb-2"><HelpDrawer title="What is an Onboarding Invite?">
+          <p>Creates a one-time signup link for a new tenant with your chosen plan, price, and optional trial. We will copy the link to your clipboard when created.</p>
+        </HelpDrawer></div>
+
         <div className="grid gap-3 md:grid-cols-3">
           <Field label="Email"><input value={inviteForm.email} onChange={e=>setInviteForm(v=>({...v,email:e.target.value}))} className="w-full px-3 py-2 rounded border" style={{ background:'var(--glass-bg)', borderColor:'var(--border-accent)' }} /></Field>
           <Field label="Plan">
+
             <select value={inviteForm.planId} onChange={e=>setInviteForm(v=>({...v,planId:e.target.value}))} className="w-full px-3 py-2 rounded border" style={{ background:'var(--glass-bg)', borderColor:'var(--border-accent)' }}>
               <option value="">Select plan</option>
               {planOptions.map(p=>(<option key={p.id} value={p.id}>{p.name}</option>))}
@@ -336,6 +351,7 @@ export default function MonetizationClient() {
             </select>
           </Field>
           <Field label="Trial Days"><input type="number" value={inviteForm.trialDays} onChange={e=>setInviteForm(v=>({...v,trialDays:Number(e.target.value||0)}))} className="w-full px-3 py-2 rounded border" style={{ background:'var(--glass-bg)', borderColor:'var(--border-accent)' }} /></Field>
+
           <Field label="Expires In (minutes)"><input type="number" value={inviteForm.expiresInMinutes} onChange={e=>setInviteForm(v=>({...v,expiresInMinutes:Number(e.target.value||0)}))} className="w-full px-3 py-2 rounded border" style={{ background:'var(--glass-bg)', borderColor:'var(--border-accent)' }} /></Field>
         </div>
         <div className="flex justify-end mt-3">
@@ -351,9 +367,15 @@ export default function MonetizationClient() {
       {/* Global Config */}
       <div className="rounded-xl p-4" style={{ background:'var(--glass-bg)', border:'1px solid var(--border-accent)' }}>
         <div className="font-semibold mb-3" style={{ color:'var(--text-primary)' }}>Global Defaults</div>
+        <div className="mb-2"><HelpDrawer title="What are Global Defaults?">
+          <p>Defaults only apply to new tenants you create or invite. Changing defaults does not modify existing tenants.</p>
+        </HelpDrawer></div>
+
         <div className="grid gap-3 md:grid-cols-3">
           <Field label="Default Plan">
             <select value={cfg?.defaultPlanId || ''} onChange={e=>updateGlobal({ defaultPlanId: e.target.value||null })} className="w-full px-3 py-2 rounded border" style={{ background:'var(--glass-bg)', borderColor:'var(--border-accent)' }}>
+
+
               <option value="">—</option>
               {planOptions.map(p=>(<option key={p.id} value={p.id}>{p.name}</option>))}
             </select>
@@ -375,9 +397,14 @@ export default function MonetizationClient() {
       {/* Coupons */}
       <div className="rounded-xl p-4" style={{ background:'var(--glass-bg)', border:'1px solid var(--border-accent)' }}>
         <div className="font-semibold mb-3" style={{ color:'var(--text-primary)' }}>Coupons</div>
+        <div className="mb-2"><HelpDrawer title="What are Coupons?">
+          <p>Coupons are discount codes you can apply to subscriptions. They can be a percentage off, a fixed amount off, or repeat for a duration.</p>
+        </HelpDrawer></div>
+
         {/* Create */}
         <div className="grid gap-3 md:grid-cols-4">
           <Field label="Code"><input value={couponForm.code} onChange={e=>setCouponForm(v=>({...v,code:e.target.value}))} className="w-full px-3 py-2 rounded border" style={{ background:'var(--glass-bg)', borderColor:'var(--border-accent)' }} /></Field>
+
           <Field label="Percent Off"><input type="number" value={couponForm.percentOff} onChange={e=>setCouponForm(v=>({...v,percentOff:Number(e.target.value||0)}))} className="w-full px-3 py-2 rounded border" style={{ background:'var(--glass-bg)', borderColor:'var(--border-accent)' }} /></Field>
           <Field label="Amount Off (cents)"><input type="number" value={couponForm.amountOffCents} onChange={e=>setCouponForm(v=>({...v,amountOffCents:Number(e.target.value||0)}))} className="w-full px-3 py-2 rounded border" style={{ background:'var(--glass-bg)', borderColor:'var(--border-accent)' }} /></Field>
           <Field label="Duration">
@@ -441,6 +468,10 @@ export default function MonetizationClient() {
       {/* Offers */}
       <div className="rounded-xl p-4" style={{ background:'var(--glass-bg)', border:'1px solid var(--border-accent)' }}>
         <div className="font-semibold mb-3" style={{ color:'var(--text-primary)' }}>Offers</div>
+        <div className="mb-2"><HelpDrawer title="What are Offers?">
+          <p>Offers are marketing bundles (e.g., temporary discounts or trials) you can present to tenants or during onboarding. They don’t change existing subscriptions until applied.</p>
+        </HelpDrawer></div>
+
         {/* Create */}
         <div className="grid gap-3 md:grid-cols-3">
           <Field label="Key"><input value={offerForm.key} onChange={e=>setOfferForm(v=>({...v,key:e.target.value}))} className="w-full px-3 py-2 rounded border" style={{ background:'var(--glass-bg)', borderColor:'var(--border-accent)' }} /></Field>
@@ -505,6 +536,10 @@ export default function MonetizationClient() {
       {/* Tenant Overrides */}
       <div className="rounded-xl p-4" style={{ background:'var(--glass-bg)', border:'1px solid var(--border-accent)' }}>
         <div className="font-semibold mb-3" style={{ color:'var(--text-primary)' }}>Tenant Price Overrides</div>
+        <div className="mb-2"><HelpDrawer title="What are Tenant Overrides?">
+          <p>An override changes pricing for a single tenant only. It takes precedence over plan and global defaults and is safe to remove later.</p>
+        </HelpDrawer></div>
+
         <div className="grid gap-3 md:grid-cols-4">
           <Field label="Org ID"><input list="org-list" value={overrideForm.orgId} onChange={e=>setOverrideForm(v=>({...v,orgId:e.target.value}))} className="w-full px-3 py-2 rounded border" style={{ background:'var(--glass-bg)', borderColor:'var(--border-accent)' }} /></Field>
           <datalist id="org-list">
