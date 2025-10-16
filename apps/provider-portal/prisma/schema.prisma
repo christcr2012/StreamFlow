@@ -1586,4 +1586,98 @@ model VulnerabilityScan {
   @@index([scanDate])
 }
 
+// ============================================
+// DEVELOPER PORTAL MODELS
+// ============================================
+
+/// Webhook endpoints for event notifications
+model WebhookEndpoint {
+  id          String   @id @default(cuid())
+  name        String
+  url         String
+  events      String[] // Array of event types to subscribe to
+  secret      String   // HMAC secret for signature verification
+  active      Boolean  @default(true)
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  deliveries  WebhookDelivery[]
+
+  @@index([active])
+  @@index([createdAt])
+}
+
+/// Webhook delivery logs and retry tracking
+model WebhookDelivery {
+  id            String   @id @default(cuid())
+  endpointId    String
+  endpoint      WebhookEndpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
+  event         String
+  payload       Json
+  status        String   // 'pending' | 'success' | 'failed' | 'retrying'
+  statusCode    Int?
+  responseBody  String?  @db.Text
+  errorMessage  String?  @db.Text
+  attempts      Int      @default(0)
+  maxAttempts   Int      @default(3)
+  nextRetryAt   DateTime?
+  deliveredAt   DateTime?
+  createdAt     DateTime @default(now())
+
+  @@index([endpointId, createdAt])
+  @@index([status, nextRetryAt])
+  @@index([event, createdAt])
+}
+
+/// Developer API keys for authentication
+model DeveloperApiKey {
+  id          String   @id @default(cuid())
+  name        String
+  description String?  @db.Text
+  keyHash     String   @unique
+  keyPrefix   String   // First 8 chars for identification (e.g., "dev_1234")
+  scopes      String[] // Array of permitted scopes
+  expiresAt   DateTime?
+  lastUsedAt  DateTime?
+  usageCount  Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([keyPrefix])
+  @@index([expiresAt])
+  @@index([createdAt])
+}
+
+/// API usage metrics for developer dashboards
+model ApiUsageMetric {
+  id          String   @id @default(cuid())
+  endpoint    String
+  method      String   // 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+  statusCode  Int
+  latency     Int      // Response time in milliseconds
+  apiKeyId    String?  // Reference to DeveloperApiKey if authenticated
+  userAgent   String?
+  ipAddress   String?
+  timestamp   DateTime @default(now())
+
+  @@index([endpoint, timestamp])
+  @@index([apiKeyId, timestamp])
+  @@index([statusCode, timestamp])
+  @@index([timestamp])
+}
+
+/// AI Developer Assistant conversation history
+model AiAssistantConversation {
+  id          String   @id @default(cuid())
+  sessionId   String
+  role        String   // 'user' | 'assistant' | 'system'
+  content     String   @db.Text
+  metadata    Json?    // Code snippets, API references, etc.
+  createdAt   DateTime @default(now())
+
+  @@index([sessionId, createdAt])
+  @@index([createdAt])
+}
+
 
