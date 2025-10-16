@@ -1,0 +1,121 @@
+name: E2E Tests (Playwright)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Run nightly at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      tenant_app_url:
+        description: 'Tenant App URL to test'
+        required: false
+        default: ''
+      provider_portal_url:
+        description: 'Provider Portal URL to test'
+        required: false
+        default: ''
+
+jobs:
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [tenant-app-chromium, provider-portal-chromium]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Set up test environment
+        run: |
+          cp .env.test.example .env.test
+          # Set test credentials from secrets
+          echo "TEST_OWNER_EMAIL=${{ secrets.TEST_OWNER_EMAIL || 'owner@test.com' }}" >> .env.test
+          echo "TEST_OWNER_PASSWORD=${{ secrets.TEST_OWNER_PASSWORD || 'password123' }}" >> .env.test
+          echo "TEST_MANAGER_EMAIL=${{ secrets.TEST_MANAGER_EMAIL || 'manager@test.com' }}" >> .env.test
+          echo "TEST_MANAGER_PASSWORD=${{ secrets.TEST_MANAGER_PASSWORD || 'password123' }}" >> .env.test
+          echo "TEST_TECH_EMAIL=${{ secrets.TEST_TECH_EMAIL || 'tech@test.com' }}" >> .env.test
+          echo "TEST_TECH_PASSWORD=${{ secrets.TEST_TECH_PASSWORD || 'password123' }}" >> .env.test
+          echo "TEST_PROVIDER_EMAIL=${{ secrets.TEST_PROVIDER_EMAIL || 'provider@test.com' }}" >> .env.test
+          echo "TEST_PROVIDER_PASSWORD=${{ secrets.TEST_PROVIDER_PASSWORD || 'password123' }}" >> .env.test
+
+      - name: Set deployment URLs
+        run: |
+          if [ -n "${{ inputs.tenant_app_url }}" ]; then
+            echo "TENANT_APP_URL=${{ inputs.tenant_app_url }}" >> .env.test
+          elif [ -n "${{ vars.STAGING_TENANT_APP_URL }}" ]; then
+            echo "TENANT_APP_URL=${{ vars.STAGING_TENANT_APP_URL }}" >> .env.test
+          fi
+          
+          if [ -n "${{ inputs.provider_portal_url }}" ]; then
+            echo "PROVIDER_PORTAL_URL=${{ inputs.provider_portal_url }}" >> .env.test
+          elif [ -n "${{ vars.STAGING_PROVIDER_PORTAL_URL }}" ]; then
+            echo "PROVIDER_PORTAL_URL=${{ vars.STAGING_PROVIDER_PORTAL_URL }}" >> .env.test
+          fi
+
+      - name: Run Playwright tests
+        run: npx playwright test --project=${{ matrix.project }}
+        env:
+          CI: true
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results-${{ matrix.project }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 30
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.project }}
+          path: playwright-report/
+          retention-days: 30
+
+  e2e-summary:
+    name: E2E Test Summary
+    runs-on: ubuntu-latest
+    needs: e2e-tests
+    if: always()
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Generate summary
+        run: |
+          echo "# E2E Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Test Execution" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tenant App Tests**: ${{ needs.e2e-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Provider Portal Tests**: ${{ needs.e2e-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "Test reports and screenshots are available in the artifacts section." >> $GITHUB_STEP_SUMMARY
+
