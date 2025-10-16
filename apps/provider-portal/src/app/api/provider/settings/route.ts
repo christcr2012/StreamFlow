@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getProviderSession } from '@/lib/api/auth';
-import { createErrorResponse } from '@/lib/api/response';
+import { getProviderSession } from '@/lib/api/withProviderAuth';
+import { jsonError } from '@/lib/api/response';
 
 /**
  * GET /api/provider/settings
@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     const session = getProviderSession(request);
     
     if (!session) {
-      return createErrorResponse('unauthorized', 'Provider authentication required');
+      return jsonError(401, 'unauthorized', 'Provider authentication required');
     }
 
     // Fetch provider config (there should only be one row)
@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error fetching provider settings:', error);
-    return createErrorResponse('internal_error', 'Failed to fetch provider settings');
+    return jsonError(500, 'internal_error', 'Failed to fetch provider settings');
   }
 }
 
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
     const session = getProviderSession(request);
     
     if (!session) {
-      return createErrorResponse('unauthorized', 'Provider authentication required');
+      return jsonError(401, 'unauthorized', 'Provider authentication required');
     }
 
     const body = await request.json();
@@ -114,15 +114,15 @@ export async function POST(request: NextRequest) {
 
     // Validate inputs
     if (providerName && typeof providerName !== 'string') {
-      return createErrorResponse('validation_error', 'Provider name must be a string');
+      return jsonError(400, 'validation_error', 'Provider name must be a string');
     }
 
     if (contactEmail && typeof contactEmail !== 'string') {
-      return createErrorResponse('validation_error', 'Contact email must be a string');
+      return jsonError(400, 'validation_error', 'Contact email must be a string');
     }
 
     if (supportUrl && typeof supportUrl !== 'string') {
-      return createErrorResponse('validation_error', 'Support URL must be a string');
+      return jsonError(400, 'validation_error', 'Support URL must be a string');
     }
 
     // Get or create provider config
@@ -182,7 +182,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error updating provider settings:', error);
-    return createErrorResponse('internal_error', 'Failed to update provider settings');
+    return jsonError(500, 'internal_error', 'Failed to update provider settings');
   }
 }
 
