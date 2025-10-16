@@ -29,6 +29,7 @@
     "test:e2e:playwright:report": "playwright show-report",
     "test:e2e:tenant": "playwright test tests/e2e-playwright/tenant-app",
     "test:e2e:provider": "playwright test tests/e2e-playwright/provider-portal",
+    "test:e2e:vercel": "powershell -ExecutionPolicy Bypass -File ./scripts/run-e2e-vercel.ps1",
     "test:e2e:all": "npm run test:unit && npm run test:e2e && npm run test:e2e:playwright",
     "contracts:gen": "node scripts/generate-contract-snapshot.js",
     "contracts:diff": "node scripts/diff-contracts.js --fail-on-breaking",
