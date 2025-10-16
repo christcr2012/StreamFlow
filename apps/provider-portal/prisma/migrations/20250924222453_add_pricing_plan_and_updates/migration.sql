@@ -1,4 +1,8 @@
 /*
+  @migration-guardrail-override
+  Historical migration - already applied to production databases.
+  This migration was approved and applied before migration safety guardrails were implemented.
+
   Warnings:
 
   - You are about to drop the column `action` on the `AuditLog` table. All the data in the column will be lost.
