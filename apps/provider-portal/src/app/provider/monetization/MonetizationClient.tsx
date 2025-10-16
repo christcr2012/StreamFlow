@@ -279,7 +279,14 @@ export default function MonetizationClient() {
           <Field label="Name"><input value={planForm.name} onChange={e=>setPlanForm(v=>({...v,name:e.target.value}))} className="w-full px-3 py-2 rounded border" style={{ background:'var(--glass-bg)', borderColor:'var(--border-accent)' }} /></Field>
           <Field label="Description"><input value={planForm.description} onChange={e=>setPlanForm(v=>({...v,description:e.target.value}))} className="w-full px-3 py-2 rounded border" style={{ background:'var(--glass-bg)', borderColor:'var(--border-accent)' }} /></Field>
         </div>
-        <div className="flex justify-end mt-3"><button onClick={createPlan} className="px-3 py-2 rounded" style={{ background:'var(--brand-primary)', color:'var(--bg-main)' }}>Create Plan</button></div>
+        <div className="flex justify-end mt-3">
+          <ConfirmDialog
+            summary={`Create new plan "${planForm.name||planForm.key||'unnamed'}" at scope: ${scope.type}${scope.type==='plan' ? ' (selected plan)' : scope.type==='tenant' ? ' (selected tenant only)' : ' (global)'}${impact ? ` · preview shows ${impact.tenantsAffected} tenant(s) affected` : ''}`}
+            onConfirm={createPlan}
+          >
+            Confirm Create Plan
+          </ConfirmDialog>
+        </div>
       </div>
 
       {/* Quick Create Price */}
@@ -301,7 +308,14 @@ export default function MonetizationClient() {
           </Field>
           <Field label="Amount (cents)"><input type="number" value={priceForm.unitAmountCents} onChange={e=>setPriceForm(v=>({...v,unitAmountCents:Number(e.target.value||0)}))} className="w-full px-3 py-2 rounded border" style={{ background:'var(--glass-bg)', borderColor:'var(--border-accent)' }} /></Field>
         </div>
-        <div className="flex justify-end mt-3"><button onClick={createPrice} className="px-3 py-2 rounded" style={{ background:'var(--brand-primary)', color:'var(--bg-main)' }}>Create Price</button></div>
+        <div className="flex justify-end mt-3">
+          <ConfirmDialog
+            summary={`Create price $${((Number(priceForm.unitAmountCents||0))/100).toFixed(2)}/${(priceForm.cadence||'MONTHLY').toLowerCase()} for plan ${priceForm.planId||'(none)'} at scope: ${scope.type}${impact ? ` · preview shows ${impact.tenantsAffected} tenant(s)` : ''}`}
+            onConfirm={createPrice}
+          >
+            Confirm Create Price
+          </ConfirmDialog>
+        </div>
       </div>
 
       {/* Generate Invite */}
@@ -324,7 +338,14 @@ export default function MonetizationClient() {
           <Field label="Trial Days"><input type="number" value={inviteForm.trialDays} onChange={e=>setInviteForm(v=>({...v,trialDays:Number(e.target.value||0)}))} className="w-full px-3 py-2 rounded border" style={{ background:'var(--glass-bg)', borderColor:'var(--border-accent)' }} /></Field>
           <Field label="Expires In (minutes)"><input type="number" value={inviteForm.expiresInMinutes} onChange={e=>setInviteForm(v=>({...v,expiresInMinutes:Number(e.target.value||0)}))} className="w-full px-3 py-2 rounded border" style={{ background:'var(--glass-bg)', borderColor:'var(--border-accent)' }} /></Field>
         </div>
-        <div className="flex justify-end mt-3"><button onClick={createInvite} className="px-3 py-2 rounded" style={{ background:'var(--brand-primary)', color:'var(--bg-main)' }}>Create Invite</button></div>
+        <div className="flex justify-end mt-3">
+          <ConfirmDialog
+            summary={`Create onboarding invite for ${inviteForm.email||'(no email)'} · plan ${inviteForm.planId||'(none)'} · price ${inviteForm.priceId||'(none)'} · trial ${inviteForm.trialDays||0} days · expires in ${inviteForm.expiresInMinutes||0} minutes.`}
+            onConfirm={createInvite}
+          >
+            Confirm Create Invite
+          </ConfirmDialog>
+        </div>
       </div>
 
       {/* Global Config */}
@@ -367,7 +388,14 @@ export default function MonetizationClient() {
             </select>
           </Field>
         </div>
-        <div className="flex justify-end mt-3"><button onClick={createCoupon} className="px-3 py-2 rounded" style={{ background:'var(--brand-primary)', color:'var(--bg-main)' }}>Create Coupon</button></div>
+        <div className="flex justify-end mt-3">
+          <ConfirmDialog
+            summary={`Create coupon ${couponForm.code||'(no code)'} \u00b7 ${couponForm.percentOff? `${couponForm.percentOff}% off` : couponForm.amountOffCents? `$${((Number(couponForm.amountOffCents))/100).toFixed(2)} off` : 'no discount set'} \u00b7 duration ${couponForm.duration||'once'}`}
+            onConfirm={createCoupon}
+          >
+            Confirm Create Coupon
+          </ConfirmDialog>
+        </div>
 
         {/* Filters */}
         <div className="grid gap-3 md:grid-cols-4 mt-6">
@@ -394,7 +422,7 @@ export default function MonetizationClient() {
           {coupons.map((c:any)=> (
             <div key={c.id} className="flex items-center justify-between text-sm" style={{ color:'var(--text-secondary)' }}>
               <div>#{c.id} · code {c.code} · {c.active ? 'active' : 'inactive'}</div>
-              <button onClick={()=>deleteCoupon(c.id)} className="px-2 py-1 rounded" style={{ background:'transparent', border:'1px solid var(--border-accent)', color:'var(--text-tertiary)' }}>Delete</button>
+              <ConfirmDialog summary={`Delete coupon #${c.id}? This cannot be undone.`} onConfirm={()=>deleteCoupon(c.id)}>Delete</ConfirmDialog>
             </div>
           ))}
           {(!coupons || coupons.length===0) && (<div className="text-xs" style={{ color:'var(--text-tertiary)' }}>No coupons</div>)}
@@ -425,7 +453,14 @@ export default function MonetizationClient() {
           </Field>
         </div>
         <Field label="Description"><input value={offerForm.description} onChange={e=>setOfferForm(v=>({...v,description:e.target.value}))} className="w-full px-3 py-2 rounded border mt-2" style={{ background:'var(--glass-bg)', borderColor:'var(--border-accent)' }} /></Field>
-        <div className="flex justify-end mt-3"><button onClick={createOffer} className="px-3 py-2 rounded" style={{ background:'var(--brand-primary)', color:'var(--bg-main)' }}>Create Offer</button></div>
+        <div className="flex justify-end mt-3">
+          <ConfirmDialog
+            summary={`Create offer ${offerForm.name||offerForm.key||'(no name)'} \u00b7 ${offerForm.active? 'active' : 'inactive'}${offerForm.description? ` \u00b7 ${offerForm.description}` : ''}`}
+            onConfirm={createOffer}
+          >
+            Confirm Create Offer
+          </ConfirmDialog>
+        </div>
 
         {/* Filters */}
         <div className="grid gap-3 md:grid-cols-3 mt-6">
@@ -451,7 +486,7 @@ export default function MonetizationClient() {
           {offers.map((o:any)=> (
             <div key={o.id} className="flex items-center justify-between text-sm" style={{ color:'var(--text-secondary)' }}>
               <div>#{o.id} · {o.name||o.key} · {o.active ? 'active' : 'inactive'}</div>
-              <button onClick={()=>deleteOffer(o.id)} className="px-2 py-1 rounded" style={{ background:'transparent', border:'1px solid var(--border-accent)', color:'var(--text-tertiary)' }}>Delete</button>
+              <ConfirmDialog summary={`Delete offer #${o.id}? This cannot be undone.`} onConfirm={()=>deleteOffer(o.id)}>Delete</ConfirmDialog>
             </div>
           ))}
           {(!offers || offers.length===0) && (<div className="text-xs" style={{ color:'var(--text-tertiary)' }}>No offers</div>)}
@@ -505,12 +540,19 @@ export default function MonetizationClient() {
           )}
           <Field label="Reason"><input value={overrideForm.reason} onChange={e=>setOverrideForm(v=>({...v,reason:e.target.value}))} className="w-full px-3 py-2 rounded border" style={{ background:'var(--glass-bg)', borderColor:'var(--border-accent)' }} /></Field>
         </div>
-        <div className="flex justify-end mt-3"><button onClick={createOverride} className="px-3 py-2 rounded" style={{ background:'var(--brand-primary)', color:'var(--bg-main)' }}>Create Override</button></div>
+        <div className="flex justify-end mt-3">
+          <ConfirmDialog
+            summary={`Create override for org ${overrideForm.orgId||'(none)'} - ${overrideForm.type}${overrideForm.type==='percent'? ` ${overrideForm.percentOff||0}%` : overrideForm.type==='amount'? ` $${((Number(overrideForm.amountOffCents||0))/100).toFixed(2)}` : overrideForm.type==='fixed'? ` $${((Number(overrideForm.priceCents||0))/100).toFixed(2)}` : ''}${overrideForm.planId? ` - plan ${overrideForm.planId}` : ''}${overrideForm.priceId? ` - price ${overrideForm.priceId}` : ''}${overrideForm.reason? ` - reason: ${overrideForm.reason}` : ''}`}
+            onConfirm={createOverride}
+          >
+            Confirm Create Override
+          </ConfirmDialog>
+        </div>
         <div className="mt-3 text-xs" style={{ color:'var(--text-tertiary)' }}>Recent: {overrides.slice(0,5).map((o:any)=>o.id).join(', ')||'—'}</div>
         {overrides.slice(0,5).map((o:any)=> (
           <div key={o.id} className="flex items-center justify-between text-xs mt-1" style={{ color:'var(--text-secondary)' }}>
             <div>#{o.id} · org {o.orgId} · {o.type}</div>
-            <button onClick={()=>deleteOverride(o.id)} className="px-2 py-1 rounded" style={{ background:'transparent', border:'1px solid var(--border-accent)', color:'var(--text-tertiary)' }}>Delete</button>
+            <ConfirmDialog summary={`Delete override #${o.id}? This cannot be undone.`} onConfirm={()=>deleteOverride(o.id)}>Delete</ConfirmDialog>
           </div>
         ))}
       </div>
