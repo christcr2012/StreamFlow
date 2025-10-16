@@ -30,10 +30,9 @@ export async function GET(request: NextRequest) {
       } as any,
     });
 
-    // If no config exists, return defaults
+    // If no config exists, create one with defaults
     if (!config) {
-      return NextResponse.json({
-        success: true,
+      const newConfig = await prisma.providerConfig.create({
         data: {
           providerName: 'Cortiware Provider',
           contactEmail: 'provider@cortiware.com',
@@ -54,6 +53,34 @@ export async function GET(request: NextRequest) {
             samGovConfigured: false,
             apiRateLimit: 1000,
           },
+          featureFlags: {
+            'analytics-v2': true,
+            'action-center': true,
+            'api-key-management': true,
+            'advanced-monitoring': false,
+            'multi-region': false,
+          },
+        },
+        select: {
+          id: true,
+          providerName: true,
+          contactEmail: true,
+          supportUrl: true,
+          notificationSettings: true,
+          securitySettings: true,
+          integrationSettings: true,
+        } as any,
+      });
+
+      return NextResponse.json({
+        success: true,
+        data: {
+          providerName: (newConfig as any).providerName,
+          contactEmail: (newConfig as any).contactEmail,
+          supportUrl: (newConfig as any).supportUrl,
+          notificationSettings: (newConfig as any).notificationSettings,
+          securitySettings: (newConfig as any).securitySettings,
+          integrationSettings: (newConfig as any).integrationSettings,
         },
       });
     }
