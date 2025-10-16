@@ -1,0 +1,6 @@
+C:\Users\chris\Git Local\Cortiware\docs\planning\ROADMAP.md	23	1) M2: Packs+Importers hardened; golden fixtures; smoke CLI
+C:\Users\chris\Git Local\Cortiware\docs\planning\ROADMAP.md	24	2) M3: Settlement pipeline with wallet-first debit else 402 invoice artifacts
+C:\Users\chris\Git Local\Cortiware\docs\planning\ROADMAP.md	25	3) M4: Routing optimizer knobs, landfill catalog tools; capacity sim tests
+C:\Users\chris\Git Local\Cortiware\docs\planning\ROADMAP.md	26	4) M5: UX toggles and smoke flows behind existing routes; CI time ≤ 10 min
+C:\Users\chris\Git Local\Cortiware\docs\planning\ROADMAP.md	27	5) M6: Cost dashboard (local), 36-route check green, perf budget docs
+C:\Users\chris\Git Local\Cortiware\docs\planning\ROADMAP.md	28	6) M7: Migration templates, runbooks, and signoff checklist

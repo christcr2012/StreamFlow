@@ -1,0 +1,77 @@
+# M-Series plan (machine-readable)
+# Source docs: docs/planning/ROADMAP.md, docs/planning/IMPLEMENTATION_CHECKLISTS.md
+
+series:
+  - id: M2
+    phase: 2
+    title: Packs + Importers Hardened
+    status: in-progress
+    depends_on: []
+    checklist_refs:
+      - docs/planning/IMPLEMENTATION_CHECKLISTS.md#L5-L10
+    preconditions:
+      - type: build
+        name: Typescript typecheck green
+        state: failing
+    tasks:
+      - path: packages/verticals
+        desc: add minimal packs for remaining verticals (stable exports)
+      - path: importers
+        desc: add schema validation (headers/type checks)
+      - path: tests/fixtures/importers
+        desc: add golden fixtures and comparisons
+      - path: docs/PHASE1_RUN.md
+        desc: extend usage docs
+    decision_hooks:
+      - trigger: "when typecheck and Vercel builds are green"
+        action: "proceed with importer hardening and fixtures"
+
+  - id: M3
+    phase: 3
+    title: Settlement Pipeline & Wallet Flows
+    status: proposed
+    depends_on: [M2]
+    checklist_refs:
+      - docs/planning/IMPLEMENTATION_CHECKLISTS.md#L11-L16
+    tasks:
+      - path: packages/agreements
+        desc: rule-eval module (pure function)
+      - path: scripts/agreements
+        desc: wire rule-eval -> charges.json -> settle_charges.ts
+      - path: wallet
+        desc: read/update balance; record WalletTxn
+      - path: tests
+        desc: unit (eval math), integration (wallet vs 402)
+
+  - id: M4
+    phase: 4
+    title: Routing Optimization & Tools
+    status: proposed
+    depends_on: [M3]
+    checklist_refs:
+      - docs/planning/IMPLEMENTATION_CHECKLISTS.md#L17-L21
+
+  - id: M5
+    phase: 5
+    title: UX Toggles & Smoke Flows
+    status: proposed
+    depends_on: [M3]
+    checklist_refs:
+      - docs/planning/IMPLEMENTATION_CHECKLISTS.md#L22-L26
+
+  - id: M6
+    phase: 6
+    title: Cost & Route-Cap Guardrails
+    status: proposed
+    depends_on: [M5]
+    checklist_refs:
+      - docs/planning/IMPLEMENTATION_CHECKLISTS.md#L27-L31
+
+  - id: M7
+    phase: 7
+    title: Migration Templates & GTM
+    status: proposed
+    depends_on: [M6]
+    checklist_refs:
+      - docs/planning/IMPLEMENTATION_CHECKLISTS.md#L32-L35
+

@@ -7,7 +7,7 @@
 - Documentation (including binders, plans, roadmaps) is REFERENCE ONLY.
 - If a document claims something is done, DOUBLE-CHECK the codebase.
 - Do not treat old documentation as a to-do list. Use `docs/ACTUAL_REMAINING_WORK.md` and the codebase.
-- Planned work that remains valid is centralized in `docs/PLANNED_WORK_BACKLOG.md` (with machine-readable `docs/planned_work.backlog.yml`).
+- Planned work that remains valid is centralized in `docs/PLANNED_WORK_BACKLOG.md` (with machine-readable `docs/planned_work.backlog.yml`) and the M-series plan: `docs/M_SERIES_MASTER_PLAN.md` (`docs/m_series.plan.yml`).
 
 ## Monorepo Structure
 
