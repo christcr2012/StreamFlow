@@ -149,7 +149,7 @@ export function SkeletonTable({ rows = 5, columns = 4 }: SkeletonTableProps) {
 
 /**
  * SkeletonList Component
- * 
+ *
  * Pre-configured skeleton for list layouts
  */
 export interface SkeletonListProps {
@@ -172,4 +172,33 @@ export function SkeletonList({ items = 5, showAvatar = false }: SkeletonListProp
     </div>
   );
 }
+
+/**
+ * DetailSkeleton Component
+ *
+ * Pre-configured skeleton for detail/form layouts
+ */
+export function DetailSkeleton() {
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="space-y-2">
+        <Skeleton width="40%" height="2rem" />
+        <Skeleton width="60%" height="1rem" />
+      </div>
+
+      {/* Content sections */}
+      {Array.from({ length: 3 }).map((_, i) => (
+        <div key={i} className="space-y-3">
+          <Skeleton width="30%" height="1rem" />
+          <Skeleton width="100%" height="3rem" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Alias exports for compatibility
+export { SkeletonTable as TableSkeleton };
+export { DetailSkeleton };
 
