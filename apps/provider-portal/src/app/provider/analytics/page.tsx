@@ -50,8 +50,46 @@ export default function ProviderAnalyticsPage() {
 
   if (!data) {
     return (
-      <div className="p-8 text-center" style={{ color: 'var(--text-secondary)' }}>
-        Failed to load analytics
+      <div className="p-8">
+        <div className="max-w-2xl mx-auto text-center space-y-6">
+          <div className="text-6xl">📊</div>
+          <h2 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
+            No Analytics Data Available
+          </h2>
+          <p style={{ color: 'var(--text-secondary)' }}>
+            Analytics data will appear here once you have active tenants and usage data.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+            <div className="p-4 rounded-lg" style={{ background: 'var(--glass-bg)', border: '1px solid var(--border-primary)' }}>
+              <div className="text-3xl mb-2">👥</div>
+              <div className="font-semibold" style={{ color: 'var(--text-primary)' }}>Add Tenants</div>
+              <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+                Onboard your first tenant to start tracking usage
+              </p>
+            </div>
+            <div className="p-4 rounded-lg" style={{ background: 'var(--glass-bg)', border: '1px solid var(--border-primary)' }}>
+              <div className="text-3xl mb-2">💰</div>
+              <div className="font-semibold" style={{ color: 'var(--text-primary)' }}>Configure Billing</div>
+              <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+                Set up subscriptions and pricing
+              </p>
+            </div>
+            <div className="p-4 rounded-lg" style={{ background: 'var(--glass-bg)', border: '1px solid var(--border-primary)' }}>
+              <div className="text-3xl mb-2">📈</div>
+              <div className="font-semibold" style={{ color: 'var(--text-primary)' }}>Monitor Usage</div>
+              <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+                Track API calls and resource consumption
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={fetchAnalytics}
+            className="mt-6 px-6 py-3 rounded-lg font-medium"
+            style={{ background: 'var(--brand-primary)', color: 'var(--text-on-brand)' }}
+          >
+            Retry Loading
+          </button>
+        </div>
       </div>
     );
   }

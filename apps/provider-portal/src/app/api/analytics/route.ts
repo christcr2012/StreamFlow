@@ -11,18 +11,73 @@ const handler = async (req: NextRequest) => {
     const daysAgo = parseInt(range);
     const startDate = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
 
-    // Revenue trends (mock data - would calculate from subscriptions)
-    const revenueTrends = Array.from({ length: daysAgo }, (_, i) => ({
-      date: new Date(Date.now() - (daysAgo - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      mrr: 5000 + Math.random() * 1000,
-      arr: 60000 + Math.random() * 12000
+    // Calculate real revenue trends from subscriptions
+    const subscriptions = await prisma.subscription.findMany({
+      where: {
+        createdAt: { gte: startDate }
+      },
+      select: {
+        priceCents: true,
+        createdAt: true,
+        status: true
+      }
+    });
+
+    // Group by date and calculate MRR/ARR
+    const revenueByDate = new Map<string, { mrr: number; arr: number }>();
+
+    for (let i = 0; i < daysAgo; i++) {
+      const date = new Date(Date.now() - (daysAgo - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      const dayStart = new Date(date);
+      const dayEnd = new Date(dayStart.getTime() + 24 * 60 * 60 * 1000);
+
+      const activeSubs = subscriptions.filter(sub =>
+        new Date(sub.createdAt) <= dayEnd && sub.status === 'active'
+      );
+
+      const mrr = activeSubs.reduce((sum, sub) => sum + (sub.priceCents / 100), 0);
+      const arr = mrr * 12;
+
+      revenueByDate.set(date, { mrr, arr });
+    }
+
+    const revenueTrends = Array.from(revenueByDate.entries()).map(([date, revenue]) => ({
+      date,
+      mrr: revenue.mrr,
+      arr: revenue.arr
     }));
 
-    // User growth
-    const userGrowth = Array.from({ length: daysAgo }, (_, i) => ({
-      date: new Date(Date.now() - (daysAgo - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      newUsers: Math.floor(Math.random() * 20),
-      activeUsers: 100 + Math.floor(Math.random() * 50)
+    // Calculate real user growth
+    const orgs = await prisma.org.findMany({
+      where: {
+        createdAt: { gte: startDate }
+      },
+      select: {
+        createdAt: true
+      }
+    });
+
+    const usersByDate = new Map<string, number>();
+
+    for (let i = 0; i < daysAgo; i++) {
+      const date = new Date(Date.now() - (daysAgo - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      const dayStart = new Date(date);
+      const dayEnd = new Date(dayStart.getTime() + 24 * 60 * 60 * 1000);
+
+      const newUsers = orgs.filter(org => {
+        const created = new Date(org.createdAt);
+        return created >= dayStart && created < dayEnd;
+      }).length;
+
+      const activeUsers = orgs.filter(org => new Date(org.createdAt) <= dayEnd).length;
+
+      usersByDate.set(date, newUsers);
+    }
+
+    const userGrowth = Array.from(usersByDate.entries()).map(([date, newUsers], index) => ({
+      date,
+      newUsers,
+      activeUsers: orgs.filter(org => new Date(org.createdAt) <= new Date(date)).length
     }));
 
     // Conversion funnel
