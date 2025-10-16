@@ -2,6 +2,13 @@
 
 import { useEffect, useMemo, useState, useCallback } from 'react';
 
+import { ScopeSelector, Scope } from '@/components/clarity/ScopeSelector';
+import { ScopeBadge } from '@/components/clarity/ScopeBadge';
+import { ImpactSummary, Impact } from '@/components/clarity/ImpactSummary';
+import { HelpDrawer } from '@/components/clarity/HelpDrawer';
+import { ConfirmDialog } from '@/components/clarity/ConfirmDialog';
+
+
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block text-sm">
@@ -24,6 +31,32 @@ export default function MonetizationClient() {
   // Extended controls
   const [coupons, setCoupons] = useState<any[]>([]);
   const [offers, setOffers] = useState<any[]>([]);
+
+  // Clarity framework state
+  const [scope, setScope] = useState<Scope>({ type: 'provider' });
+  const [impact, setImpact] = useState<Impact | null>(null);
+  const [previewBusy, setPreviewBusy] = useState(false);
+
+  const previewImpact = useCallback(async () => {
+    setError(null);
+    setPreviewBusy(true);
+    try {
+      const res = await fetch('/api/provider/monetization/simulate', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ scope }),
+      });
+      const j = await res.json();
+      if (!res.ok) throw new Error(j?.error || 'Failed to preview impact');
+      setImpact(j?.impact || null);
+    } catch (e: any) {
+      setImpact(null);
+      setError(String(e?.message || e));
+    } finally {
+      setPreviewBusy(false);
+    }
+  }, [scope]);
+
   const [overrides, setOverrides] = useState<any[]>([]);
 
   const [couponForm, setCouponForm] = useState({ code: '', percentOff: 0, amountOffCents: 0, duration: 'once' });
@@ -174,6 +207,37 @@ export default function MonetizationClient() {
       await loadAll();
     } catch(e:any) { setError(String(e?.message||e)); }
   }
+
+      {/* Scope & Impact */}
+      <div className="rounded-xl p-4" style={{ background:'var(--glass-bg)', border:'1px solid var(--border-accent)' }}>
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <div className="font-semibold" style={{ color:'var(--text-primary)' }}>Scope & Impact</div>
+            <ScopeBadge level={scope.type as any} />
+          </div>
+          <HelpDrawer title="What does scope mean?">
+            <p className="mb-2">Scope defines where your change applies:</p>
+            <ul className="list-disc pl-5">
+              <li><b>Provider</b>: global defaults for all tenants (unless overridden)</li>
+              <li><b>Plan</b>: tenants assigned to the selected plan (overrides remain unchanged)</li>
+              <li><b>Tenant</b>: a single tenant/org only</li>
+            </ul>
+          </HelpDrawer>
+        </div>
+        <ScopeSelector
+          value={scope}
+          onChange={(s)=>{ setScope(s); setImpact(null); }}
+          planOptions={planOptions}
+          orgOptions={orgSuggestions.map((o:any)=>({ id: o.id||o.orgId, name: o.name||o.orgName||o.id }))}
+        />
+        <div className="flex items-center gap-2 mt-3">
+          <button onClick={previewImpact} disabled={previewBusy} className="px-3 py-2 rounded border" style={{ borderColor:'var(--border-accent)' }}>{previewBusy? 'Computing…' : 'Preview Impact'}</button>
+        </div>
+        <div className="mt-3">
+          <ImpactSummary impact={impact} />
+        </div>
+      </div>
+
 
   async function deleteOverride(id:string) {
     setError(null);
