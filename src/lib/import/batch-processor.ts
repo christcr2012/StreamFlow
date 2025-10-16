@@ -13,6 +13,7 @@
 
 import { prisma } from '@/lib/prisma';
 import { ImportStatus, ImportEntityType } from '@prisma/client';
+import { getEntitySchema } from './schemas';
 
 export interface BatchProcessorOptions {
   importJobId: string;
@@ -306,7 +307,27 @@ async function processBatch(
       // 1. Transform record
       const transformed = transformRecord(sourceRecord, fieldMappings, transformRules);
 
-      // 2. Validate record
+      // 2. Schema validation (entity-specific)
+      const schema = getEntitySchema(entityType);
+      if (schema) {
+        const parsed = schema.safeParse(transformed);
+        if (!parsed.success) {
+          result.errors++;
+          for (const issue of parsed.error.issues) {
+            await logError(
+              importJobId,
+              rowNumber,
+              (issue.path && issue.path.length > 0 ? String(issue.path[0]) : null),
+              'schema',
+              issue.message,
+              sourceRecord
+            );
+          }
+          continue;
+        }
+      }
+
+      // 3. Validate record (rule-based)
       const validation = validateRecord(transformed, validationRules);
       if (!validation.valid) {
         result.errors++;
@@ -323,7 +344,7 @@ async function processBatch(
         continue;
       }
 
-      // 3. Check for duplicates
+      // 4. Check for duplicates
       const isDuplicate = await checkDuplicate(orgId, entityType, transformed, dedupeFields);
       if (isDuplicate) {
         result.skipped++;

@@ -17,6 +17,7 @@ import { run as runAgreementsEval } from './agreements_eval.test';
 import { run as runWallet } from './wallet.test';
 import { run as runRoutingOptimization } from './routing_optimization.test';
 import { run as runUiComponents } from './ui_components.test';
+import { run as runImportersSchema } from './importers_schema.test';
 
 process.env.UNIT_TESTS = '1';
 
@@ -40,6 +41,7 @@ async function main() {
     await runWallet(),
     await runRoutingOptimization(),
     await runUiComponents(),
+    await runImportersSchema(),
   ];
   const totals = results.reduce((acc, r) => ({
     passed: acc.passed + r.passed,
