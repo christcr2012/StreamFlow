@@ -98,6 +98,7 @@ export default function CortiwareHomePage() {
         <h2 className="text-3xl font-bold text-white mb-8 text-center">Popular Use Cases</h2>
         <div className="grid md:grid-cols-3 gap-6">
           <div className="group relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 transition-all">
+
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-teal-500/0 to-cyan-500/0 group-hover:from-teal-500/5 group-hover:to-cyan-500/5 transition-all" />
             <h3 className="text-xl font-semibold text-white mb-2">Client Portals</h3>
             <p className="text-slate-300">Offer your clients branded access with permissions, workflows, and real-time insights.</p>
@@ -135,6 +136,7 @@ export default function CortiwareHomePage() {
               White-label your platform with custom domains, logos, colors, and themes.
               Each tenant gets their own branded experience.
             </p>
+>
           </div>
 
           {/* Feature 2 */}
@@ -216,6 +218,28 @@ export default function CortiwareHomePage() {
         </div>
       </section>
 
+      {/* Product Tour */}
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <h2 className="text-4xl font-bold text-white mb-12 text-center">Product Tour</h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          {[{
+            title: 'Onboard in Minutes',
+            desc: 'Create your org, invite teammates, and pick a branded theme. No code required to get started.'
+          },{
+            title: 'Launch AI Agents',
+            desc: 'Enable prebuilt agents for support, analytics, and contentor bring your own prompts.'
+          },{
+            title: 'Scale with Governance',
+            desc: 'Add tenants as you grow. Centralized policies, audit trails, and per-tenant branding.'
+          }].map((s) => (
+            <div key={s.title} className="group relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 transition-all">
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-teal-500/0 to-cyan-500/0 group-hover:from-teal-500/5 group-hover:to-cyan-500/5 transition-all" />
+              <h3 className="text-2xl font-semibold text-white mb-2">{s.title}</h3>
+              <p className="text-slate-300">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
       {/* Pricing Section */}
       <section id="pricing" className="max-w-7xl mx-auto px-6 py-24">
         <h2 className="text-4xl font-bold text-white mb-12 text-center">Simple, Transparent Pricing</h2>
@@ -237,6 +261,7 @@ export default function CortiwareHomePage() {
                 <span className="text-teal-400">✓</span> Basic AI agents
               </li>
               <li className="text-slate-300 flex items-center gap-2">
+
                 <span className="text-teal-400">✓</span> Email support
               </li>
             </ul>
@@ -320,6 +345,32 @@ export default function CortiwareHomePage() {
         </div>
       </section>
 
+
+      {/* FAQ Section */}
+      <section id="faq" className="max-w-7xl mx-auto px-6 py-24">
+        <h2 className="text-4xl font-bold text-white mb-12 text-center">Frequently Asked Questions</h2>
+        <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+          {[{
+            q: 'How fast can we get started?',
+            a: 'Most teams are live within a day. Create your org, pick a theme, invite teammates, and you can start launching tenants immediately.'
+          },{
+            q: 'Can we bring our own AI models?',
+            a: 'Yes. Cortiware supports hosted providers and custom endpoints, with per-tenant configuration and usage policies.'
+          },{
+            q: 'How do you handle multi-tenant security?',
+            a: 'Isolated schemas, strong RBAC, audit logs, and optional SSO. Each tenant has separated data boundaries by design.'
+          },{
+            q: 'What does pricing look like as we scale?',
+            a: 'Start simple and grow. Plans scale by seats and tenants; enterprise agreements are available for larger deployments.'
+          }].map((f) => (
+            <div key={f.q} className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6">
+              <h3 className="text-white font-semibold mb-2">{f.q}</h3>
+              <p className="text-slate-300">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="border-t border-slate-800 mt-24">
         <div className="max-w-7xl mx-auto px-6 py-12">
@@ -338,6 +389,8 @@ export default function CortiwareHomePage() {
               <ul className="space-y-2">
                 <li><a href="#features" className="text-slate-400 hover:text-white transition-colors text-sm">Features</a></li>
                 <li><a href="#pricing" className="text-slate-400 hover:text-white transition-colors text-sm">Pricing</a></li>
+
+
                 <li><a href="#docs" className="text-slate-400 hover:text-white transition-colors text-sm">Documentation</a></li>
               </ul>
             </div>

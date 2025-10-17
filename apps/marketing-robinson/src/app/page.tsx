@@ -151,6 +151,30 @@ export default function RobinsonHomePage() {
         </div>
       </section>
 
+      {/* Engagement Models */}
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <h2 className="text-4xl font-bold text-white mb-12 text-center">Engagement Models</h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          {[{
+            title: 'Advisory + Architecture',
+            desc: 'Executive-level strategy, roadmaps, and reference architectures to de-risk AI initiatives.'
+          },{
+            title: 'Build-Operate-Transfer',
+            desc: 'We build and operate your AI platform, then transition to your in-house team with playbooks.'
+          },{
+            title: 'Dedicated Delivery Team',
+            desc: 'Cross-functional squad delivering features end-to-end with enterprise rigor.'
+          }].map((m) => (
+            <div key={m.title} className="group relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 transition-all">
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-teal-500/0 to-cyan-500/0 group-hover:from-teal-500/5 group-hover:to-cyan-500/5 transition-all" />
+              <h3 className="text-xl font-semibold text-white mb-2">{m.title}</h3>
+              <p className="text-slate-300">{m.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+
       {/* About Section */}
       <section id="about" className="max-w-7xl mx-auto px-6 py-24">
         <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-12">
