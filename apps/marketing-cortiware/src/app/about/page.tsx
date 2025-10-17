@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-slate-950">
@@ -43,7 +45,7 @@ export default function AboutPage() {
               We believe every service business deserves enterprise-grade software with AI that actually works. Not generic tools that require hours of setup—but intelligent systems that understand your industry from day one.
             </p>
             <p className="text-base sm:text-lg text-slate-300 leading-relaxed">
-              Cortiware was built to level the playing field. Whether you're a solo HVAC technician or a multi-location cleaning company, you get the same powerful AI, automation, and insights that Fortune 500 companies use.
+              Cortiware was built to level the playing field. Whether you&apos;re a solo HVAC technician or a multi-location cleaning company, you get the same powerful AI, automation, and insights that Fortune 500 companies use.
             </p>
           </div>
           <div className="relative group animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
@@ -182,7 +184,7 @@ export default function AboutPage() {
         <div className="max-w-4xl mx-auto">
           <div className="bg-gradient-to-br from-slate-900/90 to-slate-900/50 backdrop-blur-xl border border-slate-800/80 rounded-2xl sm:rounded-3xl p-8 sm:p-12 shadow-2xl text-center">
             <p className="text-base sm:text-lg text-slate-300 leading-relaxed mb-8">
-              We're a small, focused team that believes in building software the right way: secure, scalable, and designed for real-world use. Every line of code is written with your business in mind.
+              We&apos;re a small, focused team that believes in building software the right way: secure, scalable, and designed for real-world use. Every line of code is written with your business in mind.
             </p>
             <a href="https://robinsonaisystems.com" target="_blank" rel="noopener noreferrer" className="group/btn inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 text-white rounded-xl transition-all font-semibold text-base sm:text-lg shadow-lg hover:shadow-emerald-500/50 relative overflow-hidden" style={{ background: 'var(--vp-gradient)' }}>
               <span className="relative z-10">Learn More About Robinson AI Systems</span>
@@ -209,13 +211,13 @@ export default function AboutPage() {
             <p className="text-base sm:text-lg md:text-xl text-slate-300 mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed">
               Join service businesses that are already automating with Cortiware.
             </p>
-            <a href="/#pricing" className="group/btn inline-flex items-center gap-2 px-6 sm:px-10 py-3 sm:py-5 text-white rounded-xl transition-all font-bold text-base sm:text-lg shadow-2xl hover:shadow-emerald-500/50 relative overflow-hidden" style={{ background: 'var(--vp-gradient)' }}>
+            <Link href="/#pricing" className="group/btn inline-flex items-center gap-2 px-6 sm:px-10 py-3 sm:py-5 text-white rounded-xl transition-all font-bold text-base sm:text-lg shadow-2xl hover:shadow-emerald-500/50 relative overflow-hidden" style={{ background: 'var(--vp-gradient)' }}>
               <span className="relative z-10">View Pricing</span>
               <svg className="relative z-10 w-5 h-5 sm:w-6 sm:h-6 group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
               <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300" />
-            </a>
+            </Link>
           </div>
         </div>
       </section>

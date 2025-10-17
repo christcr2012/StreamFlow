@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 export default function HVACPage() {
   return (
     <div className="min-h-screen bg-slate-950">
@@ -27,13 +29,13 @@ export default function HVACPage() {
               Automate scheduling, dispatch, customer communication, and invoicing. Built specifically for HVAC contractors.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/#pricing" className="group/btn inline-flex items-center justify-center gap-2 px-8 py-4 text-white rounded-xl transition-all font-bold text-lg shadow-2xl hover:shadow-emerald-500/50 relative overflow-hidden" style={{ background: 'var(--vp-gradient)' }}>
+              <Link href="/#pricing" className="group/btn inline-flex items-center justify-center gap-2 px-8 py-4 text-white rounded-xl transition-all font-bold text-lg shadow-2xl hover:shadow-emerald-500/50 relative overflow-hidden" style={{ background: 'var(--vp-gradient)' }}>
                 <span className="relative z-10">Start Free Trial</span>
                 <svg className="relative z-10 w-6 h-6 group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300" />
-              </a>
+              </Link>
               <a href="/contact" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-slate-900/50 border-2 border-slate-700 hover:border-emerald-500 text-white rounded-xl transition-all font-bold text-lg">
                 Schedule Demo
               </a>
@@ -164,13 +166,13 @@ export default function HVACPage() {
               Join HVAC contractors who are already saving time and growing revenue with Cortiware.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/#pricing" className="group/btn inline-flex items-center justify-center gap-2 px-8 py-4 text-white rounded-xl transition-all font-bold text-lg shadow-2xl hover:shadow-emerald-500/50 relative overflow-hidden" style={{ background: 'var(--vp-gradient)' }}>
+              <Link href="/#pricing" className="group/btn inline-flex items-center justify-center gap-2 px-8 py-4 text-white rounded-xl transition-all font-bold text-lg shadow-2xl hover:shadow-emerald-500/50 relative overflow-hidden" style={{ background: 'var(--vp-gradient)' }}>
                 <span className="relative z-10">Start Free Trial</span>
                 <svg className="relative z-10 w-6 h-6 group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300" />
-              </a>
+              </Link>
               <a href="/contact" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-slate-900/50 border-2 border-slate-700 hover:border-emerald-500 text-white rounded-xl transition-all font-bold text-lg">
                 Schedule Demo
               </a>
