@@ -57,6 +57,16 @@ export default function CortiwareHomePage() {
           </div>
         </div>
       </section>
+      {/* Who it's for */}
+      <section className="max-w-7xl mx-auto px-6 pt-2 pb-12">
+        <div className="flex flex-wrap items-center justify-center gap-3 text-slate-200">
+          <span className="px-3 py-1 rounded-full bg-slate-900/60 border border-slate-800/80 text-sm">Startups</span>
+          <span className="px-3 py-1 rounded-full bg-slate-900/60 border border-slate-800/80 text-sm">Growing teams</span>
+          <span className="px-3 py-1 rounded-full bg-slate-900/60 border border-slate-800/80 text-sm">Agencies/MSPs</span>
+          <span className="px-3 py-1 rounded-full bg-slate-900/60 border border-slate-800/80 text-sm">Multi-location enterprise</span>
+        </div>
+      </section>
+
 
       {/* Features Section */}
       <section id="features" className="max-w-7xl mx-auto px-6 py-24">
