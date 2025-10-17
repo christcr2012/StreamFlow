@@ -39,7 +39,7 @@ export default function CortiwareHomePage() {
           <h1 className="text-6xl font-bold text-white mb-6 leading-tight">
             The AI Platform
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-500">
-              Built for Scale
+              Built to Scale
             </span>
           </h1>
           <p className="text-xl text-slate-300 mb-12 leading-relaxed">
@@ -136,7 +136,7 @@ export default function CortiwareHomePage() {
               White-label your platform with custom domains, logos, colors, and themes.
               Each tenant gets their own branded experience.
             </p>
->
+
           </div>
 
           {/* Feature 2 */}
@@ -227,7 +227,7 @@ export default function CortiwareHomePage() {
             desc: 'Create your org, invite teammates, and pick a branded theme. No code required to get started.'
           },{
             title: 'Launch AI Agents',
-            desc: 'Enable prebuilt agents for support, analytics, and contentor bring your own prompts.'
+            desc: 'Enable prebuilt agents for support, analytics, and content—or bring your own prompts.'
           },{
             title: 'Scale with Governance',
             desc: 'Add tenants as you grow. Centralized policies, audit trails, and per-tenant branding.'
