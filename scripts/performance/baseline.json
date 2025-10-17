@@ -1,0 +1,77 @@
+{
+  "timestamp": "2025-10-17T21:58:35.732Z",
+  "git": {
+    "commit": "3f620d86322deab73430bbd2155621b87749e3a7",
+    "branch": "main"
+  },
+  "nodeVersion": "v22.19.0",
+  "platform": "win32",
+  "apps": {
+    "provider-portal": {
+      "path": "apps/provider-portal",
+      "dependencies": {
+        "dependencies": 41,
+        "devDependencies": 14,
+        "total": 55
+      },
+      "bundleSize": {
+        "error": "Command failed: du -sh \"apps\\provider-portal\\.next\" | awk '{print $1}'"
+      },
+      "buildTime": {
+        "success": true,
+        "duration": "70.98s",
+        "durationMs": 70984
+      }
+    },
+    "tenant-app": {
+      "path": "apps/tenant-app",
+      "dependencies": {
+        "dependencies": 24,
+        "devDependencies": 6,
+        "total": 30
+      },
+      "bundleSize": {
+        "error": "Command failed: du -sh \"apps\\tenant-app\\.next\" | awk '{print $1}'"
+      },
+      "buildTime": {
+        "success": false,
+        "error": "Command failed: cd apps/tenant-app && npm run build"
+      }
+    },
+    "marketing-robinson": {
+      "path": "apps/marketing-robinson",
+      "dependencies": {
+        "dependencies": 7,
+        "devDependencies": 5,
+        "total": 12
+      },
+      "bundleSize": {
+        "error": "Command failed: du -sh \"apps\\marketing-robinson\\.next\" | awk '{print $1}'"
+      },
+      "buildTime": {
+        "success": true,
+        "duration": "14.67s",
+        "durationMs": 14669
+      }
+    },
+    "marketing-cortiware": {
+      "path": "apps/marketing-cortiware",
+      "dependencies": {
+        "dependencies": 7,
+        "devDependencies": 5,
+        "total": 12
+      },
+      "bundleSize": {
+        "error": "Command failed: du -sh \"apps\\marketing-cortiware\\.next\" | awk '{print $1}'"
+      },
+      "buildTime": {
+        "success": true,
+        "duration": "14.71s",
+        "durationMs": 14714
+      }
+    }
+  },
+  "monorepo": {
+    "nodeModulesSize": "Unknown"
+  }
+}

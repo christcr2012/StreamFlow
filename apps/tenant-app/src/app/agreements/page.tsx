@@ -1,28 +1,29 @@
 import { getAuthContext } from '@/lib/auth-context';
 import { redirect } from 'next/navigation';
-import { prisma } from '@/lib/prisma';
+// import { prisma } from '@/lib/prisma';
 import { Card } from '@cortiware/ui';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@cortiware/ui';
 import Link from 'next/link';
 
-async function getAgreements(orgId: string) {
-  const agreements = await prisma.agreement.findMany({
-    where: { orgId },
-    include: {
-      customer: {
-        select: { id: true, company: true, primaryName: true },
-      },
-      template: {
-        select: { id: true, name: true },
-      },
-    },
-    orderBy: { createdAt: 'desc' },
-    take: 100,
-  });
+// TODO: Add Agreement and AgreementTemplate models to prisma/schema.prisma
+// async function getAgreements(orgId: string) {
+//   const agreements = await prisma.agreement.findMany({
+//     where: { orgId },
+//     include: {
+//       customer: {
+//         select: { id: true, company: true, primaryName: true },
+//       },
+//       template: {
+//         select: { id: true, name: true },
+//       },
+//     },
+//     orderBy: { createdAt: 'desc' },
+//     take: 100,
+//   });
 
-  return agreements;
-}
+//   return agreements;
+// }
 
 export default async function AgreementsPage() {
   const authContext = await getAuthContext();
@@ -31,7 +32,8 @@ export default async function AgreementsPage() {
     redirect('/login');
   }
 
-  const agreements = await getAgreements(authContext.orgId);
+  // const agreements = await getAgreements(authContext.orgId);
+  const agreements: any[] = []; // Temporary placeholder until Agreement models are added
 
   return (
     <div className="min-h-screen p-8 bg-gray-50">
