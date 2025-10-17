@@ -91,7 +91,7 @@ export function middleware(request: NextRequest) {
     
     // Require authentication
     if (!session) {
-      return NextResponse.redirect(new URL('/provider/login', request.url));
+      return NextResponse.redirect(new URL('/login', request.url));
     }
     
     // Check write permissions for sensitive routes
