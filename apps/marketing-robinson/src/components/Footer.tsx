@@ -16,9 +16,9 @@ export default function Footer() {
               width={1200}
               height={1200}
               className="transition-transform duration-normal group-hover:scale-105"
-              style={{ height: '160px !important', width: 'auto !important', maxHeight: 'none !important', maxWidth: 'none !important' }}
+              style={{ height: '80px !important', width: 'auto !important', maxHeight: 'none !important', maxWidth: 'none !important' }}
             />
-            <span className="text-3xl font-bold text-text">Robinson AI Systems</span>
+            <span className="text-2xl font-bold text-text">Robinson AI Systems</span>
           </Link>
           <p className="text-text-muted max-w-md text-lg">
             Enterprise AI consulting and delivery partner. Custom platforms, agent systems, and vertical solutions built for scale.

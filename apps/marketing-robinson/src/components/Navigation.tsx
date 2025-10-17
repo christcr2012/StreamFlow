@@ -34,17 +34,18 @@ export default function Navigation() {
           ? 'border-border bg-surface/95 shadow-md'
           : 'border-border/50 bg-surface/80'
       }`}
+      style={{ height: '72px' }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-4 group">
+        <Link href="/" className="flex items-center gap-4 group h-full">
           <Image
             src="/logo.png"
             alt="Robinson AI Systems Logo"
             width={1000}
             height={1000}
             className="transition-transform duration-normal group-hover:scale-105"
-            style={{ height: '200px !important', width: 'auto !important', maxHeight: 'none !important', maxWidth: 'none !important' }}
+            style={{ height: '60px !important', width: 'auto !important', maxHeight: 'none !important', maxWidth: 'none !important' }}
             priority
           />
           <span className="text-xl sm:text-2xl font-bold text-text tracking-tight hidden sm:inline">
