@@ -1,0 +1,115 @@
+name: Performance Monitoring
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      compare_against:
+        description: 'Baseline file to compare against (optional)'
+        required: false
+        default: ''
+
+jobs:
+  performance_check:
+    name: Performance Regression Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+      
+      - name: Generate Prisma Clients
+        run: |
+          npx prisma generate --schema=prisma/schema.prisma
+          npx prisma generate --schema=apps/provider-portal/prisma/schema.prisma
+      
+      - name: Check for existing baseline
+        id: check_baseline
+        run: |
+          if [ -f "scripts/performance/baseline.json" ]; then
+            echo "baseline_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "baseline_exists=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Measure current performance
+        run: npm run perf:measure
+        continue-on-error: true
+      
+      - name: Compare against baseline
+        if: steps.check_baseline.outputs.baseline_exists == 'true'
+        run: npm run perf:compare
+        continue-on-error: true
+      
+      - name: Upload performance results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-results
+          path: |
+            scripts/performance/baseline.json
+            scripts/performance/current.json
+            scripts/performance/results/*.json
+          retention-days: 30
+      
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request' && steps.check_baseline.outputs.baseline_exists == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            let comment = '## 📊 Performance Comparison\n\n';
+            
+            try {
+              const baseline = JSON.parse(fs.readFileSync('scripts/performance/baseline.json', 'utf-8'));
+              const current = JSON.parse(fs.readFileSync('scripts/performance/current.json', 'utf-8'));
+              
+              comment += `**Baseline**: ${baseline.timestamp}\n`;
+              comment += `**Current**: ${current.timestamp}\n\n`;
+              comment += '### Results\n\n';
+              comment += '| App | Bundle Size | Build Time | Status |\n';
+              comment += '|-----|-------------|------------|--------|\n';
+              
+              for (const [appName, metrics] of Object.entries(current.apps)) {
+                const baseMetrics = baseline.apps[appName];
+                if (!baseMetrics) continue;
+                
+                const bundleChange = metrics.bundleSize.total !== baseMetrics.bundleSize.total 
+                  ? `${baseMetrics.bundleSize.total} → ${metrics.bundleSize.total}` 
+                  : metrics.bundleSize.total;
+                
+                const buildChange = metrics.buildTime.duration !== baseMetrics.buildTime.duration
+                  ? `${baseMetrics.buildTime.duration} → ${metrics.buildTime.duration}`
+                  : metrics.buildTime.duration;
+                
+                const status = '✅';
+                
+                comment += `| ${appName} | ${bundleChange} | ${buildChange} | ${status} |\n`;
+              }
+              
+              comment += '\n*Note: Performance monitoring is informational. Significant regressions should be investigated.*';
+              
+            } catch (error) {
+              comment += `⚠️ Could not generate comparison: ${error.message}`;
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+

@@ -42,6 +42,9 @@
     "contracts:diff": "node scripts/diff-contracts.js --fail-on-breaking",
     "contracts:check": "npm run contracts:gen && node scripts/diff-contracts.js --fail-on-breaking",
     "contracts:promote": "node scripts/promote-contracts.js",
+    "perf:baseline": "node scripts/performance/measure-baseline.js",
+    "perf:measure": "node scripts/performance/measure-baseline.js && mv scripts/performance/baseline.json scripts/performance/current.json",
+    "perf:compare": "node scripts/performance/compare-results.js",
     "prepare": "node -e \"try{require('husky').install()}catch(e){process.exit(0)}\""
   },
   "dependencies": {

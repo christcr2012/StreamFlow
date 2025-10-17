@@ -1,10 +1,31 @@
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Performance optimizations
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'],
+    } : false,
+  },
+
+  // Code splitting and optimization
+  experimental: {
+    optimizePackageImports: ['@cortiware/themes', 'lucide-react'],
+  },
+
+  // Disable ESLint during builds (run in CI separately)
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
   async rewrites() {
     return [
       {
         source: '/app/:path*',
-        destination: process.env.TENANT_APP_URL 
+        destination: process.env.TENANT_APP_URL
           ? `${process.env.TENANT_APP_URL}/:path*`
           : 'http://localhost:3003/:path*', // Local dev fallback
       },
@@ -12,5 +33,8 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+// Only apply bundle analyzer when explicitly requested
+module.exports = process.env.ANALYZE === 'true'
+  ? withBundleAnalyzer(nextConfig)
+  : nextConfig;
 
