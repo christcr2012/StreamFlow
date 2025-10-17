@@ -112,6 +112,7 @@ export async function PATCH(
   }
 }
 
+// TODO: Add Agreement and AgreementTemplate models to prisma/schema.prisma
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -122,29 +123,32 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id } = await params;
+    // const { id } = await params;
 
-    // Only allow deletion of draft agreements
-    const agreement = await prisma.agreement.findFirst({
-      where: { id, orgId: authContext.orgId! },
-    });
+    // // Only allow deletion of draft agreements
+    // const agreement = await prisma.agreement.findFirst({
+    //   where: { id, orgId: authContext.orgId! },
+    // });
 
-    if (!agreement) {
-      return NextResponse.json({ error: 'Agreement not found' }, { status: 404 });
-    }
+    // if (!agreement) {
+    //   return NextResponse.json({ error: 'Agreement not found' }, { status: 404 });
+    // }
 
-    if (agreement.status !== 'draft') {
-      return NextResponse.json(
-        { error: 'Only draft agreements can be deleted' },
-        { status: 400 }
-      );
-    }
+    // if (agreement.status !== 'draft') {
+    //   return NextResponse.json(
+    //     { error: 'Only draft agreements can be deleted' },
+    //     { status: 400 }
+    //   );
+    // }
 
-    await prisma.agreement.delete({
-      where: { id, orgId: authContext.orgId! },
-    });
+    // await prisma.agreement.delete({
+    //   where: { id, orgId: authContext.orgId! },
+    // });
 
-    return NextResponse.json({ ok: true });
+    // Temporary placeholder until Agreement models are added
+    return NextResponse.json({
+      error: 'Agreement feature not yet implemented - models need to be added to schema'
+    }, { status: 501 });
   } catch (error: any) {
     console.error('DELETE /api/agreements/[id] error:', error);
     return NextResponse.json(
