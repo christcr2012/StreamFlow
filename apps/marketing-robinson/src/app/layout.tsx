@@ -1,5 +1,7 @@
 import '../styles/globals.css';
 import { Inter, IBM_Plex_Sans, JetBrains_Mono } from 'next/font/google';
+import Navigation from '../components/Navigation';
+import Footer from '../components/Footer';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
 const plex = IBM_Plex_Sans({ subsets: ['latin'], weight: ['400','500','700'], display: 'swap' });
@@ -31,7 +33,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
-        {children}
+        <Navigation />
+        <main className="min-h-screen">
+          {children}
+        </main>
+        <Footer />
         <script type="application/ld+json" suppressHydrationWarning
           dangerouslySetInnerHTML={{ __html: JSON.stringify({
             "@context": "https://schema.org",
