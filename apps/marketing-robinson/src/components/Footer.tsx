@@ -11,12 +11,12 @@ export default function Footer() {
         <div className="mb-2">
           <Link href="/" className="inline-flex items-center gap-5 group mb-1">
             <Image
-              src="/logo.png"
-              alt="Robinson AI Systems Logo"
-              width={1200}
-              height={1200}
+              src="/logo-icon.png"
+              alt="Robinson AI Systems Icon"
+              width={500}
+              height={500}
               className="transition-transform duration-normal group-hover:scale-105"
-              style={{ height: '120px !important', width: 'auto !important', maxHeight: 'none !important', maxWidth: 'none !important', display: 'block' }}
+              style={{ height: '120px !important', width: '120px !important', maxHeight: 'none !important', maxWidth: 'none !important', display: 'block' }}
             />
             <span className="text-3xl font-bold text-text">Robinson AI Systems</span>
           </Link>
