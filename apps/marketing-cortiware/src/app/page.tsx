@@ -498,9 +498,9 @@ export default function CortiwareHomePage() {
         <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 md:p-10 text-center">
           <h3 className="text-2xl font-semibold text-white mb-3">Get product updates</h3>
           <p className="text-slate-300 mb-6">No spam. Only meaningful releases and guides.</p>
-          <form action="#" onSubmit={(e)=>e.preventDefault()} className="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto">
+          <form action="#" className="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto">
             <input type="email" required placeholder="you@company.com" className="flex-1 px-4 py-3 rounded-lg bg-slate-800/80 border border-slate-700/70 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500" />
-            <button className="px-6 py-3 bg-teal-500 hover:bg-teal-400 text-white rounded-lg font-semibold transition-colors">Subscribe</button>
+            <button type="submit" className="px-6 py-3 bg-teal-500 hover:bg-teal-400 text-white rounded-lg font-semibold transition-colors">Subscribe</button>
           </form>
         </div>
       </section>
