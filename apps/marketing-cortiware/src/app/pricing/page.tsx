@@ -1,57 +1,8 @@
 import Link from 'next/link';
+import { getPricing } from '@/lib/pricing';
 
-export default function PricingPage() {
-  const plans = [
-    {
-      name: 'Starter',
-      price: 49,
-      description: 'Perfect for small teams just getting started',
-      features: [
-        'Up to 3 users',
-        'Basic scheduling & dispatch',
-        'Customer portal',
-        'Mobile app access',
-        'Email support',
-        'Monthly invoicing',
-      ],
-      cta: 'Start Free Trial',
-      highlighted: false,
-    },
-    {
-      name: 'Professional',
-      price: 199,
-      description: 'For growing businesses with advanced needs',
-      features: [
-        'Unlimited users',
-        'Advanced AI automation',
-        'Custom branding',
-        'API access',
-        'Priority support',
-        'Real-time analytics',
-        'Custom integrations',
-        'SSO & advanced security',
-      ],
-      cta: 'Start Free Trial',
-      highlighted: true,
-    },
-    {
-      name: 'Enterprise',
-      price: null,
-      description: 'Custom solutions for large organizations',
-      features: [
-        'Everything in Professional',
-        'Dedicated account manager',
-        'Custom SLA',
-        'On-premise deployment',
-        'Advanced compliance',
-        'Custom development',
-        'Training & onboarding',
-        'Phone support',
-      ],
-      cta: 'Contact Sales',
-      highlighted: false,
-    },
-  ];
+export default async function PricingPage() {
+  const { plans } = await getPricing();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
