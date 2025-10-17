@@ -41,7 +41,7 @@ export default function Navigation() {
             <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-normal" />
           </div>
           <span className="text-xl sm:text-2xl font-bold text-text tracking-tight">
-            Cortiware
+            Robinson AI Systems
           </span>
         </Link>
 
@@ -50,7 +50,7 @@ export default function Navigation() {
           <NavLinks
             className="text-text-muted hover:text-text transition-all duration-fast relative group"
           />
-          <CTAButton href="/get-started">Get Started →</CTAButton>
+          <CTAButton href="/contact">Contact Us</CTAButton>
         </div>
 
         {/* Mobile Menu Button */}
@@ -121,11 +121,11 @@ export default function Navigation() {
           {/* Mobile CTA */}
           <div className="p-6 border-t border-border">
             <CTAButton
-              href="/get-started"
+              href="/contact"
               className="w-full text-center"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Get Started →
+              Contact Us
             </CTAButton>
           </div>
         </div>
