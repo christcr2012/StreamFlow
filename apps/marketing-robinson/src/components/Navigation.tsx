@@ -41,9 +41,10 @@ export default function Navigation() {
           <Image
             src="/logo.png"
             alt="Robinson AI Systems Logo"
-            width={660}
-            height={660}
-            className="h-[50px] w-auto transition-transform duration-normal group-hover:scale-110"
+            width={1000}
+            height={1000}
+            className="w-auto transition-transform duration-normal group-hover:scale-105"
+            style={{ height: 'calc(100vh - 32px)', maxHeight: '56px' }}
             priority
           />
           <span className="text-xl sm:text-2xl font-bold text-text tracking-tight hidden sm:inline">
