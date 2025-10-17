@@ -21,7 +21,7 @@ export default function RobinsonHomePage() {
 
       {/* Hero Section */}
       <section className="relative overflow-hidden max-w-7xl mx-auto px-6 py-28">
-        <div className="text-center max-w-4xl mx-auto">
+        <div className="relative text-center max-w-4xl mx-auto bg-slate-900/40 backdrop-blur-md border border-slate-800/60 rounded-3xl p-8 md:p-12 shadow-lg shadow-teal-500/10">
         {/* Decorative background */}
         <div className="pointer-events-none absolute inset-0 -z-10">
           <div className="absolute -top-32 left-1/2 -translate-x-1/2 h-[420px] w-[720px] rounded-full blur-3xl opacity-20" style={{ background: 'var(--cortiware-gradient)' }} />
