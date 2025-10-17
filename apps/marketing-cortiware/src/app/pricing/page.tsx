@@ -80,15 +80,15 @@ export default function PricingPage() {
 
         <div className="grid md:grid-cols-3 gap-8 mb-16">
           {plans.map((plan, idx) => (
-            <div key={idx} className="relative">
+            <div key={idx} className={`relative ${plan.highlighted ? 'pt-6' : ''}`}>
               {plan.highlighted && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10 px-4 py-1.5 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full text-white text-xs font-bold shadow-lg">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10 px-4 py-1.5 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full text-white text-xs font-bold shadow-lg whitespace-nowrap">
                   MOST POPULAR
                 </div>
               )}
               <div className={`rounded-2xl transition-all duration-300 h-full ${
                 plan.highlighted
-                  ? 'bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border-2 border-emerald-500/50 scale-105 shadow-2xl shadow-emerald-500/20'
+                  ? 'bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border-2 border-emerald-500/50 md:scale-105 shadow-2xl shadow-emerald-500/20'
                   : 'bg-slate-900/40 backdrop-blur-md border border-slate-800/60 hover:border-emerald-500/30'
               } p-8 ${plan.highlighted ? 'pt-10' : ''}`}>
                 <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
