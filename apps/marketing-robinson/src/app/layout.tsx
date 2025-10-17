@@ -1,6 +1,5 @@
-import '@cortiware/themes/globals.css';
-import '../../../../branding/Robinson_AI_Systems/tokens.css';
-import { ThemeRegistry } from '@cortiware/themes';
+import '@cortiware/themes/src/themes.css';
+import '@cortiware/themes/src/brand/robinson/tokens.css';
 import { Inter, IBM_Plex_Sans, JetBrains_Mono } from 'next/font/google';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
@@ -22,9 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
-        <ThemeRegistry>
-          {children}
-        </ThemeRegistry>
+        {children}
       </body>
     </html>
   );
