@@ -22,8 +22,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
         {children}
+        <script type="application/ld+json" suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Robinson AI Systems",
+            url: "https://www.robinsonaisystems.com",
+            logo: "https://www.robinsonaisystems.com/favicon.png"
+          }) }}
+        />
       </body>
     </html>
+
   );
 }
 
