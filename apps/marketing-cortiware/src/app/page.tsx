@@ -186,7 +186,7 @@ export default function CortiwareHomePage() {
           </div>
 
           {/* Professional */}
-          <div className="bg-gradient-to-br from-teal-500/15 to-cyan-500/15 border-2 border-teal-500 rounded-2xl p-8 relative shadow-xl shadow-teal-500/10 hover:shadow-teal-400/20 hover:-translate-y-1 transition-all">
+          <div className="bg-gradient-to-br from-teal-500/15 to-cyan-500/15 border-2 border-teal-500 rounded-2xl p-8 relative shadow-xl shadow-teal-500/10 hover:shadow-teal-400/20 hover:-translate-y-1 transition-all duration-300 hover:scale-[1.01] ring-1 ring-teal-500/30 hover:ring-teal-400/40">
             <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-teal-500 text-white text-sm font-semibold rounded-full">
               Most Popular
             </div>
