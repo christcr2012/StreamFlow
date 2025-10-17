@@ -9,8 +9,8 @@ export default function RobinsonHomePage() {
             <span className="text-xl font-bold text-white">Robinson AI Systems</span>
           </div>
           <div className="flex items-center gap-8">
-            <a href="#products" className="text-slate-300 hover:text-white transition-colors">Products</a>
-            <a href="#about" className="text-slate-300 hover:text-white transition-colors">About</a>
+            <a href="/products" className="text-slate-300 hover:text-white transition-colors">Products</a>
+            <a href="/about" className="text-slate-300 hover:text-white transition-colors">About</a>
             <a href="https://provider.robinsonaisystems.com/login" className="px-4 py-2 bg-teal-500 hover:bg-teal-400 text-white rounded-lg transition-colors font-medium">
               Provider Sign-in →
             </a>
@@ -33,10 +33,10 @@ export default function RobinsonHomePage() {
             SaaS to custom AI agents, we build the infrastructure that scales.
           </p>
           <div className="flex gap-4 justify-center">
-            <a href="#products" className="px-8 py-4 bg-teal-500 hover:bg-teal-400 text-white rounded-lg transition-colors font-semibold text-lg">
+            <a href="/products" className="px-8 py-4 bg-teal-500 hover:bg-teal-400 text-white rounded-lg transition-colors font-semibold text-lg">
               Explore Products
             </a>
-            <a href="#contact" className="px-8 py-4 border-2 border-slate-700 hover:border-teal-500 text-white rounded-lg transition-colors font-semibold text-lg">
+            <a href="/contact" className="px-8 py-4 border-2 border-slate-700 hover:border-teal-500 text-white rounded-lg transition-colors font-semibold text-lg">
               Contact Sales
             </a>
           </div>
@@ -70,7 +70,7 @@ export default function RobinsonHomePage() {
               intelligent automation to predictive analytics, we build solutions
               that drive real business value.
             </p>
-            <a href="#contact" className="text-teal-400 hover:text-teal-300 font-semibold inline-flex items-center gap-2">
+            <a href="/contact" className="text-teal-400 hover:text-teal-300 font-semibold inline-flex items-center gap-2">
               Get Started →
             </a>
           </div>

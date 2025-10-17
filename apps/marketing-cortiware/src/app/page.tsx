@@ -9,8 +9,8 @@ export default function CortiwareHomePage() {
             <span className="text-xl font-bold text-white">Cortiware</span>
           </div>
           <div className="flex items-center gap-8">
-            <a href="#features" className="text-slate-300 hover:text-white transition-colors">Features</a>
-            <a href="#pricing" className="text-slate-300 hover:text-white transition-colors">Pricing</a>
+            <a href="/features" className="text-slate-300 hover:text-white transition-colors">Features</a>
+            <a href="/pricing" className="text-slate-300 hover:text-white transition-colors">Pricing</a>
             <a href="#docs" className="text-slate-300 hover:text-white transition-colors">Docs</a>
             <a href="/app" className="px-4 py-2 bg-teal-500 hover:bg-teal-400 text-white rounded-lg transition-colors font-medium">
               Launch App →

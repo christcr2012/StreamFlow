@@ -9,7 +9,7 @@ const mono = JetBrains_Mono({ subsets: ['latin'], weight: ['400','700'], display
 export const metadata = {
   title: 'Robinson AI Systems',
   description: 'Enterprise AI solutions',
-  icons: { icon: '/favicon.svg' },
+  icons: { icon: '/favicon.png' },
   openGraph: {
     title: 'Robinson AI Systems',
     description: 'Enterprise AI solutions',
