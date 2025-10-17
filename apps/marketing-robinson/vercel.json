@@ -4,6 +4,14 @@
   "framework": "nextjs",
   "installCommand": "cd ../.. && npm install",
   "ignoreCommand": "npx turbo-ignore marketing-robinson",
+  "redirects": [
+    {
+      "source": "/provider/:path*",
+      "destination": "https://provider.robinsonaisystems.com/provider/:path*",
+      "permanent": true
+    }
+  ],
+
   "rewrites": [
     {
       "source": "/portal/:path*",
