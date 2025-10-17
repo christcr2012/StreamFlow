@@ -9,14 +9,15 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-1">
         {/* Logo and tagline */}
         <div className="mb-2">
-          <Link href="/" className="inline-flex items-center gap-5 group mb-1">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logo-icon.png"
+          <Link href="/" className="inline-flex items-center gap-3 group mb-6">
+            <Image
+              src="/logo.png"
               alt="Robinson AI Systems Logo"
-              className="transition-transform duration-normal group-hover:scale-105"
-              style={{ height: '120px', width: 'auto' }}
+              width={132}
+              height={132}
+              className="h-10 w-auto transition-transform duration-normal group-hover:scale-105"
             />
+            <span className="text-3xl font-bold text-text">Robinson AI Systems</span>
           </Link>
           <p className="text-text-muted max-w-md text-lg">
             Enterprise AI consulting and delivery partner. Custom platforms, agent systems, and vertical solutions built for scale.
