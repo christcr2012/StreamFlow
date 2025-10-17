@@ -40,16 +40,13 @@ export default function Navigation() {
         <Link href="/" className="flex items-center gap-4 group">
           <Image
             src="/logo-icon.png"
-            alt="Robinson AI Systems Icon"
-            width={500}
-            height={500}
+            alt="Robinson AI Systems Logo"
+            width={1000}
+            height={1000}
             className="transition-transform duration-normal group-hover:scale-105"
-            style={{ height: '100px !important', width: '100px !important', maxHeight: 'none !important', maxWidth: 'none !important', display: 'block' }}
+            style={{ height: '100px !important', width: 'auto !important', maxHeight: 'none !important', maxWidth: 'none !important', display: 'block' }}
             priority
           />
-          <span className="text-xl sm:text-2xl font-bold text-text tracking-tight hidden sm:inline">
-            Robinson AI Systems
-          </span>
         </Link>
 
         {/* Desktop Navigation */}
