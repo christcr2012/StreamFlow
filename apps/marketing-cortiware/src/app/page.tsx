@@ -13,7 +13,7 @@ export default function CortiwareHomePage() {
             <a href="/pricing" className="text-slate-300 hover:text-white transition-colors">Pricing</a>
             <a href="/industries" className="text-slate-300 hover:text-white transition-colors">Industries</a>
             <a href="#docs" className="text-slate-300 hover:text-white transition-colors">Docs</a>
-            <a href="/app" className="px-4 py-2 bg-teal-500 hover:bg-teal-400 text-white rounded-lg transition-colors font-medium">
+            <a href="/app" className="px-4 py-2 text-white rounded-lg font-medium shadow-sm" style={{ background: 'var(--cortiware-gradient)' }}>
               Launch App →
             </a>
           </div>
@@ -21,8 +21,13 @@ export default function CortiwareHomePage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-6 py-24">
+      <section className="relative overflow-hidden max-w-7xl mx-auto px-6 py-28">
         <div className="text-center max-w-4xl mx-auto">
+        {/* Decorative background */}
+        <div className="pointer-events-none absolute inset-0 -z-10">
+          <div className="absolute -top-32 left-1/2 -translate-x-1/2 h-[420px] w-[720px] rounded-full blur-3xl opacity-20" style={{ background: 'var(--cortiware-gradient)' }} />
+        </div>
+
           <div className="flex flex-col items-center gap-2 mb-6">
             <div className="inline-block px-4 py-2 bg-teal-500/10 border border-teal-500/20 rounded-full text-teal-400 text-sm font-semibold">
               Multi-Tenant AI Platform
@@ -58,7 +63,7 @@ export default function CortiwareHomePage() {
         <h2 className="text-4xl font-bold text-white mb-12 text-center">Everything You Need</h2>
         <div className="grid md:grid-cols-3 gap-8">
           {/* Feature 1 */}
-          <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-8">
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 hover:-translate-y-0.5 transition-all">
             <div className="w-12 h-12 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-xl mb-6 flex items-center justify-center text-white text-2xl">
               🎨
             </div>
@@ -70,7 +75,7 @@ export default function CortiwareHomePage() {
           </div>
 
           {/* Feature 2 */}
-          <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-8">
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 hover:-translate-y-0.5 transition-all">
             <div className="w-12 h-12 bg-gradient-to-br from-violet-400 to-purple-500 rounded-xl mb-6 flex items-center justify-center text-white text-2xl">
               🤖
             </div>
@@ -82,7 +87,7 @@ export default function CortiwareHomePage() {
           </div>
 
           {/* Feature 3 */}
-          <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-8">
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 hover:-translate-y-0.5 transition-all">
             <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl mb-6 flex items-center justify-center text-white text-2xl">
               🔒
             </div>
@@ -94,7 +99,7 @@ export default function CortiwareHomePage() {
           </div>
 
           {/* Feature 4 */}
-          <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-8">
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 hover:-translate-y-0.5 transition-all">
             <div className="w-12 h-12 bg-gradient-to-br from-rose-400 to-pink-500 rounded-xl mb-6 flex items-center justify-center text-white text-2xl">
               📊
             </div>
@@ -106,7 +111,7 @@ export default function CortiwareHomePage() {
           </div>
 
           {/* Feature 5 */}
-          <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-8">
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 hover:-translate-y-0.5 transition-all">
             <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-green-500 rounded-xl mb-6 flex items-center justify-center text-white text-2xl">
               ⚡
             </div>
@@ -118,7 +123,7 @@ export default function CortiwareHomePage() {
           </div>
 
           {/* Feature 6 */}
-          <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-8">
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 hover:-translate-y-0.5 transition-all">
             <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-xl mb-6 flex items-center justify-center text-white text-2xl">
               🔌
             </div>
@@ -136,7 +141,7 @@ export default function CortiwareHomePage() {
         <h2 className="text-4xl font-bold text-white mb-12 text-center">Simple, Transparent Pricing</h2>
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {/* Starter */}
-          <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-8">
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 hover:-translate-y-0.5 transition-all">
             <h3 className="text-2xl font-bold text-white mb-2">Starter</h3>
             <div className="text-4xl font-bold text-white mb-6">
               $49<span className="text-lg text-slate-400">/mo</span>
@@ -161,7 +166,7 @@ export default function CortiwareHomePage() {
           </div>
 
           {/* Professional */}
-          <div className="bg-gradient-to-br from-teal-500/10 to-cyan-500/10 border-2 border-teal-500 rounded-2xl p-8 relative">
+          <div className="bg-gradient-to-br from-teal-500/15 to-cyan-500/15 border-2 border-teal-500 rounded-2xl p-8 relative shadow-xl shadow-teal-500/10 hover:shadow-teal-400/20 hover:-translate-y-1 transition-all">
             <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-teal-500 text-white text-sm font-semibold rounded-full">
               Most Popular
             </div>
@@ -192,7 +197,7 @@ export default function CortiwareHomePage() {
           </div>
 
           {/* Enterprise */}
-          <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-8">
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 hover:-translate-y-0.5 transition-all">
             <h3 className="text-2xl font-bold text-white mb-2">Enterprise</h3>
             <div className="text-4xl font-bold text-white mb-6">
               Custom
