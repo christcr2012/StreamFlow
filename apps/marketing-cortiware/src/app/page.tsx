@@ -832,105 +832,261 @@ export default function CortiwareHomePage() {
       </section>
 
       {/* Testimonials - Early Access */}
-      <section className="max-w-7xl mx-auto px-6 py-24">
-        <h2 className="text-4xl font-bold text-white mb-12 text-center">What Our Customers Say</h2>
-        <div className="max-w-3xl mx-auto">
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-12 text-center shadow-lg shadow-emerald-500/5">
-            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center">
-              <span className="text-3xl">✨</span>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-32">
+        <div className="text-center mb-12 sm:mb-16">
+          <div className="inline-block px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-emerald-400 text-sm font-semibold mb-6">
+            Join Early Access
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 sm:mb-6 leading-tight px-4">
+            What Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">Customers Say</span>
+          </h2>
+        </div>
+        <div className="max-w-4xl mx-auto">
+          <div className="group relative bg-gradient-to-br from-slate-900/90 to-slate-900/50 backdrop-blur-xl border border-slate-800/80 rounded-2xl sm:rounded-3xl p-8 sm:p-12 lg:p-16 text-center shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 overflow-hidden">
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/0 via-emerald-500/5 to-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+            {/* Icon */}
+            <div className="relative z-10 mb-6 sm:mb-8">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              </div>
             </div>
-            <h3 className="text-2xl font-semibold text-white mb-4">Be the First to Share Your Experience</h3>
-            <p className="text-slate-300 mb-6">
-              Cortiware is in early access. Join our growing community of service businesses and help shape the future of AI-powered business software.
-            </p>
-            <a
-              href="#pricing"
-              className="inline-block px-8 py-3 rounded-lg font-semibold transition-all"
-              style={{ background: 'var(--vp-gradient)' }}
-            >
-              <span className="text-white">Get Early Access</span>
-            </a>
+
+            {/* Content */}
+            <div className="relative z-10">
+              <h3 className="text-2xl sm:text-3xl font-black text-white mb-4 sm:mb-6">Be the First to Share Your Experience</h3>
+              <p className="text-base sm:text-lg text-slate-300 mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed">
+                Cortiware is in <span className="text-emerald-400 font-semibold">early access</span>. Join our growing community of service businesses and help shape the future of AI-powered business software.
+              </p>
+              <a
+                href="#pricing"
+                className="group/btn inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 text-white rounded-xl transition-all font-semibold text-base sm:text-lg shadow-lg hover:shadow-emerald-500/50 relative overflow-hidden"
+                style={{ background: 'var(--vp-gradient)' }}
+              >
+                <span className="relative z-10">Get Early Access</span>
+                <svg className="relative z-10 w-5 h-5 group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300" />
+              </a>
+            </div>
+
+            {/* Decorative corners */}
+            <div className="absolute -top-8 -left-8 w-32 h-32 bg-gradient-to-br from-emerald-500/20 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-tl from-emerald-500/20 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </div>
         </div>
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="max-w-7xl mx-auto px-6 py-24">
-        <h2 className="text-4xl font-bold text-white mb-12 text-center">Frequently Asked Questions</h2>
-        <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+      <section id="faq" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-32">
+        <div className="text-center mb-12 sm:mb-16">
+          <div className="inline-block px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-emerald-400 text-sm font-semibold mb-6">
+            Common Questions
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 sm:mb-6 leading-tight px-4">
+            Frequently Asked <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">Questions</span>
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-6xl mx-auto">
           {[{
             q: 'Can I customize Cortiware for my specific business?',
-            a: 'Absolutely! Cortiware is fully customizable. Adjust branding, pricing, workflows, and features to match your exact needs.'
+            a: 'Absolutely! Cortiware is fully customizable. Adjust branding, pricing, workflows, and features to match your exact needs.',
+            icon: (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+              </svg>
+            )
           },{
             q: 'What if my industry isn\'t listed?',
-            a: 'We support many industries beyond what\'s shown. Contact us and we\'ll configure Cortiware for your specific business.'
+            a: 'We support many industries beyond what\'s shown. Contact us and we\'ll configure Cortiware for your specific business.',
+            icon: (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            )
           },{
             q: 'Do I need technical skills to use Cortiware?',
-            a: 'No. Cortiware is designed for business owners, not developers. If you can use a web browser, you can run Cortiware.'
+            a: 'No. Cortiware is designed for business owners, not developers. If you can use a web browser, you can run Cortiware.',
+            icon: (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            )
           },{
             q: 'How does the AI actually help my business?',
-            a: 'AI handles customer inquiries, schedules appointments, sends follow-ups, generates quotes, and automates routine tasks—24/7.'
-          }].map((f) => (
-            <div key={f.q} className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6">
-              <h3 className="text-white font-semibold mb-2">{f.q}</h3>
-              <p className="text-slate-300">{f.a}</p>
+            a: 'AI handles customer inquiries, schedules appointments, sends follow-ups, generates quotes, and automates routine tasks—24/7.',
+            icon: (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+            )
+          }].map((f, i) => (
+            <div key={f.q} className="group relative bg-gradient-to-br from-slate-900/90 to-slate-900/50 backdrop-blur-xl border border-slate-800/80 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 hover:-translate-y-1 overflow-hidden animate-fade-in-up" style={{ animationDelay: `${i * 0.1}s` }}>
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/0 via-emerald-500/0 to-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+              {/* Icon */}
+              <div className="relative z-10 mb-4">
+                <div className="inline-flex p-3 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 rounded-xl text-emerald-400 group-hover:scale-110 transition-all duration-300">
+                  {f.icon}
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="relative z-10">
+                <h3 className="text-lg sm:text-xl font-bold text-white mb-3 group-hover:text-emerald-400 transition-colors duration-300">{f.q}</h3>
+                <p className="text-sm sm:text-base text-slate-300 leading-relaxed">{f.a}</p>
+              </div>
+
+              {/* Decorative corner */}
+              <div className="absolute -bottom-8 -right-8 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-tl from-emerald-500/20 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </div>
           ))}
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="max-w-7xl mx-auto px-6 py-24">
-        <div className="bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 rounded-2xl p-12 text-center">
-          <h2 className="text-4xl font-bold text-white mb-6">Ready to Transform Your Business?</h2>
-          <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-            Get Cortiware for your industry and start automating with AI today. No credit card required to get started.
-          </p>
-          <a href="https://app.cortiware.com" target="_blank" rel="noopener noreferrer" className="px-8 py-4 text-white rounded-lg transition-all font-semibold text-lg inline-block shadow-lg hover:shadow-emerald-500/30" style={{ background: 'var(--vp-gradient)' }}>
-            Get Started →
-          </a>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-32">
+        <div className="relative bg-gradient-to-br from-emerald-500/15 to-teal-500/15 border-2 border-emerald-500/30 rounded-2xl sm:rounded-3xl p-8 sm:p-12 lg:p-16 text-center shadow-2xl shadow-emerald-500/20 overflow-hidden group">
+          {/* Animated background gradient */}
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-teal-500/10 opacity-100 group-hover:opacity-100 transition-opacity duration-500" />
+
+          {/* Floating orbs */}
+          <div className="absolute top-10 left-10 w-32 h-32 bg-emerald-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '3s' }} />
+          <div className="absolute bottom-10 right-10 w-32 h-32 bg-teal-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s', animationDelay: '1s' }} />
+
+          {/* Content */}
+          <div className="relative z-10">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 sm:mb-6 leading-tight">
+              Ready to <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">Transform</span> Your Business?
+            </h2>
+            <p className="text-base sm:text-lg md:text-xl text-slate-300 mb-8 sm:mb-10 max-w-3xl mx-auto leading-relaxed">
+              Get Cortiware for your industry and start automating with AI today. <span className="text-white font-semibold">No credit card required</span> to get started.
+            </p>
+            <a href="https://app.cortiware.com" target="_blank" rel="noopener noreferrer" className="group/btn inline-flex items-center gap-2 px-6 sm:px-10 py-3 sm:py-5 text-white rounded-xl transition-all font-bold text-base sm:text-lg shadow-2xl hover:shadow-emerald-500/50 relative overflow-hidden" style={{ background: 'var(--vp-gradient)' }}>
+              <span className="relative z-10">Get Started</span>
+              <svg className="relative z-10 w-5 h-5 sm:w-6 sm:h-6 group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300" />
+            </a>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800/50 bg-slate-950/50">
-        <div className="max-w-7xl mx-auto px-6 py-12">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-lg" style={{ background: 'var(--vp-gradient)' }} />
-                <span className="text-xl font-bold text-white">Cortiware</span>
+      <footer className="relative border-t border-slate-800/50 bg-slate-950/80 backdrop-blur-xl overflow-hidden">
+        {/* Gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 to-slate-950/90" />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mb-12 sm:mb-16">
+            {/* Brand Column */}
+            <div className="sm:col-span-2 lg:col-span-1">
+              <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6 group">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-emerald-500/20" style={{ background: 'var(--vp-gradient)' }} />
+                <span className="text-2xl sm:text-3xl font-black text-white">Cortiware</span>
               </div>
-              <p className="text-slate-400 text-sm">
-                AI-powered software for service businesses.
+              <p className="text-slate-400 text-sm sm:text-base leading-relaxed mb-6">
+                AI-powered software for service businesses. <span className="text-emerald-400">Automate everything.</span>
               </p>
+              {/* Social Links */}
+              <div className="flex gap-3">
+                <a href="https://twitter.com/cortiware" target="_blank" rel="noopener noreferrer" className="group/social w-10 h-10 rounded-lg bg-slate-900/50 border border-slate-800/80 flex items-center justify-center hover:border-emerald-500/50 hover:bg-slate-800/50 transition-all">
+                  <svg className="w-5 h-5 text-slate-400 group-hover/social:text-emerald-400 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+                  </svg>
+                </a>
+                <a href="https://linkedin.com/company/cortiware" target="_blank" rel="noopener noreferrer" className="group/social w-10 h-10 rounded-lg bg-slate-900/50 border border-slate-800/80 flex items-center justify-center hover:border-emerald-500/50 hover:bg-slate-800/50 transition-all">
+                  <svg className="w-5 h-5 text-slate-400 group-hover/social:text-emerald-400 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                  </svg>
+                </a>
+              </div>
             </div>
+
+            {/* Product Column */}
             <div>
-              <h4 className="text-white font-semibold mb-4">Product</h4>
-              <ul className="space-y-2 text-slate-400 text-sm">
-                <li><a href="#industries" className="hover:text-white transition-colors">Industries</a></li>
-                <li><a href="#ai-features" className="hover:text-white transition-colors">AI Features</a></li>
-                <li><a href="#pricing" className="hover:text-white transition-colors">Pricing</a></li>
+              <h4 className="text-white font-bold text-base sm:text-lg mb-4 sm:mb-6">Product</h4>
+              <ul className="space-y-3">
+                {[
+                  { label: 'Industries', href: '#industries' },
+                  { label: 'AI Features', href: '#ai-features' },
+                  { label: 'Pricing', href: '#pricing' },
+                  { label: 'FAQ', href: '#faq' }
+                ].map((link) => (
+                  <li key={link.label}>
+                    <a href={link.href} className="group/link text-slate-400 text-sm sm:text-base hover:text-emerald-400 transition-colors inline-flex items-center gap-2">
+                      <span className="group-hover/link:translate-x-1 transition-transform">{link.label}</span>
+                      <svg className="w-4 h-4 opacity-0 group-hover/link:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </a>
+                  </li>
+                ))}
               </ul>
             </div>
+
+            {/* Company Column */}
             <div>
-              <h4 className="text-white font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-slate-400 text-sm">
-                <li><a href="/about" className="hover:text-white transition-colors">About</a></li>
-                <li><a href="/contact" className="hover:text-white transition-colors">Contact</a></li>
-                <li><a href="https://robinsonaisystems.com" className="hover:text-white transition-colors">Robinson AI Systems</a></li>
+              <h4 className="text-white font-bold text-base sm:text-lg mb-4 sm:mb-6">Company</h4>
+              <ul className="space-y-3">
+                {[
+                  { label: 'About', href: '/about' },
+                  { label: 'Contact', href: '/contact' },
+                  { label: 'Robinson AI Systems', href: 'https://robinsonaisystems.com' }
+                ].map((link) => (
+                  <li key={link.label}>
+                    <a href={link.href} className="group/link text-slate-400 text-sm sm:text-base hover:text-emerald-400 transition-colors inline-flex items-center gap-2">
+                      <span className="group-hover/link:translate-x-1 transition-transform">{link.label}</span>
+                      <svg className="w-4 h-4 opacity-0 group-hover/link:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </a>
+                  </li>
+                ))}
               </ul>
             </div>
+
+            {/* Legal Column */}
             <div>
-              <h4 className="text-white font-semibold mb-4">Legal</h4>
-              <ul className="space-y-2 text-slate-400 text-sm">
-                <li><a href="/privacy" className="hover:text-white transition-colors">Privacy</a></li>
-                <li><a href="/terms" className="hover:text-white transition-colors">Terms</a></li>
+              <h4 className="text-white font-bold text-base sm:text-lg mb-4 sm:mb-6">Legal</h4>
+              <ul className="space-y-3">
+                {[
+                  { label: 'Privacy Policy', href: '/privacy' },
+                  { label: 'Terms of Service', href: '/terms' }
+                ].map((link) => (
+                  <li key={link.label}>
+                    <a href={link.href} className="group/link text-slate-400 text-sm sm:text-base hover:text-emerald-400 transition-colors inline-flex items-center gap-2">
+                      <span className="group-hover/link:translate-x-1 transition-transform">{link.label}</span>
+                      <svg className="w-4 h-4 opacity-0 group-hover/link:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </a>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
-          <div className="border-t border-slate-800/50 pt-8 text-center text-slate-400 text-sm">
-            © 2025 Robinson AI Systems, LLC. All rights reserved.
+
+          {/* Bottom Bar */}
+          <div className="border-t border-slate-800/50 pt-8 sm:pt-10">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <p className="text-slate-400 text-xs sm:text-sm text-center sm:text-left">
+                © 2025 <span className="text-white font-semibold">Robinson AI Systems, LLC</span>. All rights reserved.
+              </p>
+              <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-400">
+                <span>Built with</span>
+                <svg className="w-4 h-4 text-emerald-400 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                </svg>
+                <span>by AI</span>
+              </div>
+            </div>
           </div>
         </div>
       </footer>
