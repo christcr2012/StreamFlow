@@ -12,6 +12,7 @@ export default function RobinsonHomePage() {
             <a href="/products" className="text-slate-300 hover:text-white transition-colors">Products</a>
             <a href="/industries" className="text-slate-300 hover:text-white transition-colors">Industries</a>
             <a href="/about" className="text-slate-300 hover:text-white transition-colors">About</a>
+            <a href="/contact" className="text-slate-300 hover:text-white transition-colors">Contact</a>
             <a href="https://provider.robinsonaisystems.com/login" target="_blank" rel="noopener noreferrer" className="px-4 py-2 text-white rounded-lg font-medium shadow-sm" style={{ background: 'var(--cortiware-gradient)' }}>
               Provider Sign-in →
             </a>
