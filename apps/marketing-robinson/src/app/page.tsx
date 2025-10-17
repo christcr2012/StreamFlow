@@ -12,7 +12,7 @@ export default function RobinsonHomePage() {
             <a href="/products" className="text-slate-300 hover:text-white transition-colors">Products</a>
             <a href="/industries" className="text-slate-300 hover:text-white transition-colors">Industries</a>
             <a href="/about" className="text-slate-300 hover:text-white transition-colors">About</a>
-            <a href="https://provider.robinsonaisystems.com/login" className="px-4 py-2 text-white rounded-lg font-medium shadow-sm" style={{ background: 'var(--cortiware-gradient)' }}>
+            <a href="https://provider.robinsonaisystems.com/login" target="_blank" rel="noopener noreferrer" className="px-4 py-2 text-white rounded-lg font-medium shadow-sm" style={{ background: 'var(--cortiware-gradient)' }}>
               Provider Sign-in →
             </a>
           </div>
@@ -74,7 +74,7 @@ export default function RobinsonHomePage() {
               and enterprise-grade security. Built for businesses that need to scale
               their AI operations across multiple clients.
             </p>
-            <a href="https://cortiware.com" className="text-teal-400 hover:text-teal-300 font-semibold inline-flex items-center gap-2">
+            <a href="https://cortiware.com" target="_blank" rel="noopener noreferrer" className="text-teal-400 hover:text-teal-300 font-semibold inline-flex items-center gap-2">
               Learn More →
             </a>
           </div>

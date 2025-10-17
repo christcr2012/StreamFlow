@@ -13,7 +13,7 @@ export default function CortiwareHomePage() {
             <a href="/pricing" className="text-slate-300 hover:text-white transition-colors">Pricing</a>
             <a href="/industries" className="text-slate-300 hover:text-white transition-colors">Industries</a>
             <a href="/contact" className="text-slate-300 hover:text-white transition-colors">Contact</a>
-            <a href="https://app.cortiware.com" className="px-4 py-2 text-white rounded-lg font-medium shadow-sm" style={{ background: 'var(--cortiware-gradient)' }}>
+            <a href="https://app.cortiware.com" target="_blank" rel="noopener noreferrer" className="px-4 py-2 text-white rounded-lg font-medium shadow-sm" style={{ background: 'var(--cortiware-gradient)' }}>
               Launch App →
             </a>
           </div>
@@ -48,7 +48,7 @@ export default function CortiwareHomePage() {
             powerful AI agents—all in one platform.
           </p>
           <div className="flex gap-4 justify-center">
-            <a href="https://app.cortiware.com" className="px-8 py-4 bg-teal-500 hover:bg-teal-400 text-white rounded-lg transition-colors font-semibold text-lg">
+            <a href="https://app.cortiware.com" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-teal-500 hover:bg-teal-400 text-white rounded-lg transition-colors font-semibold text-lg">
               Get Started Free
             </a>
             <a href="#features" className="px-8 py-4 border-2 border-slate-700 hover:border-teal-500 text-white rounded-lg transition-colors font-semibold text-lg">
@@ -180,7 +180,7 @@ export default function CortiwareHomePage() {
                 <span className="text-teal-400">✓</span> Email support
               </li>
             </ul>
-            <a href="https://app.cortiware.com" className="block w-full px-6 py-3 border-2 border-slate-700 hover:border-teal-500 text-white rounded-lg transition-colors font-semibold text-center">
+            <a href="https://app.cortiware.com" target="_blank" rel="noopener noreferrer" className="block w-full px-6 py-3 border-2 border-slate-700 hover:border-teal-500 text-white rounded-lg transition-colors font-semibold text-center">
               Start Free Trial
             </a>
           </div>
@@ -211,7 +211,7 @@ export default function CortiwareHomePage() {
                 <span className="text-teal-400">✓</span> Priority support
               </li>
             </ul>
-            <a href="https://app.cortiware.com" className="block w-full px-6 py-3 bg-teal-500 hover:bg-teal-400 text-white rounded-lg transition-colors font-semibold text-center">
+            <a href="https://app.cortiware.com" target="_blank" rel="noopener noreferrer" className="block w-full px-6 py-3 bg-teal-500 hover:bg-teal-400 text-white rounded-lg transition-colors font-semibold text-center">
               Start Free Trial
             </a>
           </div>
@@ -254,7 +254,7 @@ export default function CortiwareHomePage() {
             Join thousands of businesses using Cortiware to power their AI operations.
             Start your free trial today—no credit card required.
           </p>
-          <a href="https://app.cortiware.com" className="px-8 py-4 bg-teal-500 hover:bg-teal-400 text-white rounded-lg transition-colors font-semibold text-lg inline-block">
+          <a href="https://app.cortiware.com" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-teal-500 hover:bg-teal-400 text-white rounded-lg transition-colors font-semibold text-lg inline-block">
             Start Free Trial →
           </a>
         </div>
@@ -284,7 +284,7 @@ export default function CortiwareHomePage() {
             <div>
               <h4 className="font-semibold text-white mb-4">Company</h4>
               <ul className="space-y-2">
-                <li><a href="https://robinsonaisystems.com" className="text-slate-400 hover:text-white transition-colors text-sm">About</a></li>
+                <li><a href="https://robinsonaisystems.com" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors text-sm">About</a></li>
                 <li><a href="mailto:contact@cortiware.com" className="text-slate-400 hover:text-white transition-colors text-sm">Contact</a></li>
               </ul>
             </div>
@@ -299,8 +299,8 @@ export default function CortiwareHomePage() {
           <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-slate-400 text-sm">© 2025 Cortiware. A Robinson AI Systems product.</p>
             <div className="flex gap-6">
-              <a href="https://app.cortiware.com" className="text-slate-400 hover:text-white transition-colors text-sm">Launch App</a>
-              <a href="https://robinsonaisystems.com" className="text-slate-400 hover:text-white transition-colors text-sm">Robinson AI Systems</a>
+              <a href="https://app.cortiware.com" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors text-sm">Launch App</a>
+              <a href="https://robinsonaisystems.com" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors text-sm">Robinson AI Systems</a>
             </div>
           </div>
         </div>
