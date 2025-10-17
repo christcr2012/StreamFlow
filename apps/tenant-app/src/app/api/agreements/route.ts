@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
         status: 'DRAFT',
       },
       include: { Customer: true,
-        template: true,
+        AgreementTemplate: true,
       },
     });
 

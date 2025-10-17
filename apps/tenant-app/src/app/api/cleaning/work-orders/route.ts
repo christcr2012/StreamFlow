@@ -80,11 +80,11 @@ export async function GET(request: NextRequest) {
               id: true,
               frequency: true,
               basePrice: true,
-              estimate: {
+              CleaningEstimate: {
                 select: {
                   spaceType: true,
                   squareFeet: true,
-                  lead: {
+                  CleaningLead: {
                     select: {
                       contactName: true,
                       address: true,

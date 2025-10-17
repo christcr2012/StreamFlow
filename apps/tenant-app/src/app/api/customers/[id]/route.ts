@@ -50,7 +50,7 @@ export async function GET(
           orderBy: { createdAt: 'desc' },
           take: 10,
         },
-        _count: { select: { Job: true, invoices: true, agreements: true },
+        _count: { select: { Job: true, Invoice: true, Agreement: true },
         },
       },
     });

@@ -57,10 +57,10 @@ export async function GET(request: NextRequest) {
               id: true,
               scheduledDate: true,
               status: true,
-              contract: {
+              CleaningContract: {
                 select: {
                   id: true,
-                  estimate: {
+                  CleaningEstimate: {
                     select: {
                       spaceType: true,
                       lead: {

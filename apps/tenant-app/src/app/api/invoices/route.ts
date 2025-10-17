@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
               amountCents: true,
             },
           },
-          payments: {
+          Payment: {
             select: {
               id: true,
               amount: true,
@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
         },
       },
       include: { Customer: true,
-        lineItems: true,
+        InvoiceLine: true,
       },
     });
 

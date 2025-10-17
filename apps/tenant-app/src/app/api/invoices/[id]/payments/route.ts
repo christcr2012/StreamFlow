@@ -22,7 +22,7 @@ export async function POST(
     const invoice = await prisma.invoice.findFirst({
       where: { id: invoiceId, orgId: authContext.orgId! },
       include: { Payment: true,
-        customer: {
+        Customer: {
           select: { id: true, company: true, primaryName: true },
         },
       },
@@ -33,7 +33,7 @@ export async function POST(
     }
 
     // Calculate total paid so far
-    const totalPaid = invoice.Payment.reduce((sum: number, p) => sum + Number(p.amount), 0);
+    const totalPaid = invoice.Payment.reduce((sum: number, p: any) => sum + Number(p.amount), 0);
     const remainingAmount = Number(invoice.amount) - totalPaid;
 
     if (data.amount > remainingAmount) {

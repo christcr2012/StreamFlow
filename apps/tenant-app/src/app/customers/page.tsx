@@ -8,7 +8,7 @@ async function getCustomers(orgId: string) {
     where: { orgId },
     include: {
       _count: { select: { Job: true,
-          invoices: true,
+          Invoice: true,
         },
       },
     },

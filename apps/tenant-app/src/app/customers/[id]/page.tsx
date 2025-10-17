@@ -7,11 +7,11 @@ async function getCustomer(id: string, orgId: string) {
   const customer = await prisma.customer.findFirst({
     where: { id, orgId },
     include: { CustomerContact: true,
-      jobs: {
+      Job: {
         orderBy: { createdAt: 'desc' },
         take: 10,
       },
-      invoices: {
+      Invoice: {
         orderBy: { issuedAt: 'desc' },
         take: 10,
       },

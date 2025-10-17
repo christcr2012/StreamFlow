@@ -14,7 +14,7 @@ interface Customer {
   notes: string | null;
   tags: string[];
   createdAt: Date;
-  contacts: Array<{
+  CustomerContact: Array<{
     id: string;
     name: string;
     email: string | null;
@@ -22,14 +22,14 @@ interface Customer {
     role: string | null;
     isPrimary: boolean;
   }>;
-  jobs: Array<{
+  Job: Array<{
     id: string;
     title: string;
     status: string;
     scheduledAt: Date | null;
     createdAt: Date;
   }>;
-  invoices: Array<{
+  Invoice: Array<{
     id: string;
     number: string | null;
     amount: any;
@@ -108,11 +108,11 @@ export function CustomerDetailClient({ customer }: CustomerDetailClientProps) {
             </Card>
 
             {/* Additional Contacts */}
-            {customer.contacts.length > 0 && (
+            {customer.CustomerContact.length > 0 && (
               <Card>
                 <CardHeader title="Additional Contacts" />
                 <div className="divide-y divide-gray-200">
-                  {customer.contacts.map((contact) => (
+                  {customer.CustomerContact.map((contact) => (
                     <div key={contact.id} className="p-4">
                       <div className="flex items-center justify-between">
                         <div>
@@ -146,12 +146,12 @@ export function CustomerDetailClient({ customer }: CustomerDetailClientProps) {
                 }
               />
               <div className="divide-y divide-gray-200">
-                {customer.jobs.length === 0 ? (
+                {customer.Job.length === 0 ? (
                   <div className="p-6 text-center text-gray-500">
                     No jobs yet
                   </div>
                 ) : (
-                  customer.jobs.map((job) => (
+                  customer.Job.map((job) => (
                     <Link key={job.id} href={`/jobs/${job.id}`} className="block p-4 hover:bg-gray-50">
                       <div className="flex items-center justify-between">
                         <div>
@@ -189,12 +189,12 @@ export function CustomerDetailClient({ customer }: CustomerDetailClientProps) {
                 }
               />
               <div className="divide-y divide-gray-200">
-                {customer.invoices.length === 0 ? (
+                {customer.Invoice.length === 0 ? (
                   <div className="p-6 text-center text-gray-500 text-sm">
                     No invoices yet
                   </div>
                 ) : (
-                  customer.invoices.map((invoice) => (
+                  customer.Invoice.map((invoice) => (
                     <Link key={invoice.id} href={`/invoices/${invoice.id}`} className="block p-4 hover:bg-gray-50">
                       <div className="flex items-center justify-between mb-2">
                         <p className="font-medium text-gray-900 text-sm">{invoice.number || 'Draft'}</p>

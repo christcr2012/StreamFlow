@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
               squareFeet: true
             }
           },
-          workOrders: {
+          CleaningWorkOrder: {
             select: {
               id: true,
               status: true,

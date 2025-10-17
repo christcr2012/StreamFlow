@@ -38,7 +38,7 @@ export async function GET(
           },
           orderBy: { createdAt: 'asc' },
         },
-        payments: {
+        Payment: {
           select: {
             id: true,
             amount: true,
@@ -139,7 +139,7 @@ export async function PATCH(
             createdAt: true,
           },
         },
-        payments: {
+        Payment: {
           select: {
             id: true,
             amount: true,

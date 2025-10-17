@@ -153,7 +153,7 @@ export async function DELETE(
     const photo = await prisma.jobPhoto.findFirst({
       where: {
         id: photoId,
-        job: {
+        Job: {
           id,
           orgId: authContext.orgId,
         },

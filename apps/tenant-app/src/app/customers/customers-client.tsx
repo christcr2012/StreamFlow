@@ -24,8 +24,8 @@ interface Customer {
   primaryPhone: string | null;
   createdAt: Date;
   _count: {
-    jobs: number;
-    invoices: number;
+    Job: number;
+    Invoice: number;
   };
 }
 
@@ -93,12 +93,12 @@ export function CustomersClient({ customers: initialCustomers }: CustomersClient
           bVal = (b.company || b.primaryName || '').toLowerCase();
           break;
         case 'jobs':
-          aVal = a._count.jobs;
-          bVal = b._count.jobs;
+          aVal = a._count.Job;
+          bVal = b._count.Job;
           break;
         case 'invoices':
-          aVal = a._count.invoices;
-          bVal = b._count.invoices;
+          aVal = a._count.Invoice;
+          bVal = b._count.Invoice;
           break;
         case 'createdAt':
         default:
@@ -194,7 +194,7 @@ export function CustomersClient({ customers: initialCustomers }: CustomersClient
       label: 'Jobs',
       render: (customer: Customer) => (
         <Badge variant="info" size="sm">
-          {customer._count.jobs}
+          {customer._count.Job}
         </Badge>
       ),
     },
@@ -203,7 +203,7 @@ export function CustomersClient({ customers: initialCustomers }: CustomersClient
       label: 'Invoices',
       render: (customer: Customer) => (
         <Badge variant="default" size="sm">
-          {customer._count.invoices}
+          {customer._count.Invoice}
         </Badge>
       ),
     },
@@ -226,8 +226,8 @@ export function CustomersClient({ customers: initialCustomers }: CustomersClient
         c.company || '',
         c.primaryEmail || '',
         c.primaryPhone || '',
-        c._count.jobs.toString(),
-        c._count.invoices.toString(),
+        c._count.Job.toString(),
+        c._count.Invoice.toString(),
         new Date(c.createdAt).toLocaleDateString(),
       ]),
     ].map(row => row.join(',')).join('\n');

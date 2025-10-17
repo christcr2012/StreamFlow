@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
               address: true
             }
           },
-          contract: {
+          CleaningContract: {
             select: {
               id: true,
               status: true

@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
       select: {
         customerId: true,
         amount: true,
-        customer: {
+        Customer: {
           select: {
             company: true,
             primaryName: true,
