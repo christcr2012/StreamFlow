@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import Navigation from '@/components/Navigation';
 import Link from 'next/link';
 
 export default function CortiwareHomePage() {
@@ -28,8 +27,6 @@ export default function CortiwareHomePage() {
           backgroundSize: '50px 50px',
         }} />
       </div>
-
-      <Navigation />
 
       {/* Hero Section */}
       <section className="relative overflow-visible pt-20 pb-32">
@@ -939,119 +936,6 @@ export default function CortiwareHomePage() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="relative border-t border-slate-800/50 bg-slate-950/80 backdrop-blur-xl overflow-hidden">
-        {/* Gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 to-slate-950/90" />
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mb-12 sm:mb-16">
-            {/* Brand Column */}
-            <div className="sm:col-span-2 lg:col-span-1">
-              <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6 group">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-emerald-500/20" style={{ background: 'var(--vp-gradient)' }} />
-                <span className="text-2xl sm:text-3xl font-black text-white">Cortiware</span>
-              </div>
-              <p className="text-slate-400 text-sm sm:text-base leading-relaxed mb-6">
-                AI-powered software for service businesses. <span className="text-emerald-400">Automate everything.</span>
-              </p>
-              {/* Social Links */}
-              <div className="flex gap-3">
-                <a href="https://twitter.com/cortiware" target="_blank" rel="noopener noreferrer" className="group/social w-10 h-10 rounded-lg bg-slate-900/50 border border-slate-800/80 flex items-center justify-center hover:border-emerald-500/50 hover:bg-slate-800/50 transition-all">
-                  <svg className="w-5 h-5 text-slate-400 group-hover/social:text-emerald-400 transition-colors" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-                  </svg>
-                </a>
-                <a href="https://linkedin.com/company/cortiware" target="_blank" rel="noopener noreferrer" className="group/social w-10 h-10 rounded-lg bg-slate-900/50 border border-slate-800/80 flex items-center justify-center hover:border-emerald-500/50 hover:bg-slate-800/50 transition-all">
-                  <svg className="w-5 h-5 text-slate-400 group-hover/social:text-emerald-400 transition-colors" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-
-            {/* Product Column */}
-            <div>
-              <h4 className="text-white font-bold text-base sm:text-lg mb-4 sm:mb-6">Product</h4>
-              <ul className="space-y-3">
-                {[
-                  { label: 'Industries', href: '#industries' },
-                  { label: 'AI Features', href: '#ai-features' },
-                  { label: 'Pricing', href: '#pricing' },
-                  { label: 'FAQ', href: '#faq' }
-                ].map((link) => (
-                  <li key={link.label}>
-                    <a href={link.href} className="group/link text-slate-400 text-sm sm:text-base hover:text-emerald-400 transition-colors inline-flex items-center gap-2">
-                      <span className="group-hover/link:translate-x-1 transition-transform">{link.label}</span>
-                      <svg className="w-4 h-4 opacity-0 group-hover/link:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Company Column */}
-            <div>
-              <h4 className="text-white font-bold text-base sm:text-lg mb-4 sm:mb-6">Company</h4>
-              <ul className="space-y-3">
-                {[
-                  { label: 'About', href: '/about' },
-                  { label: 'Contact', href: '/contact' },
-                  { label: 'Robinson AI Systems', href: 'https://robinsonaisystems.com' }
-                ].map((link) => (
-                  <li key={link.label}>
-                    <a href={link.href} className="group/link text-slate-400 text-sm sm:text-base hover:text-emerald-400 transition-colors inline-flex items-center gap-2">
-                      <span className="group-hover/link:translate-x-1 transition-transform">{link.label}</span>
-                      <svg className="w-4 h-4 opacity-0 group-hover/link:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Legal Column */}
-            <div>
-              <h4 className="text-white font-bold text-base sm:text-lg mb-4 sm:mb-6">Legal</h4>
-              <ul className="space-y-3">
-                {[
-                  { label: 'Privacy Policy', href: '/privacy' },
-                  { label: 'Terms of Service', href: '/terms' }
-                ].map((link) => (
-                  <li key={link.label}>
-                    <a href={link.href} className="group/link text-slate-400 text-sm sm:text-base hover:text-emerald-400 transition-colors inline-flex items-center gap-2">
-                      <span className="group-hover/link:translate-x-1 transition-transform">{link.label}</span>
-                      <svg className="w-4 h-4 opacity-0 group-hover/link:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Bottom Bar */}
-          <div className="border-t border-slate-800/50 pt-8 sm:pt-10">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <p className="text-slate-400 text-xs sm:text-sm text-center sm:text-left">
-                © 2025 <span className="text-white font-semibold">Robinson AI Systems, LLC</span>. All rights reserved.
-              </p>
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-400">
-                <span>Built with</span>
-                <svg className="w-4 h-4 text-emerald-400 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-                </svg>
-                <span>by AI</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

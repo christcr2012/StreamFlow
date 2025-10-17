@@ -39,11 +39,11 @@ export default function Navigation() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
           <Image
-            src="/logo-white.png"
+            src="/logo.png"
             alt="Robinson AI Systems Logo"
-            width={40}
-            height={40}
-            className="w-10 h-10 transition-transform duration-normal group-hover:scale-110"
+            width={132}
+            height={132}
+            className="h-10 w-auto transition-transform duration-normal group-hover:scale-110"
             priority
           />
           <span className="text-xl sm:text-2xl font-bold text-text tracking-tight hidden sm:inline">
