@@ -80,17 +80,18 @@ export default function PricingPage() {
 
         <div className="grid md:grid-cols-3 gap-8 mb-16">
           {plans.map((plan, idx) => (
-            <div key={idx} className={`rounded-2xl transition-all duration-300 ${
-              plan.highlighted
-                ? 'bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border-2 border-emerald-500/50 scale-105 shadow-2xl shadow-emerald-500/20'
-                : 'bg-slate-900/40 backdrop-blur-md border border-slate-800/60 hover:border-emerald-500/30'
-            } p-8`}>
+            <div key={idx} className="relative">
               {plan.highlighted && (
-                <div className="inline-block px-3 py-1 bg-emerald-500/20 border border-emerald-500/40 rounded-full text-emerald-400 text-xs font-bold mb-4">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10 px-4 py-1.5 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full text-white text-xs font-bold shadow-lg">
                   MOST POPULAR
                 </div>
               )}
-              <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
+              <div className={`rounded-2xl transition-all duration-300 h-full ${
+                plan.highlighted
+                  ? 'bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border-2 border-emerald-500/50 scale-105 shadow-2xl shadow-emerald-500/20'
+                  : 'bg-slate-900/40 backdrop-blur-md border border-slate-800/60 hover:border-emerald-500/30'
+              } p-8 ${plan.highlighted ? 'pt-10' : ''}`}>
+                <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
               <p className="text-slate-400 text-sm mb-6">{plan.description}</p>
 
               <div className="mb-6">
@@ -121,6 +122,7 @@ export default function PricingPage() {
                     <span className="text-slate-300 text-sm">{feature}</span>
                   </div>
                 ))}
+              </div>
               </div>
             </div>
           ))}
