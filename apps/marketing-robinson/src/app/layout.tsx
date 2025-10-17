@@ -11,7 +11,11 @@ export const metadata = {
   metadataBase: new URL('https://www.robinsonaisystems.com'),
   title: 'Robinson AI Systems, LLC',
   description: 'Enterprise AI consulting and delivery partner — Custom platforms, agent systems, and vertical solutions',
-  icons: { icon: '/favicon.png' },
+  icons: {
+    icon: '/favicon.png',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.png',
+  },
   alternates: { canonical: 'https://www.robinsonaisystems.com' },
   openGraph: {
     title: 'Robinson AI Systems',
@@ -19,13 +23,13 @@ export const metadata = {
     url: 'https://www.robinsonaisystems.com',
     siteName: 'Robinson AI Systems',
     type: 'website',
-    images: ['/og.svg']
+    images: [{ url: '/logo.png', width: 320, height: 132, alt: 'Robinson AI Systems Logo' }]
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Robinson AI Systems',
     description: 'Enterprise AI solutions',
-    images: ['/og.svg']
+    images: ['/logo.png']
   }
 };
 
@@ -44,7 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             "@type": "Organization",
             name: "Robinson AI Systems",
             url: "https://www.robinsonaisystems.com",
-            logo: "https://www.robinsonaisystems.com/favicon.png"
+            logo: "https://www.robinsonaisystems.com/logo.png"
           }) }}
         />
       </body>

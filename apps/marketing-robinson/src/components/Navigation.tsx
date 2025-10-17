@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { MobilePanel } from './MobilePanel';
 import { NavLinks } from './NavLinks';
@@ -37,10 +38,15 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-brand-primary to-brand-secondary relative overflow-hidden transition-transform duration-normal group-hover:scale-110">
-            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-normal" />
-          </div>
-          <span className="text-xl sm:text-2xl font-bold text-text tracking-tight">
+          <Image
+            src="/logo-white.png"
+            alt="Robinson AI Systems Logo"
+            width={40}
+            height={40}
+            className="w-10 h-10 transition-transform duration-normal group-hover:scale-110"
+            priority
+          />
+          <span className="text-xl sm:text-2xl font-bold text-text tracking-tight hidden sm:inline">
             Robinson AI Systems
           </span>
         </Link>

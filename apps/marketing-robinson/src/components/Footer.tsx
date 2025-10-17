@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -6,6 +7,23 @@ export default function Footer() {
   return (
     <footer className="border-t border-border bg-surface">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        {/* Logo and tagline */}
+        <div className="mb-8">
+          <Link href="/" className="inline-flex items-center gap-3 group mb-4">
+            <Image
+              src="/logo-white.png"
+              alt="Robinson AI Systems Logo"
+              width={40}
+              height={40}
+              className="w-10 h-10 transition-transform duration-normal group-hover:scale-110"
+            />
+            <span className="text-xl font-bold text-text">Robinson AI Systems</span>
+          </Link>
+          <p className="text-text-muted max-w-md">
+            Enterprise AI consulting and delivery partner. Custom platforms, agent systems, and vertical solutions built for scale.
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           {/* Company */}
           <div>
