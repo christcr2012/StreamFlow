@@ -1,6 +1,4 @@
-import '@cortiware/themes/src/themes.css';
-import '@cortiware/themes/src/brand/robinson/tokens.css';
-import '@cortiware/themes/src/motion.css';
+import '../styles/globals.css';
 import { Inter, IBM_Plex_Sans, JetBrains_Mono } from 'next/font/google';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });

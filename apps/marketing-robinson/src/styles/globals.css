@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import shared theme system from monorepo package */
+@import '@cortiware/themes/src/themes.css';
+@import '@cortiware/themes/src/brand/robinson/tokens.css';
+@import '@cortiware/themes/src/motion.css';
+
+/* Override Tailwind defaults with premium styling */
+body {
+  background: #0a0a0a !important;
+  color: #ffffff !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+}
+
