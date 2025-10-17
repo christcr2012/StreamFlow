@@ -1681,3 +1681,86 @@ model AiAssistantConversation {
 }
 
 
+
+// ============================================================================
+// MARKETING PRICING MANAGEMENT
+// ============================================================================
+// These models manage the pricing displayed on the marketing website.
+// Pricing can be edited from the Provider Portal and automatically updates
+// the marketing site via ISR (Incremental Static Regeneration).
+
+/// MarketingPricingPlan stores the pricing tiers displayed on www.cortiware.com
+/// Each plan represents a subscription tier (Starter, Professional, Enterprise)
+model MarketingPricingPlan {
+  id          String   @id @default(cuid())
+  name        String   // "Starter", "Professional", "Enterprise"
+  slug        String   @unique // "starter", "professional", "enterprise"
+  price       Int?     // Price in cents (null for "Contact Sales")
+  currency    String   @default("USD") // ISO currency code
+  description String   // Short description of the plan
+  cta         String   // Call-to-action text: "Start Free Trial", "Contact Sales"
+  highlighted Boolean  @default(false) // Shows "MOST POPULAR" badge
+  active      Boolean  @default(true) // Whether to display on marketing site
+  sortOrder   Int      @default(0) // Display order (1, 2, 3...)
+
+  // Approval Workflow
+  status      MarketingPricingStatus @default(DRAFT) // DRAFT, PENDING_REVIEW, PUBLISHED
+  publishedAt DateTime? // When it was last published
+
+  features    MarketingPricingFeature[]
+  history     MarketingPricingHistory[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   String? // User ID who created this plan
+  updatedBy   String? // User ID who last updated this plan
+
+  @@index([active, sortOrder])
+  @@index([status])
+  @@map("marketing_pricing_plans")
+}
+
+/// MarketingPricingFeature stores individual features for each pricing plan
+model MarketingPricingFeature {
+  id          String   @id @default(cuid())
+  planId      String
+  plan        MarketingPricingPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  text        String   // "Up to 3 users", "Advanced AI automation"
+  sortOrder   Int      @default(0) // Display order within the plan
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([planId, sortOrder])
+  @@map("marketing_pricing_features")
+}
+
+/// MarketingPricingHistory tracks all pricing changes for audit purposes
+model MarketingPricingHistory {
+  id          String   @id @default(cuid())
+  planId      String
+  plan        MarketingPricingPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  // Snapshot of what changed
+  action      String   // "CREATED", "UPDATED", "PUBLISHED", "UNPUBLISHED"
+  changes     Json     // JSON object with before/after values
+
+  // Who made the change
+  changedBy   String   // User ID
+  changedByEmail String? // User email for reference
+  reason      String?  // Optional reason for the change
+
+  createdAt   DateTime @default(now())
+
+  @@index([planId, createdAt])
+  @@index([changedBy])
+  @@map("marketing_pricing_history")
+}
+
+/// Enum for pricing plan approval workflow status
+enum MarketingPricingStatus {
+  DRAFT           // Being edited, not visible on marketing site
+  PENDING_REVIEW  // Submitted for review
+  PUBLISHED       // Live on marketing site
+}
