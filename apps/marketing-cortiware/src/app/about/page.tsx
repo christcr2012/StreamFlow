@@ -1,10 +1,13 @@
 'use client';
 
 import Link from 'next/link';
+import Navigation from '@/components/Navigation';
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      <Navigation />
+
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         {/* Animated background grid */}
