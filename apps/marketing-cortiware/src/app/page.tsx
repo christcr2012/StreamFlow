@@ -8,14 +8,26 @@ export default function CortiwareHomePage() {
   const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Disable parallax on mobile devices for better performance
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) return;
+
+    let ticking = false;
+
     const handleScroll = () => {
-      if (!heroRef.current) return;
-      const scrolled = window.scrollY;
-      const parallax = scrolled * 0.5;
-      heroRef.current.style.transform = `translateY(${parallax}px)`;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (!heroRef.current) return;
+          const scrolled = window.scrollY;
+          const parallax = scrolled * 0.3; // Reduced from 0.5 for subtler effect
+          heroRef.current.style.transform = `translateY(${parallax}px)`;
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -36,7 +48,7 @@ export default function CortiwareHomePage() {
         <div className="absolute top-40 right-10 w-96 h-96 bg-teal-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '1s' }} />
         <div className="absolute bottom-20 left-1/3 w-64 h-64 bg-emerald-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '2s' }} />
 
-        <div ref={heroRef} className="relative max-w-7xl mx-auto px-6 transition-transform duration-100">
+        <div ref={heroRef} className="relative max-w-7xl mx-auto px-6">
           <div className="text-center max-w-5xl mx-auto">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 rounded-full text-emerald-400 text-sm font-semibold mb-8 backdrop-blur-sm animate-fade-in-down">
