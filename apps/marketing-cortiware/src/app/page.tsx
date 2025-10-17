@@ -371,6 +371,48 @@ export default function CortiwareHomePage() {
         </div>
       </section>
 
+      {/* Integrations */}
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <h2 className="text-4xl font-bold text-white mb-12 text-center">Integrations</h2>
+        <div className="grid md:grid-cols-4 gap-6">
+          {['Stripe','PostgreSQL','SendGrid','Webhooks','S3-Compatible Storage','Zapier','Slack','REST APIs'].map((i) => (
+            <div key={i} className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 text-center shadow-lg shadow-teal-500/5">
+              <div className="w-10 h-10 mx-auto mb-3 rounded-lg bg-gradient-to-br from-teal-400 to-cyan-500" />
+              <div className="text-white font-semibold">{i}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Developer-first */}
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <h2 className="text-4xl font-bold text-white mb-12 text-center">Developer-First</h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8">
+            <h3 className="text-xl font-semibold text-white mb-2">API-First</h3>
+            <p className="text-slate-300">Comprehensive REST APIs with webhooks and future SDKs for popular stacks.</p>
+          </div>
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8">
+            <h3 className="text-xl font-semibold text-white mb-2">Multi-Tenant Tooling</h3>
+            <p className="text-slate-300">Tenant-aware auth, audit, feature flags, and usage metrics out of the box.</p>
+          </div>
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8">
+            <h3 className="text-xl font-semibold text-white mb-2">Observability</h3>
+            <p className="text-slate-300">Structured logs and traces designed for scalable incident response.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Enterprise Ready microband */}
+      <section className="max-w-7xl mx-auto px-6 pb-10">
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          {['RBAC','SLA Options','SAML/SSO (roadmap)','Data Residency (roadmap)','Audit Trails'].map((b) => (
+            <span key={b} className="px-3 py-1 rounded-full bg-slate-900/60 border border-slate-800/80 text-sm text-slate-200">{b}</span>
+          ))}
+        </div>
+      </section>
+
+
       {/* Footer */}
       <footer className="border-t border-slate-800 mt-24">
         <div className="max-w-7xl mx-auto px-6 py-12">

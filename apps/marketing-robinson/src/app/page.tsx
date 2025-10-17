@@ -235,6 +235,58 @@ export default function RobinsonHomePage() {
         </div>
       </section>
 
+      {/* Why Robinson */}
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <h2 className="text-4xl font-bold text-white mb-12 text-center">Why Robinson</h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
+            <h3 className="text-xl font-semibold text-white mb-2">Enterprise Discipline</h3>
+            <p className="text-slate-300">Release gating, observability, incident response, and compliant-by-default patterns across environments.</p>
+          </div>
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
+            <h3 className="text-xl font-semibold text-white mb-2">Full-Stack AI</h3>
+            <p className="text-slate-300">From product strategy and UX to LLM pipelines, evals, prompt tooling, and reliability at scale.</p>
+          </div>
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
+            <h3 className="text-xl font-semibold text-white mb-2">Partner Mentality</h3>
+            <p className="text-slate-300">We embed with your team, transfer knowledge, and leave you with robust playbooks—not dependencies.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Approach */}
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <h2 className="text-4xl font-bold text-white mb-12 text-center">Our Approach</h2>
+        <div className="grid md:grid-cols-4 gap-6">
+          {[
+            { step: '01', title: 'Discover', desc: 'Stakeholder goals, constraints, and success metrics; de-risk unknowns early.' },
+            { step: '02', title: 'Blueprint', desc: 'Reference architectures, data models, and rollout plans that scale.' },
+            { step: '03', title: 'Build', desc: 'Iterative delivery with strong QA, telemetry, and change management.' },
+            { step: '04', title: 'Operate', desc: 'Runbooks, SLOs, and handoff to your team with clear ownership.' },
+          ].map((s) => (
+            <div key={s.step} className="relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6">
+              <div className="text-teal-400 font-bold text-sm mb-2">{s.step}</div>
+              <h3 className="text-white font-semibold mb-1">{s.title}</h3>
+              <p className="text-slate-300 text-sm">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Accreditations & Practices (truthful) */}
+      <section className="max-w-7xl mx-auto px-6 py-20">
+        <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-8">
+          <h2 className="text-3xl font-bold text-white mb-6 text-center">Security-Minded by Design</h2>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {['RBAC','Audit Trails','Environment Separation','Encryption in Transit','PII Minimization'].map((b) => (
+              <span key={b} className="px-3 py-1 rounded-full bg-slate-900/60 border border-slate-800/80 text-sm text-slate-200">{b}</span>
+            ))}
+          </div>
+          <p className="text-slate-400 text-xs mt-6 text-center">We follow SOC 2–minded practices and GDPR-aware handling. No false claims.</p>
+        </div>
+      </section>
+
+
 
 
 
