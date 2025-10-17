@@ -10,6 +10,7 @@ export default function RobinsonHomePage() {
           </div>
           <div className="flex items-center gap-8">
             <a href="/products" className="text-slate-300 hover:text-white transition-colors">Products</a>
+            <a href="/industries" className="text-slate-300 hover:text-white transition-colors">Industries</a>
             <a href="/about" className="text-slate-300 hover:text-white transition-colors">About</a>
             <a href="https://provider.robinsonaisystems.com/login" className="px-4 py-2 bg-teal-500 hover:bg-teal-400 text-white rounded-lg transition-colors font-medium">
               Provider Sign-in →
