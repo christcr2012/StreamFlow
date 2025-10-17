@@ -22,42 +22,52 @@ export default function RobinsonHomePage() {
 
       {/* Hero Section */}
       <section className="relative overflow-hidden max-w-7xl mx-auto px-6 py-28">
-        <div className="relative text-center max-w-4xl mx-auto bg-slate-900/40 backdrop-blur-md border border-slate-800/60 rounded-3xl p-8 md:p-12 shadow-lg shadow-teal-500/10">
-        {/* Decorative background */}
-        <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute -top-32 left-1/2 -translate-x-1/2 h-[420px] w-[720px] rounded-full blur-3xl opacity-20" style={{ background: 'var(--cortiware-gradient)' }} />
-        </div>
-
-          <h1 className="text-6xl font-bold text-white mb-6 leading-tight">
-            Enterprise AI Solutions
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-500">
-              Built for Scale
-            </span>
-          </h1>
-          <p className="text-xl text-slate-300 mb-12 leading-relaxed">
-            Robinson AI Systems delivers cutting-edge artificial intelligence platforms
-            that power the next generation of business applications. From multi-tenant
-            SaaS to custom AI agents, we build the infrastructure that scales.
-          </p>
-          <div className="flex gap-4 justify-center">
-            <a href="/products" className="px-8 py-4 bg-teal-500 hover:bg-teal-400 text-white rounded-lg transition-colors font-semibold text-lg">
-              Explore Products
-            </a>
-            <a href="/contact" className="px-8 py-4 border-2 border-slate-700 hover:border-teal-500 text-white rounded-lg transition-colors font-semibold text-lg">
-              Contact Sales
-            </a>
+        <div className="grid md:grid-cols-2 gap-10 items-center">
+          {/* Copy column */}
+          <div className="relative bg-slate-900/40 backdrop-blur-md border border-slate-800/60 rounded-3xl p-8 md:p-12 shadow-lg shadow-teal-500/10">
+            <div className="pointer-events-none absolute inset-0 -z-10">
+              <div className="absolute -top-32 left-1/2 -translate-x-1/2 h-[420px] w-[720px] rounded-full blur-3xl opacity-20" style={{ background: 'var(--cortiware-gradient)' }} />
+            </div>
+            <h1 className="text-6xl font-bold text-white mb-6 leading-tight">
+              Enterprise AI Solutions
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-500">Built for Scale</span>
+            </h1>
+            <p className="text-xl text-slate-300 mb-8 leading-relaxed">
+              Robinson AI Systems delivers cutting-edge artificial intelligence platforms that power the next generation of business applications.
+            </p>
+            <div className="flex gap-4">
+              <a href="/products" className="px-8 py-4 bg-teal-500 hover:bg-teal-400 text-white rounded-lg transition-colors font-semibold text-lg">Explore Products</a>
+              <a href="/contact" className="px-8 py-4 border-2 border-slate-700 hover:border-teal-500 text-white rounded-lg transition-colors font-semibold text-lg">Contact Sales</a>
+            </div>
+          </div>
+          {/* Visual column */}
+          <div className="relative">
+            <div className="absolute -top-10 -right-10 h-72 w-72 rounded-full blur-3xl opacity-25" style={{ background: 'var(--cortiware-gradient)' }} />
+            <div className="relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 md:p-8 shadow-xl shadow-teal-500/10">
+              <div className="mb-4 flex items-center gap-2">
+                <div className="h-3 w-3 rounded-full bg-rose-400/80" />
+                <div className="h-3 w-3 rounded-full bg-amber-400/80" />
+                <div className="h-3 w-3 rounded-full bg-emerald-400/80" />
+                <div className="ml-auto text-slate-400 text-xs">Preview</div>
+              </div>
+              <div className="grid gap-3">
+                <div className="h-12 rounded-lg bg-slate-800/80 border border-slate-700/70" />
+                <div className="h-12 rounded-lg bg-slate-800/80 border border-slate-700/70" />
+                <div className="h-12 rounded-lg bg-slate-800/80 border border-slate-700/70" />
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Social proof logos */}
       <section className="max-w-7xl mx-auto px-6 -mt-8 pb-12">
-        <div className="flex flex-wrap items-center justify-center gap-8 opacity-80">
-          <div className="h-8 w-28 rounded-md bg-slate-800/80 border border-slate-700" />
-          <div className="h-8 w-28 rounded-md bg-slate-800/80 border border-slate-700" />
-          <div className="h-8 w-28 rounded-md bg-slate-800/80 border border-slate-700" />
-          <div className="h-8 w-28 rounded-md bg-slate-800/80 border border-slate-700" />
-          <div className="h-8 w-28 rounded-md bg-slate-800/80 border border-slate-700" />
+        <div className="flex flex-wrap items-center justify-center gap-8 opacity-90">
+          <img src="/logos/acme.svg" alt="Acme" className="h-6 w-auto" />
+          <img src="/logos/globex.svg" alt="Globex" className="h-6 w-auto" />
+          <img src="/logos/initech.svg" alt="Initech" className="h-6 w-auto" />
+          <img src="/logos/soylent.svg" alt="Soylent" className="h-6 w-auto" />
+          <img src="/logos/umbrella.svg" alt="Umbrella" className="h-6 w-auto" />
         </div>
       </section>
 
@@ -130,6 +140,7 @@ export default function RobinsonHomePage() {
           <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
             <div className="text-2xl mb-4">⚙️</div>
             <h3 className="text-xl font-semibold text-white mb-2">Product Engineering</h3>
+
             <p className="text-slate-300">Multi-tenant SaaS, agent workflows, analytics, and secure integrations delivered with enterprise rigor.</p>
           </div>
           <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
@@ -157,6 +168,25 @@ export default function RobinsonHomePage() {
         </div>
       </section>
       {/* Testimonials */}
+      {/* Case Studies */}
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <h2 className="text-4xl font-bold text-white mb-12 text-center">Case Studies</h2>
+        <div className="grid md:grid-cols-2 gap-8">
+          <div className="group relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 transition-all">
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-teal-500/0 to-cyan-500/0 group-hover:from-teal-500/5 group-hover:to-cyan-500/5 transition-all" />
+            <h3 className="text-2xl font-semibold text-white mb-2">Scaling SaaS to Enterprise</h3>
+            <p className="text-slate-300 mb-4">From seed-stage to hundreds of enterprise tenants—with observability, RBAC, and rollout safety.</p>
+            <a href="/contact" className="text-teal-400 hover:text-teal-300 font-semibold">Request full story →</a>
+          </div>
+          <div className="group relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 transition-all">
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-teal-500/0 to-cyan-500/0 group-hover:from-teal-500/5 group-hover:to-cyan-500/5 transition-all" />
+            <h3 className="text-2xl font-semibold text-white mb-2">Agent Workflows in Production</h3>
+            <p className="text-slate-300 mb-4">LLM agents integrated into customer support, analytics, and content—measurable outcomes.</p>
+            <a href="/contact" className="text-teal-400 hover:text-teal-300 font-semibold">Learn how →</a>
+          </div>
+        </div>
+      </section>
+
       <section className="max-w-7xl mx-auto px-6 py-12">
         <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-10">
           <blockquote className="text-xl text-slate-200 leading-relaxed mb-4">“Robinson delivered a production-ready AI platform that we scaled from our first cohort to hundreds of customers without a rewrite.”</blockquote>
