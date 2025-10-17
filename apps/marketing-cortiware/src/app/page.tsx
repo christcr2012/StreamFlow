@@ -666,25 +666,26 @@ export default function CortiwareHomePage() {
             All-inclusive pricing. <span className="text-white font-semibold">No hidden fees, no surprises.</span>
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 gap-y-12 max-w-6xl mx-auto overflow-visible mt-8">
           {/* Starter */}
-          <div className="group relative bg-gradient-to-br from-slate-900/90 to-slate-900/50 backdrop-blur-xl border border-slate-800/80 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden animate-fade-in-up">
+          <div className="group relative bg-gradient-to-br from-slate-900/90 to-slate-900/50 backdrop-blur-xl border border-slate-800/80 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden animate-fade-in-up pt-4">
             {/* Gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/0 via-emerald-500/0 to-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
             <div className="relative z-10">
               <h3 className="text-2xl sm:text-3xl font-black text-white mb-2">Starter</h3>
               <div className="flex items-baseline gap-2 mb-6 sm:mb-8">
-                <span className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">$299</span>
+                <span className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">$49</span>
                 <span className="text-lg text-slate-400">/mo</span>
               </div>
               <ul className="space-y-3 sm:space-y-4 mb-8 sm:mb-10">
                 {[
-                  'Up to 500 customers',
-                  'AI agents & automation',
+                  'Up to 3 users',
+                  'Basic scheduling & dispatch',
                   'Customer portal',
-                  'Custom branding',
-                  'Email support'
+                  'Mobile app access',
+                  'Email support',
+                  'Monthly invoicing'
                 ].map((feature) => (
                   <li key={feature} className="text-sm sm:text-base text-slate-300 flex items-center gap-3">
                     <svg className="w-5 h-5 text-emerald-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -706,30 +707,33 @@ export default function CortiwareHomePage() {
           </div>
 
           {/* Professional - Featured */}
-          <div className="group relative bg-gradient-to-br from-emerald-500/15 to-teal-500/15 border-2 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all duration-500 hover:-translate-y-2 overflow-hidden ring-1 ring-emerald-500/30 hover:ring-emerald-400/50 md:scale-105 animate-fade-in-up" style={{ borderColor: 'var(--vp-emerald)', animationDelay: '0.1s' }}>
+          <div className="group relative pt-4">
             {/* Most Popular Badge */}
-            <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 sm:px-6 py-1.5 sm:py-2 text-white text-xs sm:text-sm font-bold rounded-full shadow-lg z-20" style={{ background: 'var(--vp-gradient)' }}>
-              Most Popular
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 px-4 sm:px-6 py-1.5 sm:py-2 text-white text-xs sm:text-sm font-bold rounded-full shadow-lg z-20 whitespace-nowrap" style={{ background: 'var(--vp-gradient)' }}>
+              MOST POPULAR
             </div>
 
-            {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-teal-500/10 opacity-100 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="bg-gradient-to-br from-emerald-500/15 to-teal-500/15 border-2 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all duration-500 hover:-translate-y-2 overflow-visible ring-1 ring-emerald-500/30 hover:ring-emerald-400/50 md:scale-105 animate-fade-in-up pt-10" style={{ borderColor: 'var(--vp-emerald)', animationDelay: '0.1s' }}>
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-teal-500/10 opacity-100 group-hover:opacity-100 transition-opacity duration-500" />
 
-            <div className="relative z-10">
-              <h3 className="text-2xl sm:text-3xl font-black text-white mb-2">Professional</h3>
-              <div className="flex items-baseline gap-2 mb-6 sm:mb-8">
-                <span className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">$699</span>
-                <span className="text-lg text-slate-400">/mo</span>
-              </div>
-              <ul className="space-y-3 sm:space-y-4 mb-8 sm:mb-10">
-                {[
-                  'Up to 2,500 customers',
-                  'Advanced AI features',
-                  'Priority support',
-                  'API access',
-                  'Custom integrations',
-                  'Multi-user access'
-                ].map((feature) => (
+              <div className="relative z-10">
+                <h3 className="text-2xl sm:text-3xl font-black text-white mb-2">Professional</h3>
+                <div className="flex items-baseline gap-2 mb-6 sm:mb-8">
+                  <span className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">$199</span>
+                  <span className="text-lg text-slate-400">/mo</span>
+                </div>
+                <ul className="space-y-3 sm:space-y-4 mb-8 sm:mb-10">
+                  {[
+                    'Unlimited users',
+                    'Advanced AI automation',
+                    'Custom branding',
+                    'API access',
+                    'Priority support',
+                    'Real-time analytics',
+                    'Custom integrations',
+                    'SSO & advanced security'
+                  ].map((feature) => (
                   <li key={feature} className="text-sm sm:text-base text-slate-300 flex items-center gap-3">
                     <svg className="w-5 h-5 text-emerald-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -748,10 +752,11 @@ export default function CortiwareHomePage() {
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300" />
               </a>
             </div>
+            </div>
           </div>
 
           {/* Enterprise */}
-          <div className="group relative bg-gradient-to-br from-slate-900/90 to-slate-900/50 backdrop-blur-xl border border-slate-800/80 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+          <div className="group relative bg-gradient-to-br from-slate-900/90 to-slate-900/50 backdrop-blur-xl border border-slate-800/80 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden animate-fade-in-up pt-4" style={{ animationDelay: '0.2s' }}>
             {/* Gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/0 via-emerald-500/0 to-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -762,12 +767,14 @@ export default function CortiwareHomePage() {
               </div>
               <ul className="space-y-3 sm:space-y-4 mb-8 sm:mb-10">
                 {[
-                  'Unlimited customers',
-                  'White-label options',
-                  'Custom AI training',
+                  'Everything in Professional',
                   'Dedicated account manager',
-                  'SLA guarantee',
-                  'On-premise deployment'
+                  'Custom SLA',
+                  'On-premise deployment',
+                  'Advanced compliance',
+                  'Custom development',
+                  'Training & onboarding',
+                  'Phone support'
                 ].map((feature) => (
                   <li key={feature} className="text-sm sm:text-base text-slate-300 flex items-center gap-3">
                     <svg className="w-5 h-5 text-emerald-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">

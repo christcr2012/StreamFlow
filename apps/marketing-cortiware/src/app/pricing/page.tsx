@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Navigation from '@/components/Navigation';
 
 export default function PricingPage() {
   const plans = [
@@ -62,8 +61,6 @@ export default function PricingPage() {
           backgroundSize: '50px 50px',
         }} />
       </div>
-
-      <Navigation />
 
       <main className="max-w-7xl mx-auto px-6 py-24 overflow-visible">
         <div className="text-center mb-16">
