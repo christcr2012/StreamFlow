@@ -65,7 +65,7 @@ export default function PricingPage() {
 
       <Navigation />
 
-      <main className="max-w-7xl mx-auto px-6 py-24">
+      <main className="max-w-7xl mx-auto px-6 py-24 overflow-visible">
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/20 border border-emerald-500/40 rounded-full text-emerald-400 text-sm font-bold mb-8">
             SIMPLE, TRANSPARENT PRICING
@@ -78,11 +78,11 @@ export default function PricingPage() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 gap-y-12 mb-16">
+        <div className="grid md:grid-cols-3 gap-8 gap-y-12 mb-16 overflow-visible mt-8">
           {plans.map((plan, idx) => (
-            <div key={idx} className="relative">
+            <div key={idx} className="relative pt-4">
               {plan.highlighted && (
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 px-4 py-1.5 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full text-white text-xs font-bold shadow-lg whitespace-nowrap">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10 px-4 py-1.5 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full text-white text-xs font-bold shadow-lg whitespace-nowrap">
                   MOST POPULAR
                 </div>
               )}
