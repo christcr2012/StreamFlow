@@ -13,9 +13,9 @@ export default function Footer() {
             <Image
               src="/logo.png"
               alt="Robinson AI Systems Logo"
-              width={132}
-              height={132}
-              className="h-10 w-auto transition-transform duration-normal group-hover:scale-110"
+              width={528}
+              height={528}
+              className="h-[40px] w-auto transition-transform duration-normal group-hover:scale-110"
             />
             <span className="text-xl font-bold text-text">Robinson AI Systems</span>
           </Link>
