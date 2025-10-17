@@ -15,6 +15,11 @@ const nextConfig = {
     } : false,
   },
 
+  // Disable ESLint during Vercel builds (we run lint in CI separately)
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
   // Code splitting and optimization
   experimental: {
     optimizePackageImports: ['@cortiware/ui', '@cortiware/ui-components', 'lucide-react'],
