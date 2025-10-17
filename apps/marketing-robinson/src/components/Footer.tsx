@@ -6,17 +6,17 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-border bg-surface">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-1">
         {/* Logo and tagline */}
-        <div className="mb-4">
-          <Link href="/" className="inline-flex items-center gap-5 group mb-2 py-1">
+        <div className="mb-2">
+          <Link href="/" className="inline-flex items-center gap-5 group mb-1">
             <Image
               src="/logo.png"
               alt="Robinson AI Systems Logo"
               width={1200}
               height={1200}
               className="transition-transform duration-normal group-hover:scale-105"
-              style={{ height: '140px !important', width: 'auto !important', maxHeight: 'none !important', maxWidth: 'none !important' }}
+              style={{ height: '120px !important', width: 'auto !important', maxHeight: 'none !important', maxWidth: 'none !important', display: 'block' }}
             />
             <span className="text-3xl font-bold text-text">Robinson AI Systems</span>
           </Link>
