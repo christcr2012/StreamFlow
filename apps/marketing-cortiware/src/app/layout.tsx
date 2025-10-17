@@ -1,5 +1,6 @@
 import '@cortiware/themes/src/themes.css';
-import '@cortiware/themes/src/brand/robinson/tokens.css';
+import '@cortiware/themes/src/brand/vertical-packs/tokens.css';
+import '@cortiware/themes/src/motion.css';
 import { Inter, IBM_Plex_Sans, JetBrains_Mono } from 'next/font/google';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
@@ -8,8 +9,8 @@ const mono = JetBrains_Mono({ subsets: ['latin'], weight: ['400','700'], display
 
 export const metadata = {
   metadataBase: new URL('https://www.cortiware.com'),
-  title: 'Cortiware',
-  description: 'Business management platform — a Robinson AI Systems product',
+  title: 'Vertical Packs by Robinson AI Systems',
+  description: 'Industry-specific AI solutions ready to deploy — Healthcare, Legal, Real Estate, Finance, and more',
   icons: { icon: '/favicon.svg' },
   alternates: { canonical: 'https://www.cortiware.com' },
   openGraph: {

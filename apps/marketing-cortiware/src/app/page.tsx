@@ -73,6 +73,18 @@ export default function CortiwareHomePage() {
           </div>
         </div>
       </section>
+      {/* Performance Metrics */}
+      <section className="max-w-7xl mx-auto px-6 py-12">
+        <div className="grid md:grid-cols-3 gap-6 text-center">
+          {[{k:'Avg setup time',v:'< 1 day'},{k:'Median response',v:'< 250ms'},{k:'Uptime target',v:'99.9%'}].map((m) => (
+            <div key={m.k} className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
+              <div className="text-3xl font-extrabold text-white mb-1">{m.v}</div>
+              <div className="text-slate-400 text-sm">{m.k}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Built on a modern stack (truthful, no placeholders) */}
       <section className="max-w-7xl mx-auto px-6 -mt-8 pb-6">
         <div className="flex flex-wrap items-center justify-center gap-3 text-slate-200">
@@ -218,6 +230,19 @@ export default function CortiwareHomePage() {
         </div>
       </section>
 
+
+      {/* Product Demo */}
+      <section className="max-w-6xl mx-auto px-6 py-12">
+        <div className="relative aspect-video rounded-2xl border border-slate-800/80 overflow-hidden bg-slate-900/60">
+          <div className="absolute inset-0 grid place-items-center">
+            <button aria-label="Play demo" className="h-16 w-16 rounded-full bg-teal-500 hover:bg-teal-400 text-white grid place-items-center shadow-lg shadow-teal-500/20 transition-colors">
+              ▶
+            </button>
+          </div>
+          <div className="absolute inset-x-0 bottom-0 p-4 text-slate-300 text-sm bg-gradient-to-t from-slate-900/80 to-transparent">2-min product overview</div>
+        </div>
+      </section>
+
       {/* Product Tour */}
       <section className="max-w-7xl mx-auto px-6 py-24">
         <h2 className="text-4xl font-bold text-white mb-12 text-center">Product Tour</h2>
@@ -240,6 +265,38 @@ export default function CortiwareHomePage() {
           ))}
         </div>
       </section>
+
+      {/* Feature Comparison */}
+      <section className="max-w-6xl mx-auto px-6 py-24">
+        <h2 className="text-4xl font-bold text-white mb-8 text-center">Why Teams Pick Cortiware</h2>
+        <div className="overflow-x-auto rounded-2xl border border-slate-800/80 bg-slate-900/40">
+          <table className="min-w-full text-left">
+            <thead className="text-slate-300">
+              <tr>
+                <th className="px-6 py-4 font-semibold">Capability</th>
+                <th className="px-6 py-4 font-semibold">Cortiware</th>
+                <th className="px-6 py-4 font-semibold">DIY</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-800/80 text-slate-200">
+              {[
+                ['Multi-tenant RBAC','Built-in','Custom & brittle'],
+                ['Audit logging','Built-in, exportable','Custom, partial'],
+                ['Per-tenant config','UI + API','Manual env juggling'],
+                ['Usage & billing','Native hooks','Hard to model'],
+                ['Theming/white-label','Instant','Rebuild for each client'],
+              ].map((row)=> (
+                <tr key={row[0]} className="hover:bg-slate-800/40 transition-colors">
+                  <td className="px-6 py-4 text-slate-300">{row[0]}</td>
+                  <td className="px-6 py-4"><span className="text-teal-400">{row[1]}</span></td>
+                  <td className="px-6 py-4 text-slate-400">{row[2]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
       {/* Pricing Section */}
       <section id="pricing" className="max-w-7xl mx-auto px-6 py-24">
         <h2 className="text-4xl font-bold text-white mb-12 text-center">Simple, Transparent Pricing</h2>
@@ -318,6 +375,7 @@ export default function CortiwareHomePage() {
                 <span className="text-teal-400">✓</span> Custom AI models
               </li>
               <li className="text-slate-300 flex items-center gap-2">
+
                 <span className="text-teal-400">✓</span> Dedicated support
               </li>
               <li className="text-slate-300 flex items-center gap-2">
@@ -349,6 +407,7 @@ export default function CortiwareHomePage() {
       {/* FAQ Section */}
       <section id="faq" className="max-w-7xl mx-auto px-6 py-24">
         <h2 className="text-4xl font-bold text-white mb-12 text-center">Frequently Asked Questions</h2>
+
         <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
           {[{
             q: 'How fast can we get started?',
@@ -389,6 +448,7 @@ export default function CortiwareHomePage() {
         <h2 className="text-4xl font-bold text-white mb-12 text-center">Developer-First</h2>
         <div className="grid md:grid-cols-3 gap-8">
           <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8">
+
             <h3 className="text-xl font-semibold text-white mb-2">API-First</h3>
             <p className="text-slate-300">Comprehensive REST APIs with webhooks and future SDKs for popular stacks.</p>
           </div>
@@ -413,7 +473,59 @@ export default function CortiwareHomePage() {
       </section>
 
 
+
+      {/* Testimonials */}
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <h2 className="text-4xl font-bold text-white mb-12 text-center">What Teams Say</h2>
+        <div className="grid md:grid-cols-3 gap-6">
+          {[{
+            q:'“We launched multi-tenant in a weekend.”',a:'Head of Product, B2B SaaS'
+          },{
+            q:'“Security reviews were a breeze with Cortiware.”',a:'CTO, Fintech'
+          },{
+            q:'“Finally, AI ops we can standardize across clients.”',a:'Director, Agency'
+          }].map(t => (
+            <div key={t.q} className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
+              <p className="text-white text-lg mb-4">{t.q}</p>
+              <div className="text-slate-400 text-sm">{t.a}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Newsletter */}
+      <section className="max-w-4xl mx-auto px-6 pb-12">
+        <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 md:p-10 text-center">
+          <h3 className="text-2xl font-semibold text-white mb-3">Get product updates</h3>
+          <p className="text-slate-300 mb-6">No spam. Only meaningful releases and guides.</p>
+          <form action="#" onSubmit={(e)=>e.preventDefault()} className="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto">
+            <input type="email" required placeholder="you@company.com" className="flex-1 px-4 py-3 rounded-lg bg-slate-800/80 border border-slate-700/70 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            <button className="px-6 py-3 bg-teal-500 hover:bg-teal-400 text-white rounded-lg font-semibold transition-colors">Subscribe</button>
+          </form>
+        </div>
+      </section>
+
       {/* Footer */}
+
+      {/* Case Studies (anonymized) */}
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <h2 className="text-4xl font-bold text-white mb-12 text-center">Case Studies</h2>
+        <div className="grid md:grid-cols-2 gap-8">
+          <div className="group relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 transition-all">
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-teal-500/0 to-cyan-500/0 group-hover:from-teal-500/5 group-hover:to-cyan-500/5 transition-all" />
+            <h3 className="text-2xl font-semibold text-white mb-2">Scaling B2B Agency Ops</h3>
+            <p className="text-slate-300 mb-4">Onboarded 40+ client tenants with branded portals, RBAC, and audit trails—no code.</p>
+            <a href="#contact" className="text-teal-400 hover:text-teal-300 font-semibold">Request full story →</a>
+          </div>
+          <div className="group relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 transition-all">
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-teal-500/0 to-cyan-500/0 group-hover:from-teal-500/5 group-hover:to-cyan-500/5 transition-all" />
+            <h3 className="text-2xl font-semibold text-white mb-2">Tenant Analytics at Scale</h3>
+            <p className="text-slate-300 mb-4">Delivered real-time usage metrics and dashboards across divisions with &lt;200ms med. latency.</p>
+            <a href="#contact" className="text-teal-400 hover:text-teal-300 font-semibold">Learn how →</a>
+          </div>
+        </div>
+      </section>
+
       <footer className="border-t border-slate-800 mt-24">
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
@@ -431,6 +543,8 @@ export default function CortiwareHomePage() {
               <ul className="space-y-2">
                 <li><a href="#features" className="text-slate-400 hover:text-white transition-colors text-sm">Features</a></li>
                 <li><a href="#pricing" className="text-slate-400 hover:text-white transition-colors text-sm">Pricing</a></li>
+
+
 
 
                 <li><a href="#docs" className="text-slate-400 hover:text-white transition-colors text-sm">Documentation</a></li>

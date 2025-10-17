@@ -1,18 +1,58 @@
-:root{
-  --brand-emerald:#00B67A;
-  --brand-deep-base:#006E56;
-  --brand-highlight:#CFFAE5;
-  --brand-electric-teal:#00E3C2;
-  --neutral-charcoal:#0C0C0C;
-  --neutral-graphite:#1E1E1E;
-  --neutral-mist-white:#F8FAF8;
-  --neutral-cool-grey:#9FA5A3;
-  --accent-arctic-blue:#4DDFFF;
-  --accent-signal-amber:#FFB200;
-  --accent-coral-red:#FF5F5F;
-  --cortiware-gradient:linear-gradient(90deg,#00B67A 0%,#00E3C2 100%);
+/* Robinson AI Systems Brand Tokens
+ * Company-focused, executive, credible, security-minded
+ * Cool cyan/teal with deep slate backgrounds
+ */
+
+:root {
+  /* Primary Brand Colors */
+  --robinson-cyan: #00B8D4;
+  --robinson-teal: #00897B;
+  --robinson-deep-slate: #0F172A;
+  --robinson-slate: #1E293B;
+
+  /* Gradient */
+  --robinson-gradient: linear-gradient(135deg, #00B8D4 0%, #00897B 100%);
+  --robinson-gradient-subtle: linear-gradient(135deg, rgba(0, 184, 212, 0.1) 0%, rgba(0, 137, 123, 0.1) 100%);
+
+  /* Accent Colors */
+  --robinson-accent-success: #10B981;
+  --robinson-accent-warning: #F59E0B;
+  --robinson-accent-error: #EF4444;
+  --robinson-accent-info: #06B6D4;
+
+  /* Neutral Palette */
+  --robinson-charcoal: #0A0E14;
+  --robinson-graphite: #1A1F28;
+  --robinson-mist: #E2E8F0;
+  --robinson-grey: #94A3B8;
+
+  /* Glass/Surface Tokens */
+  --robinson-glass-bg: rgba(15, 23, 42, 0.75);
+  --robinson-glass-border: rgba(0, 184, 212, 0.15);
+  --robinson-surface-elevated: rgba(30, 41, 59, 0.9);
+
+  /* Shadow Tokens */
+  --robinson-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --robinson-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+  --robinson-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.5);
+  --robinson-shadow-glow: 0 0 20px rgba(0, 184, 212, 0.2);
+
+  /* Legacy aliases for backward compatibility */
+  --brand-emerald: #00B67A;
+  --brand-deep-base: #006E56;
+  --brand-highlight: #CFFAE5;
+  --brand-electric-teal: #00E3C2;
+  --neutral-charcoal: #0C0C0C;
+  --neutral-graphite: #1E1E1E;
+  --neutral-mist-white: #F8FAF8;
+  --neutral-cool-grey: #9FA5A3;
+  --accent-arctic-blue: #4DDFFF;
+  --accent-signal-amber: #FFB200;
+  --accent-coral-red: #FF5F5F;
+  --cortiware-gradient: linear-gradient(90deg, #00B67A 0%, #00E3C2 100%);
 }
+
 /* Example usage:
-   .btn-primary{background:var(--brand-emerald); color:white;}
-   .hero-glow{background:var(--cortiware-gradient);} 
+   .robinson-cta { background: var(--robinson-gradient); color: white; }
+   .robinson-card { background: var(--robinson-glass-bg); border: 1px solid var(--robinson-glass-border); }
 */

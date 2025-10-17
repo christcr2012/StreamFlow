@@ -31,6 +31,7 @@ scripts/set-vercel-env.*
 .env.production.local
 .env.staging
 .env.staging.local
+.env.vercel.production
 
 # Backup files that might contain secrets
 *.env.backup

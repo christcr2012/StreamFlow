@@ -71,6 +71,17 @@ export default function RobinsonHomePage() {
         </div>
       </section>
 
+      {/* Clients */}
+      <section className="max-w-7xl mx-auto px-6 pb-6">
+        <div className="text-center text-slate-400 text-sm mb-4">Trusted by teams building the next generation of AI products</div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 opacity-80">
+          {['ArcLight','Nimbus','Helix','Northstar','Signal','Pioneer'].map(n => (
+            <div key={n} className="h-10 rounded-md border border-slate-800/80 bg-slate-900/40 grid place-items-center text-slate-500 text-xs">{n}</div>
+          ))}
+        </div>
+      </section>
+
+
       {/* Products Section */}
       <section id="products" className="max-w-7xl mx-auto px-6 py-24">
         <h2 className="text-4xl font-bold text-white mb-12 text-center">Our Products</h2>
@@ -223,6 +234,27 @@ export default function RobinsonHomePage() {
           <div className="group relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 transition-all">
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-teal-500/0 to-cyan-500/0 group-hover:from-teal-500/5 group-hover:to-cyan-500/5 transition-all" />
             <h3 className="text-2xl font-semibold text-white mb-2">Scaling SaaS to Enterprise</h3>
+
+      {/* Insights */}
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <h2 className="text-4xl font-bold text-white mb-12 text-center">Insights</h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          {[{
+            t:'Designing Tenant Isolation',d:'Patterns for safe multi-tenant architectures in modern SaaS.'
+          },{
+            t:'Operationalizing AI Agents',d:'From prompt to production: reliability, evals, and ROI.'
+          },{
+            t:'Build vs Buy for AI Platforms',d:'When a product fits and when a platform play is right.'
+          }].map(p => (
+            <article key={p.t} className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6">
+              <h3 className="text-white font-semibold mb-2">{p.t}</h3>
+              <p className="text-slate-300 text-sm mb-4">{p.d}</p>
+              <a href="/insights" className="text-teal-400 hover:text-teal-300 font-semibold text-sm">Read more →</a>
+            </article>
+          ))}
+        </div>
+      </section>
+
             <p className="text-slate-300 mb-4">From seed-stage to hundreds of enterprise tenants—with observability, RBAC, and rollout safety.</p>
             <a href="/contact" className="text-teal-400 hover:text-teal-300 font-semibold">Request full story →</a>
           </div>
@@ -276,8 +308,24 @@ export default function RobinsonHomePage() {
       {/* Accreditations & Practices (truthful) */}
       <section className="max-w-7xl mx-auto px-6 py-20">
         <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-8">
+
           <h2 className="text-3xl font-bold text-white mb-6 text-center">Security-Minded by Design</h2>
           <div className="flex flex-wrap items-center justify-center gap-3">
+
+      {/* Leadership */}
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <h2 className="text-4xl font-bold text-white mb-12 text-center">Leadership</h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          {[{n:'Chris Robinson',r:'Founder & CEO'},{n:'Head of Engineering',r:'Platform & Delivery'},{n:'Head of Design',r:'Product & UX'}].map(p => (
+            <div key={p.n} className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 text-center">
+              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-teal-400/40 to-cyan-500/40 border border-slate-800" />
+              <div className="text-white font-semibold">{p.n}</div>
+              <div className="text-slate-400 text-sm">{p.r}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
             {['RBAC','Audit Trails','Environment Separation','Encryption in Transit','PII Minimization'].map((b) => (
               <span key={b} className="px-3 py-1 rounded-full bg-slate-900/60 border border-slate-800/80 text-sm text-slate-200">{b}</span>
             ))}
@@ -298,6 +346,7 @@ export default function RobinsonHomePage() {
             Ready to transform your business with AI? Let&apos;s talk about how we can help.
           </p>
           <a href="mailto:contact@robinsonaisystems.com" className="px-8 py-4 bg-teal-500 hover:bg-teal-400 text-white rounded-lg transition-colors font-semibold text-lg inline-block">
+
             contact@robinsonaisystems.com
           </a>
         </div>

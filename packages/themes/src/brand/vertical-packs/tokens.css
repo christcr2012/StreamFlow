@@ -1,0 +1,46 @@
+/* Vertical Packs Brand Tokens
+ * Product-focused, bright, conversion-oriented
+ * Emerald/teal gradient with electric cyan accents
+ */
+
+:root {
+  /* Primary Brand Colors */
+  --vp-emerald: #00B67A;
+  --vp-deep-base: #006E56;
+  --vp-highlight: #CFFAE5;
+  --vp-electric-teal: #00E3C2;
+  
+  /* Gradient */
+  --vp-gradient: linear-gradient(90deg, #00B67A 0%, #00E3C2 100%);
+  --vp-gradient-vertical: linear-gradient(180deg, #00B67A 0%, #00E3C2 100%);
+  --vp-gradient-radial: radial-gradient(circle, #00B67A 0%, #00E3C2 100%);
+  
+  /* Accent Colors */
+  --vp-accent-success: #18C964;
+  --vp-accent-warning: #F6C244;
+  --vp-accent-error: #FF5C5C;
+  --vp-accent-info: #2CF2FF;
+  
+  /* Neutral Palette */
+  --vp-charcoal: #0C0C0C;
+  --vp-graphite: #1E1E1E;
+  --vp-mist-white: #F8FAF8;
+  --vp-cool-grey: #9FA5A3;
+  
+  /* Glass/Surface Tokens */
+  --vp-glass-bg: rgba(0, 182, 122, 0.08);
+  --vp-glass-border: rgba(0, 227, 194, 0.2);
+  --vp-surface-elevated: rgba(0, 110, 86, 0.12);
+  
+  /* Shadow Tokens */
+  --vp-shadow-sm: 0 1px 2px rgba(0, 182, 122, 0.1);
+  --vp-shadow-md: 0 4px 8px rgba(0, 182, 122, 0.15);
+  --vp-shadow-lg: 0 8px 16px rgba(0, 182, 122, 0.2);
+  --vp-shadow-glow: 0 0 20px rgba(0, 227, 194, 0.3);
+}
+
+/* Example usage:
+   .vp-cta { background: var(--vp-gradient); color: white; }
+   .vp-card { box-shadow: var(--vp-shadow-glow); }
+*/
+

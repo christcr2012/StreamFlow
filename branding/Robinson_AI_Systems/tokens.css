@@ -1,0 +1,19 @@
+
+:root{
+  --brand-emerald:#00B67A;
+  --brand-deep-base:#006E56;
+  --brand-highlight:#CFFAE5;
+  --brand-electric-teal:#00E3C2;
+  --neutral-charcoal:#0C0C0C;
+  --neutral-graphite:#1E1E1E;
+  --neutral-mist-white:#F8FAF8;
+  --neutral-cool-grey:#9FA5A3;
+  --accent-arctic-blue:#4DDFFF;
+  --accent-signal-amber:#FFB200;
+  --accent-coral-red:#FF5F5F;
+  --cortiware-gradient:linear-gradient(90deg,#00B67A 0%,#00E3C2 100%);
+}
+/* Example usage:
+   .btn-primary{background:var(--brand-emerald); color:white;}
+   .hero-glow{background:var(--cortiware-gradient);}
+*/

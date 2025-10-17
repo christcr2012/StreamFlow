@@ -1,5 +1,6 @@
 import '@cortiware/themes/src/themes.css';
 import '@cortiware/themes/src/brand/robinson/tokens.css';
+import '@cortiware/themes/src/motion.css';
 import { Inter, IBM_Plex_Sans, JetBrains_Mono } from 'next/font/google';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
@@ -8,8 +9,8 @@ const mono = JetBrains_Mono({ subsets: ['latin'], weight: ['400','700'], display
 
 export const metadata = {
   metadataBase: new URL('https://www.robinsonaisystems.com'),
-  title: 'Robinson AI Systems',
-  description: 'Enterprise AI solutions',
+  title: 'Robinson AI Systems, LLC',
+  description: 'Enterprise AI consulting and delivery partner — Custom platforms, agent systems, and vertical solutions',
   icons: { icon: '/favicon.png' },
   alternates: { canonical: 'https://www.robinsonaisystems.com' },
   openGraph: {
