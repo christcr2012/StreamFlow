@@ -709,7 +709,7 @@ export default function CortiwareHomePage() {
           {/* Professional - Featured */}
           <div className="group relative pt-4">
             {/* Most Popular Badge */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 px-4 sm:px-6 py-1.5 sm:py-2 text-white text-xs sm:text-sm font-bold rounded-full shadow-lg z-20 whitespace-nowrap" style={{ background: 'var(--vp-gradient)' }}>
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10 px-4 sm:px-6 py-1.5 sm:py-2 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full text-white text-xs sm:text-sm font-bold shadow-lg whitespace-nowrap">
               MOST POPULAR
             </div>
 
