@@ -314,20 +314,26 @@ export default function CortiwareHomePage() {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Testimonials - Early Access */}
       <section className="max-w-7xl mx-auto px-6 py-24">
-        <h2 className="text-4xl font-bold text-white mb-12 text-center">What Customers Say</h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          {[
-            {q:'"Cortiware transformed how we run our HVAC business. The AI handles scheduling while we focus on service."',a:'Mike R., HVAC Business Owner'},
-            {q:'"The automation alone saves us 20+ hours per week. Best investment we\'ve made."',a:'Sarah L., Roofing Company'},
-            {q:'"Finally, software that actually understands our industry. Setup was incredibly easy."',a:'James K., Plumbing Services'},
-          ].map(t => (
-            <div key={t.q} className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-emerald-500/5">
-              <p className="text-white text-lg mb-4">{t.q}</p>
-              <div className="text-slate-400 text-sm">{t.a}</div>
+        <h2 className="text-4xl font-bold text-white mb-12 text-center">What Our Customers Say</h2>
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-12 text-center shadow-lg shadow-emerald-500/5">
+            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center">
+              <span className="text-3xl">✨</span>
             </div>
-          ))}
+            <h3 className="text-2xl font-semibold text-white mb-4">Be the First to Share Your Experience</h3>
+            <p className="text-slate-300 mb-6">
+              Cortiware is in early access. Join our growing community of service businesses and help shape the future of AI-powered business software.
+            </p>
+            <a
+              href="#pricing"
+              className="inline-block px-8 py-3 rounded-lg font-semibold transition-all"
+              style={{ background: 'var(--vp-gradient)' }}
+            >
+              <span className="text-white">Get Early Access</span>
+            </a>
+          </div>
         </div>
       </section>
 
