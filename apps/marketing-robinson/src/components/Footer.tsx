@@ -10,13 +10,12 @@ export default function Footer() {
         {/* Logo and tagline */}
         <div className="mb-2">
           <Link href="/" className="inline-flex items-center gap-5 group mb-1">
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src="/logo-icon.png"
               alt="Robinson AI Systems Logo"
-              width={1200}
-              height={1200}
               className="transition-transform duration-normal group-hover:scale-105"
-              style={{ height: '120px !important', width: 'auto !important', maxHeight: 'none !important', maxWidth: 'none !important', display: 'block' }}
+              style={{ height: '120px', width: 'auto' }}
             />
           </Link>
           <p className="text-text-muted max-w-md text-lg">

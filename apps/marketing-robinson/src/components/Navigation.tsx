@@ -38,14 +38,12 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-0.5 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-4 group">
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src="/logo-icon.png"
             alt="Robinson AI Systems Logo"
-            width={1000}
-            height={1000}
             className="transition-transform duration-normal group-hover:scale-105"
-            style={{ height: '100px !important', width: 'auto !important', maxHeight: 'none !important', maxWidth: 'none !important', display: 'block' }}
-            priority
+            style={{ height: '100px', width: 'auto' }}
           />
         </Link>
 
