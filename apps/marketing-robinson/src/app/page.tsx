@@ -1,399 +1,197 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Robinson AI Systems - Enterprise AI Solutions',
+  description: 'Enterprise AI consulting and delivery partner. Custom platforms, agent systems, and vertical solutions built for scale.',
+};
+
 export default function RobinsonHomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-      {/* Navigation */}
-      <nav className="border-b border-slate-800/50 backdrop-blur-sm bg-slate-950/50 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-lg" />
-            <span className="text-xl font-bold text-white">Robinson AI Systems</span>
-          </div>
-          <div className="flex items-center gap-8">
-            <a href="/products" className="text-slate-300 hover:text-white transition-colors">Products</a>
-            <a href="/industries" className="text-slate-300 hover:text-white transition-colors">Industries</a>
-            <a href="/about" className="text-slate-300 hover:text-white transition-colors">About</a>
-            <a href="/contact" className="text-slate-300 hover:text-white transition-colors">Contact</a>
-            <a href="https://provider.robinsonaisystems.com/login" target="_blank" rel="noopener noreferrer" className="px-4 py-2 text-white rounded-lg font-medium shadow-sm" style={{ background: 'var(--cortiware-gradient)' }}>
-              Provider Sign-in →
-            </a>
-          </div>
-        </div>
-      </nav>
-
+    <div className="bg-bg">
       {/* Hero Section */}
-      <section className="relative overflow-hidden max-w-7xl mx-auto px-6 py-28">
-        <div className="grid md:grid-cols-2 gap-10 items-center">
-          {/* Copy column */}
-          <div className="relative bg-slate-900/40 backdrop-blur-md border border-slate-800/60 rounded-3xl p-8 md:p-12 shadow-lg shadow-teal-500/10">
-            <div className="pointer-events-none absolute inset-0 -z-10">
-              <div className="absolute -top-32 left-1/2 -translate-x-1/2 h-[420px] w-[720px] rounded-full blur-3xl opacity-20" style={{ background: 'var(--cortiware-gradient)' }} />
-            </div>
-            <h1 className="text-6xl font-bold text-white mb-6 leading-tight">
-              Enterprise AI Solutions
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-500">Built for Scale</span>
-            </h1>
-            <p className="text-xl text-slate-300 mb-8 leading-relaxed">
-              Robinson AI Systems delivers cutting-edge artificial intelligence platforms that power the next generation of business applications.
-            </p>
-            <div className="flex gap-4">
-              <a href="/products" className="px-8 py-4 bg-teal-500 hover:bg-teal-400 text-white rounded-lg transition-colors font-semibold text-lg">Explore Products</a>
-              <a href="/contact" className="px-8 py-4 border-2 border-slate-700 hover:border-teal-500 text-white rounded-lg transition-colors font-semibold text-lg">Contact Sales</a>
-            </div>
-          </div>
-          {/* Visual column */}
-          <div className="relative">
-            <div className="absolute -top-10 -right-10 h-72 w-72 rounded-full blur-3xl opacity-25" style={{ background: 'var(--cortiware-gradient)' }} />
-            <div className="relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 md:p-8 shadow-xl shadow-teal-500/10">
-              <div className="mb-4 flex items-center gap-2">
-                <div className="h-3 w-3 rounded-full bg-rose-400/80" />
-                <div className="h-3 w-3 rounded-full bg-amber-400/80" />
-                <div className="h-3 w-3 rounded-full bg-emerald-400/80" />
-                <div className="ml-auto text-slate-400 text-xs">Preview</div>
+      <section className="relative overflow-hidden bg-gradient-to-b from-bg-elevated to-bg py-20 sm:py-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Copy column */}
+            <div>
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-text mb-6 leading-tight">
+                Enterprise AI Solutions{' '}
+                <span className="gradient-text">Built for Scale</span>
+              </h1>
+              <p className="text-xl text-text-muted mb-8 leading-relaxed">
+                Robinson AI Systems delivers cutting-edge artificial intelligence platforms that power the next generation of business applications.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link
+                  href="/services"
+                  className="px-8 py-4 bg-gradient-to-r from-brand-primary to-brand-secondary text-text-on-brand rounded-lg font-semibold shadow-lg hover:shadow-glow transition-all duration-normal hover:scale-105 text-center"
+                >
+                  Explore Services
+                </Link>
+                <Link
+                  href="/contact"
+                  className="px-8 py-4 border border-border hover:border-brand-primary text-text rounded-lg font-semibold transition-all duration-normal text-center"
+                >
+                  Contact Sales
+                </Link>
               </div>
-              <div className="grid gap-3">
-                <div className="h-12 rounded-lg bg-slate-800/80 border border-slate-700/70" />
-                <div className="h-12 rounded-lg bg-slate-800/80 border border-slate-700/70" />
-                <div className="h-12 rounded-lg bg-slate-800/80 border border-slate-700/70" />
+            </div>
+
+            {/* Visual column */}
+            <div className="relative">
+              <div className="enterprise-card p-8">
+                <div className="mb-4 flex items-center gap-2">
+                  <div className="h-3 w-3 rounded-full bg-red-400" />
+                  <div className="h-3 w-3 rounded-full bg-yellow-400" />
+                  <div className="h-3 w-3 rounded-full bg-green-400" />
+                  <div className="ml-auto text-text-muted text-xs">AI Platform</div>
+                </div>
+                <div className="space-y-3">
+                  <div className="h-12 rounded-lg bg-bg-elevated border border-border" />
+                  <div className="h-12 rounded-lg bg-bg-elevated border border-border" />
+                  <div className="h-12 rounded-lg bg-bg-elevated border border-border" />
+                  <div className="h-8 rounded-lg bg-gradient-to-r from-brand-primary to-brand-secondary opacity-80" />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Built on proven infrastructure (truthful, no placeholders) */}
-      <section className="max-w-7xl mx-auto px-6 -mt-8 pb-12">
-        <div className="flex flex-wrap items-center justify-center gap-3 text-slate-200">
-          {['Next.js','Vercel','Prisma','PostgreSQL','Tailwind CSS','Turborepo'].map((t) => (
-            <span key={t} className="px-3 py-1 rounded-full bg-slate-900/60 border border-slate-800/80 text-sm">
-              {t}
-            </span>
-          ))}
-        </div>
-      </section>
-
-      {/* Clients */}
-      <section className="max-w-7xl mx-auto px-6 pb-6">
-        <div className="text-center text-slate-400 text-sm mb-4">Trusted by teams building the next generation of AI products</div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 opacity-80">
-          {['ArcLight','Nimbus','Helix','Northstar','Signal','Pioneer'].map(n => (
-            <div key={n} className="h-10 rounded-md border border-slate-800/80 bg-slate-900/40 grid place-items-center text-slate-500 text-xs">{n}</div>
-          ))}
+      {/* Tech Stack */}
+      <section className="py-12 bg-bg-elevated">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <p className="text-center text-text-muted text-sm mb-6">Built on proven infrastructure</p>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {['Next.js', 'Vercel', 'Prisma', 'PostgreSQL', 'Tailwind CSS', 'Turborepo'].map((tech) => (
+              <span
+                key={tech}
+                className="px-4 py-2 rounded-full bg-surface border border-border text-text-muted text-sm"
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
 
       {/* Products Section */}
-      <section id="products" className="max-w-7xl mx-auto px-6 py-24">
-        <h2 className="text-4xl font-bold text-white mb-12 text-center">Our Products</h2>
-        <div className="grid md:grid-cols-2 gap-8">
-          {/* Cortiware Card */}
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 hover:-translate-y-0.5 transition-all">
-            <div className="w-12 h-12 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-xl mb-6" />
-            <h3 className="text-2xl font-bold text-white mb-4">Cortiware</h3>
-            <p className="text-slate-300 mb-6 leading-relaxed">
-              Multi-tenant SaaS platform with advanced AI capabilities, custom branding,
-
-              and enterprise-grade security. Built for businesses that need to scale
-              their AI operations across multiple clients.
-            </p>
-            <a href="https://cortiware.com" target="_blank" rel="noopener noreferrer" className="text-teal-400 hover:text-teal-300 font-semibold inline-flex items-center gap-2">
-              Learn More →
-            </a>
-          </div>
-
-          {/* Custom Solutions Card */}
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 hover:-translate-y-0.5 transition-all">
-            <div className="w-12 h-12 bg-gradient-to-br from-violet-400 to-purple-500 rounded-xl mb-6" />
-            <h3 className="text-2xl font-bold text-white mb-4">Custom AI Solutions</h3>
-            <p className="text-slate-300 mb-6 leading-relaxed">
-              Tailored AI systems designed for your specific business needs. From
-              intelligent automation to predictive analytics, we build solutions
-              that drive real business value.
-            </p>
-            <a href="/contact" className="text-teal-400 hover:text-teal-300 font-semibold inline-flex items-center gap-2">
-              Get Started →
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* Capabilities Section */}
-      <section className="max-w-7xl mx-auto px-6 py-24">
-        <h2 className="text-4xl font-bold text-white mb-12 text-center">What We Do Best</h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
-            <div className="w-12 h-12 rounded-xl mb-6 flex items-center justify-center text-[10px] font-bold tracking-wide uppercase" style={{ background: 'linear-gradient(135deg,#00B67A33,#00E3C233)' }}>ENG</div>
-            <h3 className="text-xl font-bold text-white mb-3">Product Engineering</h3>
-            <p className="text-slate-300">Designing and building AI products and platforms with robust data models, clean APIs, and modern UX.</p>
-          </div>
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
-            <div className="w-12 h-12 rounded-xl mb-6 flex items-center justify-center text-[10px] font-bold tracking-wide uppercase" style={{ background: 'linear-gradient(135deg,#00B67A33,#00E3C233)' }}>AI</div>
-            <h3 className="text-xl font-bold text-white mb-3">Applied AI & Agents</h3>
-            <p className="text-slate-300">LLM-driven agents, retrieval pipelines, prompt tooling, and evaluation loops tuned for business results.</p>
-          </div>
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
-            <div className="w-12 h-12 rounded-xl mb-6 flex items-center justify-center text-[10px] font-bold tracking-wide uppercase" style={{ background: 'linear-gradient(135deg,#00B67A33,#00E3C233)' }}>SCALE</div>
-            <h3 className="text-xl font-bold text-white mb-3">Reliability & Scale</h3>
-            <p className="text-slate-300">Multi-tenant architectures, observability, governance, and rollout strategies from startup to enterprise.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Capabilities Section */}
-      <section className="max-w-7xl mx-auto px-6 py-24">
-        <h2 className="text-4xl font-bold text-white mb-12 text-center">What We Deliver</h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
-            <div className="text-2xl mb-4">🎯</div>
-            <h3 className="text-xl font-semibold text-white mb-2">Strategy & Architecture</h3>
-            <p className="text-slate-300">From discovery to system design, we blueprint AI platforms that scale from your first customer to enterprise.</p>
-          </div>
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
-            <div className="text-2xl mb-4">⚙️</div>
-            <h3 className="text-xl font-semibold text-white mb-2">Product Engineering</h3>
-
-            <p className="text-slate-300">Multi-tenant SaaS, agent workflows, analytics, and secure integrations delivered with enterprise rigor.</p>
-          </div>
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
-            <div className="text-2xl mb-4">🛡️</div>
-            <h3 className="text-xl font-semibold text-white mb-2">Reliability & Security</h3>
-            <p className="text-slate-300">Operational excellence: observability, incident response, access control, and compliance-minded practices.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Engagement Models */}
-      <section className="max-w-7xl mx-auto px-6 py-24">
-        <h2 className="text-4xl font-bold text-white mb-12 text-center">Engagement Models</h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          {[{
-            title: 'Advisory + Architecture',
-            desc: 'Executive-level strategy, roadmaps, and reference architectures to de-risk AI initiatives.'
-          },{
-            title: 'Build-Operate-Transfer',
-            desc: 'We build and operate your AI platform, then transition to your in-house team with playbooks.'
-          },{
-            title: 'Dedicated Delivery Team',
-            desc: 'Cross-functional squad delivering features end-to-end with enterprise rigor.'
-          }].map((m) => (
-            <div key={m.title} className="group relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 transition-all">
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-teal-500/0 to-cyan-500/0 group-hover:from-teal-500/5 group-hover:to-cyan-500/5 transition-all" />
-
-
-              <h3 className="text-xl font-semibold text-white mb-2">{m.title}</h3>
-              <p className="text-slate-300">{m.desc}</p>
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <h2 className="text-3xl sm:text-4xl font-bold text-text mb-12 text-center">Our Products</h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Cortiware Card */}
+            <div className="enterprise-card p-8 hover:-translate-y-1 transition-transform duration-normal">
+              <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-brand-primary to-brand-secondary mb-6" />
+              <h3 className="text-2xl font-bold text-text mb-4">Cortiware</h3>
+              <p className="text-text-muted mb-6 leading-relaxed">
+                AI-powered business management platform for service industries. Multi-tenant SaaS with advanced AI capabilities, custom branding, and enterprise-grade security.
+              </p>
+              <a
+                href="https://www.cortiware.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-primary hover:text-brand-secondary font-semibold inline-flex items-center gap-2 transition-colors duration-fast"
+              >
+                Learn More →
+              </a>
             </div>
-          ))}
-        </div>
-      </section>
 
-
-      {/* About Section */}
-      <section id="about" className="max-w-7xl mx-auto px-6 py-24">
-        <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-12">
-          <h2 className="text-4xl font-bold text-white mb-6">About Robinson AI Systems</h2>
-          <p className="text-xl text-slate-300 leading-relaxed mb-6">
-            Founded on the principle that AI should be accessible, scalable, and
-            enterprise-ready, Robinson AI Systems builds the infrastructure that
-            powers modern AI applications.
-          </p>
-          <p className="text-lg text-slate-400 leading-relaxed">
-            Our team combines deep expertise in distributed systems, machine learning,
-
-
-            and enterprise software to deliver solutions that scale from startup to
-            enterprise. We believe in building platforms that grow with your business.
-          </p>
-
-      {/* Security & Compliance */}
-      <section className="max-w-7xl mx-auto px-6 py-24">
-        <h2 className="text-4xl font-bold text-white mb-12 text-center">Security & Compliance</h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
-            <h3 className="text-xl font-semibold text-white mb-2">Access Control</h3>
-            <p className="text-slate-300">Role-based access, least-privilege defaults, and environment separation.</p>
-          </div>
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
-            <h3 className="text-xl font-semibold text-white mb-2">Observability</h3>
-            <p className="text-slate-300">Structured logging, tracing, metrics, and alerting for reliable operations.</p>
-          </div>
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
-            <h3 className="text-xl font-semibold text-white mb-2">Data Protection</h3>
-            <p className="text-slate-300">Tenant isolation by design and encryption in transit with standard best practices.</p>
-          </div>
-        </div>
-      </section>
-
-        </div>
-      </section>
-      {/* Testimonials */}
-      {/* Case Studies */}
-      <section className="max-w-7xl mx-auto px-6 py-24">
-        <h2 className="text-4xl font-bold text-white mb-12 text-center">Case Studies</h2>
-        <div className="grid md:grid-cols-2 gap-8">
-          <div className="group relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 transition-all">
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-teal-500/0 to-cyan-500/0 group-hover:from-teal-500/5 group-hover:to-cyan-500/5 transition-all" />
-            <h3 className="text-2xl font-semibold text-white mb-2">Scaling SaaS to Enterprise</h3>
-
-      {/* Insights */}
-      <section className="max-w-7xl mx-auto px-6 py-24">
-        <h2 className="text-4xl font-bold text-white mb-12 text-center">Insights</h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          {[{
-            t:'Designing Tenant Isolation',d:'Patterns for safe multi-tenant architectures in modern SaaS.'
-          },{
-            t:'Operationalizing AI Agents',d:'From prompt to production: reliability, evals, and ROI.'
-          },{
-            t:'Build vs Buy for AI Platforms',d:'When a product fits and when a platform play is right.'
-          }].map(p => (
-            <article key={p.t} className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6">
-              <h3 className="text-white font-semibold mb-2">{p.t}</h3>
-              <p className="text-slate-300 text-sm mb-4">{p.d}</p>
-              <a href="/insights" className="text-teal-400 hover:text-teal-300 font-semibold text-sm">Read more →</a>
-            </article>
-          ))}
-        </div>
-      </section>
-
-            <p className="text-slate-300 mb-4">From seed-stage to hundreds of enterprise tenants—with observability, RBAC, and rollout safety.</p>
-            <a href="/contact" className="text-teal-400 hover:text-teal-300 font-semibold">Request full story →</a>
-          </div>
-          <div className="group relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 transition-all">
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-teal-500/0 to-cyan-500/0 group-hover:from-teal-500/5 group-hover:to-cyan-500/5 transition-all" />
-            <h3 className="text-2xl font-semibold text-white mb-2">Agent Workflows in Production</h3>
-            <p className="text-slate-300 mb-4">LLM agents integrated into customer support, analytics, and content—measurable outcomes.</p>
-            <a href="/contact" className="text-teal-400 hover:text-teal-300 font-semibold">Learn how →</a>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Robinson */}
-      <section className="max-w-7xl mx-auto px-6 py-24">
-        <h2 className="text-4xl font-bold text-white mb-12 text-center">Why Robinson</h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
-            <h3 className="text-xl font-semibold text-white mb-2">Enterprise Discipline</h3>
-            <p className="text-slate-300">Release gating, observability, incident response, and compliant-by-default patterns across environments.</p>
-          </div>
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
-            <h3 className="text-xl font-semibold text-white mb-2">Full-Stack AI</h3>
-            <p className="text-slate-300">From product strategy and UX to LLM pipelines, evals, prompt tooling, and reliability at scale.</p>
-          </div>
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
-            <h3 className="text-xl font-semibold text-white mb-2">Partner Mentality</h3>
-            <p className="text-slate-300">We embed with your team, transfer knowledge, and leave you with robust playbooks—not dependencies.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Our Approach */}
-      <section className="max-w-7xl mx-auto px-6 py-24">
-        <h2 className="text-4xl font-bold text-white mb-12 text-center">Our Approach</h2>
-        <div className="grid md:grid-cols-4 gap-6">
-          {[
-            { step: '01', title: 'Discover', desc: 'Stakeholder goals, constraints, and success metrics; de-risk unknowns early.' },
-            { step: '02', title: 'Blueprint', desc: 'Reference architectures, data models, and rollout plans that scale.' },
-            { step: '03', title: 'Build', desc: 'Iterative delivery with strong QA, telemetry, and change management.' },
-            { step: '04', title: 'Operate', desc: 'Runbooks, SLOs, and handoff to your team with clear ownership.' },
-          ].map((s) => (
-            <div key={s.step} className="relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6">
-              <div className="text-teal-400 font-bold text-sm mb-2">{s.step}</div>
-              <h3 className="text-white font-semibold mb-1">{s.title}</h3>
-              <p className="text-slate-300 text-sm">{s.desc}</p>
+            {/* Custom Solutions Card */}
+            <div className="enterprise-card p-8 hover:-translate-y-1 transition-transform duration-normal">
+              <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 mb-6" />
+              <h3 className="text-2xl font-bold text-text mb-4">Custom AI Solutions</h3>
+              <p className="text-text-muted mb-6 leading-relaxed">
+                Tailored AI systems designed for your specific business needs. From intelligent automation to predictive analytics, we build solutions that drive real business value.
+              </p>
+              <Link
+                href="/contact"
+                className="text-brand-primary hover:text-brand-secondary font-semibold inline-flex items-center gap-2 transition-colors duration-fast"
+              >
+                Get Started →
+              </Link>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Accreditations & Practices (truthful) */}
-      <section className="max-w-7xl mx-auto px-6 py-20">
-        <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-8">
-
-          <h2 className="text-3xl font-bold text-white mb-6 text-center">Security-Minded by Design</h2>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-
-      {/* Leadership */}
-      <section className="max-w-7xl mx-auto px-6 py-24">
-        <h2 className="text-4xl font-bold text-white mb-12 text-center">Leadership</h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          {[{n:'Chris Robinson',r:'Founder & CEO'},{n:'Head of Engineering',r:'Platform & Delivery'},{n:'Head of Design',r:'Product & UX'}].map(p => (
-            <div key={p.n} className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 text-center">
-              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-teal-400/40 to-cyan-500/40 border border-slate-800" />
-              <div className="text-white font-semibold">{p.n}</div>
-              <div className="text-slate-400 text-sm">{p.r}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-            {['RBAC','Audit Trails','Environment Separation','Encryption in Transit','PII Minimization'].map((b) => (
-              <span key={b} className="px-3 py-1 rounded-full bg-slate-900/60 border border-slate-800/80 text-sm text-slate-200">{b}</span>
-            ))}
           </div>
-          <p className="text-slate-400 text-xs mt-6 text-center">We follow SOC 2–minded practices and GDPR-aware handling. No false claims.</p>
         </div>
       </section>
 
-
-
-
-
-      {/* Contact Section */}
-      <section id="contact" className="max-w-7xl mx-auto px-6 py-24">
-        <div className="text-center max-w-2xl mx-auto">
-          <h2 className="text-4xl font-bold text-white mb-6">Get in Touch</h2>
-          <p className="text-xl text-slate-300 mb-8">
-            Ready to transform your business with AI? Let&apos;s talk about how we can help.
-          </p>
-          <a href="mailto:contact@robinsonaisystems.com" className="px-8 py-4 bg-teal-500 hover:bg-teal-400 text-white rounded-lg transition-colors font-semibold text-lg inline-block">
-
-            contact@robinsonaisystems.com
-          </a>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-t border-slate-800 mt-24">
-        <div className="max-w-7xl mx-auto px-6 py-16">
-          <div className="grid md:grid-cols-4 gap-10 mb-10">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-6 h-6 bg-gradient-to-br from-teal-400 to-cyan-500 rounded" />
-                <span className="font-semibold text-white">Robinson AI Systems</span>
+      {/* Services Overview */}
+      <section className="py-20 bg-gradient-to-b from-bg to-bg-elevated">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <h2 className="text-3xl sm:text-4xl font-bold text-text mb-12 text-center">What We Do Best</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="enterprise-card p-8">
+              <div className="w-12 h-12 rounded-lg bg-brand-primary/20 mb-6 flex items-center justify-center">
+                <svg className="w-6 h-6 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                </svg>
               </div>
-              <p className="text-slate-400 text-sm">High-end, trustworthy AI platforms and services.</p>
+              <h3 className="text-xl font-bold text-text mb-3">Product Engineering</h3>
+              <p className="text-text-muted">Designing and building AI products and platforms with robust data models, clean APIs, and modern UX.</p>
             </div>
-            <div>
-              <h4 className="font-semibold text-white mb-3">Company</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="/about" className="text-slate-400 hover:text-white transition-colors">About</a></li>
-                <li><a href="/contact" className="text-slate-400 hover:text-white transition-colors">Contact</a></li>
-              </ul>
+            <div className="enterprise-card p-8">
+              <div className="w-12 h-12 rounded-lg bg-brand-primary/20 mb-6 flex items-center justify-center">
+                <svg className="w-6 h-6 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-text mb-3">Applied AI & Agents</h3>
+              <p className="text-text-muted">LLM-driven agents, retrieval pipelines, prompt tooling, and evaluation loops tuned for business results.</p>
             </div>
-            <div>
-              <h4 className="font-semibold text-white mb-3">Products</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="/products" className="text-slate-400 hover:text-white transition-colors">Overview</a></li>
-                <li><a href="https://cortiware.com" className="text-slate-400 hover:text-white transition-colors">Cortiware</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-white mb-3">Access</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="https://provider.robinsonaisystems.com/login" className="text-slate-400 hover:text-white transition-colors">Provider Sign-in</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-slate-800 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
-            <span className="text-slate-400 text-sm">© 2025 Robinson AI Systems</span>
-            <div className="flex gap-6 text-sm">
-              <a href="/privacy" className="text-slate-400 hover:text-white transition-colors">Privacy</a>
-              <a href="/terms" className="text-slate-400 hover:text-white transition-colors">Terms</a>
+            <div className="enterprise-card p-8">
+              <div className="w-12 h-12 rounded-lg bg-brand-primary/20 mb-6 flex items-center justify-center">
+                <svg className="w-6 h-6 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-text mb-3">Reliability & Scale</h3>
+              <p className="text-text-muted">Multi-tenant architectures, observability, governance, and rollout strategies from startup to enterprise.</p>
             </div>
           </div>
         </div>
-      </footer>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold text-text mb-6">
+            Ready to Transform Your Business with AI?
+          </h2>
+          <p className="text-xl text-text-muted mb-8">
+            Let&apos;s discuss how Robinson AI Systems can help you achieve your goals.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/contact"
+              className="px-8 py-4 bg-gradient-to-r from-brand-primary to-brand-secondary text-text-on-brand rounded-lg font-semibold shadow-lg hover:shadow-glow transition-all duration-normal hover:scale-105"
+            >
+              Contact Sales
+            </Link>
+            <Link
+              href="/services"
+              className="px-8 py-4 border border-border hover:border-brand-primary text-text rounded-lg font-semibold transition-all duration-normal"
+            >
+              Explore Services
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
+            name: 'Robinson AI Systems - Enterprise AI Solutions',
+            description: 'Enterprise AI consulting and delivery partner. Custom platforms, agent systems, and vertical solutions built for scale.',
+            url: 'https://www.robinsonaisystems.com',
+          }),
+        }}
+      />
     </div>
   );
 }
-
