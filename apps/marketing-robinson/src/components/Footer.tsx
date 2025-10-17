@@ -15,8 +15,8 @@ export default function Footer() {
               alt="Robinson AI Systems Logo"
               width={1200}
               height={1200}
-              className="w-auto transition-transform duration-normal group-hover:scale-105"
-              style={{ height: '160px' }}
+              className="transition-transform duration-normal group-hover:scale-105"
+              style={{ height: '160px !important', width: 'auto !important', maxHeight: 'none !important', maxWidth: 'none !important' }}
             />
             <span className="text-3xl font-bold text-text">Robinson AI Systems</span>
           </Link>
