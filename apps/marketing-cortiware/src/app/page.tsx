@@ -59,12 +59,12 @@ export default function CortiwareHomePage() {
       </section>
       {/* Social proof logos */}
       <section className="max-w-7xl mx-auto px-6 -mt-8 pb-6">
-        <div className="flex flex-wrap items-center justify-center gap-8 opacity-80">
-          <div className="h-8 w-28 rounded-md bg-slate-800/80 border border-slate-700" />
-          <div className="h-8 w-28 rounded-md bg-slate-800/80 border border-slate-700" />
-          <div className="h-8 w-28 rounded-md bg-slate-800/80 border border-slate-700" />
-          <div className="h-8 w-28 rounded-md bg-slate-800/80 border border-slate-700" />
-          <div className="h-8 w-28 rounded-md bg-slate-800/80 border border-slate-700" />
+        <div className="flex flex-wrap items-center justify-center gap-8 opacity-90">
+          <img src="/logos/acme.svg" alt="Acme" className="h-6 w-auto" />
+          <img src="/logos/globex.svg" alt="Globex" className="h-6 w-auto" />
+          <img src="/logos/initech.svg" alt="Initech" className="h-6 w-auto" />
+          <img src="/logos/soylent.svg" alt="Soylent" className="h-6 w-auto" />
+          <img src="/logos/umbrella.svg" alt="Umbrella" className="h-6 w-auto" />
         </div>
       </section>
       {/* Who it's for */}
@@ -77,6 +77,28 @@ export default function CortiwareHomePage() {
         </div>
       </section>
 
+      {/* Use Cases */}
+      <section className="max-w-7xl mx-auto px-6 py-12">
+        <h2 className="text-3xl font-bold text-white mb-8 text-center">Popular Use Cases</h2>
+        <div className="grid md:grid-cols-3 gap-6">
+          <div className="group relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 transition-all">
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-teal-500/0 to-cyan-500/0 group-hover:from-teal-500/5 group-hover:to-cyan-500/5 transition-all" />
+            <h3 className="text-xl font-semibold text-white mb-2">Client Portals</h3>
+            <p className="text-slate-300">Offer your clients branded access with permissions, workflows, and real-time insights.</p>
+          </div>
+          <div className="group relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 transition-all">
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-teal-500/0 to-cyan-500/0 group-hover:from-teal-500/5 group-hover:to-cyan-500/5 transition-all" />
+            <h3 className="text-xl font-semibold text-white mb-2">Agency Workspaces</h3>
+            <p className="text-slate-300">Multi-tenant management for agencies/MSPs with templated setups and analytics.</p>
+          </div>
+          <div className="group relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 transition-all">
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-teal-500/0 to-cyan-500/0 group-hover:from-teal-500/5 group-hover:to-cyan-500/5 transition-all" />
+            <h3 className="text-xl font-semibold text-white mb-2">Enterprise Divisions</h3>
+            <p className="text-slate-300">Segmented tenants per location/division with centralized governance and RBAC.</p>
+          </div>
+        </div>
+      </section>
+
 
       {/* Features Section */}
       <section id="features" className="max-w-7xl mx-auto px-6 py-24">
@@ -84,8 +106,13 @@ export default function CortiwareHomePage() {
         <div className="grid md:grid-cols-3 gap-8">
           {/* Feature 1 */}
           <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 hover:-translate-y-0.5 transition-all">
-            <div className="w-12 h-12 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-xl mb-6 flex items-center justify-center text-white text-2xl">
-              🎨
+            <div className="w-12 h-12 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-xl mb-6 flex items-center justify-center">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="9" stroke="white" strokeOpacity="0.9" strokeWidth="2"/>
+                <circle cx="9" cy="10" r="1.2" fill="white"/>
+                <circle cx="12" cy="8" r="1.2" fill="white"/>
+                <circle cx="15" cy="11" r="1.2" fill="white"/>
+              </svg>
             </div>
             <h3 className="text-xl font-bold text-white mb-4">Custom Branding</h3>
             <p className="text-slate-300 leading-relaxed">
@@ -96,8 +123,13 @@ export default function CortiwareHomePage() {
 
           {/* Feature 2 */}
           <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 hover:-translate-y-0.5 transition-all">
-            <div className="w-12 h-12 bg-gradient-to-br from-violet-400 to-purple-500 rounded-xl mb-6 flex items-center justify-center text-white text-2xl">
-              🤖
+            <div className="w-12 h-12 bg-gradient-to-br from-violet-400 to-purple-500 rounded-xl mb-6 flex items-center justify-center">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="7" width="14" height="10" rx="2" stroke="white" strokeOpacity="0.9" strokeWidth="2"/>
+                <circle cx="9" cy="12" r="1" fill="white"/>
+                <circle cx="15" cy="12" r="1" fill="white"/>
+                <rect x="9" y="4" width="6" height="2" rx="1" fill="white"/>
+              </svg>
             </div>
             <h3 className="text-xl font-bold text-white mb-4">AI Agents</h3>
             <p className="text-slate-300 leading-relaxed">
@@ -108,8 +140,11 @@ export default function CortiwareHomePage() {
 
           {/* Feature 3 */}
           <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 hover:-translate-y-0.5 transition-all">
-            <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl mb-6 flex items-center justify-center text-white text-2xl">
-              🔒
+            <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl mb-6 flex items-center justify-center">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="10" width="14" height="9" rx="2" stroke="white" strokeOpacity="0.9" strokeWidth="2"/>
+                <path d="M8 10V8a4 4 0 118 0v2" stroke="white" strokeOpacity="0.9" strokeWidth="2"/>
+              </svg>
             </div>
             <h3 className="text-xl font-bold text-white mb-4">Enterprise Security</h3>
             <p className="text-slate-300 leading-relaxed">
@@ -120,8 +155,12 @@ export default function CortiwareHomePage() {
 
           {/* Feature 4 */}
           <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 hover:-translate-y-0.5 transition-all">
-            <div className="w-12 h-12 bg-gradient-to-br from-rose-400 to-pink-500 rounded-xl mb-6 flex items-center justify-center text-white text-2xl">
-              📊
+            <div className="w-12 h-12 bg-gradient-to-br from-rose-400 to-pink-500 rounded-xl mb-6 flex items-center justify-center">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="12" width="3" height="6" rx="1" fill="white"/>
+                <rect x="10.5" y="9" width="3" height="9" rx="1" fill="white"/>
+                <rect x="16" y="6" width="3" height="12" rx="1" fill="white"/>
+              </svg>
             </div>
             <h3 className="text-xl font-bold text-white mb-4">Analytics & Insights</h3>
             <p className="text-slate-300 leading-relaxed">
@@ -132,8 +171,10 @@ export default function CortiwareHomePage() {
 
           {/* Feature 5 */}
           <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 hover:-translate-y-0.5 transition-all">
-            <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-green-500 rounded-xl mb-6 flex items-center justify-center text-white text-2xl">
-              ⚡
+            <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-green-500 rounded-xl mb-6 flex items-center justify-center">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/>
+              </svg>
             </div>
             <h3 className="text-xl font-bold text-white mb-4">Lightning Fast</h3>
             <p className="text-slate-300 leading-relaxed">
@@ -144,8 +185,11 @@ export default function CortiwareHomePage() {
 
           {/* Feature 6 */}
           <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 hover:-translate-y-0.5 transition-all">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-xl mb-6 flex items-center justify-center text-white text-2xl">
-              🔌
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-xl mb-6 flex items-center justify-center">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 8v4M17 8v4" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                <rect x="4" y="12" width="16" height="6" rx="2" stroke="white" strokeWidth="2"/>
+              </svg>
             </div>
             <h3 className="text-xl font-bold text-white mb-4">API-First</h3>
             <p className="text-slate-300 leading-relaxed">
