@@ -186,7 +186,7 @@ export default function RobinsonHomePage() {
                 <div className="w-6 h-6 bg-gradient-to-br from-teal-400 to-cyan-500 rounded" />
                 <span className="font-semibold text-white">Robinson AI Systems</span>
               </div>
-              <p className="text-slate-400 text-sm">Highend, trustworthy AI platforms and services.</p>
+              <p className="text-slate-400 text-sm">High-end, trustworthy AI platforms and services.</p>
             </div>
             <div>
               <h4 className="font-semibold text-white mb-3">Company</h4>
