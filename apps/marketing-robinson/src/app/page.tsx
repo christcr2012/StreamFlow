@@ -84,6 +84,50 @@ export default function RobinsonHomePage() {
         </div>
       </section>
 
+      {/* Capabilities Section */}
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <h2 className="text-4xl font-bold text-white mb-12 text-center">What We Do Best</h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
+            <div className="w-12 h-12 rounded-xl mb-6 flex items-center justify-center text-[10px] font-bold tracking-wide uppercase" style={{ background: 'linear-gradient(135deg,#00B67A33,#00E3C233)' }}>ENG</div>
+            <h3 className="text-xl font-bold text-white mb-3">Product Engineering</h3>
+            <p className="text-slate-300">Designing and building AI products and platforms with robust data models, clean APIs, and modern UX.</p>
+          </div>
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
+            <div className="w-12 h-12 rounded-xl mb-6 flex items-center justify-center text-[10px] font-bold tracking-wide uppercase" style={{ background: 'linear-gradient(135deg,#00B67A33,#00E3C233)' }}>AI</div>
+            <h3 className="text-xl font-bold text-white mb-3">Applied AI & Agents</h3>
+            <p className="text-slate-300">LLM-driven agents, retrieval pipelines, prompt tooling, and evaluation loops tuned for business results.</p>
+          </div>
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
+            <div className="w-12 h-12 rounded-xl mb-6 flex items-center justify-center text-[10px] font-bold tracking-wide uppercase" style={{ background: 'linear-gradient(135deg,#00B67A33,#00E3C233)' }}>SCALE</div>
+            <h3 className="text-xl font-bold text-white mb-3">Reliability & Scale</h3>
+            <p className="text-slate-300">Multi-tenant architectures, observability, governance, and rollout strategies from startup to enterprise.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Capabilities Section */}
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <h2 className="text-4xl font-bold text-white mb-12 text-center">What We Deliver</h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
+            <div className="text-2xl mb-4">🎯</div>
+            <h3 className="text-xl font-semibold text-white mb-2">Strategy & Architecture</h3>
+            <p className="text-slate-300">From discovery to system design, we blueprint AI platforms that scale from your first customer to enterprise.</p>
+          </div>
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
+            <div className="text-2xl mb-4">⚙️</div>
+            <h3 className="text-xl font-semibold text-white mb-2">Product Engineering</h3>
+            <p className="text-slate-300">Multi-tenant SaaS, agent workflows, analytics, and secure integrations delivered with enterprise rigor.</p>
+          </div>
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
+            <div className="text-2xl mb-4">🛡️</div>
+            <h3 className="text-xl font-semibold text-white mb-2">Reliability & Security</h3>
+            <p className="text-slate-300">Operational excellence: observability, incident response, access control, and compliance-minded practices.</p>
+          </div>
+        </div>
+      </section>
+
       {/* About Section */}
       <section id="about" className="max-w-7xl mx-auto px-6 py-24">
         <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-12">
@@ -100,6 +144,14 @@ export default function RobinsonHomePage() {
           </p>
         </div>
       </section>
+      {/* Testimonials */}
+      <section className="max-w-7xl mx-auto px-6 py-12">
+        <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-10">
+          <blockquote className="text-xl text-slate-200 leading-relaxed mb-4">“Robinson delivered a production-ready AI platform that we scaled from our first cohort to hundreds of customers without a rewrite.”</blockquote>
+          <div className="text-slate-400">Head of Engineering, Growth-stage SaaS</div>
+        </div>
+      </section>
+
 
       {/* Contact Section */}
       <section id="contact" className="max-w-7xl mx-auto px-6 py-24">
@@ -116,15 +168,41 @@ export default function RobinsonHomePage() {
 
       {/* Footer */}
       <footer className="border-t border-slate-800 mt-24">
-        <div className="max-w-7xl mx-auto px-6 py-12">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 bg-gradient-to-br from-teal-400 to-cyan-500 rounded" />
-              <span className="text-slate-400">© 2025 Robinson AI Systems</span>
+        <div className="max-w-7xl mx-auto px-6 py-16">
+          <div className="grid md:grid-cols-4 gap-10 mb-10">
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-6 h-6 bg-gradient-to-br from-teal-400 to-cyan-500 rounded" />
+                <span className="font-semibold text-white">Robinson AI Systems</span>
+              </div>
+              <p className="text-slate-400 text-sm">Highend, trustworthy AI platforms and services.</p>
             </div>
-            <div className="flex gap-8">
-              <a href="https://provider.robinsonaisystems.com/login" className="text-slate-400 hover:text-white transition-colors">Provider Sign-in</a>
-              <a href="https://cortiware.com" className="text-slate-400 hover:text-white transition-colors">Cortiware</a>
+            <div>
+              <h4 className="font-semibold text-white mb-3">Company</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="/about" className="text-slate-400 hover:text-white transition-colors">About</a></li>
+                <li><a href="/contact" className="text-slate-400 hover:text-white transition-colors">Contact</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold text-white mb-3">Products</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="/products" className="text-slate-400 hover:text-white transition-colors">Overview</a></li>
+                <li><a href="https://cortiware.com" className="text-slate-400 hover:text-white transition-colors">Cortiware</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold text-white mb-3">Access</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="https://provider.robinsonaisystems.com/login" className="text-slate-400 hover:text-white transition-colors">Provider Sign-in</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-slate-800 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <span className="text-slate-400 text-sm">© 2025 Robinson AI Systems</span>
+            <div className="flex gap-6 text-sm">
+              <a href="/privacy" className="text-slate-400 hover:text-white transition-colors">Privacy</a>
+              <a href="/terms" className="text-slate-400 hover:text-white transition-colors">Terms</a>
             </div>
           </div>
         </div>
