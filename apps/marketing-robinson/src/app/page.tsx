@@ -167,6 +167,8 @@ export default function RobinsonHomePage() {
           }].map((m) => (
             <div key={m.title} className="group relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 transition-all">
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-teal-500/0 to-cyan-500/0 group-hover:from-teal-500/5 group-hover:to-cyan-500/5 transition-all" />
+
+
               <h3 className="text-xl font-semibold text-white mb-2">{m.title}</h3>
               <p className="text-slate-300">{m.desc}</p>
             </div>
@@ -186,9 +188,31 @@ export default function RobinsonHomePage() {
           </p>
           <p className="text-lg text-slate-400 leading-relaxed">
             Our team combines deep expertise in distributed systems, machine learning,
+
+
             and enterprise software to deliver solutions that scale from startup to
             enterprise. We believe in building platforms that grow with your business.
           </p>
+
+      {/* Security & Compliance */}
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <h2 className="text-4xl font-bold text-white mb-12 text-center">Security & Compliance</h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
+            <h3 className="text-xl font-semibold text-white mb-2">Access Control</h3>
+            <p className="text-slate-300">Role-based access, least-privilege defaults, and environment separation.</p>
+          </div>
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
+            <h3 className="text-xl font-semibold text-white mb-2">Observability</h3>
+            <p className="text-slate-300">Structured logging, tracing, metrics, and alerting for reliable operations.</p>
+          </div>
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5">
+            <h3 className="text-xl font-semibold text-white mb-2">Data Protection</h3>
+            <p className="text-slate-300">Tenant isolation by design and encryption in transit with standard best practices.</p>
+          </div>
+        </div>
+      </section>
+
         </div>
       </section>
       {/* Testimonials */}
