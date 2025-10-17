@@ -56,8 +56,7 @@ export async function GET(request: NextRequest) {
         orderBy: { createdAt: 'desc' },
         take: limit,
         skip: offset,
-        include: {
-          estimate: {
+        include: { CleaningEstimate: {
             select: {
               id: true,
               spaceType: true,

@@ -43,10 +43,8 @@ export async function POST(request: NextRequest) {
       where: {
         id: { in: contractIds as string[] }
       },
-      include: {
-        estimate: {
-          select: {
-            lead: {
+      include: { CleaningEstimate: {
+          select: { CleaningLead: {
               select: {
                 contactName: true,
                 email: true,

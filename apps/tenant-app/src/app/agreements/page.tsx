@@ -1,29 +1,27 @@
 import { getAuthContext } from '@/lib/auth-context';
 import { redirect } from 'next/navigation';
-// import { prisma } from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { Card } from '@cortiware/ui';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@cortiware/ui';
 import Link from 'next/link';
 
-// TODO: Add Agreement and AgreementTemplate models to prisma/schema.prisma
-// async function getAgreements(orgId: string) {
-//   const agreements = await prisma.agreement.findMany({
-//     where: { orgId },
-//     include: {
-//       customer: {
-//         select: { id: true, company: true, primaryName: true },
-//       },
-//       template: {
-//         select: { id: true, name: true },
-//       },
-//     },
-//     orderBy: { createdAt: 'desc' },
-//     take: 100,
-//   });
+async function getAgreements(orgId: string) {
+  const agreements = await prisma.agreement.findMany({
+    where: { orgId },
+    include: { Customer: {
+        select: { id: true, company: true, primaryName: true },
+      },
+      template: {
+        select: { id: true, name: true },
+      },
+    },
+    orderBy: { createdAt: 'desc' },
+    take: 100,
+  });
 
-//   return agreements;
-// }
+  return agreements;
+}
 
 export default async function AgreementsPage() {
   const authContext = await getAuthContext();
@@ -32,8 +30,7 @@ export default async function AgreementsPage() {
     redirect('/login');
   }
 
-  // const agreements = await getAgreements(authContext.orgId);
-  const agreements: any[] = []; // Temporary placeholder until Agreement models are added
+  const agreements = await getAgreements(authContext.orgId);
 
   return (
     <div className="min-h-screen p-8 bg-gray-50">
@@ -104,8 +101,8 @@ export default async function AgreementsPage() {
                   agreements.map((agreement: any) => (
                     <tr key={agreement.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <Link href={`/customers/${agreement.customer.id}`} className="text-blue-600 hover:text-blue-700">
-                          {agreement.customer.company || agreement.customer.primaryName}
+                        <Link href={`/customers/${agreement.Customer.id}`} className="text-blue-600 hover:text-blue-700">
+                          {agreement.Customer.company || agreement.Customer.primaryName}
                         </Link>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">

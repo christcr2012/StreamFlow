@@ -17,8 +17,7 @@ export async function GET(
 
     const invoice = await prisma.invoice.findFirst({
       where: { id, orgId: authContext.orgId! },
-      include: {
-        customer: {
+      include: { Customer: {
           select: {
             id: true,
             company: true,
@@ -120,8 +119,7 @@ export async function PATCH(
     const invoice = await prisma.invoice.update({
       where: { id, orgId: authContext.orgId! },
       data: updateData,
-      include: {
-        customer: {
+      include: { Customer: {
           select: {
             id: true,
             company: true,

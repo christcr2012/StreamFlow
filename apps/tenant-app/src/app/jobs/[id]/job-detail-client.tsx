@@ -80,9 +80,9 @@ export function JobDetailClient({ job }: JobDetailClientProps) {
               ← Back to Jobs
             </Link>
             <h1 className="text-3xl font-bold text-gray-900">{job.title}</h1>
-            {job.customer && (
+            {job.Customer && (
               <p className="text-gray-600 mt-1">
-                {job.customer.company || job.customer.primaryName}
+                {job.Customer.company || job.Customer.primaryName}
               </p>
             )}
           </div>
@@ -197,8 +197,8 @@ export function JobDetailClient({ job }: JobDetailClientProps) {
             <Card>
               <CardHeader title="Quick Actions" />
               <div className="p-6 space-y-3">
-                {job.customer && (
-                  <Link href={`/customers/${job.customer.id}`}>
+                {job.Customer && (
+                  <Link href={`/customers/${job.Customer.id}`}>
                     <Button variant="secondary" fullWidth>
                       View Customer
                     </Button>

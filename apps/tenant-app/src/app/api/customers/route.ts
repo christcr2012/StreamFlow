@@ -32,8 +32,7 @@ export async function GET(request: NextRequest) {
     const [items, total] = await Promise.all([
       prisma.customer.findMany({
         where,
-        include: {
-          contacts: {
+        include: { CustomerContact: {
             select: {
               id: true,
               name: true,
@@ -42,8 +41,7 @@ export async function GET(request: NextRequest) {
               role: true,
             },
           },
-          _count: {
-            select: { jobs: true, invoices: true },
+          _count: { select: { Job: true, invoices: true },
           },
         },
         skip: (filter.page - 1) * filter.limit,
@@ -93,8 +91,7 @@ export async function POST(request: NextRequest) {
           create: contacts,
         } : undefined,
       },
-      include: {
-        contacts: true,
+      include: { CustomerContact: true,
       },
     });
 

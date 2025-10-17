@@ -82,20 +82,19 @@ async function handlePaymentSuccess(paymentIntent: any, orgId: string) {
     // Get invoice and customer details for email
     const invoice = await prisma.invoice.findUnique({
       where: { id: invoiceId },
-      include: {
-        customer: true,
+      include: { Customer: true,
       },
     });
 
-    if (!invoice || !invoice.customer) {
+    if (!invoice || !invoice.Customer) {
       console.error('Invoice or customer not found');
       return;
     }
 
     // Send payment confirmation email to customer
-    const customerEmail = invoice.customer.primaryEmail;
+    const customerEmail = invoice.Customer.primaryEmail;
     if (customerEmail) {
-      const customerName = invoice.customer.company || invoice.customer.primaryName || 'Customer';
+      const customerName = invoice.Customer.company || invoice.Customer.primaryName || 'Customer';
       const emailTemplate = getPaymentReceivedEmailTemplate({
         customerName,
         invoiceNumber: invoice.number || 'DRAFT',
@@ -188,8 +187,7 @@ async function handleRefund(charge: any, orgId: string) {
         stripePaymentIntentId: paymentIntentId,
         orgId,
       },
-      include: {
-        invoice: true,
+      include: { Invoice: true,
       },
     });
 
@@ -207,9 +205,9 @@ async function handleRefund(charge: any, orgId: string) {
     });
 
     // Update invoice status back to open if it was paid
-    if (payment.invoice && payment.invoice.status === 'paid') {
+    if (payment.Invoice && payment.Invoice.status === 'paid') {
       await prisma.invoice.update({
-        where: { id: payment.invoice.id },
+        where: { id: payment.Invoice.id },
         data: {
           status: 'open',
           paidAt: null,

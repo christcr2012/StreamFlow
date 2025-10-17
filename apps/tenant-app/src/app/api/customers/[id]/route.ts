@@ -18,8 +18,7 @@ export async function GET(
     // PERFORMANCE: Optimize query with select for related data
     const customer = await prisma.customer.findFirst({
       where: { id, orgId: authContext.orgId! },
-      include: {
-        contacts: {
+      include: { CustomerContact: {
           select: {
             id: true,
             name: true,
@@ -51,8 +50,7 @@ export async function GET(
           orderBy: { createdAt: 'desc' },
           take: 10,
         },
-        _count: {
-          select: { jobs: true, invoices: true, agreements: true },
+        _count: { select: { Job: true, invoices: true, agreements: true },
         },
       },
     });
@@ -102,8 +100,7 @@ export async function PATCH(
           create: contacts,
         } : undefined,
       },
-      include: {
-        contacts: true,
+      include: { CustomerContact: true,
       },
     });
 

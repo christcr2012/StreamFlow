@@ -9,171 +9,210 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Org {
-  id                    String                @id @default(cuid())
-  name                  String
-  featureFlags          Json                  @default("{}")
-  createdAt             DateTime              @default(now())
-  updatedAt             DateTime              @updatedAt
-  /// brandConfig stores white-label brand settings such as name, colors, and logo URL.
-  /// It is JSON to allow arbitrary keys like { name: "Mountain Vista", color: "#123456", logoUrl: "https://..." }
-  brandConfig           Json?                 @default("{}")
-  /// settingsJson stores arbitrary organization-level settings.  This can be used
-  /// by owners to configure API keys or other preferences needed at runtime.
-  settingsJson          Json?                 @default("{}")
-  aiAlerts              Json                  @default("{}")
-  aiCreditBalance       Int                   @default(1000)
-  aiMonthlyBudgetCents  Int                   @default(5000)
-  aiPlan                AiPlan                @default(BASE)
-  stripeCustomerId      String?
-  stripeSubscriptionId  String?
-  subscriptionEndDate   DateTime?
-  subscriptionStartDate DateTime?
-  subscriptionStatus    String?
-  activities            Activity[]            @relation("OrgActivities")
-  addonPurchases        AddonPurchase[]       @relation("OrgAddonPurchases")
-  aiMonthlySummaries    AiMonthlySummary[]    @relation("OrgAiMonthlySummaries")
-  aiUsageEvents         AiUsageEvent[]        @relation("OrgAiUsageEvents")
-  auditLogs             AuditLog[]
-  ledger                BillingLedger[]
-  customers             Customer[]
-  incidents             Incident[]            @relation("OrgIncidents")
-  invoices              Invoice[]
-  jobs                  Job[]
-  leads                 Lead[]
-  leadInvoices          LeadInvoice[]         @relation("OrgLeadInvoices")
-  notifications         Notification[]        @relation("OrgNotifications")
-  opportunities         Opportunity[]
-  payments              Payment[]
-  pricingPlan           PricingPlan?          @relation("OrgPricingPlan")
-  rbacRoles             RbacRole[]            @relation("OrgRbacRoles")
-  rbacUserRoles         RbacUserRole[]        @relation("OrgRbacUserRoles")
-  referrals             Referral[]
-  rfps                  Rfp[]
-  subscriptions         Subscription[]        @relation("OrgSubscriptions")
-  tenantOverrides       TenantPriceOverride[]
-  usageMeters           UsageMeter[]          @relation("OrgUsageMeters")
-  users                 User[]
-}
-
-model User {
-  id                  String                  @id @default(cuid())
-  orgId               String
-  email               String                  @unique
-  name                String?
-  role                Role                    @default(STAFF)
-  status              String                  @default("active")
-  createdAt           DateTime                @default(now())
-  updatedAt           DateTime                @updatedAt
-  mustChangePassword  Boolean                 @default(false)
-  passwordHash        String?                 @db.VarChar(255)
-  backupCodesHash     String?
-  failedLoginAttempts Int                     @default(0)
-  isActive            Boolean                 @default(true)
-  isLocked            Boolean                 @default(false)
-  lastFailedLogin     DateTime?
-  lastPasswordChange  DateTime?
-  lastSuccessfulLogin DateTime?
-  lockedUntil         DateTime?
-  totpEnabled         Boolean                 @default(false)
-  totpSecret          String?
-  rbacUserRoles       RbacUserRole[]          @relation("UserRbacUserRoles")
-  org                 Org                     @relation(fields: [orgId], references: [id])
-  breakglassAccount   UserBreakglassAccount?
-  deviceFingerprints  UserDeviceFingerprint[]
-  loginHistory        UserLoginHistory[]
-  recoveryCodes       UserRecoveryCode[]
-  securityQuestions   UserSecurityQuestion[]
-}
-
-/// Recovery codes for self-service account recovery (Layer 1)
-model UserRecoveryCode {
-  id        String    @id @default(cuid())
-  userId    String
-  codeHash  String
-  usedAt    DateTime?
-  usedFrom  String?
-  createdAt DateTime  @default(now())
-  expiresAt DateTime
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([usedAt])
-}
-
-/// Security questions for additional verification (Layer 2)
-model UserSecurityQuestion {
+model Activity {
   id         String   @id @default(cuid())
-  userId     String
-  question   String
-  answerHash String
+  orgId      String
+  actorType  String
+  actorId    String?
+  entityType String
+  entityId   String
+  action     String
+  meta       Json     @default("{}")
   createdAt  DateTime @default(now())
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Org        Org      @relation(fields: [orgId], references: [id])
 
-  @@index([userId])
+  @@index([orgId, createdAt])
+  @@index([orgId, entityType, entityId, createdAt])
 }
 
-/// Breakglass account for automated emergency access (Layer 3)
-model UserBreakglassAccount {
-  id                    String    @id @default(cuid())
-  userId                String    @unique
-  orgId                 String
-  encryptedEmail        String
-  encryptedPasswordHash String
-  encryptionIV          String
-  createdAt             DateTime  @default(now())
-  lastActivatedAt       DateTime?
-  activationCount       Int       @default(0)
-  isEnabled             Boolean   @default(true)
-  canAutoActivate       Boolean   @default(true)
-  minDelayMinutes       Int       @default(0)
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+model AddonPurchase {
+  id          String    @id @default(cuid())
+  orgId       String
+  sku         String
+  amount      Decimal   @db.Decimal(12, 2)
+  status      String
+  purchasedAt DateTime  @default(now())
+  refundedAt  DateTime?
+  meta        Json      @default("{}")
+  Org         Org       @relation(fields: [orgId], references: [id])
 
-  @@index([orgId])
-  @@index([userId])
+  @@index([orgId, sku, status])
+  @@index([purchasedAt])
 }
 
-/// Device fingerprinting for trust scoring
-model UserDeviceFingerprint {
+model Agreement {
+  id                String            @id @default(cuid())
+  orgId             String
+  customerId        String
+  templateId        String
+  status            String            @default("draft")
+  content           String
+  variables         Json              @default("{}")
+  signUrl           String?
+  signedAt          DateTime?
+  signedBy          String?
+  renewalAt         DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime @updatedAt
+  Customer          Customer          @relation(fields: [customerId], references: [id])
+  AgreementTemplate AgreementTemplate @relation(fields: [templateId], references: [id])
+
+  @@index([customerId])
+  @@index([orgId, status, renewalAt])
+}
+
+model AgreementTemplate {
+  id          String      @id @default(cuid())
+  orgId       String?
+  name        String
+  verticalKey String?
+  content     String
+  mergeFields Json        @default("[]")
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime @updatedAt
+  Agreement   Agreement[]
+
+  @@index([orgId, isActive])
+  @@index([verticalKey])
+}
+
+model AiModelTest {
+  id                String              @id @default(cuid())
+  orgId             String
+  testName          String
+  feature           String
+  modelA            String
+  modelB            String
+  status            String              @default("active")
+  trafficSplit      Int                 @default(50)
+  startedAt         DateTime            @default(now())
+  endedAt           DateTime?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime @updatedAt
+  Org               Org                 @relation(fields: [orgId], references: [id])
+  AiModelTestResult AiModelTestResult[]
+
+  @@index([orgId, feature])
+  @@index([orgId, status])
+}
+
+model AiModelTestResult {
+  id          String      @id @default(cuid())
+  testId      String
+  model       String
+  feature     String
+  tokensIn    Int
+  tokensOut   Int
+  costUsd     Decimal     @db.Decimal(8, 6)
+  latencyMs   Int
+  userRating  Int?
+  success     Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  AiModelTest AiModelTest @relation(fields: [testId], references: [id], onDelete: Cascade)
+
+  @@index([testId, createdAt])
+  @@index([testId, model])
+}
+
+model AiMonthlySummary {
   id          String   @id @default(cuid())
-  userId      String
-  fingerprint String
-  ipAddress   String
-  userAgent   String
-  isTrusted   Boolean  @default(false)
-  trustScore  Int      @default(0)
-  firstSeenAt DateTime @default(now())
-  lastSeenAt  DateTime @default(now())
-  loginCount  Int      @default(1)
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orgId       String
+  monthKey    String
+  tokensIn    Int      @default(0)
+  tokensOut   Int      @default(0)
+  costUsd     Decimal  @default(0) @db.Decimal(8, 2)
+  creditsUsed Int      @default(0)
+  callCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Org         Org      @relation(fields: [orgId], references: [id])
 
-  @@unique([userId, fingerprint])
-  @@index([userId])
-  @@index([fingerprint])
+  @@unique([orgId, monthKey])
+  @@index([monthKey])
 }
 
-/// Comprehensive login history for audit trail
-model UserLoginHistory {
-  id                String   @id @default(cuid())
-  userId            String
-  success           Boolean
-  method            String
-  ipAddress         String
-  userAgent         String
-  deviceFingerprint String?
-  riskScore         Int      @default(0)
-  riskFactors       String?
-  country           String?
-  city              String?
-  timestamp         DateTime @default(now())
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+model AiUsageEvent {
+  id          String   @id @default(cuid())
+  orgId       String
+  userId      String?
+  feature     String
+  model       String
+  tokensIn    Int
+  tokensOut   Int
+  costUsd     Decimal  @db.Decimal(8, 6)
+  creditsUsed Int
+  requestId   String?
+  createdAt   DateTime @default(now())
+  Org         Org      @relation(fields: [orgId], references: [id])
 
-  @@index([userId, timestamp])
-  @@index([success])
-  @@index([riskScore])
+  @@index([orgId, createdAt])
+  @@index([orgId, feature, createdAt])
+  @@index([orgId, feature])
 }
 
-/// Breakglass activation log for automated actions
+model AnalyticsSnapshot {
+  id             String   @id @default(cuid())
+  snapshotDate   DateTime @unique @db.Date
+  mrrCents       Int      @default(0)
+  arrCents       Int      @default(0)
+  activeClients  Int      @default(0)
+  newClients     Int      @default(0)
+  churnedClients Int      @default(0)
+  totalRevenue   Int      @default(0)
+  metricsJson    Json     @default("{}")
+  createdAt      DateTime @default(now())
+
+  @@index([snapshotDate])
+}
+
+model AuditEvent {
+  id         String   @id @default(cuid())
+  actorType  String
+  actorId    String?
+  action     String
+  entityType String
+  entityId   String?
+  metadata   Json     @default("{}")
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([actorId, createdAt])
+  @@index([createdAt])
+  @@index([entityType, entityId, createdAt])
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  orgId       String
+  entityId    String?
+  createdAt   DateTime @default(now())
+  actorUserId String?
+  entity      String
+  field       String?
+  newValue    Json?
+  oldValue    Json?
+  reason      String?
+  Org         Org      @relation(fields: [orgId], references: [id])
+
+  @@index([actorUserId, createdAt])
+  @@index([orgId, createdAt])
+  @@index([orgId, entity, createdAt])
+}
+
+model BillingLedger {
+  id        String     @id @default(cuid())
+  orgId     String
+  type      LedgerType
+  amount    Decimal    @db.Decimal(12, 2)
+  meta      Json       @default("{}")
+  createdAt DateTime   @default(now())
+  Org       Org        @relation(fields: [orgId], references: [id])
+
+  @@index([orgId, type])
+}
+
 model BreakglassActivationLog {
   id                String   @id @default(cuid())
   userId            String
@@ -191,12 +230,884 @@ model BreakglassActivationLog {
   notifiedAdmins    String
   timestamp         DateTime @default(now())
 
-  @@index([userId, timestamp])
   @@index([orgId, timestamp])
   @@index([riskScore])
+  @@index([userId, timestamp])
 }
 
-/// Pending recovery requests with automated delay timers
+model CleaningChecklistTemplate {
+  id        String   @id @default(cuid())
+  orgId     String
+  name      String
+  spaceType String
+  itemsJson Json
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Org       Org      @relation(fields: [orgId], references: [id])
+
+  @@index([orgId, spaceType])
+}
+
+model CleaningContract {
+  id                 String              @id @default(cuid())
+  orgId              String
+  estimateId         String              @unique
+  customerId         String?
+  siteAddress        String
+  spaceType          String
+  squareFeet         Int
+  recurrenceRule     String?
+  frequency          String
+  startDate          DateTime
+  endDate            DateTime?
+  basePrice          Decimal             @db.Decimal(12, 2)
+  taxRate            Decimal?            @db.Decimal(5, 2)
+  escalatorPct       Decimal?            @db.Decimal(5, 2)
+  slaResponseHours   Int?
+  slaCompletionHours Int?
+  status             String              @default("ACTIVE")
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime @updatedAt
+  CleaningEstimate   CleaningEstimate    @relation(fields: [estimateId], references: [id])
+  Org                Org                 @relation(fields: [orgId], references: [id])
+  CleaningWorkOrder  CleaningWorkOrder[]
+
+  @@index([orgId, startDate])
+  @@index([orgId, status])
+}
+
+model CleaningEstimate {
+  id               String            @id @default(cuid())
+  orgId            String
+  leadId           String?
+  version          Int               @default(1)
+  spaceType        String
+  squareFeet       Int
+  frequency        String
+  optionsJson      Json
+  status           String            @default("DRAFT")
+  acceptedOption   String?
+  signedAt         DateTime?
+  signedBy         String?
+  signatureUrl     String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime @updatedAt
+  CleaningContract CleaningContract?
+  CleaningLead     CleaningLead?     @relation(fields: [leadId], references: [id])
+  Org              Org               @relation(fields: [orgId], references: [id])
+
+  @@index([leadId])
+  @@index([orgId, status])
+}
+
+model CleaningInspection {
+  id                String              @id @default(cuid())
+  orgId             String
+  workOrderId       String              @unique
+  inspectorId       String?
+  inspectedAt       DateTime?
+  checklistJson     Json
+  score             Decimal?            @db.Decimal(5, 2)
+  defectsCount      Int                 @default(0)
+  status            String              @default("PENDING")
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime @updatedAt
+  Org               Org                 @relation(fields: [orgId], references: [id])
+  CleaningWorkOrder CleaningWorkOrder[]
+
+  @@index([orgId, inspectedAt])
+  @@index([orgId, status])
+}
+
+model CleaningLead {
+  id               String             @id @default(cuid())
+  orgId            String
+  company          String?
+  contactName      String
+  email            String?
+  phone            String?
+  address          String
+  city             String
+  state            String
+  zip              String
+  lat              Decimal?           @db.Decimal(10, 7)
+  lon              Decimal?           @db.Decimal(10, 7)
+  spaceType        String
+  squareFeet       Int?
+  frequency        String?
+  status           String             @default("NEW")
+  aiEstimateJson   Json?
+  aiTokensUsed     Int?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime @updatedAt
+  CleaningEstimate CleaningEstimate[]
+  Org              Org                @relation(fields: [orgId], references: [id])
+
+  @@index([orgId, createdAt])
+  @@index([orgId, status])
+}
+
+model CleaningWorkOrder {
+  id                     String                   @id @default(cuid())
+  orgId                  String
+  contractId             String?
+  publicId               String                   @unique
+  siteAddress            String
+  spaceType              String
+  squareFeet             Int
+  scheduledDate          DateTime
+  scheduledStart         DateTime
+  scheduledEnd           DateTime
+  assignedTo             String?
+  assignedAt             DateTime?
+  actualStart            DateTime?
+  actualEnd              DateTime?
+  status                 String                   @default("SCHEDULED")
+  checklistJson          Json?
+  inspectionId           String?
+  photosJson             Json?
+  signatureUrl           String?
+  signedBy               String?
+  signedAt               DateTime?
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime @updatedAt
+  CleaningContract       CleaningContract?        @relation(fields: [contractId], references: [id])
+  CleaningInspection     CleaningInspection?      @relation(fields: [inspectionId], references: [id])
+  Org                    Org                      @relation(fields: [orgId], references: [id])
+  CleaningWorkOrderEvent CleaningWorkOrderEvent[]
+
+  @@index([assignedTo, scheduledDate])
+  @@index([orgId, scheduledDate])
+  @@index([orgId, status])
+}
+
+model CleaningWorkOrderEvent {
+  id                String            @id @default(cuid())
+  workOrderId       String
+  eventType         String
+  userId            String?
+  timestamp         DateTime          @default(now())
+  metadata          Json?
+  CleaningWorkOrder CleaningWorkOrder @relation(fields: [workOrderId], references: [id])
+
+  @@index([workOrderId, timestamp])
+}
+
+model Coupon {
+  id               String             @id @default(cuid())
+  code             String             @unique
+  name             String?
+  percentOff       Int?
+  amountOffCents   Int?
+  duration         String?
+  durationMonths   Int?
+  startsAt         DateTime?
+  endsAt           DateTime?
+  maxRedemptions   Int?
+  active           Boolean            @default(true)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime @updatedAt
+  OnboardingInvite OnboardingInvite[]
+}
+
+model Customer {
+  id               String             @id @default(cuid())
+  orgId            String
+  publicId         String             @unique
+  company          String?
+  primaryName      String?
+  primaryEmail     String?
+  primaryPhone     String?
+  notes            String?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime @updatedAt
+  billingSettings  Json               @default("{}")
+  tags             String[]           @default([])
+  Agreement        Agreement[]
+  Org              Org                @relation(fields: [orgId], references: [id])
+  CustomerContact  CustomerContact[]
+  Invoice          Invoice[]
+  Job              Job[]
+  Opportunity      Opportunity[]
+  RecurringInvoice RecurringInvoice[]
+
+  @@index([orgId, company])
+  @@index([orgId, createdAt])
+  @@index([orgId, primaryName])
+}
+
+model CustomerContact {
+  id         String   @id @default(cuid())
+  customerId String
+  name       String
+  email      String?
+  phone      String?
+  role       String?
+  isPrimary  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  Customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+}
+
+model EmailTemplate {
+  id           String   @id @default(cuid())
+  orgId        String
+  templateType String
+  subject      String
+  htmlBody     String
+  textBody     String
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  Org          Org      @relation(fields: [orgId], references: [id])
+
+  @@unique([orgId, templateType])
+  @@index([orgId, active])
+}
+
+model FederationKey {
+  id         String    @id @default(cuid())
+  tenantId   String
+  keyId      String    @unique
+  secretHash String
+  scope      String
+  createdAt  DateTime  @default(now())
+  disabledAt DateTime?
+  lastUsedAt DateTime?
+  rotatedAt  DateTime?
+
+  @@index([keyId, disabledAt])
+  @@index([tenantId, scope])
+}
+
+model GlobalMonetizationConfig {
+  id               String     @id @default(cuid())
+  defaultPlanId    String?
+  defaultPriceId   String?
+  defaultTrialDays Int?       @default(0)
+  publicOnboarding Boolean    @default(true)
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime @updatedAt
+  PricePlan        PricePlan? @relation(fields: [defaultPlanId], references: [id])
+  PlanPrice        PlanPrice? @relation(fields: [defaultPriceId], references: [id])
+}
+
+model ImportError {
+  id           String    @id @default(cuid())
+  importJobId  String
+  rowNumber    Int
+  fieldName    String?
+  errorType    String
+  errorMessage String
+  rawData      Json?
+  createdAt    DateTime  @default(now())
+  ImportJob    ImportJob @relation(fields: [importJobId], references: [id], onDelete: Cascade)
+
+  @@index([importJobId, errorType])
+  @@index([importJobId, rowNumber])
+}
+
+model ImportJob {
+  id               String           @id @default(cuid())
+  orgId            String
+  userId           String
+  entityType       ImportEntityType
+  status           ImportStatus     @default(PENDING)
+  fileName         String
+  fileSize         Int
+  totalRecords     Int              @default(0)
+  processedRecords Int              @default(0)
+  successCount     Int              @default(0)
+  errorCount       Int              @default(0)
+  skipCount        Int              @default(0)
+  mappingId        String?
+  sampleData       Json?
+  fieldMappings    Json?
+  transformRules   Json?
+  validationRules  Json?
+  progressPercent  Int              @default(0)
+  startedAt        DateTime?
+  completedAt      DateTime?
+  errorSummary     String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime @updatedAt
+  ImportError      ImportError[]
+  ImportMapping    ImportMapping?   @relation(fields: [mappingId], references: [id])
+  Org              Org              @relation(fields: [orgId], references: [id])
+  User             User             @relation(fields: [userId], references: [id])
+
+  @@index([orgId, status, createdAt])
+  @@index([userId, createdAt])
+}
+
+model ImportMapping {
+  id              String           @id @default(cuid())
+  orgId           String
+  name            String
+  entityType      ImportEntityType
+  sourceFormat    String
+  fieldMappings   Json
+  transformRules  Json
+  validationRules Json
+  isTemplate      Boolean          @default(false)
+  useCount        Int              @default(0)
+  lastUsedAt      DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime @updatedAt
+  ImportJob       ImportJob[]
+  Org             Org              @relation(fields: [orgId], references: [id])
+
+  @@index([isTemplate, useCount])
+  @@index([orgId, entityType])
+  @@index([orgId, isTemplate])
+}
+
+model Incident {
+  id                  String           @id @default(cuid())
+  orgId               String
+  severity            IncidentSeverity
+  status              IncidentStatus   @default(OPEN)
+  title               String
+  description         String
+  assigneeUserId      String?
+  slaResponseDeadline DateTime?
+  slaResolveDeadline  DateTime?
+  acknowledgedAt      DateTime?
+  resolvedAt          DateTime?
+  closedAt            DateTime?
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime @updatedAt
+  Org                 Org              @relation(fields: [orgId], references: [id])
+
+  @@index([orgId, severity])
+  @@index([orgId, status, createdAt])
+}
+
+model InfrastructureLimit {
+  id              String                @id @default(cuid())
+  service         InfrastructureService
+  metric          MetricType
+  currentPlan     String
+  limitValue      Float
+  warningPercent  Float                 @default(75)
+  criticalPercent Float                 @default(90)
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([service, metric, currentPlan])
+}
+
+model InfrastructureMetric {
+  id        String                @id @default(cuid())
+  service   InfrastructureService
+  metric    MetricType
+  value     Float
+  timestamp DateTime              @default(now())
+  metadata  Json?
+
+  @@index([service, metric, timestamp])
+  @@index([timestamp])
+}
+
+model Invoice {
+  id                   String            @id @default(cuid())
+  orgId                String
+  customerId           String?
+  amount               Decimal           @db.Decimal(12, 2)
+  status               String            @default("draft")
+  issuedAt             DateTime          @default(now())
+  items                Json              @default("[]")
+  createdAt            DateTime          @default(now())
+  currency             String            @default("USD")
+  discountAmount       Decimal           @default(0) @db.Decimal(12, 2)
+  dueDate              DateTime?
+  jobId                String?
+  notes                String?
+  number               String?           @unique
+  paidAt               DateTime?
+  paymentLinkExpiresAt DateTime?
+  paymentLinkToken     String?           @unique
+  paymentLinkViews     Int               @default(0)
+  subtotal             Decimal           @default(0) @db.Decimal(12, 2)
+  taxAmount            Decimal           @default(0) @db.Decimal(12, 2)
+  terms                String?
+  updatedAt            DateTime @updatedAt
+  Customer             Customer?         @relation(fields: [customerId], references: [id])
+  Org                  Org               @relation(fields: [orgId], references: [id])
+  InvoiceLine          InvoiceLine[]
+  InvoiceReminder      InvoiceReminder[]
+  Payment              Payment[]
+
+  @@index([number])
+  @@index([orgId, customerId])
+  @@index([orgId, status, dueDate])
+  @@index([paymentLinkToken])
+}
+
+model InvoiceLine {
+  id             String          @id @default(cuid())
+  invoiceId      String
+  description    String
+  lineType       InvoiceLineType
+  quantity       Int             @default(1)
+  unitPriceCents Int
+  amountCents    Int
+  sourceType     String?
+  sourceId       String?
+  createdAt      DateTime        @default(now())
+  Invoice        Invoice         @relation(fields: [invoiceId], references: [id])
+
+  @@index([invoiceId])
+  @@index([sourceType, sourceId])
+}
+
+model InvoiceReminder {
+  id           String    @id @default(cuid())
+  invoiceId    String
+  reminderType String
+  status       String    @default("pending")
+  sentAt       DateTime?
+  error        String?
+  createdAt    DateTime  @default(now())
+  Invoice      Invoice   @relation(fields: [invoiceId], references: [id])
+
+  @@index([invoiceId])
+  @@index([status, sentAt])
+}
+
+model Job {
+  id          String        @id @default(cuid())
+  orgId       String
+  customerId  String?
+  rfpId       String?
+  status      String        @default("scheduled")
+  schedule    Json          @default("{}")
+  assignedTo  String?
+  checklist   Json          @default("[]")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime @updatedAt
+  assignees   String[]      @default([])
+  completedAt DateTime?
+  description String?
+  location    Json?
+  notes       String?
+  scheduledAt DateTime?
+  title       String
+  Customer    Customer?     @relation(fields: [customerId], references: [id])
+  Org         Org           @relation(fields: [orgId], references: [id])
+  Rfp         Rfp?          @relation(fields: [rfpId], references: [id])
+  JobPhoto    JobPhoto[]
+  JobTimeline JobTimeline[]
+
+  @@index([orgId, createdAt])
+  @@index([orgId, customerId])
+  @@index([orgId, status, scheduledAt])
+}
+
+model JobPhoto {
+  id        String   @id @default(cuid())
+  publicId  String   @unique
+  jobId     String
+  url       String
+  caption   String?
+  metadata  Json     @default("{}")
+  takenAt   DateTime @default(now())
+  takenBy   String?
+  createdAt DateTime @default(now())
+  Job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([jobId])
+  @@index([publicId])
+}
+
+model JobTimeline {
+  id          String   @id @default(cuid())
+  publicId    String   @unique
+  jobId       String
+  eventType   String
+  description String
+  metadata    Json     @default("{}")
+  userId      String?
+  createdAt   DateTime @default(now())
+  Job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([jobId, createdAt])
+  @@index([publicId])
+}
+
+model Lead {
+  id                    String            @id @default(cuid())
+  orgId                 String
+  publicId              String            @unique
+  sourceType            LeadSource
+  identityHash          String
+  company               String?
+  contactName           String?
+  email                 String?
+  phoneE164             String?
+  website               String?
+  serviceCode           String?
+  zip                   String?
+  enrichmentJson        Json              @default("{}")
+  aiScore               Int               @default(0)
+  scoreFactors          Json              @default("{}")
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @default(now())
+  city                  String?
+  notes                 String?
+  sourceDetail          String?
+  state                 String?
+  postalCode            String?           @db.VarChar(20)
+  address               String?
+  addressLine1          String?
+  addressLine2          String?
+  country               String?
+  convertedAt           DateTime?
+  rfp                   Json?
+  systemGenerated       Boolean           @default(false)
+  status                LeadStatus        @default(NEW)
+  convertedToCustomerId String?
+  customFields          Json              @default("{}")
+  Org                   Org               @relation(fields: [orgId], references: [id])
+  LeadInvoiceLine       LeadInvoiceLine[]
+
+  @@index([convertedToCustomerId])
+  @@index([orgId, convertedAt])
+  @@index([orgId, createdAt])
+  @@index([orgId, identityHash])
+  @@index([orgId, sourceType])
+  @@index([orgId, status])
+}
+
+model LeadInvoice {
+  id              String            @id @default(cuid())
+  orgId           String?
+  number          String            @unique
+  periodFrom      DateTime
+  periodTo        DateTime
+  status          String
+  subtotalCents   Int
+  taxCents        Int               @default(0)
+  totalCents      Int
+  currency        String            @default("usd")
+  stripeInvoiceId String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime @updatedAt
+  leadCount       Int               @default(0)
+  Org             Org?              @relation(fields: [orgId], references: [id])
+  LeadInvoiceLine LeadInvoiceLine[]
+}
+
+model LeadInvoiceLine {
+  id             String      @id @default(cuid())
+  invoiceId      String
+  leadId         String?
+  description    String
+  quantity       Int         @default(1)
+  unitPriceCents Int
+  amountCents    Int
+  source         String?
+  createdAt      DateTime    @default(now())
+  LeadInvoice    LeadInvoice @relation(fields: [invoiceId], references: [id])
+  Lead           Lead?       @relation(fields: [leadId], references: [id])
+
+  @@index([invoiceId])
+  @@index([leadId])
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  orgId     String?
+  audience  String
+  type      String
+  title     String
+  body      String
+  severity  String
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+  Org       Org?      @relation(fields: [orgId], references: [id])
+
+  @@index([orgId, createdAt])
+}
+
+model OIDCConfig {
+  id           String    @id @default(cuid())
+  enabled      Boolean   @default(false)
+  issuerUrl    String
+  clientId     String
+  clientSecret String
+  scopes       String    @default("openid profile email")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime @updatedAt
+  lastTestedAt DateTime?
+}
+
+model Offer {
+  id               String             @id @default(cuid())
+  name             String
+  percentOff       Int?
+  amountOffCents   Int?
+  duration         String?
+  durationMonths   Int?
+  appliesToPlanId  String?
+  startsAt         DateTime?
+  endsAt           DateTime?
+  active           Boolean            @default(true)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime @updatedAt
+  PricePlan        PricePlan?         @relation(fields: [appliesToPlanId], references: [id])
+  OnboardingInvite OnboardingInvite[]
+}
+
+model OnboardingInvite {
+  id        String     @id @default(cuid())
+  token     String     @unique
+  email     String?
+  planId    String?
+  priceId   String?
+  offerId   String?
+  couponId  String?
+  trialDays Int?       @default(0)
+  expiresAt DateTime
+  usedAt    DateTime?
+  note      String?
+  createdAt DateTime   @default(now())
+  Coupon    Coupon?    @relation(fields: [couponId], references: [id])
+  Offer     Offer?     @relation(fields: [offerId], references: [id])
+  PricePlan PricePlan? @relation(fields: [planId], references: [id])
+  PlanPrice PlanPrice? @relation(fields: [priceId], references: [id])
+
+  @@index([expiresAt, usedAt])
+}
+
+model Opportunity {
+  id             String    @id @default(cuid())
+  orgId          String
+  customerId     String
+  valueType      ValueType @default(RELATIONSHIP)
+  estValue       Decimal?  @db.Decimal(12, 2)
+  stage          String    @default("new")
+  ownerId        String?
+  sourceLeadId   String?
+  classification Json      @default("{}")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime @updatedAt
+  Customer       Customer  @relation(fields: [customerId], references: [id])
+  Org            Org       @relation(fields: [orgId], references: [id])
+}
+
+model Org {
+  id                        String                      @id @default(cuid())
+  name                      String
+  featureFlags              Json                        @default("{}")
+  createdAt                 DateTime                    @default(now())
+  updatedAt                 DateTime @updatedAt
+  brandConfig               Json?                       @default("{}")
+  settingsJson              Json?                       @default("{}")
+  aiAlerts                  Json                        @default("{}")
+  aiCreditBalance           Int                         @default(1000)
+  aiMonthlyBudgetCents      Int                         @default(5000)
+  aiPlan                    AiPlan                      @default(BASE)
+  stripeCustomerId          String?
+  stripeSubscriptionId      String?
+  subscriptionEndDate       DateTime?
+  subscriptionStartDate     DateTime?
+  subscriptionStatus        String?
+  emailApiKey               String?
+  emailConfigured           Boolean                     @default(false)
+  emailFromAddress          String?
+  emailFromName             String?
+  emailProvider             String?
+  smsApiKey                 String?
+  smsConfigured             Boolean                     @default(false)
+  smsFromNumber             String?
+  smsProvider               String?
+  stripeAccountId           String?
+  stripeConfigured          Boolean                     @default(false)
+  stripePublishableKey      String?
+  stripeSecretKey           String?
+  stripeWebhookSecret       String?
+  themeSettings             Json                        @default("{\"variant\": \"premium-dark\", \"accentColor\": \"#3aa8ff\", \"primaryColor\": \"#00ff88\"}")
+  Activity                  Activity[]
+  AddonPurchase             AddonPurchase[]
+  AiModelTest               AiModelTest[]
+  AiMonthlySummary          AiMonthlySummary[]
+  AiUsageEvent              AiUsageEvent[]
+  AuditLog                  AuditLog[]
+  BillingLedger             BillingLedger[]
+  CleaningChecklistTemplate CleaningChecklistTemplate[]
+  CleaningContract          CleaningContract[]
+  CleaningEstimate          CleaningEstimate[]
+  CleaningInspection        CleaningInspection[]
+  CleaningLead              CleaningLead[]
+  CleaningWorkOrder         CleaningWorkOrder[]
+  Customer                  Customer[]
+  EmailTemplate             EmailTemplate[]
+  ImportJob                 ImportJob[]
+  ImportMapping             ImportMapping[]
+  Incident                  Incident[]
+  Invoice                   Invoice[]
+  Job                       Job[]
+  Lead                      Lead[]
+  LeadInvoice               LeadInvoice[]
+  Notification              Notification[]
+  Opportunity               Opportunity[]
+  Payment                   Payment[]
+  PricingPlan               PricingPlan?
+  RbacRole                  RbacRole[]
+  RbacUserRole              RbacUserRole[]
+  RecurringInvoice          RecurringInvoice[]
+  Referral                  Referral[]
+  Rfp                       Rfp[]
+  Subscription              Subscription[]
+  TenantPriceOverride       TenantPriceOverride[]
+  UsageMeter                UsageMeter[]
+  User                      User[]
+}
+
+model Payment {
+  id                    String    @id @default(cuid())
+  orgId                 String
+  invoiceId             String?
+  amount                Decimal   @db.Decimal(12, 2)
+  method                String    @default("stripe")
+  receivedAt            DateTime  @default(now())
+  reference             String?
+  failureReason         String?
+  lastRetryAt           DateTime?
+  retryCount            Int       @default(0)
+  status                String    @default("succeeded")
+  stripeChargeId        String?
+  stripePaymentIntentId String?
+  currency              String    @default("USD")
+  Invoice               Invoice?  @relation(fields: [invoiceId], references: [id])
+  Org                   Org       @relation(fields: [orgId], references: [id])
+
+  @@index([orgId, status])
+  @@index([stripeChargeId])
+  @@index([stripePaymentIntentId])
+}
+
+model PlanPrice {
+  id                       String                     @id @default(cuid())
+  planId                   String
+  currency                 String                     @default("usd")
+  unitAmountCents          Int
+  cadence                  BillingCadence             @default(MONTHLY)
+  trialDays                Int?                       @default(0)
+  active                   Boolean                    @default(true)
+  stripePriceId            String?
+  createdAt                DateTime                   @default(now())
+  updatedAt                DateTime @updatedAt
+  GlobalMonetizationConfig GlobalMonetizationConfig[]
+  OnboardingInvite         OnboardingInvite[]
+  PricePlan                PricePlan                  @relation(fields: [planId], references: [id], onDelete: Cascade)
+  TenantPriceOverride      TenantPriceOverride[]
+
+  @@index([planId, active])
+  @@index([stripePriceId])
+}
+
+model PricePlan {
+  id                       String                     @id @default(cuid())
+  key                      String                     @unique
+  name                     String
+  description              String?
+  active                   Boolean                    @default(true)
+  createdAt                DateTime                   @default(now())
+  updatedAt                DateTime @updatedAt
+  GlobalMonetizationConfig GlobalMonetizationConfig[]
+  Offer                    Offer[]
+  OnboardingInvite         OnboardingInvite[]
+  PlanPrice                PlanPrice[]
+  TenantPriceOverride      TenantPriceOverride[]
+}
+
+model PricingPlan {
+  orgId         String       @id
+  model         PricingModel @default(PER_LEAD_FIXED)
+  currency      String       @default("usd")
+  unitAmount    Int          @default(10000)
+  tiersJson     Json?
+  includedUnits Int          @default(0)
+  Org           Org          @relation(fields: [orgId], references: [id])
+}
+
+model ProviderConfig {
+  id              String   @id @default(cuid())
+  samApiKey       String?
+  stripeSecretKey String?
+  otherConfig     Json?    @default("{}")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model ProviderIntegration {
+  id                String    @id @default(cuid())
+  name              String
+  type              String
+  config            Json      @default("{}")
+  enabled           Boolean   @default(true)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime @updatedAt
+  lastSyncAt        DateTime?
+  errorMessage      String?
+  healthStatus      String?
+  lastHealthCheckAt DateTime?
+  syncStatus        String?
+  url               String?
+
+  @@index([healthStatus])
+  @@index([syncStatus])
+  @@index([type, enabled])
+}
+
+model RbacPermission {
+  id                 String               @id @default(cuid())
+  code               String               @unique
+  description        String?
+  createdAt          DateTime             @default(now())
+  RbacRolePermission RbacRolePermission[]
+}
+
+model RbacRole {
+  id                 String               @id @default(cuid())
+  orgId              String?
+  name               String
+  slug               String
+  isSystem           Boolean              @default(false)
+  createdAt          DateTime             @default(now())
+  Org                Org?                 @relation(fields: [orgId], references: [id])
+  RbacRolePermission RbacRolePermission[]
+  RbacUserRole       RbacUserRole[]
+
+  @@unique([orgId, slug])
+}
+
+model RbacRolePermission {
+  roleId         String
+  permissionId   String
+  RbacPermission RbacPermission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  RbacRole       RbacRole       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+}
+
+model RbacUserRole {
+  id       String   @id @default(cuid())
+  userId   String
+  orgId    String?
+  roleId   String
+  Org      Org?     @relation(fields: [orgId], references: [id])
+  RbacRole RbacRole @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  User     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId, orgId])
+}
+
 model RecoveryRequest {
   id                String    @id @default(cuid())
   userId            String
@@ -215,136 +1126,63 @@ model RecoveryRequest {
   expiresAt         DateTime
   completedAt       DateTime?
 
+  @@index([status, delayUntil])
   @@index([userId])
   @@index([verificationToken])
-  @@index([status, delayUntil])
 }
 
-model Lead {
-  id                   String              @id @default(cuid())
-  orgId                String
-  publicId             String              @unique
-  sourceType           LeadSource
-  identityHash         String
-  company              String?
-  contactName          String?
-  email                String?
-  phoneE164            String?
-  website              String?
-  serviceCode          String?
-  zip                  String?
-  enrichmentJson       Json                @default("{}")
-  aiScore              Int                 @default(0)
-  scoreFactors         Json                @default("{}")
-  createdAt            DateTime            @default(now())
-  updatedAt            DateTime            @updatedAt
-  city                 String?
-  notes                String?
-  sourceDetail         String?
-  state                String?
-  postalCode           String?             @db.VarChar(20)
-  address              String?
-  addressLine1         String?
-  addressLine2         String?
-  country              String?
-  /// convertedAt: timestamp when lead was converted (if status changes to converted)
-  convertedAt          DateTime?
-  /// rfp: raw RFP metadata from SAM.gov
-  rfp                  Json?
-  /// systemGenerated: true if lead came from SAM/automated import
-  systemGenerated      Boolean             @default(false)
-  /// Status of the lead. Stored as an enum rather than string for consistency.
-  status               LeadStatus          @default(NEW)
-  disputeStatus        DisputeStatus?      @default(NONE)
-  disputeReason        String?
-  disputeResolvedAt    DateTime?
-  disputeResolvedBy    String?
-  classificationType   ClassificationType?
-  classificationReason String?
-  classifiedAt         DateTime?
-  classifiedBy         String?
-  qualityScore         Int?
-  qualityNotes         String?
-  qualityScoredAt      DateTime?
-  qualityScoredBy      String?
-  org                  Org                 @relation(fields: [orgId], references: [id])
-  LeadInvoiceLine      LeadInvoiceLine[]
+model RecurringInvoice {
+  id              String    @id @default(cuid())
+  orgId           String
+  customerId      String
+  frequency       String
+  intervalCount   Int       @default(1)
+  startDate       DateTime
+  endDate         DateTime?
+  nextInvoiceDate DateTime
+  active          Boolean   @default(true)
+  items           Json      @default("[]")
+  terms           String?
+  notes           String?
+  currency        String    @default("USD")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime @updatedAt
+  Customer        Customer  @relation(fields: [customerId], references: [id])
+  Org             Org       @relation(fields: [orgId], references: [id])
 
-  @@index([orgId, createdAt])
-  @@index([orgId, convertedAt])
-  @@index([orgId, status])
-  @@index([orgId, sourceType])
-  @@index([orgId, identityHash])
-  @@index([orgId, disputeStatus])
+  @@index([customerId])
+  @@index([orgId, active, nextInvoiceDate])
 }
 
-model Customer {
-  id            String        @id @default(cuid())
+model Referral {
+  id            String    @id @default(cuid())
   orgId         String
-  publicId      String        @unique
-  company       String?
-  primaryName   String?
-  primaryEmail  String?
-  primaryPhone  String?
-  notes         String?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  org           Org           @relation(fields: [orgId], references: [id])
-  invoices      Invoice[]
-  jobs          Job[]
-  opportunities Opportunity[]
+  employeeId    String?
+  referredName  String
+  referredEmail String?
+  referredPhone String?
+  status        String    @default("new")
+  convertedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime @updatedAt
+  Org           Org       @relation(fields: [orgId], references: [id])
 }
 
-model Opportunity {
-  id             String    @id @default(cuid())
-  orgId          String
-  customerId     String
-  valueType      ValueType @default(RELATIONSHIP)
-  estValue       Decimal?  @db.Decimal(12, 2)
-  stage          String    @default("new")
-  ownerId        String?
-  sourceLeadId   String?
-  classification Json      @default("{}")
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  customer       Customer  @relation(fields: [customerId], references: [id])
-  org            Org       @relation(fields: [orgId], references: [id])
-}
+model RefreshToken {
+  id        String    @id @default(cuid())
+  sessionId String    @unique
+  userId    String
+  email     String
+  role      String
+  expiresAt DateTime
+  revoked   Boolean   @default(false)
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime @updatedAt
 
-model Invoice {
-  id         String        @id @default(cuid())
-  orgId      String
-  customerId String?
-  amount     Decimal       @db.Decimal(12, 2)
-  status     String        @default("draft")
-  issuedAt   DateTime      @default(now())
-  items      Json          @default("[]")
-  customer   Customer?     @relation(fields: [customerId], references: [id])
-  org        Org           @relation(fields: [orgId], references: [id])
-  lineItems  InvoiceLine[]
-  payments   Payment[]
-}
-
-model Payment {
-  id                    String    @id @default(cuid())
-  orgId                 String
-  invoiceId             String?
-  amount                Decimal   @db.Decimal(12, 2)
-  method                String    @default("stripe")
-  receivedAt            DateTime  @default(now())
-  reference             String?
-  failureReason         String?
-  lastRetryAt           DateTime?
-  retryCount            Int       @default(0)
-  status                String    @default("succeeded")
-  stripeChargeId        String?
-  stripePaymentIntentId String?
-  invoice               Invoice?  @relation(fields: [invoiceId], references: [id])
-  org                   Org       @relation(fields: [orgId], references: [id])
-
-  @@index([orgId, status])
-  @@index([stripePaymentIntentId])
-  @@index([stripeChargeId])
+  @@index([expiresAt])
+  @@index([sessionId])
+  @@index([userId])
 }
 
 model Rfp {
@@ -358,252 +1196,11 @@ model Rfp {
   aiBidFit    Int?
   aiPriceHint Json      @default("{}")
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  jobs        Job[]
-  org         Org       @relation(fields: [orgId], references: [id])
-}
-
-model Job {
-  id         String    @id @default(cuid())
-  orgId      String
-  customerId String?
-  rfpId      String?
-  status     String    @default("planned")
-  schedule   Json      @default("{}")
-  assignedTo String?
-  checklist  Json      @default("[]")
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  customer   Customer? @relation(fields: [customerId], references: [id])
-  org        Org       @relation(fields: [orgId], references: [id])
-  rfp        Rfp?      @relation(fields: [rfpId], references: [id])
-}
-
-model Referral {
-  id            String    @id @default(cuid())
-  orgId         String
-  employeeId    String?
-  referredName  String
-  referredEmail String?
-  referredPhone String?
-  status        String    @default("new")
-  convertedAt   DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  org           Org       @relation(fields: [orgId], references: [id])
-}
-
-model BillingLedger {
-  id        String     @id @default(cuid())
-  orgId     String
-  type      LedgerType
-  amount    Decimal    @db.Decimal(12, 2)
-  meta      Json       @default("{}")
-  createdAt DateTime   @default(now())
-  org       Org        @relation(fields: [orgId], references: [id])
-
-  @@index([orgId, type])
-}
-
-/// LeadInvoice represents a monthly invoice for converted leads. This is separate from the
-/// existing Invoice model used for customers/jobs. It aggregates lead conversions and
-/// includes metadata to support billing and optional Stripe integration.
-model LeadInvoice {
-  id              String            @id @default(cuid())
-  orgId           String?
-  number          String            @unique
-  periodFrom      DateTime
-  periodTo        DateTime
-  status          String
-  subtotalCents   Int
-  taxCents        Int               @default(0)
-  totalCents      Int
-  currency        String            @default("usd")
-  stripeInvoiceId String?
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  /// Number of leads billed on this invoice (to support flat-per-lead billing)
-  leadCount       Int               @default(0)
-  org             Org?              @relation("OrgLeadInvoices", fields: [orgId], references: [id])
-  lines           LeadInvoiceLine[]
-}
-
-/// LeadInvoiceLine represents an individual line item on a LeadInvoice. Each line is typically
-/// associated with a converted lead, but generic fee/credit lines are also supported.
-model LeadInvoiceLine {
-  id             String      @id @default(cuid())
-  invoiceId      String
-  leadId         String?
-  description    String
-  quantity       Int         @default(1)
-  unitPriceCents Int
-  amountCents    Int
-  source         String?
-  createdAt      DateTime    @default(now())
-  invoice        LeadInvoice @relation(fields: [invoiceId], references: [id])
-  lead           Lead?       @relation(fields: [leadId], references: [id])
-
-  @@index([invoiceId])
-  @@index([leadId])
-}
-
-model AuditLog {
-  id          String   @id @default(cuid())
-  orgId       String
-  /// Identifier of the record affected
-  entityId    String?
-  createdAt   DateTime @default(now())
-  actorUserId String?
-  /// The entity type affected (e.g. 'lead', 'invoice', 'pricing', etc.)
-  entity      String
-  /// Name of the field that was changed (nullable for record-level actions)
-  field       String?
-  /// New value (JSON) after the change, if applicable
-  newValue    Json?
-  /// Previous value (JSON) before the change, if applicable
-  oldValue    Json?
-  /// Free-form reason or comment describing why the change was made
-  reason      String?
-  org         Org      @relation(fields: [orgId], references: [id])
-}
-
-model RbacPermission {
-  id          String               @id @default(cuid())
-  code        String               @unique
-  description String?
-  createdAt   DateTime             @default(now())
-  rolePerms   RbacRolePermission[]
-}
-
-model RbacRole {
-  id        String               @id @default(cuid())
-  orgId     String?
-  name      String
-  slug      String
-  isSystem  Boolean              @default(false)
-  createdAt DateTime             @default(now())
-  org       Org?                 @relation("OrgRbacRoles", fields: [orgId], references: [id])
-  rolePerms RbacRolePermission[]
-  userRoles RbacUserRole[]
-
-  @@unique([orgId, slug])
-}
-
-model RbacRolePermission {
-  roleId       String
-  permissionId String
-  permission   RbacPermission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
-  role         RbacRole       @relation(fields: [roleId], references: [id], onDelete: Cascade)
-
-  @@id([roleId, permissionId])
-}
-
-model RbacUserRole {
-  id     String   @id @default(cuid())
-  userId String
-  orgId  String?
-  roleId String
-  org    Org?     @relation("OrgRbacUserRoles", fields: [orgId], references: [id])
-  role   RbacRole @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  user   User     @relation("UserRbacUserRoles", fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, roleId, orgId])
-}
-
-/// ProviderConfig holds provider-level secrets and configuration separate from any organization.
-/// These values are used for system integrations that the provider controls, such as SAM.gov or
-/// Stripe secrets used when billing clients.  Only one row is typically used.  Use a simple
-/// admin interface to update these values.
-model ProviderConfig {
-  id                   String   @id @default(cuid())
-  samApiKey            String?
-  stripeSecretKey      String?
-  otherConfig          Json?    @default("{}")
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
-  contactEmail         String?
-  featureFlags         Json?    @default("{\"analytics-v2\": true, \"multi-region\": false, \"action-center\": true, \"api-key-management\": true, \"advanced-monitoring\": false}")
-  integrationSettings  Json?    @default("{\"apiRateLimit\": 1000, \"samGovConfigured\": false, \"stripeConfigured\": false}")
-  notificationSettings Json?    @default("{\"emailAlerts\": true, \"weeklyReports\": true, \"monthlyReports\": true, \"slackNotifications\": false}")
-  providerName         String?
-  securitySettings     Json?    @default("{\"ipWhitelist\": [], \"twoFactorEnabled\": false, \"sessionTimeoutMinutes\": 30}")
-  supportUrl           String?
-  themeSettings        Json     @default("{\"variant\": \"premium-dark\", \"accentColor\": \"#3aa8ff\", \"primaryColor\": \"#00ff88\"}")
-}
-
-/// PricingPlan defines how an organization is billed for leads. Each org can have only
-/// one pricing plan record. A plan specifies the billing model (e.g. per-lead fixed fee)
-/// and can include tiered structures or prepaid units via includedUnits and tiersJson.
-model PricingPlan {
-  orgId         String       @id
-  /// Billing model used for this organization (per-lead, tiered, subscription, or hybrid)
-  model         PricingModel @default(PER_LEAD_FIXED)
-  /// ISO currency code (e.g. "usd")
-  currency      String       @default("usd")
-  /// Fixed unit price in cents for per-lead billing
-  unitAmount    Int          @default(10000)
-  /// JSON-encoded pricing tiers (used when model is TIERED or HYBRID)
-  tiersJson     Json?
-  /// Number of prepaid leads included before billing starts
-  includedUnits Int          @default(0)
-  org           Org          @relation("OrgPricingPlan", fields: [orgId], references: [id])
-}
-
-model AiUsageEvent {
-  id          String   @id @default(cuid())
-  orgId       String
-  userId      String?
-  feature     String
-  model       String
-  tokensIn    Int
-  tokensOut   Int
-  costUsd     Decimal  @db.Decimal(8, 6)
-  creditsUsed Int
-  requestId   String?
-  createdAt   DateTime @default(now())
-  org         Org      @relation("OrgAiUsageEvents", fields: [orgId], references: [id])
-
-  @@index([orgId, createdAt])
-  @@index([orgId, feature])
-}
-
-model AiMonthlySummary {
-  id          String   @id @default(cuid())
-  orgId       String
-  monthKey    String
-  tokensIn    Int      @default(0)
-  tokensOut   Int      @default(0)
-  costUsd     Decimal  @default(0) @db.Decimal(8, 2)
-  creditsUsed Int      @default(0)
-  callCount   Int      @default(0)
-  createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  org         Org      @relation("OrgAiMonthlySummaries", fields: [orgId], references: [id])
-
-  @@unique([orgId, monthKey])
-  @@index([monthKey])
+  Job         Job[]
+  Org         Org       @relation(fields: [orgId], references: [id])
 }
 
-/// Activity tracks cross-entity timeline events for provider operations
-/// Used for unified activity feeds across leads, invoices, incidents, etc.
-model Activity {
-  id         String   @id @default(cuid())
-  orgId      String
-  actorType  String
-  actorId    String?
-  entityType String
-  entityId   String
-  action     String
-  meta       Json     @default("{}")
-  createdAt  DateTime @default(now())
-  org        Org      @relation("OrgActivities", fields: [orgId], references: [id])
-
-  @@index([orgId, entityType, entityId, createdAt])
-  @@index([orgId, createdAt])
-}
-
-/// Subscription tracks plan lifecycle for provider billing operations
-/// Supports MRR/ARR calculations, churn analysis, and plan changes
 model Subscription {
   id         String    @id @default(cuid())
   orgId      String
@@ -615,247 +1212,11 @@ model Subscription {
   priceCents Int
   meta       Json      @default("{}")
   createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  org        Org       @relation("OrgSubscriptions", fields: [orgId], references: [id])
+  updatedAt  DateTime @updatedAt
+  Org        Org       @relation(fields: [orgId], references: [id])
 
   @@index([orgId, status])
   @@index([status, renewsAt])
-}
-
-/// UsageMeter records raw usage units before rating/billing
-/// Used for usage-based billing and cost tracking
-model UsageMeter {
-  id          String   @id @default(cuid())
-  orgId       String
-  meter       String
-  quantity    Int
-  windowStart DateTime
-  windowEnd   DateTime
-  createdAt   DateTime @default(now())
-  org         Org      @relation("OrgUsageMeters", fields: [orgId], references: [id])
-
-  @@index([orgId, meter, windowStart])
-  @@index([windowStart, windowEnd])
-}
-
-/// AddonPurchase tracks one-off purchases and refunds
-/// Used for add-on revenue tracking and reconciliation
-model AddonPurchase {
-  id          String    @id @default(cuid())
-  orgId       String
-  sku         String
-  amount      Decimal   @db.Decimal(12, 2)
-  status      String
-  purchasedAt DateTime  @default(now())
-  refundedAt  DateTime?
-  meta        Json      @default("{}")
-  org         Org       @relation("OrgAddonPurchases", fields: [orgId], references: [id])
-
-  @@index([orgId, sku, status])
-  @@index([purchasedAt])
-}
-
-/// FederationKey stores HMAC keys for provider-side federation
-/// Used for secure machine-to-machine authentication
-model FederationKey {
-  id         String    @id @default(cuid())
-  keyId      String    @unique
-  secretHash String
-  createdAt  DateTime  @default(now())
-  disabledAt DateTime?
-  orgId      String
-
-  @@index([orgId, keyId])
-}
-
-/// OIDCConfig stores OIDC/OAuth provider configuration for federation
-model OIDCConfig {
-  id           String    @id @default(cuid())
-  enabled      Boolean   @default(false)
-  issuerUrl    String
-  clientId     String
-  clientSecret String
-  scopes       String    @default("openid profile email")
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  lastTestedAt DateTime?
-}
-
-/// ProviderIntegration tracks external provider connections
-model ProviderIntegration {
-  id         String    @id @default(cuid())
-  name       String
-  type       String
-  config     Json      @default("{}")
-  enabled    Boolean   @default(true)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  lastSyncAt DateTime?
-
-  @@index([type, enabled])
-}
-
-/// AuditEvent stores provider-side audit trail
-model AuditEvent {
-  id         String   @id @default(cuid())
-  actorType  String
-  actorId    String?
-  action     String
-  entityType String
-  entityId   String?
-  metadata   Json     @default("{}")
-  ipAddress  String?
-  userAgent  String?
-  createdAt  DateTime @default(now())
-  orgId      String?
-  redactJson Json?
-  result     String   @default("success")
-
-  @@index([actorId, createdAt])
-  @@index([entityType, entityId, createdAt])
-  @@index([createdAt])
-  @@index([orgId, entityType, createdAt])
-}
-
-/// AnalyticsSnapshot stores daily aggregated metrics for caching
-model AnalyticsSnapshot {
-  id             String   @id @default(cuid())
-  snapshotDate   DateTime @unique @db.Date
-  mrrCents       Int      @default(0)
-  arrCents       Int      @default(0)
-  activeClients  Int      @default(0)
-  newClients     Int      @default(0)
-  churnedClients Int      @default(0)
-  totalRevenue   Int      @default(0)
-  metricsJson    Json     @default("{}")
-  createdAt      DateTime @default(now())
-
-  @@index([snapshotDate])
-}
-
-/// Incident lifecycle tracking with SLA fields
-model Incident {
-  id                  String           @id @default(cuid())
-  orgId               String
-  severity            IncidentSeverity
-  status              IncidentStatus   @default(OPEN)
-  title               String
-  description         String
-  assigneeUserId      String?
-  slaResponseDeadline DateTime?
-  slaResolveDeadline  DateTime?
-  acknowledgedAt      DateTime?
-  resolvedAt          DateTime?
-  closedAt            DateTime?
-  createdAt           DateTime         @default(now())
-  updatedAt           DateTime         @updatedAt
-  org                 Org              @relation("OrgIncidents", fields: [orgId], references: [id])
-
-  @@index([orgId, status, createdAt])
-  @@index([orgId, severity])
-}
-
-/// InvoiceLine ties granular charges to Invoices
-model InvoiceLine {
-  id             String          @id @default(cuid())
-  invoiceId      String
-  description    String
-  lineType       InvoiceLineType
-  quantity       Int             @default(1)
-  unitPriceCents Int
-  amountCents    Int
-  sourceType     String?
-  sourceId       String?
-  createdAt      DateTime        @default(now())
-  invoice        Invoice         @relation(fields: [invoiceId], references: [id])
-
-  @@index([invoiceId])
-  @@index([sourceType, sourceId])
-}
-
-/// Provider in-app notifications
-model Notification {
-  id        String    @id @default(cuid())
-  orgId     String?
-  audience  String
-  type      String
-  title     String
-  body      String
-  severity  String
-  readAt    DateTime?
-  createdAt DateTime  @default(now())
-  org       Org?      @relation("OrgNotifications", fields: [orgId], references: [id])
-
-  @@index([orgId, createdAt])
-}
-
-model PricePlan {
-  id           String                     @id @default(cuid())
-  key          String                     @unique
-  name         String
-  description  String?
-  active       Boolean                    @default(true)
-  createdAt    DateTime                   @default(now())
-  updatedAt    DateTime                   @updatedAt
-  asDefaultFor GlobalMonetizationConfig[]
-  offers       Offer[]
-  invites      OnboardingInvite[]
-  prices       PlanPrice[]
-  overrides    TenantPriceOverride[]
-}
-
-model PlanPrice {
-  id              String                     @id @default(cuid())
-  planId          String
-  currency        String                     @default("usd")
-  unitAmountCents Int
-  cadence         BillingCadence             @default(MONTHLY)
-  trialDays       Int?                       @default(0)
-  active          Boolean                    @default(true)
-  stripePriceId   String?
-  createdAt       DateTime                   @default(now())
-  updatedAt       DateTime                   @updatedAt
-  asDefaultFor    GlobalMonetizationConfig[]
-  invites         OnboardingInvite[]
-  plan            PricePlan                  @relation(fields: [planId], references: [id], onDelete: Cascade)
-  overrides       TenantPriceOverride[]
-
-  @@index([planId, active])
-  @@index([stripePriceId])
-}
-
-model Offer {
-  id              String             @id @default(cuid())
-  name            String
-  percentOff      Int?
-  amountOffCents  Int?
-  duration        String?
-  durationMonths  Int?
-  appliesToPlanId String?
-  startsAt        DateTime?
-  endsAt          DateTime?
-  active          Boolean            @default(true)
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
-  appliesToPlan   PricePlan?         @relation(fields: [appliesToPlanId], references: [id])
-  invites         OnboardingInvite[]
-}
-
-model Coupon {
-  id             String             @id @default(cuid())
-  code           String             @unique
-  name           String?
-  percentOff     Int?
-  amountOffCents Int?
-  duration       String?
-  durationMonths Int?
-  startsAt       DateTime?
-  endsAt         DateTime?
-  maxRedemptions Int?
-  active         Boolean            @default(true)
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
-  invites        OnboardingInvite[]
 }
 
 model TenantPriceOverride {
@@ -871,488 +1232,208 @@ model TenantPriceOverride {
   endsAt         DateTime?
   reason         String?
   createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  org            Org          @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  plan           PricePlan?   @relation(fields: [planId], references: [id])
-  price          PlanPrice?   @relation(fields: [priceId], references: [id])
+  updatedAt      DateTime @updatedAt
+  Org            Org          @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  PricePlan      PricePlan?   @relation(fields: [planId], references: [id])
+  PlanPrice      PlanPrice?   @relation(fields: [priceId], references: [id])
 
   @@index([orgId])
   @@index([planId])
   @@index([priceId])
 }
 
-model GlobalMonetizationConfig {
-  id               String     @id @default(cuid())
-  defaultPlanId    String?
-  defaultPriceId   String?
-  defaultTrialDays Int?       @default(0)
-  publicOnboarding Boolean    @default(true)
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
-  defaultPlan      PricePlan? @relation(fields: [defaultPlanId], references: [id])
-  defaultPrice     PlanPrice? @relation(fields: [defaultPriceId], references: [id])
-}
-
-model OnboardingInvite {
-  id        String     @id @default(cuid())
-  token     String     @unique
-  email     String?
-  planId    String?
-  priceId   String?
-  offerId   String?
-  couponId  String?
-  trialDays Int?       @default(0)
-  expiresAt DateTime
-  usedAt    DateTime?
-  note      String?
-  createdAt DateTime   @default(now())
-  coupon    Coupon?    @relation(fields: [couponId], references: [id])
-  offer     Offer?     @relation(fields: [offerId], references: [id])
-  plan      PricePlan? @relation(fields: [planId], references: [id])
-  price     PlanPrice? @relation(fields: [priceId], references: [id])
-
-  @@index([expiresAt, usedAt])
-}
-
-model InfrastructureMetric {
-  id        String                @id @default(cuid())
-  service   InfrastructureService
-  metric    MetricType
-  value     Float
-  timestamp DateTime              @default(now())
-  metadata  Json?
-
-  @@index([service, metric, timestamp])
-  @@index([timestamp])
-}
-
-model InfrastructureLimit {
-  id              String                @id @default(cuid())
-  service         InfrastructureService
-  metric          MetricType
-  currentPlan     String
-  limitValue      Float
-  warningPercent  Float                 @default(75)
-  criticalPercent Float                 @default(90)
-  updatedAt       DateTime              @updatedAt
-
-  @@unique([service, metric, currentPlan])
-  @@index([service])
-}
-
 model UpgradeRecommendation {
-  id              String                 @id @default(cuid())
-  service         InfrastructureService
-  currentPlan     String
-  recommendedPlan String
-  priority        RecommendationPriority
-  status          RecommendationStatus   @default(PENDING)
-  currentUsage    Float
-  limitValue      Float
-  usagePercent    Float
-  daysToLimit     Int?
-  currentCost     Decimal?               @db.Decimal(8, 2)
-  projectedCost   Decimal?               @db.Decimal(8, 2)
-  upgradeCost     Decimal?               @db.Decimal(8, 2)
-  revenueImpact   Decimal?               @db.Decimal(10, 2)
-  profitImpact    Decimal?               @db.Decimal(10, 2)
-  roi             Float?
-  reason          String
-  benefits        Json?
-  risks           Json?
-  createdAt       DateTime               @default(now())
-  updatedAt       DateTime               @updatedAt
-  reviewedAt      DateTime?
-  reviewedBy      String?
-  implementedAt   DateTime?
+  id               String                 @id @default(cuid())
+  service          InfrastructureService
+  currentPlan      String
+  recommendedPlan  String
+  priority         RecommendationPriority
+  status           RecommendationStatus   @default(PENDING)
+  reason           String
+  currentUsage     Float?
+  usagePercent     Float?
+  currentCost      Float?
+  upgradeCost      Float?
+  revenueImpact    Float?
+  roi              Float?
+  estimatedCostUsd Float?
+  estimatedSavings Float?
+  roiMonths        Int?
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime @updatedAt
+  acknowledgedAt   DateTime?
+  implementedAt    DateTime?
+  benefits         String?
+  daysToLimit      Int?
+  limitValue       Float?
+  profitImpact     Float?
+  projectedCost    Float?
+  risks            String?
 
-  @@index([priority, createdAt])
-  @@index([service, status, priority])
-  @@index([status, createdAt])
+  @@index([priority, status])
+  @@index([service, status])
 }
 
-model AiAssistantConversation {
-  id        String   @id
-  sessionId String
-  role      String
-  content   String
-  metadata  Json?
-  createdAt DateTime @default(now())
+model UsageMeter {
+  id          String   @id @default(cuid())
+  orgId       String
+  meter       String
+  quantity    Int
+  windowStart DateTime
+  windowEnd   DateTime
+  createdAt   DateTime @default(now())
+  Org         Org      @relation(fields: [orgId], references: [id])
 
-  @@index([createdAt])
-  @@index([sessionId, createdAt])
+  @@index([orgId, meter, windowStart])
+  @@index([windowStart, windowEnd])
 }
 
-model ApiUsageMetric {
-  id         String   @id
-  endpoint   String
-  method     String
-  statusCode Int
-  latency    Int
-  apiKeyId   String?
-  userAgent  String?
-  ipAddress  String?
-  timestamp  DateTime @default(now())
+model User {
+  id                    String                  @id @default(cuid())
+  orgId                 String
+  email                 String                  @unique
+  name                  String?
+  role                  Role                    @default(STAFF)
+  status                String                  @default("active")
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime @updatedAt
+  mustChangePassword    Boolean                 @default(false)
+  passwordHash          String?                 @db.VarChar(255)
+  backupCodesHash       String?
+  failedLoginAttempts   Int                     @default(0)
+  isActive              Boolean                 @default(true)
+  isLocked              Boolean                 @default(false)
+  lastFailedLogin       DateTime?
+  lastPasswordChange    DateTime?
+  lastSuccessfulLogin   DateTime?
+  lockedUntil           DateTime?
+  totpEnabled           Boolean                 @default(false)
+  totpSecret            String?
+  ImportJob             ImportJob[]
+  RbacUserRole          RbacUserRole[]
+  Org                   Org                     @relation(fields: [orgId], references: [id])
+  UserBreakglassAccount UserBreakglassAccount?
+  UserDeviceFingerprint UserDeviceFingerprint[]
+  UserLoginHistory      UserLoginHistory[]
+  UserRecoveryCode      UserRecoveryCode[]
+  UserSecurityQuestion  UserSecurityQuestion[]
 
-  @@index([apiKeyId, timestamp])
-  @@index([endpoint, timestamp])
-  @@index([statusCode, timestamp])
-  @@index([timestamp])
+  @@index([isActive, isLocked])
+  @@index([orgId, role])
+  @@index([orgId, status, isActive])
 }
 
-model ComplianceAudit {
-  id                  String              @id
-  frameworkId         String
-  auditDate           DateTime
-  auditor             String
-  result              String
-  reportUrl           String?
-  notes               String?
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime
-  ComplianceFramework ComplianceFramework @relation(fields: [frameworkId], references: [id], onDelete: Cascade)
-  ComplianceFinding   ComplianceFinding[]
+model UserBreakglassAccount {
+  id                    String    @id @default(cuid())
+  userId                String    @unique
+  orgId                 String
+  encryptedEmail        String
+  encryptedPasswordHash String
+  encryptionIV          String
+  createdAt             DateTime  @default(now())
+  lastActivatedAt       DateTime?
+  activationCount       Int       @default(0)
+  isEnabled             Boolean   @default(true)
+  canAutoActivate       Boolean   @default(true)
+  minDelayMinutes       Int       @default(0)
+  User                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([frameworkId, auditDate])
+  @@index([orgId])
+  @@index([userId])
 }
 
-model ComplianceFinding {
-  id                  String              @id
-  frameworkId         String
-  auditId             String?
-  severity            String
-  title               String
-  description         String
-  remediation         String?
-  status              String
-  dueDate             DateTime?
-  resolvedDate        DateTime?
-  assignedTo          String?
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime
-  ComplianceAudit     ComplianceAudit?    @relation(fields: [auditId], references: [id])
-  ComplianceFramework ComplianceFramework @relation(fields: [frameworkId], references: [id], onDelete: Cascade)
+model UserDeviceFingerprint {
+  id          String   @id @default(cuid())
+  userId      String
+  fingerprint String
+  ipAddress   String
+  userAgent   String
+  isTrusted   Boolean  @default(false)
+  trustScore  Int      @default(0)
+  firstSeenAt DateTime @default(now())
+  lastSeenAt  DateTime @default(now())
+  loginCount  Int      @default(1)
+  User        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([frameworkId, status])
-  @@index([severity, status])
+  @@unique([userId, fingerprint])
+  @@index([fingerprint])
+  @@index([userId])
 }
 
-model ComplianceFramework {
-  id                String              @id
-  framework         String              @unique
-  status            String
-  lastAuditDate     DateTime?
-  nextAuditDate     DateTime?
-  certificationUrl  String?
-  notes             String?
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime
-  ComplianceAudit   ComplianceAudit[]
-  ComplianceFinding ComplianceFinding[]
+model UserLoginHistory {
+  id                String   @id @default(cuid())
+  userId            String
+  success           Boolean
+  method            String
+  ipAddress         String
+  userAgent         String
+  deviceFingerprint String?
+  riskScore         Int      @default(0)
+  riskFactors       String?
+  country           String?
+  city              String?
+  timestamp         DateTime @default(now())
+  User              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([status])
+  @@index([riskScore])
+  @@index([success])
+  @@index([userId, timestamp])
 }
 
-model CustomFieldDefinition {
-  id               String             @id
-  orgId            String
-  entityType       String
-  fieldName        String
-  displayName      String
-  fieldType        String
-  options          Json?
-  required         Boolean            @default(false)
-  defaultValue     String?
-  validation       Json?
-  order            Int                @default(0)
-  enabled          Boolean            @default(true)
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime
-  CustomFieldValue CustomFieldValue[]
+model UserRecoveryCode {
+  id        String    @id @default(cuid())
+  userId    String
+  codeHash  String
+  usedAt    DateTime?
+  usedFrom  String?
+  createdAt DateTime  @default(now())
+  expiresAt DateTime
+  User      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([orgId, entityType, fieldName])
-  @@index([orgId, entityType, enabled])
+  @@index([usedAt])
+  @@index([userId])
 }
 
-model CustomFieldValue {
-  id                    String                @id
-  fieldId               String
-  entityType            String
-  entityId              String
-  value                 String
-  createdAt             DateTime              @default(now())
-  updatedAt             DateTime
-  CustomFieldDefinition CustomFieldDefinition @relation(fields: [fieldId], references: [id], onDelete: Cascade)
-
-  @@unique([fieldId, entityId])
-  @@index([entityType, entityId])
-}
-
-model DataRetentionPolicy {
-  id             String    @id
-  dataType       String    @unique
-  retentionDays  Int
-  autoDelete     Boolean   @default(false)
-  lastReviewDate DateTime?
-  nextReviewDate DateTime?
-  notes          String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime
-
-  @@index([autoDelete])
-}
-
-model DeveloperAPIKey {
-  id         String    @id
-  name       String
-  keyId      String    @unique
-  secretHash String
+model UserSecurityQuestion {
+  id         String   @id @default(cuid())
   userId     String
-  orgId      String?
-  scopes     String[]  @default([])
-  createdAt  DateTime  @default(now())
-  lastUsedAt DateTime?
-  expiresAt  DateTime?
-  revokedAt  DateTime?
-}
-
-model DeveloperApiKey {
-  id          String    @id
-  name        String
-  description String?
-  keyHash     String    @unique
-  keyPrefix   String
-  scopes      String[]
-  expiresAt   DateTime?
-  lastUsedAt  DateTime?
-  usageCount  Int       @default(0)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime
-
-  @@index([createdAt])
-  @@index([expiresAt])
-  @@index([keyPrefix])
-}
-
-model EncryptionConfig {
-  id               String    @id
-  component        String    @unique
-  encrypted        Boolean   @default(true)
-  algorithm        String
-  keyRotationDate  DateTime?
-  nextRotationDate DateTime?
-  notes            String?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime
-
-  @@index([encrypted])
-}
-
-model EscalationTicket {
-  id           String   @id
-  escalationId String   @unique
-  tenantId     String
-  orgId        String
-  type         String
-  severity     String
-  description  String
-  createdAt    DateTime @default(now())
-  state        String   @default("received")
-}
-
-model FederatedClient {
-  id              String    @id
-  orgId           String    @unique
-  name            String
-  contactEmail    String
-  planType        String
-  apiKeyId        String    @unique
-  webhookEndpoint String?
-  lastSeen        DateTime?
-  monthlyRevenue  Int       @default(0)
-  convertedLeads  Int       @default(0)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime
-}
-
-model FederationInvoice {
-  id             String   @id
-  clientOrgId    String
-  leadId         String
-  conversionType String
-  amountCents    Int
-  metadataJson   Json
-  createdAt      DateTime @default(now())
-  status         String   @default("received")
-}
-
-model IdempotencyKey {
-  key       String   @id
-  method    String
-  path      String
-  bodyHash  String
-  response  Json
-  orgId     String
-  createdAt DateTime @default(now())
-  ttl       Int
-}
-
-model SecretsRotationHistory {
-  id        String   @id
-  orgId     String
-  policyId  String?
-  keyType   String
-  oldKeyId  String
-  newKeyId  String
-  rotatedAt DateTime @default(now())
-  rotatedBy String
-  reason    String
-  metadata  Json?
-
-  @@index([keyType, rotatedAt])
-  @@index([orgId, rotatedAt])
-}
-
-model SecretsRotationPolicy {
-  id                   String    @id
-  orgId                String
-  name                 String
-  keyType              String
-  rotationIntervalDays Int
-  gracePeriodDays      Int
-  autoRotate           Boolean   @default(false)
-  notifyBeforeDays     Int
-  enabled              Boolean   @default(true)
-  lastRotation         DateTime?
-  nextRotation         DateTime?
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime
-
-  @@index([nextRotation, enabled])
-  @@index([orgId, keyType])
-}
-
-model VulnerabilityScan {
-  id            String   @id
-  scanDate      DateTime
-  scanner       String
-  totalVulns    Int      @default(0)
-  criticalVulns Int      @default(0)
-  highVulns     Int      @default(0)
-  mediumVulns   Int      @default(0)
-  lowVulns      Int      @default(0)
-  resolvedVulns Int      @default(0)
-  reportUrl     String?
-  notes         String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime
-
-  @@index([scanDate])
-}
-
-model WebhookDelivery {
-  id              String          @id
-  endpointId      String
-  event           String
-  payload         Json
-  status          String
-  statusCode      Int?
-  responseBody    String?
-  errorMessage    String?
-  attempts        Int             @default(0)
-  maxAttempts     Int             @default(3)
-  nextRetryAt     DateTime?
-  deliveredAt     DateTime?
-  createdAt       DateTime        @default(now())
-  WebhookEndpoint WebhookEndpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
-
-  @@index([endpointId, createdAt])
-  @@index([event, createdAt])
-  @@index([status, nextRetryAt])
-}
-
-model WebhookEndpoint {
-  id              String            @id
-  name            String
-  url             String
-  events          String[]
-  secret          String
-  active          Boolean           @default(true)
-  description     String?
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime
-  WebhookDelivery WebhookDelivery[]
-
-  @@index([active])
-  @@index([createdAt])
-}
-
-model WebhookRegistration {
-  id         String   @id
-  orgId      String   @unique
-  url        String
-  secretHash String
-  enabled    Boolean  @default(true)
+  question   String
+  answerHash String
   createdAt  DateTime @default(now())
-}
+  User       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-enum Role {
-  OWNER
-  MANAGER
-  STAFF
-  PROVIDER
-  ACCOUNTANT
-}
-
-enum LeadSource {
-  COLD
-  HOT
-  RFP
-  MANUAL_EMPLOYEE_REFERRAL
-  MANUAL_EXISTING_CUSTOMER
-  MANUAL_NEW_CUSTOMER
-  MANUAL_OTHER
-  /// System-generated leads imported from external sources like SAM.gov
-  SYSTEM
-  /// Employee referrals (for internal referral program)
-  EMPLOYEE_REFERRAL
-  /// Manually added leads not fitting other categories
-  MANUAL
-  /// Leads imported from Local Service Ads or other lead sources
-  LSA
-}
-
-enum ValueType {
-  RELATIONSHIP
-  JOB
-}
-
-enum LedgerType {
-  CONVERSION_FEE
-  PACK_PURCHASE
-}
-
-/// PricingModel enumerates the possible billing models for lead invoices.  The default is
-/// PER_LEAD_FIXED which charges a flat fee per converted lead.  Additional models support
-/// tiered pricing, subscription (monthly base fee), or hybrid structures.
-enum PricingModel {
-  PER_LEAD_FIXED
-  TIERED
-  SUBSCRIPTION
-  HYBRID
-}
-
-/// LeadStatus defines the possible states of a lead in the pipeline.  The default is
-/// NEW and transitions to CONVERTED when the lead is converted into a paying job.
-enum LeadStatus {
-  NEW
-  CONVERTED
+  @@index([userId])
 }
 
 enum AiPlan {
   BASE
   PRO
   ELITE
+}
+
+enum BillingCadence {
+  MONTHLY
+  YEARLY
+}
+
+enum ImportEntityType {
+  CUSTOMERS
+  JOBS
+  INVOICES
+  ESTIMATES
+  CONTACTS
+  ADDRESSES
+  NOTES
+}
+
+enum ImportStatus {
+  PENDING
+  ANALYZING
+  MAPPING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
 }
 
 enum IncidentSeverity {
@@ -1369,6 +1450,19 @@ enum IncidentStatus {
   CLOSED
 }
 
+enum InfrastructureService {
+  VERCEL_KV
+  VERCEL_POSTGRES
+  VERCEL_PLATFORM
+  VERCEL_BUILD
+  VERCEL_FUNCTIONS
+  VERCEL_BANDWIDTH
+  VERCEL_EDGE_REQUESTS
+  VERCEL_ISR_READS
+  AI_OPENAI
+  AI_CREDITS
+}
+
 enum InvoiceLineType {
   subscription
   usage
@@ -1376,9 +1470,42 @@ enum InvoiceLineType {
   one_time
 }
 
-enum BillingCadence {
-  MONTHLY
-  YEARLY
+enum LeadSource {
+  COLD
+  HOT
+  RFP
+  MANUAL_EMPLOYEE_REFERRAL
+  MANUAL_EXISTING_CUSTOMER
+  MANUAL_NEW_CUSTOMER
+  MANUAL_OTHER
+  SYSTEM
+  EMPLOYEE_REFERRAL
+  MANUAL
+  LSA
+}
+
+enum LeadStatus {
+  NEW
+  CONVERTED
+}
+
+enum LedgerType {
+  CONVERSION_FEE
+  PACK_PURCHASE
+}
+
+enum MetricType {
+  STORAGE_MB
+  STORAGE_GB
+  COMMANDS_PER_DAY
+  CONNECTIONS
+  LATENCY_MS
+  BANDWIDTH_GB
+  INVOCATIONS
+  BUILD_MINUTES
+  REQUEST_COUNT
+  COST_USD
+  USAGE_PERCENT
 }
 
 enum OverrideType {
@@ -1387,145 +1514,37 @@ enum OverrideType {
   CUSTOM_AMOUNT
 }
 
-enum InfrastructureService {
-  VERCEL_KV
-  VERCEL_POSTGRES
-  VERCEL_BANDWIDTH
-  VERCEL_FUNCTIONS
-  VERCEL_BUILD
-  VERCEL_EDGE_REQUESTS
-  VERCEL_ISR_READS
-  AI_OPENAI
-  AI_ANTHROPIC
-  AI_CREDITS
-}
-
-enum MetricType {
-  STORAGE_MB
-  STORAGE_GB
-  COMMANDS_PER_DAY
-  CONNECTIONS
-  BANDWIDTH_MB
-  BANDWIDTH_GB
-  INVOCATIONS
-  BUILD_MINUTES
-  REQUEST_COUNT
-  LATENCY_MS
-  COST_USD
-  USAGE_PERCENT
+enum PricingModel {
+  PER_LEAD_FIXED
+  TIERED
+  SUBSCRIPTION
+  HYBRID
 }
 
 enum RecommendationPriority {
-  LOW
-  MEDIUM
-  HIGH
   CRITICAL
+  HIGH
+  MEDIUM
+  LOW
 }
 
 enum RecommendationStatus {
   PENDING
   REVIEWED
-  APPROVED
+  ACKNOWLEDGED
   IMPLEMENTED
   DISMISSED
-  EXPIRED
 }
 
-enum ClassificationType {
-  EMPLOYEE_REFERRAL
-  DUPLICATE
-  INVALID_CONTACT
-  OUT_OF_SERVICE_AREA
-  SPAM
+enum Role {
+  OWNER
+  MANAGER
+  STAFF
+  PROVIDER
+  ACCOUNTANT
 }
 
-enum DisputeStatus {
-  NONE
-  PENDING
-  APPROVED
-  REJECTED
-}
-
-
-// ============================================================================
-// MARKETING PRICING MANAGEMENT
-// ============================================================================
-// These models manage the pricing displayed on the marketing website.
-// Pricing can be edited from the Provider Portal and automatically updates
-// the marketing site via ISR (Incremental Static Regeneration).
-
-/// MarketingPricingPlan stores the pricing tiers displayed on www.cortiware.com
-/// Each plan represents a subscription tier (Starter, Professional, Enterprise)
-model MarketingPricingPlan {
-  id          String   @id @default(cuid())
-  name        String   // "Starter", "Professional", "Enterprise"
-  slug        String   @unique // "starter", "professional", "enterprise"
-  price       Int?     // Price in cents (null for "Contact Sales")
-  currency    String   @default("USD") // ISO currency code
-  description String   // Short description of the plan
-  cta         String   // Call-to-action text: "Start Free Trial", "Contact Sales"
-  highlighted Boolean  @default(false) // Shows "MOST POPULAR" badge
-  active      Boolean  @default(true) // Whether to display on marketing site
-  sortOrder   Int      @default(0) // Display order (1, 2, 3...)
-
-  // Approval Workflow
-  status      MarketingPricingStatus @default(DRAFT) // DRAFT, PENDING_REVIEW, PUBLISHED
-  publishedAt DateTime? // When it was last published
-
-  features    MarketingPricingFeature[]
-  history     MarketingPricingHistory[]
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  createdBy   String? // User ID who created this plan
-  updatedBy   String? // User ID who last updated this plan
-
-  @@index([active, sortOrder])
-  @@index([status])
-  @@map("marketing_pricing_plans")
-}
-
-/// MarketingPricingFeature stores individual features for each pricing plan
-model MarketingPricingFeature {
-  id          String   @id @default(cuid())
-  planId      String
-  plan        MarketingPricingPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
-
-  text        String   // "Up to 3 users", "Advanced AI automation"
-  sortOrder   Int      @default(0) // Display order within the plan
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@index([planId, sortOrder])
-  @@map("marketing_pricing_features")
-}
-
-/// MarketingPricingHistory tracks all pricing changes for audit purposes
-model MarketingPricingHistory {
-  id          String   @id @default(cuid())
-  planId      String
-  plan        MarketingPricingPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
-
-  // Snapshot of what changed
-  action      String   // "CREATED", "UPDATED", "PUBLISHED", "UNPUBLISHED"
-  changes     Json     // JSON object with before/after values
-
-  // Who made the change
-  changedBy   String   // User ID
-  changedByEmail String? // User email for reference
-  reason      String?  // Optional reason for the change
-
-  createdAt   DateTime @default(now())
-
-  @@index([planId, createdAt])
-  @@index([changedBy])
-  @@map("marketing_pricing_history")
-}
-
-/// Enum for pricing plan approval workflow status
-enum MarketingPricingStatus {
-  DRAFT           // Being edited, not visible on marketing site
-  PENDING_REVIEW  // Submitted for review
-  PUBLISHED       // Live on marketing site
+enum ValueType {
+  RELATIONSHIP
+  JOB
 }

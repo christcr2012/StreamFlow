@@ -17,8 +17,7 @@ export default async function RecurringInvoicesPage() {
 
   const recurringInvoices = await prisma.recurringInvoice.findMany({
     where: { orgId: authContext.orgId },
-    include: {
-      customer: {
+    include: { Customer: {
         select: {
           id: true,
           company: true,

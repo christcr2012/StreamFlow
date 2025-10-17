@@ -6,8 +6,7 @@ import { JobsClient } from './jobs-client';
 async function getJobs(orgId: string) {
   const jobs = await prisma.job.findMany({
     where: { orgId },
-    include: {
-      customer: {
+    include: { Customer: {
         select: {
           id: true,
           company: true,

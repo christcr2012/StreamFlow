@@ -34,8 +34,7 @@ export async function GET(request: NextRequest) {
     const [items, total] = await Promise.all([
       prisma.invoice.findMany({
         where,
-        include: {
-          customer: {
+        include: { Customer: {
             select: { id: true, company: true, primaryName: true },
           },
           lineItems: {
@@ -124,8 +123,7 @@ export async function POST(request: NextRequest) {
           })),
         },
       },
-      include: {
-        customer: true,
+      include: { Customer: true,
         lineItems: true,
       },
     });

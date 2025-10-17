@@ -109,10 +109,10 @@ export async function sendJobStatusEmail(
  * // In your invoice creation API route:
  * const invoice = await prisma.invoice.create({ ... });
  *
- * if (invoice.customer?.primaryEmail) {
+ * if (invoice.Customer?.primaryEmail) {
  *   await sendInvoiceEmail(orgId, {
- *     customerEmail: invoice.customer.primaryEmail,
- *     customerName: invoice.customer.company || invoice.customer.primaryName || 'Customer',
+ *     customerEmail: invoice.Customer.primaryEmail,
+ *     customerName: invoice.Customer.company || invoice.Customer.primaryName || 'Customer',
  *     invoiceNumber: invoice.number || 'DRAFT',
  *     amount: Number(invoice.amount),
  *     dueDate: invoice.dueDate || new Date(),
@@ -123,10 +123,10 @@ export async function sendJobStatusEmail(
  * // In your job status update API route:
  * const job = await prisma.job.update({ ... });
  *
- * if (job.customer?.primaryEmail) {
+ * if (job.Customer?.primaryEmail) {
  *   await sendJobStatusEmail(orgId, {
- *     customerEmail: job.customer.primaryEmail,
- *     customerName: job.customer.company || job.customer.primaryName || 'Customer',
+ *     customerEmail: job.Customer.primaryEmail,
+ *     customerName: job.Customer.company || job.Customer.primaryName || 'Customer',
  *     jobTitle: job.title,
  *     oldStatus: previousStatus,
  *     newStatus: job.status,

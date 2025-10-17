@@ -24,8 +24,7 @@ export async function POST(
         id,
         orgId: authContext.orgId,
       },
-      include: {
-        customer: true,
+      include: { Customer: true,
       },
     });
 
@@ -49,7 +48,7 @@ export async function POST(
     }
 
     // Create payment intent
-    const customerName = invoice.customer?.company || invoice.customer?.primaryName || 'Customer';
+    const customerName = invoice.Customer?.company || invoice.Customer?.primaryName || 'Customer';
     const result = await createPaymentIntent(authContext.orgId, {
       amount: Math.round(Number(invoice.amount) * 100), // Convert to cents
       currency: 'usd',

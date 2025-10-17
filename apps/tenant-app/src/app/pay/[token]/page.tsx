@@ -27,8 +27,7 @@ export default async function PaymentPage({ params }: { params: Promise<{ token:
       paymentLinkToken: token,
       paymentLinkExpiresAt: { gte: new Date() },
     },
-    include: {
-      customer: {
+    include: { Customer: {
         select: {
           company: true,
           primaryName: true,
@@ -60,10 +59,10 @@ export default async function PaymentPage({ params }: { params: Promise<{ token:
         issuedAt: invoice.issuedAt.toISOString(),
         terms: invoice.terms,
         notes: invoice.notes,
-        customer: invoice.customer || { company: null, primaryName: null, primaryEmail: null },
-        orgName: invoice.org.name,
+        customer: invoice.Customer || { company: null, primaryName: null, primaryEmail: null },
+        orgName: invoice.Org.name,
       }}
-      stripePublishableKey={invoice.org.stripePublishableKey || ''}
+      stripePublishableKey={invoice.Org.stripePublishableKey || ''}
     />
   );
 }

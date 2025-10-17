@@ -38,8 +38,8 @@ export async function GET(request: NextRequest) {
       const key = invoice.customerId;
       if (!customerRevenue[key]) {
         customerRevenue[key] = {
-          name: invoice.customer?.company || invoice.customer?.primaryName || 'Unknown',
-          email: invoice.customer?.primaryEmail || '',
+          name: invoice.Customer?.company || invoice.Customer?.primaryName || 'Unknown',
+          email: invoice.Customer?.primaryEmail || '',
           revenue: 0,
           invoiceCount: 0,
         };

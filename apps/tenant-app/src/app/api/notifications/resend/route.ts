@@ -41,8 +41,7 @@ export async function POST(request: NextRequest) {
     if (entityType === 'invoice') {
       const invoice = await prisma.invoice.findUnique({
         where: { id: entityId, orgId: authContext.orgId },
-        include: {
-          customer: {
+        include: { Customer: {
             select: {
               primaryEmail: true,
               company: true,
@@ -56,22 +55,22 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Invoice not found' }, { status: 404 });
       }
 
-      if (!invoice.customer?.primaryEmail) {
+      if (!invoice.Customer?.primaryEmail) {
         return NextResponse.json({ error: 'Customer has no email address' }, { status: 400 });
       }
 
       // Send invoice email
       const result = await sendEmail(authContext.orgId, {
-        to: invoice.customer.primaryEmail,
-        subject: `Invoice ${invoice.number || 'DRAFT'} from ${invoice.customer.company || 'Your Company'}`,
+        to: invoice.Customer.primaryEmail,
+        subject: `Invoice ${invoice.number || 'DRAFT'} from ${invoice.Customer.company || 'Your Company'}`,
         html: `
-          <p>Dear ${invoice.customer.company || invoice.customer.primaryName || 'Customer'},</p>
+          <p>Dear ${invoice.Customer.company || invoice.Customer.primaryName || 'Customer'},</p>
           <p>Your invoice <strong>${invoice.number || 'DRAFT'}</strong> for <strong>$${(Number(invoice.amount) / 100).toFixed(2)}</strong> is ready.</p>
           <p>Due Date: ${invoice.dueDate ? new Date(invoice.dueDate).toLocaleDateString() : 'N/A'}</p>
           <p>Thank you for your business!</p>
         `,
         text: `
-Dear ${invoice.customer.company || invoice.customer.primaryName || 'Customer'},
+Dear ${invoice.Customer.company || invoice.Customer.primaryName || 'Customer'},
 
 Your invoice ${invoice.number || 'DRAFT'} for $${(Number(invoice.amount) / 100).toFixed(2)} is ready.
 
@@ -95,8 +94,7 @@ Thank you for your business!
     if (entityType === 'job') {
       const job = await prisma.job.findUnique({
         where: { id: entityId, orgId: authContext.orgId },
-        include: {
-          customer: {
+        include: { Customer: {
             select: {
               primaryEmail: true,
               company: true,
@@ -110,22 +108,22 @@ Thank you for your business!
         return NextResponse.json({ error: 'Job not found' }, { status: 404 });
       }
 
-      if (!job.customer?.primaryEmail) {
+      if (!job.Customer?.primaryEmail) {
         return NextResponse.json({ error: 'Customer has no email address' }, { status: 400 });
       }
 
       // Send job status email
       const result = await sendEmail(authContext.orgId, {
-        to: job.customer.primaryEmail,
+        to: job.Customer.primaryEmail,
         subject: `Job Status Update: ${job.title}`,
         html: `
-          <p>Dear ${job.customer.company || job.customer.primaryName || 'Customer'},</p>
+          <p>Dear ${job.Customer.company || job.Customer.primaryName || 'Customer'},</p>
           <p>The status of your job <strong>${job.title}</strong> is <strong>${job.status}</strong>.</p>
           <p>Scheduled Date: ${job.scheduledAt ? new Date(job.scheduledAt).toLocaleDateString() : 'TBD'}</p>
           <p>We will keep you informed of any further updates.</p>
         `,
         text: `
-Dear ${job.customer.company || job.customer.primaryName || 'Customer'},
+Dear ${job.Customer.company || job.Customer.primaryName || 'Customer'},
 
 The status of your job ${job.title} is ${job.status}.
 

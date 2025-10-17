@@ -6,8 +6,7 @@ import { CustomerDetailClient } from './customer-detail-client';
 async function getCustomer(id: string, orgId: string) {
   const customer = await prisma.customer.findFirst({
     where: { id, orgId },
-    include: {
-      contacts: true,
+    include: { CustomerContact: true,
       jobs: {
         orderBy: { createdAt: 'desc' },
         take: 10,

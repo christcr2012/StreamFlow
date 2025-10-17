@@ -33,12 +33,10 @@ export async function GET(request: NextRequest) {
     const [items, total] = await Promise.all([
       prisma.job.findMany({
         where,
-        include: {
-          customer: {
+        include: { Customer: {
             select: { id: true, company: true, primaryName: true },
           },
-          _count: {
-            select: { photos: true, timeline: true },
+          _count: { select: { JobPhoto: true, timeline: true },
           },
         },
         skip: (filter.page - 1) * filter.limit,
@@ -89,8 +87,7 @@ export async function POST(request: NextRequest) {
           },
         },
       },
-      include: {
-        customer: true,
+      include: { Customer: true,
       },
     });
 

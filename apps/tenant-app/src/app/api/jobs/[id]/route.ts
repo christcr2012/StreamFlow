@@ -17,8 +17,7 @@ export async function GET(
 
     const job = await prisma.job.findFirst({
       where: { id, orgId: authContext.orgId! },
-      include: {
-        customer: {
+      include: { Customer: {
           select: {
             id: true,
             company: true,
@@ -85,8 +84,7 @@ export async function PATCH(
         ...data,
         scheduledAt: data.scheduledAt ? new Date(data.scheduledAt) : undefined,
       },
-      include: {
-        customer: {
+      include: { Customer: {
           select: {
             id: true,
             company: true,

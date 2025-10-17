@@ -86,7 +86,7 @@ export function InvoicesClient({ invoices: initialInvoices }: InvoicesClientProp
       label: 'Customer',
       render: (invoice: Invoice) => (
         <span className="text-sm text-gray-900 dark:text-gray-100">
-          {invoice.customer?.company || invoice.customer?.primaryName || 'No customer'}
+          {invoice.Customer?.company || invoice.Customer?.primaryName || 'No customer'}
         </span>
       ),
     },

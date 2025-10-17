@@ -152,9 +152,9 @@ export function DashboardClient({ stats, recentJobs, recentInvoices }: Dashboard
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-gray-900 dark:text-gray-100 truncate">{job.title}</p>
-                        {job.customer && (
+                        {job.Customer && (
                           <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                            {job.customer.company || job.customer.primaryName}
+                            {job.Customer.company || job.Customer.primaryName}
                           </p>
                         )}
                         {job.scheduledAt && (
@@ -207,9 +207,9 @@ export function DashboardClient({ stats, recentJobs, recentInvoices }: Dashboard
                         <p className="font-medium text-gray-900 dark:text-gray-100 truncate">
                           {invoice.number || 'Draft'}
                         </p>
-                        {invoice.customer && (
+                        {invoice.Customer && (
                           <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                            {invoice.customer.company || invoice.customer.primaryName}
+                            {invoice.Customer.company || invoice.Customer.primaryName}
                           </p>
                         )}
                         <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">

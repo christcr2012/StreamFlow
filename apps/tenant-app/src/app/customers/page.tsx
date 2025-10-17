@@ -7,9 +7,7 @@ async function getCustomers(orgId: string) {
   const customers = await prisma.customer.findMany({
     where: { orgId },
     include: {
-      _count: {
-        select: {
-          jobs: true,
+      _count: { select: { Job: true,
           invoices: true,
         },
       },

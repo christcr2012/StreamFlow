@@ -51,20 +51,20 @@ export function generateInvoicePDF(invoice: InvoiceData, orgName: string = 'Your
   doc.setFont('helvetica', 'normal');
   
   let yPos = 56;
-  if (invoice.customer.company) {
-    doc.text(invoice.customer.company, 20, yPos);
+  if (invoice.Customer.company) {
+    doc.text(invoice.Customer.company, 20, yPos);
     yPos += 6;
   }
-  if (invoice.customer.primaryName) {
-    doc.text(invoice.customer.primaryName, 20, yPos);
+  if (invoice.Customer.primaryName) {
+    doc.text(invoice.Customer.primaryName, 20, yPos);
     yPos += 6;
   }
-  if (invoice.customer.primaryEmail) {
-    doc.text(invoice.customer.primaryEmail, 20, yPos);
+  if (invoice.Customer.primaryEmail) {
+    doc.text(invoice.Customer.primaryEmail, 20, yPos);
     yPos += 6;
   }
-  if (invoice.customer.primaryPhone) {
-    doc.text(invoice.customer.primaryPhone, 20, yPos);
+  if (invoice.Customer.primaryPhone) {
+    doc.text(invoice.Customer.primaryPhone, 20, yPos);
     yPos += 6;
   }
   

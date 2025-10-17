@@ -43,10 +43,8 @@ export async function POST(request: NextRequest) {
           { endDate: { gte: now } }
         ]
       },
-      include: {
-        estimate: {
-          select: {
-            lead: {
+      include: { CleaningEstimate: {
+          select: { CleaningLead: {
               select: {
                 contactName: true,
                 address: true,

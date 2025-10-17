@@ -23,13 +23,13 @@ async function getDashboardData(orgId: string) {
     prisma.invoice.count({ where: { orgId, status: 'paid' } }),
     prisma.job.findMany({
       where: { orgId },
-      include: { customer: true },
+      include: { Customer: true },
       orderBy: { createdAt: 'desc' },
       take: 5,
     }),
     prisma.invoice.findMany({
       where: { orgId },
-      include: { customer: true },
+      include: { Customer: true },
       orderBy: { issuedAt: 'desc' },
       take: 5,
     }),

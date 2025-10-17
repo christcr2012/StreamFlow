@@ -9,8 +9,7 @@ import { InvoicesClient } from './invoices-client';
 async function getInvoices(orgId: string) {
   const invoices = await prisma.invoice.findMany({
     where: { orgId },
-    include: {
-      customer: {
+    include: { Customer: {
         select: { id: true, company: true, primaryName: true },
       },
     },

@@ -70,7 +70,7 @@ export default function PaymentPageClient({ invoice, stripePublishableKey }: Pro
             Your payment of {formatDecimalCurrency(invoice.amount, invoice.currency)} has been processed.
           </p>
           <p className="text-sm text-gray-500">
-            A confirmation email has been sent to {invoice.customer.primaryEmail}.
+            A confirmation email has been sent to {invoice.Customer.primaryEmail}.
           </p>
         </div>
       </div>
@@ -92,7 +92,7 @@ export default function PaymentPageClient({ invoice, stripePublishableKey }: Pro
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Bill To:</span>
-            <span className="font-medium">{invoice.customer.company || invoice.customer.primaryName}</span>
+            <span className="font-medium">{invoice.Customer.company || invoice.Customer.primaryName}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Issue Date:</span>

@@ -80,8 +80,8 @@ export function JobsClient({ jobs: initialJobs }: JobsClientProps) {
       const query = searchQuery.toLowerCase();
       const matchesSearch =
         job.title.toLowerCase().includes(query) ||
-        job.customer?.company?.toLowerCase().includes(query) ||
-        job.customer?.primaryName?.toLowerCase().includes(query);
+        job.Customer?.company?.toLowerCase().includes(query) ||
+        job.Customer?.primaryName?.toLowerCase().includes(query);
 
       const matchesStatus = statusFilter === 'all' || job.status === statusFilter;
 
@@ -173,9 +173,9 @@ export function JobsClient({ jobs: initialJobs }: JobsClientProps) {
       render: (job: Job) => (
         <div>
           <p className="font-medium text-gray-900 dark:text-gray-100">{job.title}</p>
-          {job.customer && (
+          {job.Customer && (
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              {job.customer.company || job.customer.primaryName}
+              {job.Customer.company || job.Customer.primaryName}
             </p>
           )}
         </div>
@@ -255,7 +255,7 @@ export function JobsClient({ jobs: initialJobs }: JobsClientProps) {
       ['Title', 'Customer', 'Status', 'Scheduled', 'Completed', 'Created'],
       ...filteredAndSortedJobs.map(j => [
         j.title,
-        j.customer?.company || j.customer?.primaryName || 'No customer',
+        j.Customer?.company || j.Customer?.primaryName || 'No customer',
         j.status,
         j.scheduledAt ? new Date(j.scheduledAt).toLocaleDateString() : '',
         j.completedAt ? new Date(j.completedAt).toLocaleDateString() : '',

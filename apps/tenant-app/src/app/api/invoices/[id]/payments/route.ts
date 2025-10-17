@@ -21,8 +21,7 @@ export async function POST(
     // Verify invoice exists and belongs to org
     const invoice = await prisma.invoice.findFirst({
       where: { id: invoiceId, orgId: authContext.orgId! },
-      include: {
-        payments: true,
+      include: { Payment: true,
         customer: {
           select: { id: true, company: true, primaryName: true },
         },
@@ -34,7 +33,7 @@ export async function POST(
     }
 
     // Calculate total paid so far
-    const totalPaid = invoice.payments.reduce((sum: number, p) => sum + Number(p.amount), 0);
+    const totalPaid = invoice.Payment.reduce((sum: number, p) => sum + Number(p.amount), 0);
     const remainingAmount = Number(invoice.amount) - totalPaid;
 
     if (data.amount > remainingAmount) {
@@ -66,8 +65,7 @@ export async function POST(
           status: 'paid',
           paidAt: new Date(),
         },
-        include: {
-          customer: {
+        include: { Customer: {
             select: { id: true, company: true, primaryName: true },
           },
         },
@@ -77,8 +75,7 @@ export async function POST(
       updatedInvoice = await prisma.invoice.update({
         where: { id: invoiceId },
         data: { status: 'open' },
-        include: {
-          customer: {
+        include: { Customer: {
             select: { id: true, company: true, primaryName: true },
           },
         },
@@ -94,7 +91,7 @@ export async function POST(
         paymentAmount: data.amount,
         totalPaid: newTotalPaid,
         invoiceAmount: Number(invoice.amount),
-        customer: invoice.customer,
+        customer: invoice.Customer,
       },
       timestamp: new Date().toISOString(),
     });
@@ -107,7 +104,7 @@ export async function POST(
           id: updatedInvoice.id,
           number: updatedInvoice.number,
           status: updatedInvoice.status,
-          customer: updatedInvoice.customer,
+          customer: updatedInvoice.Customer,
         },
         timestamp: new Date().toISOString(),
       });

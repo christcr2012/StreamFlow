@@ -9,9 +9,7 @@ async function getOrgData(orgId: string) {
   const org = await prisma.org.findUnique({
     where: { id: orgId },
     include: {
-      _count: {
-        select: {
-          users: true,
+      _count: { select: { User: true,
           customers: true,
           jobs: true,
           invoices: true,

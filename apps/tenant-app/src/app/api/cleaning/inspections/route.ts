@@ -52,8 +52,7 @@ export async function GET(request: NextRequest) {
         orderBy: { createdAt: 'desc' },
         take: limit,
         skip: offset,
-        include: {
-          workOrders: {
+        include: { CleaningWorkOrder: {
             select: {
               id: true,
               scheduledDate: true,

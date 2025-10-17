@@ -32,8 +32,7 @@ export async function POST(
           },
         },
       },
-      include: {
-        customer: {
+      include: { Customer: {
           select: { id: true, company: true, primaryName: true },
         },
       },
@@ -46,7 +45,7 @@ export async function POST(
         id: job.id,
         title: job.title,
         status: job.status,
-        customer: job.customer,
+        customer: job.Customer,
       },
       timestamp: new Date().toISOString(),
     });

@@ -157,7 +157,7 @@ export async function aiMeter<T>(
     
     await prisma.$transaction(async (tx: any) => {
       // ATOMIC CHECKS: Re-verify both credit balance AND monthly budget within transaction
-      const currentOrg = await tx.org.findUnique({
+      const currentOrg = await tx.Org.findUnique({
         where: { id: orgId },
         select: { aiCreditBalance: true, aiMonthlyBudgetCents: true }
       }) as any;
@@ -205,7 +205,7 @@ export async function aiMeter<T>(
       });
 
       // Update organization credit balance with conditional update to prevent race conditions
-      const updateResult = await tx.org.updateMany({
+      const updateResult = await tx.Org.updateMany({
         where: { 
           id: orgId,
           aiCreditBalance: { gte: creditsUsed } // Only update if sufficient balance

@@ -27,7 +27,6 @@ export async function POST(req: NextRequest) {
       refreshToken = body.refreshToken;
     }
 
-    // TODO: Add RefreshToken model to prisma/schema.prisma
     // If we have a refresh token, revoke it
     if (refreshToken) {
       const secret = process.env.AUTH_TOKEN_SECRET || process.env.AUTH_TICKET_HMAC_SECRET;
@@ -38,12 +37,12 @@ export async function POST(req: NextRequest) {
           const { sessionId, email } = result.payload;
 
           // Revoke the refresh token in database
-          // await prisma.refreshToken.updateMany({
-          //   where: { sessionId },
-          //   data: { revoked: true, revokedAt: new Date() },
-          // });
+          await prisma.refreshToken.updateMany({
+            where: { sessionId },
+            data: { revoked: true, revokedAt: new Date() },
+          });
 
-          console.log(`✅ Logout: Revoked refresh token for ${email} (database revocation disabled - RefreshToken model missing)`);
+          console.log(`✅ Logout: Revoked refresh token for ${email}`);
         }
       }
     }

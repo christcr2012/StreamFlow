@@ -61,8 +61,7 @@ export async function GET(request: NextRequest) {
         orderBy: { createdAt: 'desc' },
         take: limit,
         skip: offset,
-        include: {
-          lead: {
+        include: { CleaningLead: {
             select: {
               id: true,
               contactName: true,

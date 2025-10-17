@@ -80,8 +80,7 @@ export async function GET(request: NextRequest) {
 
     const recurringInvoices = await prisma.recurringInvoice.findMany({
       where: { orgId: authContext.orgId },
-      include: {
-        customer: {
+      include: { Customer: {
           select: {
             id: true,
             company: true,

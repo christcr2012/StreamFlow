@@ -75,8 +75,7 @@ export async function GET(request: NextRequest) {
         orderBy: { scheduledDate: 'asc' },
         take: limit,
         skip: offset,
-        include: {
-          contract: {
+        include: { CleaningContract: {
             select: {
               id: true,
               frequency: true,

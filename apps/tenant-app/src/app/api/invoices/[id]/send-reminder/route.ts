@@ -20,8 +20,7 @@ export async function POST(
         id,
         orgId: authContext.orgId,
       },
-      include: {
-        customer: {
+      include: { Customer: {
           select: {
             company: true,
             primaryName: true,
@@ -35,7 +34,7 @@ export async function POST(
       return NextResponse.json({ error: 'Invoice not found' }, { status: 404 });
     }
 
-    if (!invoice.customer?.primaryEmail) {
+    if (!invoice.Customer?.primaryEmail) {
       return NextResponse.json({ error: 'Customer has no email address' }, { status: 400 });
     }
 
@@ -67,10 +66,10 @@ export async function POST(
     // Send reminder email
     try {
       const emailResult = await sendEmail(authContext.orgId, {
-        to: invoice.customer.primaryEmail,
+        to: invoice.Customer.primaryEmail,
         subject: `Payment Reminder: Invoice ${invoice.number || invoice.id}`,
-        text: `Dear ${invoice.customer.company || invoice.customer.primaryName},\n\nThis is a friendly reminder that invoice ${invoice.number || invoice.id} is overdue.\n\nAmount Due: $${Number(invoice.amount).toFixed(2)}\nDue Date: ${dueDate?.toLocaleDateString() || 'N/A'}\n\nPlease submit payment at your earliest convenience.\n\nThank you,\nYour Team`,
-        html: `<p>Dear ${invoice.customer.company || invoice.customer.primaryName},</p><p>This is a friendly reminder that invoice <strong>${invoice.number || invoice.id}</strong> is overdue.</p><p><strong>Amount Due:</strong> $${Number(invoice.amount).toFixed(2)}<br><strong>Due Date:</strong> ${dueDate?.toLocaleDateString() || 'N/A'}</p><p>Please submit payment at your earliest convenience.</p><p>Thank you,<br>Your Team</p>`,
+        text: `Dear ${invoice.Customer.company || invoice.Customer.primaryName},\n\nThis is a friendly reminder that invoice ${invoice.number || invoice.id} is overdue.\n\nAmount Due: $${Number(invoice.amount).toFixed(2)}\nDue Date: ${dueDate?.toLocaleDateString() || 'N/A'}\n\nPlease submit payment at your earliest convenience.\n\nThank you,\nYour Team`,
+        html: `<p>Dear ${invoice.Customer.company || invoice.Customer.primaryName},</p><p>This is a friendly reminder that invoice <strong>${invoice.number || invoice.id}</strong> is overdue.</p><p><strong>Amount Due:</strong> $${Number(invoice.amount).toFixed(2)}<br><strong>Due Date:</strong> ${dueDate?.toLocaleDateString() || 'N/A'}</p><p>Please submit payment at your earliest convenience.</p><p>Thank you,<br>Your Team</p>`,
       });
 
       if (emailResult.success) {

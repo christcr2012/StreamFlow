@@ -6,8 +6,7 @@ import { JobDetailClient } from './job-detail-client';
 async function getJob(id: string, orgId: string) {
   const job = await prisma.job.findFirst({
     where: { id, orgId },
-    include: {
-      customer: true,
+    include: { Customer: true,
       timeline: {
         orderBy: { createdAt: 'desc' },
       },

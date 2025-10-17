@@ -155,7 +155,7 @@ export function invalidateCache(pattern: string): void {
  * 
  * // Fetch with caching
  * const customer = await cache.getOrFetch(
- *   cacheKeys.customer(customerId),
+ *   cacheKeys.Customer(customerId),
  *   async () => {
  *     const response = await fetch(`/api/customers/${customerId}`);
  *     return response.json();
