@@ -1,13 +1,9 @@
 name: E2E Tests (Playwright)
 
+# DISABLED: E2E tests require deployed tenant-app and provider-portal URLs
+# These tests are for the SaaS apps, not the marketing sites
+# Re-enable when STAGING_TENANT_APP_URL and STAGING_PROVIDER_PORTAL_URL are configured
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-  schedule:
-    # Run nightly at 2 AM UTC
-    - cron: '0 2 * * *'
   workflow_dispatch:
     inputs:
       tenant_app_url:
