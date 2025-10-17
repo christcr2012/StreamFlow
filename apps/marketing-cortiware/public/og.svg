@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00B67A"/>
+      <stop offset="100%" stop-color="#00E3C2"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#0C0C0C"/>
+  <rect x="60" y="180" width="1080" height="270" rx="24" fill="url(#g)"/>
+  <text x="600" y="330" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="72" fill="#0C0C0C" font-weight="800">Cortiware</text>
+</svg>

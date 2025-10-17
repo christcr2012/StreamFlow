@@ -22,8 +22,13 @@ export default function CortiwareHomePage() {
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-6 py-24">
         <div className="text-center max-w-4xl mx-auto">
-          <div className="inline-block px-4 py-2 bg-teal-500/10 border border-teal-500/20 rounded-full text-teal-400 text-sm font-semibold mb-6">
-            Multi-Tenant AI Platform
+          <div className="flex flex-col items-center gap-2 mb-6">
+            <div className="inline-block px-4 py-2 bg-teal-500/10 border border-teal-500/20 rounded-full text-teal-400 text-sm font-semibold">
+              Multi-Tenant AI Platform
+            </div>
+            <div className="inline-block px-3 py-1 bg-slate-800/60 border border-slate-700/60 rounded-full text-slate-300 text-xs">
+              A Robinson AI Systems product
+            </div>
           </div>
           <h1 className="text-6xl font-bold text-white mb-6 leading-tight">
             The AI Platform
