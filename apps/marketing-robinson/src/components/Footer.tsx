@@ -5,20 +5,20 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border bg-surface">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+    <footer className="border-t border-border bg-surface overflow-visible">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 overflow-visible">
         {/* Logo and tagline */}
-        <div className="mb-8">
-          <Link href="/" className="inline-flex items-center gap-5 group mb-6">
+        <div className="mb-8 overflow-visible">
+          <Link href="/" className="inline-flex items-center gap-5 group mb-6 relative">
             <Image
               src="/logo.png"
               alt="Robinson AI Systems Logo"
               width={1200}
               height={1200}
               className="transition-transform duration-normal group-hover:scale-105"
-              style={{ height: '80px !important', width: 'auto !important', maxHeight: 'none !important', maxWidth: 'none !important' }}
+              style={{ height: '160px !important', width: 'auto !important', maxHeight: 'none !important', maxWidth: 'none !important' }}
             />
-            <span className="text-2xl font-bold text-text">Robinson AI Systems</span>
+            <span className="text-3xl font-bold text-text">Robinson AI Systems</span>
           </Link>
           <p className="text-text-muted max-w-md text-lg">
             Enterprise AI consulting and delivery partner. Custom platforms, agent systems, and vertical solutions built for scale.
