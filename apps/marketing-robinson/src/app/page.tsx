@@ -12,7 +12,7 @@ export default function RobinsonHomePage() {
             <a href="/products" className="text-slate-300 hover:text-white transition-colors">Products</a>
             <a href="/industries" className="text-slate-300 hover:text-white transition-colors">Industries</a>
             <a href="/about" className="text-slate-300 hover:text-white transition-colors">About</a>
-            <a href="https://provider.robinsonaisystems.com/login" className="px-4 py-2 bg-teal-500 hover:bg-teal-400 text-white rounded-lg transition-colors font-medium">
+            <a href="https://provider.robinsonaisystems.com/login" className="px-4 py-2 text-white rounded-lg font-medium shadow-sm" style={{ background: 'var(--cortiware-gradient)' }}>
               Provider Sign-in →
             </a>
           </div>
@@ -20,8 +20,13 @@ export default function RobinsonHomePage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-6 py-24">
+      <section className="relative overflow-hidden max-w-7xl mx-auto px-6 py-28">
         <div className="text-center max-w-4xl mx-auto">
+        {/* Decorative background */}
+        <div className="pointer-events-none absolute inset-0 -z-10">
+          <div className="absolute -top-32 left-1/2 -translate-x-1/2 h-[420px] w-[720px] rounded-full blur-3xl opacity-20" style={{ background: 'var(--cortiware-gradient)' }} />
+        </div>
+
           <h1 className="text-6xl font-bold text-white mb-6 leading-tight">
             Enterprise AI Solutions
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-500">
@@ -49,11 +54,12 @@ export default function RobinsonHomePage() {
         <h2 className="text-4xl font-bold text-white mb-12 text-center">Our Products</h2>
         <div className="grid md:grid-cols-2 gap-8">
           {/* Cortiware Card */}
-          <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-8 hover:border-teal-500/50 transition-all">
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 hover:-translate-y-0.5 transition-all">
             <div className="w-12 h-12 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-xl mb-6" />
             <h3 className="text-2xl font-bold text-white mb-4">Cortiware</h3>
             <p className="text-slate-300 mb-6 leading-relaxed">
               Multi-tenant SaaS platform with advanced AI capabilities, custom branding,
+
               and enterprise-grade security. Built for businesses that need to scale
               their AI operations across multiple clients.
             </p>
@@ -63,7 +69,7 @@ export default function RobinsonHomePage() {
           </div>
 
           {/* Custom Solutions Card */}
-          <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-8 hover:border-teal-500/50 transition-all">
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-8 shadow-lg shadow-teal-500/5 hover:shadow-teal-400/10 hover:-translate-y-0.5 transition-all">
             <div className="w-12 h-12 bg-gradient-to-br from-violet-400 to-purple-500 rounded-xl mb-6" />
             <h3 className="text-2xl font-bold text-white mb-4">Custom AI Solutions</h3>
             <p className="text-slate-300 mb-6 leading-relaxed">
