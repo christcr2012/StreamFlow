@@ -57,14 +57,30 @@ export default function CortiwareHomePage() {
           </div>
         </div>
       </section>
-      {/* Social proof logos */}
+      {/* Product preview (distinct from Robinson) */}
+      <section className="max-w-7xl mx-auto px-6 pb-6">
+        <div className="relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 md:p-8 shadow-xl shadow-teal-500/10">
+          <div className="mb-4 flex items-center gap-2">
+            <div className="h-3 w-3 rounded-full bg-rose-400/80" />
+            <div className="h-3 w-3 rounded-full bg-amber-400/80" />
+            <div className="h-3 w-3 rounded-full bg-emerald-400/80" />
+            <div className="ml-auto text-slate-400 text-xs">Product Preview</div>
+          </div>
+          <div className="grid md:grid-cols-3 gap-3">
+            <div className="h-20 rounded-lg bg-slate-800/80 border border-slate-700/70" />
+            <div className="h-20 rounded-lg bg-slate-800/80 border border-slate-700/70" />
+            <div className="h-20 rounded-lg bg-slate-800/80 border border-slate-700/70" />
+          </div>
+        </div>
+      </section>
+      {/* Built on a modern stack (truthful, no placeholders) */}
       <section className="max-w-7xl mx-auto px-6 -mt-8 pb-6">
-        <div className="flex flex-wrap items-center justify-center gap-8 opacity-90">
-          <img src="/logos/acme.svg" alt="Acme" className="h-6 w-auto" />
-          <img src="/logos/globex.svg" alt="Globex" className="h-6 w-auto" />
-          <img src="/logos/initech.svg" alt="Initech" className="h-6 w-auto" />
-          <img src="/logos/soylent.svg" alt="Soylent" className="h-6 w-auto" />
-          <img src="/logos/umbrella.svg" alt="Umbrella" className="h-6 w-auto" />
+        <div className="flex flex-wrap items-center justify-center gap-3 text-slate-200">
+          {['Next.js','Vercel','Prisma','PostgreSQL','Tailwind CSS','Turborepo'].map((t) => (
+            <span key={t} className="px-3 py-1 rounded-full bg-slate-900/60 border border-slate-800/80 text-sm">
+              {t}
+            </span>
+          ))}
         </div>
       </section>
       {/* Who it's for */}
