@@ -7,10 +7,10 @@ async function getJob(id: string, orgId: string) {
   const job = await prisma.job.findFirst({
     where: { id, orgId },
     include: { Customer: true,
-      timeline: {
+      JobTimeline: {
         orderBy: { createdAt: 'desc' },
       },
-      photos: {
+      JobPhoto: {
         orderBy: { createdAt: 'desc' },
       },
     },

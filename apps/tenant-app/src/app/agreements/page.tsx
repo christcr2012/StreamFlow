@@ -12,7 +12,7 @@ async function getAgreements(orgId: string) {
     include: { Customer: {
         select: { id: true, company: true, primaryName: true },
       },
-      template: {
+      AgreementTemplate: {
         select: { id: true, name: true },
       },
     },

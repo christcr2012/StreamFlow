@@ -3,6 +3,7 @@ import { getAuthContext } from '@/lib/auth-context';
 import { prisma } from '@/lib/prisma';
 import { UpdateJobStatusSchema } from '@/lib/validations/job';
 import { broadcastToOrg } from '@/lib/sse';
+import { nanoid } from 'nanoid';
 
 export async function POST(
   request: NextRequest,
@@ -23,8 +24,9 @@ export async function POST(
       data: {
         status: data.status,
         completedAt: data.status === 'completed' ? new Date() : undefined,
-        timeline: {
+        JobTimeline: {
           create: {
+            publicId: `timeline_${nanoid(12)}`,
             eventType: 'status_changed',
             description: `Status changed to ${data.status}`,
             metadata: { note: data.note || '' },

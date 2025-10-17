@@ -95,7 +95,7 @@ export async function PATCH(
         notes: customerData.notes,
         tags: customerData.tags,
         billingSettings: customerData.billingSettings as any,
-        contacts: contacts ? {
+        CustomerContact: contacts ? {
           deleteMany: {},
           create: contacts,
         } : undefined,

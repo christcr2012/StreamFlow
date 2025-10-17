@@ -60,8 +60,9 @@ export async function POST(
           status: 'scheduled',
           scheduledAt: data.jobScheduledAt ? new Date(data.jobScheduledAt) : null,
           assignees: [],
-          timeline: {
+          JobTimeline: {
             create: {
+              publicId: `timeline_${nanoid(12)}`,
               eventType: 'created',
               description: `Job created from lead conversion`,
               metadata: { leadId },

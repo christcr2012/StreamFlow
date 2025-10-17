@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
         include: { Customer: {
             select: { id: true, company: true, primaryName: true },
           },
-          lineItems: {
+          InvoiceLine: {
             select: {
               id: true,
               description: true,
@@ -113,7 +113,7 @@ export async function POST(request: NextRequest) {
         dueDate: data.dueDate ? new Date(data.dueDate) : null,
         terms: data.terms,
         notes: data.notes,
-        lineItems: {
+        InvoiceLine: {
           create: data.lines.map(line => ({
             description: line.description,
             lineType: 'one_time',

@@ -26,7 +26,7 @@ export async function GET(
             primaryPhone: true,
           },
         },
-        lineItems: {
+        InvoiceLine: {
           select: {
             id: true,
             description: true,
@@ -103,7 +103,7 @@ export async function PATCH(
         taxAmount,
         discountAmount,
         amount: total,
-        lineItems: {
+        InvoiceLine: {
           deleteMany: {},
           create: data.lines.map(line => ({
             description: line.description,
@@ -128,7 +128,7 @@ export async function PATCH(
             primaryPhone: true,
           },
         },
-        lineItems: {
+        InvoiceLine: {
           select: {
             id: true,
             description: true,

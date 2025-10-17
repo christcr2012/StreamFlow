@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAuthContext } from '@/lib/auth-context';
 import { prisma } from '@/lib/prisma';
 import { put } from '@vercel/blob';
+import { nanoid } from 'nanoid';
 
 export async function POST(
   request: NextRequest,
@@ -63,6 +64,7 @@ export async function POST(
     // Create JobPhoto record
     const photo = await prisma.jobPhoto.create({
       data: {
+        publicId: `photo_${nanoid(12)}`,
         jobId: id,
         url: blob.url,
         caption: caption || null,
@@ -72,6 +74,7 @@ export async function POST(
     // Add timeline entry
     await prisma.jobTimeline.create({
       data: {
+        publicId: `timeline_${nanoid(12)}`,
         jobId: id,
         eventType: 'photo_added',
         description: caption ? `Photo added: ${caption}` : 'Photo added',
@@ -169,6 +172,7 @@ export async function DELETE(
     // Add timeline entry
     await prisma.jobTimeline.create({
       data: {
+        publicId: `timeline_${nanoid(12)}`,
         jobId: id,
         eventType: 'photo_removed',
         description: photo.caption ? `Photo removed: ${photo.caption}` : 'Photo removed',

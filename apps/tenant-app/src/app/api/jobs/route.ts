@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAuthContext } from '@/lib/auth-context';
 import { prisma } from '@/lib/prisma';
 import { CreateJobSchema, JobFilterSchema } from '@/lib/validations/job';
+import { nanoid } from 'nanoid';
 
 export async function GET(request: NextRequest) {
   try {
@@ -36,7 +37,7 @@ export async function GET(request: NextRequest) {
         include: { Customer: {
             select: { id: true, company: true, primaryName: true },
           },
-          _count: { select: { JobPhoto: true, timeline: true },
+          _count: { select: { JobPhoto: true, JobTimeline: true },
           },
         },
         skip: (filter.page - 1) * filter.limit,
@@ -78,8 +79,9 @@ export async function POST(request: NextRequest) {
         orgId: authContext.orgId!,
         scheduledAt: data.scheduledAt ? new Date(data.scheduledAt) : null,
         location: data.location || undefined,
-        timeline: {
+        JobTimeline: {
           create: {
+            publicId: `timeline_${nanoid(12)}`,
             eventType: 'created',
             description: 'Job created',
             metadata: {},

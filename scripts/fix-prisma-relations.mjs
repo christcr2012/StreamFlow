@@ -66,12 +66,42 @@ const fixes = [
   { pattern: /select:\s*\{\s*customer\s*:/g, replacement: 'select: { Customer:' },
   { pattern: /select:\s*\{\s*job\s*:/g, replacement: 'select: { Job:' },
 
+  // More include patterns for Cleaning vertical
+  { pattern: /include:\s*\{\s*contract\s*:/g, replacement: 'include: { CleaningContract:' },
+  { pattern: /include:\s*\{\s*workOrders\s*:/g, replacement: 'include: { CleaningWorkOrder:' },
+
+  // Select patterns for Cleaning vertical
+  { pattern: /select:\s*\{\s*contract\s*:/g, replacement: 'select: { CleaningContract:' },
+  { pattern: /select:\s*\{\s*estimate\s*:/g, replacement: 'select: { CleaningEstimate:' },
+
   // _count selects - more cases
   { pattern: /_count:\s*\{\s*select:\s*\{\s*invoices\s*:/g, replacement: '_count: { select: { Invoice:' },
   { pattern: /_count:\s*\{\s*select:\s*\{\s*timeline\s*:/g, replacement: '_count: { select: { JobTimeline:' },
 
+  // More _count patterns
+  { pattern: /select:\s*\{\s*_count:\s*\{\s*select:\s*\{\s*invoices\s*:/g, replacement: 'select: { _count: { select: { Invoice:' },
+  { pattern: /select:\s*\{\s*_count:\s*\{\s*select:\s*\{\s*timeline\s*:/g, replacement: 'select: { _count: { select: { JobTimeline:' },
+
+  // Include patterns for Invoice relations
+  { pattern: /include:\s*\{\s*payments\s*:/g, replacement: 'include: { Payment:' },
+  { pattern: /include:\s*\{\s*lineItems\s*:/g, replacement: 'include: { InvoiceLine:' },
+
+  // Include patterns for Customer and Job
+  { pattern: /include:\s*\{\s*jobs\s*:/g, replacement: 'include: { Job:' },
+  { pattern: /include:\s*\{\s*invoices\s*:/g, replacement: 'include: { Invoice:' },
+
   // Where clauses
   { pattern: /where:\s*\{\s*job\s*:/g, replacement: 'where: { Job:' },
+  { pattern: /where:\s*\{\s*customer\s*:/g, replacement: 'where: { Customer:' },
+
+  // Nested creates/updates - these are the most important fixes
+  { pattern: /contacts:\s*\{/g, replacement: 'CustomerContact: {' },
+  { pattern: /timeline:\s*\{/g, replacement: 'JobTimeline: {' },
+  { pattern: /lineItems:\s*\{/g, replacement: 'InvoiceLine: {' },
+  { pattern: /photos:\s*\{/g, replacement: 'JobPhoto: {' },
+
+  // Fix template relation (Agreement)
+  { pattern: /(\s+)template:\s*\{/g, replacement: '$1AgreementTemplate: {' },
 
   // Fix prisma.Model back to prisma.model (undo over-correction)
   { pattern: /prisma\.Customer/g, replacement: 'prisma.customer' },

@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
               role: true,
             },
           },
-          _count: { select: { Job: true, invoices: true },
+          _count: { select: { Job: true, Invoice: true },
           },
         },
         skip: (filter.page - 1) * filter.limit,
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
         billingSettings: customerData.billingSettings as any,
         orgId: authContext.orgId!,
         publicId: `cust_${nanoid(12)}`,
-        contacts: contacts && contacts.length > 0 ? {
+        CustomerContact: contacts && contacts.length > 0 ? {
           create: contacts,
         } : undefined,
       },

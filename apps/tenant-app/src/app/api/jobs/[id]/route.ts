@@ -26,7 +26,7 @@ export async function GET(
             primaryPhone: true,
           },
         },
-        photos: {
+        JobPhoto: {
           select: {
             id: true,
             publicId: true,
@@ -36,7 +36,7 @@ export async function GET(
           },
           orderBy: { takenAt: 'desc' },
         },
-        timeline: {
+        JobTimeline: {
           select: {
             id: true,
             publicId: true,

@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
         include: { Customer: {
             select: { id: true, company: true, primaryName: true },
           },
-          template: {
+          AgreementTemplate: {
             select: { id: true, name: true },
           },
         },

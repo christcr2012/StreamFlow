@@ -27,7 +27,7 @@ export async function GET(
             primaryPhone: true,
           },
         },
-        template: {
+        AgreementTemplate: {
           select: {
             id: true,
             name: true,
@@ -82,7 +82,7 @@ export async function PATCH(
             primaryPhone: true,
           },
         },
-        template: {
+        AgreementTemplate: {
           select: {
             id: true,
             name: true,
