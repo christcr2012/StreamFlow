@@ -78,11 +78,11 @@ export default function PricingPage() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
+        <div className="grid md:grid-cols-3 gap-8 gap-y-12 mb-16">
           {plans.map((plan, idx) => (
-            <div key={idx} className={`relative ${plan.highlighted ? 'pt-6' : ''}`}>
+            <div key={idx} className="relative">
               {plan.highlighted && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10 px-4 py-1.5 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full text-white text-xs font-bold shadow-lg whitespace-nowrap">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 px-4 py-1.5 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full text-white text-xs font-bold shadow-lg whitespace-nowrap">
                   MOST POPULAR
                 </div>
               )}
