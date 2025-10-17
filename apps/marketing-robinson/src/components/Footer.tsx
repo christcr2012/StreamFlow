@@ -9,18 +9,18 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         {/* Logo and tagline */}
         <div className="mb-8">
-          <Link href="/" className="inline-flex items-center gap-4 group mb-4">
+          <Link href="/" className="inline-flex items-center gap-5 group mb-6">
             <Image
               src="/logo.png"
               alt="Robinson AI Systems Logo"
               width={1200}
               height={1200}
               className="w-auto transition-transform duration-normal group-hover:scale-105"
-              style={{ height: '80px' }}
+              style={{ height: '160px' }}
             />
-            <span className="text-2xl font-bold text-text">Robinson AI Systems</span>
+            <span className="text-3xl font-bold text-text">Robinson AI Systems</span>
           </Link>
-          <p className="text-text-muted max-w-md">
+          <p className="text-text-muted max-w-md text-lg">
             Enterprise AI consulting and delivery partner. Custom platforms, agent systems, and vertical solutions built for scale.
           </p>
         </div>

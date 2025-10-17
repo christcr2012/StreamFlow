@@ -37,14 +37,14 @@ export default function Navigation() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
+        <Link href="/" className="flex items-center gap-4 group">
           <Image
             src="/logo.png"
             alt="Robinson AI Systems Logo"
             width={1000}
             height={1000}
             className="w-auto transition-transform duration-normal group-hover:scale-105"
-            style={{ height: 'calc(100vh - 32px)', maxHeight: '56px' }}
+            style={{ height: '200px' }}
             priority
           />
           <span className="text-xl sm:text-2xl font-bold text-text tracking-tight hidden sm:inline">
