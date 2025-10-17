@@ -29,23 +29,22 @@ export default function Navigation() {
 
   return (
     <nav
-      className={`border-b backdrop-blur-xl sticky top-0 z-sticky transition-all duration-normal overflow-visible ${
+      className={`border-b backdrop-blur-xl sticky top-0 z-sticky transition-all duration-normal ${
         scrolled
           ? 'border-border bg-surface/95 shadow-md'
           : 'border-border/50 bg-surface/80'
       }`}
-      style={{ height: '72px' }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between overflow-visible">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-1 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-4 group relative" style={{ zIndex: 1200 }}>
+        <Link href="/" className="flex items-center gap-4 group py-1">
           <Image
             src="/logo.png"
             alt="Robinson AI Systems Logo"
             width={1000}
             height={1000}
             className="transition-transform duration-normal group-hover:scale-105"
-            style={{ height: '200px !important', width: 'auto !important', maxHeight: 'none !important', maxWidth: 'none !important' }}
+            style={{ height: 'calc(100% - 8px)', width: 'auto !important', maxHeight: '120px', minHeight: '100px' }}
             priority
           />
           <span className="text-xl sm:text-2xl font-bold text-text tracking-tight hidden sm:inline">
