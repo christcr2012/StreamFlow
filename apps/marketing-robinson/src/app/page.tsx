@@ -49,6 +49,17 @@ export default function RobinsonHomePage() {
         </div>
       </section>
 
+      {/* Social proof logos */}
+      <section className="max-w-7xl mx-auto px-6 -mt-8 pb-12">
+        <div className="flex flex-wrap items-center justify-center gap-8 opacity-80">
+          <div className="h-8 w-28 rounded-md bg-slate-800/80 border border-slate-700" />
+          <div className="h-8 w-28 rounded-md bg-slate-800/80 border border-slate-700" />
+          <div className="h-8 w-28 rounded-md bg-slate-800/80 border border-slate-700" />
+          <div className="h-8 w-28 rounded-md bg-slate-800/80 border border-slate-700" />
+          <div className="h-8 w-28 rounded-md bg-slate-800/80 border border-slate-700" />
+        </div>
+      </section>
+
       {/* Products Section */}
       <section id="products" className="max-w-7xl mx-auto px-6 py-24">
         <h2 className="text-4xl font-bold text-white mb-12 text-center">Our Products</h2>

@@ -7,10 +7,21 @@ const plex = IBM_Plex_Sans({ subsets: ['latin'], weight: ['400','500','700'], di
 const mono = JetBrains_Mono({ subsets: ['latin'], weight: ['400','700'], display: 'swap' });
 
 export const metadata = {
+  metadataBase: new URL('https://www.cortiware.com'),
   title: 'Cortiware',
   description: 'Business management platform — a Robinson AI Systems product',
   icons: { icon: '/favicon.svg' },
+  alternates: { canonical: 'https://www.cortiware.com' },
   openGraph: {
+    title: 'Cortiware',
+    description: 'Business management platform — a Robinson AI Systems product',
+    url: 'https://www.cortiware.com',
+    siteName: 'Cortiware',
+    type: 'website',
+    images: ['/og.svg']
+  },
+  twitter: {
+    card: 'summary_large_image',
     title: 'Cortiware',
     description: 'Business management platform — a Robinson AI Systems product',
     images: ['/og.svg']

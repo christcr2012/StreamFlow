@@ -7,10 +7,21 @@ const plex = IBM_Plex_Sans({ subsets: ['latin'], weight: ['400','500','700'], di
 const mono = JetBrains_Mono({ subsets: ['latin'], weight: ['400','700'], display: 'swap' });
 
 export const metadata = {
+  metadataBase: new URL('https://www.robinsonaisystems.com'),
   title: 'Robinson AI Systems',
   description: 'Enterprise AI solutions',
   icons: { icon: '/favicon.png' },
+  alternates: { canonical: 'https://www.robinsonaisystems.com' },
   openGraph: {
+    title: 'Robinson AI Systems',
+    description: 'Enterprise AI solutions',
+    url: 'https://www.robinsonaisystems.com',
+    siteName: 'Robinson AI Systems',
+    type: 'website',
+    images: ['/og.svg']
+  },
+  twitter: {
+    card: 'summary_large_image',
     title: 'Robinson AI Systems',
     description: 'Enterprise AI solutions',
     images: ['/og.svg']

@@ -23,6 +23,7 @@ const nextConfig = {
     } : false,
   },
 
+  // Touching config to trigger redeploy after Prisma ownership change
   webpack: (config, { isServer }) => {
     if (isServer) {
       config.plugins = [...config.plugins, new PrismaPlugin()];

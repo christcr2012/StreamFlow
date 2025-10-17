@@ -57,6 +57,16 @@ export default function CortiwareHomePage() {
           </div>
         </div>
       </section>
+      {/* Social proof logos */}
+      <section className="max-w-7xl mx-auto px-6 -mt-8 pb-6">
+        <div className="flex flex-wrap items-center justify-center gap-8 opacity-80">
+          <div className="h-8 w-28 rounded-md bg-slate-800/80 border border-slate-700" />
+          <div className="h-8 w-28 rounded-md bg-slate-800/80 border border-slate-700" />
+          <div className="h-8 w-28 rounded-md bg-slate-800/80 border border-slate-700" />
+          <div className="h-8 w-28 rounded-md bg-slate-800/80 border border-slate-700" />
+          <div className="h-8 w-28 rounded-md bg-slate-800/80 border border-slate-700" />
+        </div>
+      </section>
       {/* Who it's for */}
       <section className="max-w-7xl mx-auto px-6 pt-2 pb-12">
         <div className="flex flex-wrap items-center justify-center gap-3 text-slate-200">
