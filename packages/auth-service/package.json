@@ -7,7 +7,8 @@
   "scripts": {
     "build": "node ../../node_modules/typescript/bin/tsc",
     "dev": "node ../../node_modules/typescript/bin/tsc --watch",
-    "typecheck": "node ../../node_modules/typescript/bin/tsc --noEmit"
+    "typecheck": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",

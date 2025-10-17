@@ -41,17 +41,35 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "inputs": ["src/**", "prisma/**", "*.config.*", "package.json"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "env": ["DATABASE_URL", "NODE_ENV"]
     },
     "dev": {
       "cache": false,
       "persistent": true
     },
-    "lint": {},
-    "typecheck": {},
+    "lint": {
+      "inputs": ["src/**", "*.config.*"],
+      "outputs": []
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "*.config.*", "tsconfig.json"],
+      "outputs": []
+    },
     "test": {
       "dependsOn": ["build"],
+      "inputs": ["src/**", "tests/**", "*.config.*"],
       "outputs": ["coverage/**"]
+    },
+    "prisma:generate": {
+      "cache": false,
+      "inputs": ["prisma/schema.prisma"],
+      "outputs": ["node_modules/@prisma/client*/**"]
+    },
+    "clean": {
+      "cache": false
     }
   }
 }
