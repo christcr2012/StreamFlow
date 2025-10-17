@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
                   CleaningEstimate: {
                     select: {
                       spaceType: true,
-                      lead: {
+                      CleaningLead: {
                         select: {
                           contactName: true,
                           address: true

@@ -97,7 +97,7 @@ export async function GET(request: NextRequest) {
             }
           },
 
-          events: {
+          CleaningWorkOrderEvent: {
             select: {
               id: true,
               eventType: true,

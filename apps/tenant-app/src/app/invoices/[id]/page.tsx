@@ -14,7 +14,7 @@ async function getInvoice(id: string, orgId: string) {
     include: { InvoiceLine: {
         orderBy: { createdAt: 'asc' },
       },
-      customer: {
+      Customer: {
         select: {
           id: true,
           company: true,
@@ -23,10 +23,10 @@ async function getInvoice(id: string, orgId: string) {
           primaryPhone: true,
         },
       },
-      payments: {
+      Payment: {
         orderBy: { receivedAt: 'desc' },
       },
-      reminders: {
+      InvoiceReminder: {
         orderBy: { createdAt: 'desc' },
       },
     },
@@ -54,11 +54,14 @@ async function getInvoice(id: string, orgId: string) {
     taxAmount: Number(invoice.taxAmount),
     discountAmount: Number(invoice.discountAmount),
     amount: Number(invoice.amount),
-    job,
+    customer: invoice.Customer,
+    lineItems: invoice.InvoiceLine,
     payments: invoice.Payment.map((p: any) => ({
       ...p,
       amount: Number(p.amount),
     })),
+    reminders: invoice.InvoiceReminder,
+    job,
   };
 }
 

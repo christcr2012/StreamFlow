@@ -24,7 +24,7 @@ interface DashboardClientProps {
     title: string;
     status: string;
     scheduledAt: Date | null;
-    customer: {
+    Customer: {
       id: string;
       company: string | null;
       primaryName: string | null;
@@ -36,7 +36,7 @@ interface DashboardClientProps {
     amount: any;
     status: string;
     issuedAt: Date;
-    customer: {
+    Customer: {
       id: string;
       company: string | null;
       primaryName: string | null;

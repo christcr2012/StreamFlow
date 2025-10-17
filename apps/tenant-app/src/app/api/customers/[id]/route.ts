@@ -27,7 +27,7 @@ export async function GET(
             role: true,
           },
         },
-        jobs: {
+        Job: {
           select: {
             id: true,
             title: true,

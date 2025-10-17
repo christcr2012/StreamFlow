@@ -16,7 +16,7 @@ interface Invoice {
   amount: any;
   status: string;
   issuedAt: Date;
-  customer: {
+  Customer: {
     id: string;
     company: string | null;
     primaryName: string | null;

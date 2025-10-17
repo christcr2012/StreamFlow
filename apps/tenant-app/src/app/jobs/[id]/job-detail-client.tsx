@@ -21,19 +21,19 @@ interface Job {
   location: any;
   notes: string | null;
   createdAt: Date;
-  customer: {
+  Customer: {
     id: string;
     company: string | null;
     primaryName: string | null;
   } | null;
-  timeline: Array<{
+  JobTimeline: Array<{
     id: string;
     eventType: string;
     description: string;
     createdAt: Date;
     metadata: any;
   }>;
-  photos: Array<{
+  JobPhoto: Array<{
     id: string;
     url: string;
     caption: string | null;
@@ -149,7 +149,7 @@ export function JobDetailClient({ job }: JobDetailClientProps) {
             {/* Photos */}
             <JobPhotoGallery
               jobId={job.id}
-              initialPhotos={job.photos}
+              initialPhotos={job.JobPhoto}
               onPhotosChange={() => router.refresh()}
             />
 
@@ -158,7 +158,7 @@ export function JobDetailClient({ job }: JobDetailClientProps) {
               <CardHeader title="Activity Timeline" />
               <div className="p-6">
                 <Timeline
-                  events={job.timeline.map(t => ({
+                  events={job.JobTimeline.map(t => ({
                     id: t.id,
                     eventType: t.eventType,
                     description: t.description,

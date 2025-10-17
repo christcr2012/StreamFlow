@@ -23,7 +23,7 @@ interface Job {
   scheduledAt: Date | null;
   completedAt: Date | null;
   createdAt: Date;
-  customer: {
+  Customer: {
     id: string;
     company: string | null;
     primaryName: string | null;
