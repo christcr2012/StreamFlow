@@ -10,9 +10,9 @@ async function getOrgData(orgId: string) {
     where: { id: orgId },
     include: {
       _count: { select: { User: true,
-          customers: true,
-          jobs: true,
-          invoices: true,
+          Customer: true,
+          Job: true,
+          Invoice: true,
         },
       },
     },
@@ -81,19 +81,19 @@ export default async function SettingsPage() {
           <div className="p-4 md:p-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
               <div className="text-center">
-                <p className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">{org._count.users}</p>
+                <p className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">{org._count.User}</p>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Users</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">{org._count.customers}</p>
+                <p className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">{org._count.Customer}</p>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Customers</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">{org._count.jobs}</p>
+                <p className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">{org._count.Job}</p>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Jobs</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">{org._count.invoices}</p>
+                <p className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">{org._count.Invoice}</p>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Invoices</p>
               </div>
             </div>

@@ -38,7 +38,7 @@ export async function GET(
           orderBy: { createdAt: 'desc' },
           take: 10,
         },
-        invoices: {
+        Invoice: {
           select: {
             id: true,
             number: true,

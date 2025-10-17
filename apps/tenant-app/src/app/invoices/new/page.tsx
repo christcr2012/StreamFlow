@@ -20,7 +20,7 @@ async function getCustomersAndJobs(orgId: string) {
       select: {
         id: true,
         title: true,
-        customer: {
+        Customer: {
           select: {
             id: true,
             company: true,

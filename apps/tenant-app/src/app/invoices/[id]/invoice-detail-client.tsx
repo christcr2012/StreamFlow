@@ -91,19 +91,24 @@ export function InvoiceDetailClient({ invoice }: InvoiceDetailClientProps) {
 
   const handleDownloadPDF = () => {
     try {
-      if (!invoice.Customer) {
+      if (!invoice.customer) {
         showToast('Cannot generate PDF: No customer assigned', 'error');
         return;
       }
 
       // Convert Decimal to number for PDF generation
       const pdfData = {
-        ...invoice,
+        number: invoice.number,
+        issuedAt: invoice.issuedAt,
+        dueDate: invoice.dueDate,
+        customer: invoice.customer,
+        lineItems: invoice.lineItems,
         subtotal: Number(invoice.subtotal),
         taxAmount: Number(invoice.taxAmount),
         discountAmount: Number(invoice.discountAmount),
         amount: Number(invoice.amount),
-        customer: invoice.Customer,
+        terms: invoice.terms,
+        notes: invoice.notes,
       };
 
       downloadInvoicePDF(pdfData);
@@ -191,7 +196,7 @@ export function InvoiceDetailClient({ invoice }: InvoiceDetailClientProps) {
     }
   };
 
-  const totalPaid = invoice.Payment.reduce((sum, p) => sum + p.amount, 0);
+  const totalPaid = invoice.payments.reduce((sum: number, p: any) => sum + p.amount, 0);
   const amountDue = invoice.amount - totalPaid;
 
   return (
@@ -226,7 +231,7 @@ export function InvoiceDetailClient({ invoice }: InvoiceDetailClientProps) {
                   <Button variant="secondary" onClick={generatePaymentLink} loading={isProcessing} disabled={isProcessing}>
                     Generate Payment Link
                   </Button>
-                  {invoice.Customer?.primaryEmail && (
+                  {invoice.customer?.primaryEmail && (
                     <Button variant="secondary" onClick={sendReminder} loading={isProcessing} disabled={isProcessing}>
                       Send Reminder
                     </Button>
@@ -293,26 +298,26 @@ export function InvoiceDetailClient({ invoice }: InvoiceDetailClientProps) {
         </Card>
 
         {/* Customer Info */}
-        {invoice.Customer && (
+        {invoice.customer && (
           <Card>
             <CardHeader title="Customer" />
             <div className="p-6">
-              <Link href={`/customers/${invoice.Customer.id}`} className="text-blue-600 hover:text-blue-700">
+              <Link href={`/customers/${invoice.customer.id}`} className="text-blue-600 hover:text-blue-700">
                 <p className="font-medium text-lg">
-                  {invoice.Customer.company || invoice.Customer.primaryName || 'Unnamed Customer'}
+                  {invoice.customer.company || invoice.customer.primaryName || 'Unnamed Customer'}
                 </p>
               </Link>
-              {invoice.Customer.primaryEmail && (
-                <p className="text-sm text-gray-600 mt-1">{invoice.Customer.primaryEmail}</p>
+              {invoice.customer.primaryEmail && (
+                <p className="text-sm text-gray-600 mt-1">{invoice.customer.primaryEmail}</p>
               )}
-              {invoice.Customer.primaryPhone && (
-                <p className="text-sm text-gray-600">{invoice.Customer.primaryPhone}</p>
+              {invoice.customer.primaryPhone && (
+                <p className="text-sm text-gray-600">{invoice.customer.primaryPhone}</p>
               )}
-              {invoice.Job && (
+              {invoice.job && (
                 <div className="mt-3">
                   <p className="text-sm text-gray-600">Related Job:</p>
-                  <Link href={`/jobs/${invoice.Job.id}`} className="text-blue-600 hover:text-blue-700">
-                    {invoice.Job.title}
+                  <Link href={`/jobs/${invoice.job.id}`} className="text-blue-600 hover:text-blue-700">
+                    {invoice.job.title}
                   </Link>
                 </div>
               )}
@@ -411,12 +416,12 @@ export function InvoiceDetailClient({ invoice }: InvoiceDetailClientProps) {
         )}
 
         {/* Payment History */}
-        {invoice.Payment.length > 0 && (
+        {invoice.payments.length > 0 && (
           <Card>
             <CardHeader title="Payment History" />
             <div className="p-6">
               <div className="space-y-3">
-                {invoice.Payment.map((payment) => (
+                {invoice.payments.map((payment: any) => (
                   <div key={payment.id} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
                     <div>
                       <p className="text-sm font-medium">{formatDecimalCurrency(payment.amount / 100, payment.currency)}</p>

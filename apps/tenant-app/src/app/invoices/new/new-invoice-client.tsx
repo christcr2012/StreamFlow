@@ -19,7 +19,7 @@ interface Customer {
 interface Job {
   id: string;
   title: string;
-  customer: {
+  Customer: {
     id: string;
     company: string | null;
     primaryName: string | null;

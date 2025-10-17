@@ -34,7 +34,7 @@ export default async function PaymentPage({ params }: { params: Promise<{ token:
           primaryEmail: true,
         },
       },
-      org: {
+      Org: {
         select: {
           name: true,
           stripePublishableKey: true,

@@ -112,10 +112,10 @@ export default function RecurringInvoicesClient({ recurringInvoices: initialRecu
       render: (ri: RecurringInvoice) => (
         <div>
           <div className="font-medium text-gray-900 dark:text-gray-100">
-            {ri.Customer.company || ri.Customer.primaryName}
+            {ri.customer.company || ri.customer.primaryName}
           </div>
-          {ri.Customer.primaryEmail && (
-            <div className="text-sm text-gray-500 dark:text-gray-400">{ri.Customer.primaryEmail}</div>
+          {ri.customer.primaryEmail && (
+            <div className="text-sm text-gray-500 dark:text-gray-400">{ri.customer.primaryEmail}</div>
           )}
         </div>
       ),
