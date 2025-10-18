@@ -91,6 +91,7 @@ const IGNORE_PATTERNS = [
   /build\//,
   /\.env\.example$/,
   /\.env\.template$/,
+  /\.env\.vercel\.template$/,
   /package-lock\.json$/,
   /pnpm-lock\.yaml$/,
   /yarn\.lock$/,

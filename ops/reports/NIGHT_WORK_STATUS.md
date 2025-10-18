@@ -62,12 +62,12 @@ npm run build
 
 ### Test 1: Provider-Portal Authentication
 **URL:** `https://cortiware-provider-portal.vercel.app/login`
-**Credentials:**
-- Email: `chris.tcr.2012@gmail.com`
-- Password: `Thrillicious01no`
+**Credentials (example placeholders):**
+- Email: `provider@example.com`
+- Password: `CHANGE_ME_PASSWORD`
 
 **Expected:**
-- ✅ Login succeeds
+- ✅ Login succeeds (with valid configured credentials)
 - ✅ Redirects to `/provider`
 - ✅ Dashboard loads
 - ✅ All navigation works

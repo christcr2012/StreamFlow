@@ -28,7 +28,7 @@ jobs:
 
       - name: Run E2E Smoke
         env:
-          BASE_URL: ${{ inputs.base_url || vars.STAGING_URL || 'https://stream-flow-git-main-christcr2012s-projects.vercel.app' }}
+          BASE_URL: ${{ inputs.base_url || vars.STAGING_URL || 'https://cortiware-provider-portal-git-main-chris-projects-de6cd1bf.vercel.app' }}
           E2E_EXPECT_FED_ENABLED: "true"
         run: npm run test:e2e
 

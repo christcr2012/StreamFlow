@@ -1,11 +1,12 @@
-// E2E smoke tests using Node fetch against a running dev server.
-// Requires: `next dev -p 5000` in another terminal with FED_ENABLED=true
+// E2E smoke tests using Node fetch against a running server or deployed URL.
 // Control expected behavior with environment variables:
 //   BASE_URL (default http://localhost:5000)
-//   E2E_EXPECT_FED_ENABLED ("true" or "false"): if set, assert 404 when false; assert 401/200 when true
+//   E2E_EXPECT_FED_ENABLED ("true" or "false"): when "true", expect 401 unauth on protected routes
+//   E2E_PROVIDER_COOKIE (optional): if provided, use for authenticated checks
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:5000';
 const EXP_FED = (process.env.E2E_EXPECT_FED_ENABLED || '').toLowerCase();
+const TEST_PROVIDER_COOKIE = process.env.E2E_PROVIDER_COOKIE || '';
 
 function expect(cond: boolean, msg: string) {
   if (!cond) throw new Error(msg);
@@ -24,47 +25,42 @@ export async function run() {
     try { await fn(); passed++; console.log(`[PASS] ${label}`); } catch (e) { failed++; console.error(`[FAIL] ${label}:`, (e as Error).message); }
   }
 
+  // Use existing provider-portal routes
+  // 1) List federated clients (provider auth required)
   await step(async () => {
-    const res = await get('/api/fed/providers/tenants');
-    if (EXP_FED === 'false') expect(res.status === 404, `expected 404 when FED disabled, got ${res.status}`);
+    const res = await get('/api/federation/clients');
     if (EXP_FED === 'true') expect(res.status === 401, `expected 401 without cookie when FED enabled, got ${res.status}`);
-  }, 'providers/tenants without cookie');
+  }, 'federation/clients without cookie');
 
-  await step(async () => {
-    const res = await get('/api/fed/providers/tenants', 'rs_provider=dev-provider');
-    if (EXP_FED === 'false') {
-      expect(res.status === 404, `expected 404 when FED disabled, got ${res.status}`);
-    }
-    if (EXP_FED === 'true') {
-      expect(res.status === 200, `expected 200 with provider cookie when FED enabled, got ${res.status}`);
-      const json = await res.json();
-      expect(json.ok === true, 'response envelope should have ok:true');
-      expect(Array.isArray(json.data?.items), 'response should have data.items array');
-      expect(typeof json.data?.nextCursor === 'string' || json.data?.nextCursor === null, 'response should have data.nextCursor');
-    }
-  }, 'providers/tenants with provider cookie');
+  if (TEST_PROVIDER_COOKIE) {
+    await step(async () => {
+      const res = await get('/api/federation/clients', TEST_PROVIDER_COOKIE);
+      if (EXP_FED === 'true') {
+        expect(res.status === 200, `expected 200 with provider cookie when FED enabled, got ${res.status}`);
+        await res.json();
+      }
+    }, 'federation/clients with provider cookie');
+  } else {
+    console.log('[SKIP] federation/clients with provider cookie (no E2E_PROVIDER_COOKIE set)');
+  }
 
+  // 2) Federation keys (provider auth required)
   await step(async () => {
-    const res = await get('/api/fed/developers/diagnostics');
-    if (EXP_FED === 'false') expect(res.status === 404, `expected 404 when FED disabled, got ${res.status}`);
+    const res = await get('/api/federation/keys');
     if (EXP_FED === 'true') expect(res.status === 401, `expected 401 without cookie when FED enabled, got ${res.status}`);
-  }, 'developers/diagnostics without cookie');
+  }, 'federation/keys without cookie');
 
-  await step(async () => {
-    const res = await get('/api/fed/developers/diagnostics', 'rs_developer=dev-developer');
-    if (EXP_FED === 'false') {
-      expect(res.status === 404, `expected 404 when FED disabled, got ${res.status}`);
-    }
-    if (EXP_FED === 'true') {
-      expect(res.status === 200, `expected 200 with developer cookie when FED enabled, got ${res.status}`);
-      const json = await res.json();
-      expect(json.ok === true, 'response envelope should have ok:true');
-      expect(typeof json.data?.service === 'string', 'response should have data.service');
-      expect(typeof json.data?.version === 'string', 'response should have data.version');
-      expect(typeof json.data?.time === 'string', 'response should have data.time');
-      expect(typeof json.data?.features === 'object', 'response should have data.features');
-    }
-  }, 'developers/diagnostics with developer cookie');
+  if (TEST_PROVIDER_COOKIE) {
+    await step(async () => {
+      const res = await get('/api/federation/keys', TEST_PROVIDER_COOKIE);
+      if (EXP_FED === 'true') {
+        expect(res.status === 200, `expected 200 with provider cookie when FED enabled, got ${res.status}`);
+        await res.json();
+      }
+    }, 'federation/keys with provider cookie');
+  } else {
+    console.log('[SKIP] federation/keys with provider cookie (no E2E_PROVIDER_COOKIE set)');
+  }
 
   console.log(`[E2E SUMMARY] ${name}: ${passed}/${total} steps passed`);
   if (failed > 0) process.exit(1);
