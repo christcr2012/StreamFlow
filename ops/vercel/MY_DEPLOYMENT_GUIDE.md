@@ -123,23 +123,25 @@ node -e "const bcrypt = require('bcryptjs'); console.log(bcrypt.hashSync('your-p
 **NOTE:** For Stripe keys, copy them from your `.env.local` file (lines 35-37)
 
 ```bash
-# Database
-DATABASE_URL=postgresql://neondb_owner:npg_GwJisR3Hvlf7@ep-billowing-truth-afi1gfga-pooler.c-2.us-west-2.aws.neon.tech/neondb?sslmode=require
+# Database (set in Vercel → never commit real credentials)
+# Example:
+# DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DB?sslmode=require
+DATABASE_URL=postgresql://USER:PASSWORD@HOST/DB?sslmode=require
 
 # SSO Ticket Secret (MUST match tenant-app)
-AUTH_TICKET_HMAC_SECRET=GENERATE_WITH_OPENSSL_RAND_BASE64_32
+AUTH_TICKET_HMAC_SECRET=SET_IN_VERCEL
 
 # Provider Authentication
-PROVIDER_EMAIL=chris.tcr.2012@gmail.com
-PROVIDER_PASSWORD=Thrillicious01no
+PROVIDER_EMAIL=provider@example.com
+PROVIDER_PASSWORD=CHANGE_ME_IN_VERCEL
 PROVIDER_BREAKGLASS_EMAIL=breakglass-provider@example.com
-PROVIDER_BREAKGLASS_PASSWORD=GENERATE_SECURE_PASSWORD
+PROVIDER_BREAKGLASS_PASSWORD=CHANGE_ME_IN_VERCEL
 
 # Developer Authentication
-DEVELOPER_EMAIL=gametcr3@gmail.com
-DEVELOPER_PASSWORD=Thrillicious01no
+DEVELOPER_EMAIL=developer@example.com
+DEVELOPER_PASSWORD=CHANGE_ME_IN_VERCEL
 DEVELOPER_BREAKGLASS_EMAIL=breakglass-developer@example.com
-DEVELOPER_BREAKGLASS_PASSWORD=GENERATE_SECURE_PASSWORD
+DEVELOPER_BREAKGLASS_PASSWORD=CHANGE_ME_IN_VERCEL
 
 # Development Mode (DISABLE IN PRODUCTION)
 DEV_ACCEPT_ANY_PROVIDER_LOGIN=false
@@ -148,10 +150,10 @@ DEV_ACCEPT_ANY_TENANT_LOGIN=false
 DEV_ACCEPT_ANY_ACCOUNTANT_LOGIN=false
 DEV_ACCEPT_ANY_VENDOR_LOGIN=false
 
-# Stripe (Get from your .env.local file)
-STRIPE_SECRET_KEY=sk_test_YOUR_KEY_FROM_ENV_LOCAL
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_YOUR_KEY_FROM_ENV_LOCAL
-STRIPE_WEBHOOK_SECRET=whsec_YOUR_SECRET_FROM_ENV_LOCAL
+# Stripe (Get from your Stripe dashboard; set in Vercel)
+STRIPE_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
 
 # Federation (disabled for now)
 FED_ENABLED=false
@@ -190,8 +192,8 @@ node -e "console.log('ACCOUNTANT_SESSION_SECRET=' + require('crypto').randomByte
 node -e "console.log('FED_HMAC_MASTER_KEY=' + require('crypto').randomBytes(64).toString('hex'))"
 
 # Generate bcrypt hashes for credentials
-node -e "const bcrypt = require('bcryptjs'); bcrypt.hash('chris.tcr.2012@gmail.com:Thrillicious01no', 10, (e,h) => console.log('PROVIDER_CREDENTIALS=' + h))"
-node -e "const bcrypt = require('bcryptjs'); bcrypt.hash('gametcr3@gmail.com:Thrillicious01no', 10, (e,h) => console.log('DEVELOPER_CREDENTIALS=' + h))"
+node -e "const bcrypt = require('bcryptjs'); bcrypt.hash('provider@example.com:CHANGE_ME_PASSWORD', 10, (e,h) => console.log('PROVIDER_CREDENTIALS=' + h))"
+node -e "const bcrypt = require('bcryptjs'); bcrypt.hash('developer@example.com:CHANGE_ME_PASSWORD', 10, (e,h) => console.log('DEVELOPER_CREDENTIALS=' + h))"
 ```
 
 **IMPORTANT:** Save the `AUTH_TICKET_HMAC_SECRET` value - you'll need it for tenant-app!
@@ -269,11 +271,12 @@ NEXT_PUBLIC_BASE_URL=https://cortiware.com
 **CRITICAL:** Use the SAME `AUTH_TICKET_HMAC_SECRET` from provider-portal!
 
 ```bash
-# Database (same as provider-portal)
-DATABASE_URL=postgresql://neondb_owner:npg_GwJisR3Hvlf7@ep-billowing-truth-afi1gfga-pooler.c-2.us-west-2.aws.neon.tech/neondb?sslmode=require
+# Database (set in Vercel; use placeholder here)
+# Example: postgresql://USER:PASSWORD@HOST:5432/DB?sslmode=require
+DATABASE_URL=postgresql://USER:PASSWORD@HOST/DB?sslmode=require
 
 # SSO Ticket Secret (MUST match provider-portal)
-AUTH_TICKET_HMAC_SECRET=COPY_FROM_PROVIDER_PORTAL
+AUTH_TICKET_HMAC_SECRET=SET_IN_VERCEL
 
 # Tenant Cookie Secret
 TENANT_COOKIE_SECRET=GENERATE_WITH_OPENSSL_RAND_HEX_32
@@ -321,8 +324,8 @@ Copy the generated hashes to `PROVIDER_ADMIN_PASSWORD_HASH` and `DEVELOPER_ADMIN
 
 1. Visit: `https://cortiware-provider-portal.vercel.app/provider`
 2. Login with:
-   - **Email:** chris.tcr.2012@gmail.com
-   - **Password:** Thrillicious01no
+   - **Email:** provider@example.com
+   - **Password:** CHANGE_ME_IN_VERCEL
 3. Should see provider dashboard
 
 ### 5.3 Test Key Features

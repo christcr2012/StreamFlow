@@ -185,12 +185,12 @@ apps/marketing-cortiware/
 ### Flow 1: Provider Login
 ```
 1. User → https://cortiware-provider-portal.vercel.app/login
-2. Enter: chris.tcr.2012@gmail.com / Thrillicious01no
+2. Enter: provider@example.com / CHANGE_ME_PASSWORD
 3. POST /api/auth/login
 4. authenticateProvider() checks:
    - PROVIDER_EMAIL + PROVIDER_PASSWORD (env vars)
    - PROVIDER_BREAKGLASS_EMAIL + PROVIDER_BREAKGLASS_PASSWORD (fallback)
-5. Set cookie: rs_provider=chris.tcr.2012@gmail.com
+5. Set cookie: rs_provider=provider@example.com
 6. Redirect → /provider
 7. Dashboard loads
 ```
@@ -212,12 +212,12 @@ apps/marketing-cortiware/
 ### Flow 3: Emergency Provider Access
 ```
 1. Provider → https://cortiware-tenant-app.vercel.app/login
-2. Enter: chris.tcr.2012@gmail.com / Thrillicious01no
+2. Enter: provider@example.com / CHANGE_ME_PASSWORD
 3. POST /api/auth/login
 4. authenticateDatabaseUser() fails (not in DB)
 5. authenticateEmergency() checks:
    - Compare password with PROVIDER_ADMIN_PASSWORD_HASH (bcrypt)
-6. Set cookie: rs_provider=chris.tcr.2012@gmail.com
+6. Set cookie: rs_provider=provider@example.com
 7. Redirect → /dashboard
 8. Dashboard loads (Direct Access Mode)
 9. Orange banner displays
@@ -308,16 +308,16 @@ apps/marketing-cortiware/
 
 **Provider-Portal:**
 ```
-PROVIDER_EMAIL=chris.tcr.2012@gmail.com
-PROVIDER_PASSWORD=Thrillicious01no
-DEVELOPER_EMAIL=gametcr3@gmail.com
-DEVELOPER_PASSWORD=Thrillicious01no
+PROVIDER_EMAIL=provider@example.com
+PROVIDER_PASSWORD=CHANGE_ME_IN_VERCEL
+DEVELOPER_EMAIL=developer@example.com
+DEVELOPER_PASSWORD=CHANGE_ME_IN_VERCEL
 PROVIDER_BREAKGLASS_EMAIL=breakglass-provider@example.com
 PROVIDER_BREAKGLASS_PASSWORD=<secure-password>
 DEVELOPER_BREAKGLASS_EMAIL=breakglass-developer@example.com
 DEVELOPER_BREAKGLASS_PASSWORD=<secure-password>
 AUTH_TICKET_HMAC_SECRET=<shared-secret>
-DATABASE_URL=<neon-postgres-url>
+DATABASE_URL=<postgres-url>
 ```
 
 **Tenant-App:**

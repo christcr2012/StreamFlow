@@ -19,7 +19,7 @@
 3. Click "Edit" or "Add" if it doesn't exist
 4. Set the value to:
    ```
-   postgresql://neondb_owner:npg_GwJisR3Hvlf7@ep-billowing-truth-afi1gfga-pooler.c-2.us-west-2.aws.neon.tech/provider-portal?sslmode=require&channel_binding=require
+   postgresql://USER:PASSWORD@HOST/provider-portal?sslmode=require&channel_binding=require
    ```
 5. Select environments: **Production, Preview, Development**
 6. Click "Save"
@@ -62,7 +62,7 @@ If deployment fails:
 
 **Provider Portal (NEW):**
 ```
-postgresql://neondb_owner:npg_GwJisR3Hvlf7@ep-billowing-truth-afi1gfga-pooler.c-2.us-west-2.aws.neon.tech/provider-portal?sslmode=require&channel_binding=require
+postgresql://USER:PASSWORD@HOST/provider-portal?sslmode=require&channel_binding=require
 ```
 
 **Tenant App (EXISTING):**

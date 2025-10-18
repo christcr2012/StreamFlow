@@ -52,40 +52,40 @@ console.log('');
 // Use bcryptjs if available, otherwise provide instructions
 try {
   const bcrypt = require('bcryptjs');
-  
-  // Provider credentials
-  bcrypt.hash('chris.tcr.2012@gmail.com:Thrillicious01no', 10, (err, hash) => {
+
+  // Provider credentials (example placeholders)
+  bcrypt.hash('provider@example.com:CHANGE_ME_PASSWORD', 10, (err, hash) => {
     if (err) {
       console.error('Error generating PROVIDER_CREDENTIALS:', err);
     } else {
       console.log('PROVIDER_CREDENTIALS=' + hash);
     }
   });
-  
-  // Developer credentials
-  bcrypt.hash('gametcr3@gmail.com:Thrillicious01no', 10, (err, hash) => {
+
+  // Developer credentials (example placeholders)
+  bcrypt.hash('developer@example.com:CHANGE_ME_PASSWORD', 10, (err, hash) => {
     if (err) {
       console.error('Error generating DEVELOPER_CREDENTIALS:', err);
     } else {
       console.log('DEVELOPER_CREDENTIALS=' + hash);
     }
   });
-  
+
   setTimeout(() => {
     console.log('');
     console.log('='.repeat(80));
     console.log('DONE! Copy all values above into Vercel.');
     console.log('='.repeat(80));
   }, 1000);
-  
+
 } catch (e) {
   console.log('# bcryptjs not installed - install it first:');
   console.log('# npm install bcryptjs');
   console.log('# Then run this script again');
   console.log('');
   console.log('# Or generate manually:');
-  console.log('node -e "const bcrypt = require(\'bcryptjs\'); bcrypt.hash(\'chris.tcr.2012@gmail.com:Thrillicious01no\', 10, (e,h) => console.log(\'PROVIDER_CREDENTIALS=\' + h))"');
-  console.log('node -e "const bcrypt = require(\'bcryptjs\'); bcrypt.hash(\'gametcr3@gmail.com:Thrillicious01no\', 10, (e,h) => console.log(\'DEVELOPER_CREDENTIALS=\' + h))"');
+  console.log('node -e "const bcrypt = require(\'bcryptjs\'); bcrypt.hash(\'provider@example.com:CHANGE_ME_PASSWORD\', 10, (e,h) => console.log(\'PROVIDER_CREDENTIALS=\' + h))"');
+  console.log('node -e "const bcrypt = require(\'bcryptjs\'); bcrypt.hash(\'developer@example.com:CHANGE_ME_PASSWORD\', 10, (e,h) => console.log(\'DEVELOPER_CREDENTIALS=\' + h))"');
   console.log('');
   console.log('='.repeat(80));
   console.log('DONE! Copy all values above into Vercel.');
