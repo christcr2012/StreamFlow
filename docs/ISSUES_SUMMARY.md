@@ -1,8 +1,8 @@
 # Open Issues Summary
 
-Generated: 2025-10-18T22:29:54.002Z
+Generated: 2025-10-18T22:30:14.518Z
 
-Total open issues: 54
+Total open issues: 53
 
 ## Next (12)
 - #76 Tenant auth – RefreshToken model or logout refactor (priority: next, area: tenant-app, type: decision)
@@ -60,8 +60,7 @@ Total open issues: 54
 - #55 API v2 endpoints – design and implement (leads, opportunities, organizations) (priority: later, area: provider-portal, area: tenant-app, type: feature)
 - #54 Theme follow-ups – WCAG AA tune + increase variety (priority: next, area: provider-portal, area: tenant-app, type: feature)
 
-## Now (4)
+## Now (3)
 - #61 Deployment secrets (Option C) – complete required secrets for auth flows (priority: now, area: infra, type: chore)
 - #60 M2 Phase 6 – Fix TypeScript build blockers for Vercel (priority: now, area: provider-portal, area: tenant-app, type: bug)
-- #59 Add GitHub Action: sync Issues into docs/ACTUAL_REMAINING_WORK.md (priority: now, area: infra, type: chore)
 - #53 Backlog migration tracker: convert docs + TODOs into GitHub Issues 

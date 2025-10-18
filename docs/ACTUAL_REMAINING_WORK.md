@@ -4,7 +4,6 @@
 - #70 Labels: standardize taxonomy + add auto-labeler Action
 - #61 Deployment secrets (Option C) – complete required secrets for auth flows
 - #60 M2 Phase 6 – Fix TypeScript build blockers for Vercel
-- #59 Add GitHub Action: sync Issues into docs/ACTUAL_REMAINING_WORK.md
 - #53 Backlog migration tracker: convert docs + TODOs into GitHub Issues
 - #51 Retire legacy federation env toggles and docs (standardize on FED_ENABLED/FED_OIDC_ENABLED)
 - #47 Provider Portal UX: Make navigation and labels intuitive for first-time users
