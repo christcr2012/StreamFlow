@@ -58,17 +58,9 @@ jobs:
             const project = viewer.projectsV2.nodes.find(n => n.title === title);
             if (!project) throw new Error('Project not found: ' + title);
 
-            // Ensure Lane field exists (single-select) and build options map
+            // Try to read existing Lane field (optional). If missing, we still add items without setting Lane.
             const getLaneField = (proj) => (proj.fields.nodes || []).find(f => f && f.name === 'Lane');
-            let laneField = getLaneField(project);
-            if (!laneField) {
-              const mCreateField = `mutation($projectId: ID!) { createProjectV2Field(input:{ projectId: $projectId, dataType: SINGLE_SELECT, name: "Lane", options: [{name:"Now"},{name:"Next"},{name:"Later"},{name:"Blocked"}] }) { projectV2Field { id } } }`;
-              await github.graphql(mCreateField, { projectId: project.id });
-              // Re-query to fetch Lane with options
-              const projRes2 = await github.graphql(qProj);
-              const project2 = projRes2.viewer.projectsV2.nodes.find(n => n.title === title);
-              laneField = getLaneField(project2);
-            }
+            const laneField = getLaneField(project);
             const laneOptions = (laneField && laneField.options) ? laneField.options : [];
             const options = (laneOptions || []).reduce((acc, o) => { acc[o.name] = o.id; return acc; }, {});
 
