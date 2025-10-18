@@ -72,8 +72,9 @@ jobs:
               const i = context.payload.issue;
               issues = [i];
             } else {
-              // Full sync: open issues only
+              // Full sync: open issues only (exclude PRs)
               issues = await github.paginate(github.rest.issues.listForRepo, { owner, repo, state: 'open', per_page: 100 });
+              issues = issues.filter(i => !i.pull_request);
             }
 
             // Helper: ensure item exists
@@ -82,30 +83,34 @@ jobs:
             const mSet = `mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) { updateProjectV2ItemFieldValue(input:{ projectId: $projectId, itemId: $itemId, fieldId: $fieldId, value: { singleSelectOptionId: $optionId } }) { projectV2Item { id } } }`;
 
             for (const i of issues) {
-              // Get node id and milestone
-              const issueQ = `query($owner:String!, $repo:String!, $number:Int!) { repository(owner:$owner, name:$repo){ issue(number:$number){ id milestone { title } } } }`;
-              const issueRes = await github.graphql(issueQ, { owner, repo, number: i.number });
-              const issueNode = issueRes.repository.issue;
-              const lane = mapMilestoneToLane(issueNode.milestone);
-
-              // Add to project (idempotent): if already present, fetch existing item id
-              let itemId = null;
               try {
-                const added = await github.graphql(mAdd, { projectId: project.id, contentId: issueNode.id });
-                itemId = added.addProjectV2ItemById.item.id;
-              } catch (e) {
-                // Fallback: fetch existing items for this issue
-                const qItems = `query($issueId: ID!) { node(id:$issueId){ ... on Issue { projectItems: projectV2Items(first:50){ nodes { id } } } } }`;
-                const itemsRes = await github.graphql(qItems, { issueId: issueNode.id });
-                itemId = itemsRes.node?.projectItems?.nodes?.[0]?.id || null;
-              }
+                // Get node id and milestone
+                const issueQ = `query($owner:String!, $repo:String!, $number:Int!) { repository(owner:$owner, name:$repo){ issue(number:$number){ id milestone { title } } } }`;
+                const issueRes = await github.graphql(issueQ, { owner, repo, number: i.number });
+                const issueNode = issueRes.repository.issue;
+                const lane = mapMilestoneToLane(issueNode.milestone);
 
-              // Optionally set Lane when field/options are available
-              if (itemId && laneField && Object.keys(options).length) {
-                const optionId = options[lane] || options['Later'];
-                if (optionId) {
-                  await github.graphql(mSet, { projectId: project.id, itemId, fieldId: laneField.id, optionId });
+                // Add to project (idempotent): if already present, fetch existing item id
+                let itemId = null;
+                try {
+                  const added = await github.graphql(mAdd, { projectId: project.id, contentId: issueNode.id });
+                  itemId = added.addProjectV2ItemById.item.id;
+                } catch (e) {
+                  // Fallback: fetch existing items for this issue
+                  const qItems = `query($issueId: ID!) { node(id:$issueId){ ... on Issue { projectItems: projectV2Items(first:50){ nodes { id } } } } }`;
+                  const itemsRes = await github.graphql(qItems, { issueId: issueNode.id });
+                  itemId = itemsRes.node?.projectItems?.nodes?.[0]?.id || null;
                 }
+
+                // Optionally set Lane when field/options are available
+                if (itemId && laneField && Object.keys(options).length) {
+                  const optionId = options[lane] || options['Later'];
+                  if (optionId) {
+                    await github.graphql(mSet, { projectId: project.id, itemId, fieldId: laneField.id, optionId });
+                  }
+                }
+              } catch (err) {
+                core.warning(`Skipped #${i.number}: ${err.message || err}`);
               }
             }
             core.info(`Synced ${issues.length} issue(s) to project ${project.url}`);
