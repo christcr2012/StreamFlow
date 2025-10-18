@@ -1,0 +1,9 @@
+{
+  // Hide the known false-positive hints from VS Code Problems for these two workflows only
+  // This does NOT change CI or runtime behavior; it only hides local editor diagnostics
+  "problems.exclude": {
+    "**/.github/workflows/projects-v2-sync.yml": true,
+    "**/.github/workflows/projects-v2-verify.yml": true
+  }
+}
+
