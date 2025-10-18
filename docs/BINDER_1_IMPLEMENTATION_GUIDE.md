@@ -1,8 +1,11 @@
+<!-- STATUS: Reference-only. Binder documents are non-executable guidance. Use codebase and current docs as the source of truth. See docs/AI_AGENT_REFERENCE.md. -->
+
+
 # Binder 1: Leads API Implementation Guide
 
-**Phase:** 1 - v2 CRM APIs Implementation  
-**Priority:** CRITICAL  
-**Estimated Time:** 3-5 days  
+**Phase:** 1 - v2 CRM APIs Implementation
+**Priority:** CRITICAL
+**Estimated Time:** 3-5 days
 **Dependencies:** None
 
 ---
@@ -43,10 +46,10 @@ async list(_orgId, _params) {
 ```typescript
 async list(orgId: string, params: { q?: string; status?: string; cursor?: string; limit?: number }) {
   const { q, status, cursor, limit = 20 } = params;
-  
+
   // Build where clause
   const where: any = { orgId };
-  
+
   // Add search filter
   if (q) {
     where.OR = [
@@ -55,12 +58,12 @@ async list(orgId: string, params: { q?: string; status?: string; cursor?: string
       { email: { contains: q, mode: 'insensitive' } },
     ];
   }
-  
+
   // Add status filter
   if (status) {
     where.status = status;
   }
-  
+
   // Cursor pagination
   const items = await prisma.lead.findMany({
     where,
@@ -68,12 +71,12 @@ async list(orgId: string, params: { q?: string; status?: string; cursor?: string
     take: limit + 1, // Fetch one extra to determine if there's a next page
     ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
   });
-  
+
   // Determine next cursor
   const hasMore = items.length > limit;
   const results = hasMore ? items.slice(0, limit) : items;
   const nextCursor = hasMore ? results[results.length - 1].id : null;
-  
+
   return { items: results, nextCursor };
 }
 ```
@@ -103,20 +106,20 @@ async list(orgId: string, params: { q?: string; status?: string; cursor?: string
 ```typescript
 async create(orgId: string, userId: string, input: LeadCreateInput) {
   const { email, phoneE164, ...rest } = input;
-  
+
   // Generate identity hash for deduplication
   const identityHash = generateIdentityHash(email, phoneE164);
-  
+
   // Check for existing lead with same identity
   const existing = await prisma.lead.findFirst({
     where: { orgId, identityHash },
   });
-  
+
   if (existing) {
     // Return existing lead (idempotent)
     return { id: existing.id };
   }
-  
+
   // Create new lead
   const lead = await prisma.lead.create({
     data: {
@@ -130,7 +133,7 @@ async create(orgId: string, userId: string, input: LeadCreateInput) {
       ...rest,
     },
   });
-  
+
   // Audit log
   await auditLog({
     orgId,
@@ -140,7 +143,7 @@ async create(orgId: string, userId: string, input: LeadCreateInput) {
     resourceId: lead.id,
     metadata: { publicId: lead.publicId },
   });
-  
+
   return { id: lead.id };
 }
 
@@ -193,17 +196,17 @@ export const GET = guardGet(async (req: NextRequest) => {
   // Extract orgId from auth context (injected by withTenantAuth)
   const orgId = req.headers.get('x-org-id');
   if (!orgId) return jsonError(401, 'Unauthorized', 'Missing org context');
-  
+
   // Parse query params
   const { searchParams } = new URL(req.url);
   const q = searchParams.get('q') || undefined;
   const status = searchParams.get('status') || undefined;
   const cursor = searchParams.get('cursor') || undefined;
   const limit = parseInt(searchParams.get('limit') || '20', 10);
-  
+
   // Call service
   const result = await leadService.list(orgId, { q, status, cursor, limit });
-  
+
   return jsonOk(result);
 });
 ```
@@ -245,15 +248,15 @@ export const POST = guardPost(async (req: NextRequest) => {
   const orgId = req.headers.get('x-org-id');
   const userId = req.headers.get('x-user-id');
   if (!orgId || !userId) return jsonError(401, 'Unauthorized', 'Missing auth context');
-  
+
   // Parse and validate body
   const body = await req.json().catch(() => ({} as any));
   const v = validateLeadCreate(body);
   if (!v.ok) return jsonError(400, 'ValidationError', v.message);
-  
+
   // Call service
   const result = await leadService.create(orgId, userId, body);
-  
+
   // Return 201 Created
   return new Response(JSON.stringify(result), {
     status: 201,
@@ -304,25 +307,25 @@ describe('leadService.list', () => {
     // Mock data
     const mockLeads = [{ id: '1', orgId: 'org1', company: 'Acme' }];
     vi.mocked(prisma.lead.findMany).mockResolvedValue(mockLeads);
-    
+
     // Call service
     const result = await leadService.list('org1', {});
-    
+
     // Assertions
     expect(result.items).toEqual(mockLeads);
     expect(prisma.lead.findMany).toHaveBeenCalledWith(
       expect.objectContaining({ where: { orgId: 'org1' } })
     );
   });
-  
+
   it('should filter by search query', async () => {
     // Test search functionality
   });
-  
+
   it('should filter by status', async () => {
     // Test status filter
   });
-  
+
   it('should paginate with cursor', async () => {
     // Test pagination
   });
@@ -332,11 +335,11 @@ describe('leadService.create', () => {
   it('should create new lead', async () => {
     // Test creation
   });
-  
+
   it('should deduplicate by email', async () => {
     // Test deduplication
   });
-  
+
   it('should include audit log', async () => {
     // Test audit logging
   });
@@ -364,16 +367,16 @@ describe('GET /api/v2/leads', () => {
   beforeAll(async () => {
     await setupTestDb();
   });
-  
+
   afterAll(async () => {
     await cleanupTestDb();
   });
-  
+
   it('should return 401 without auth', async () => {
     const res = await testRequest('/api/v2/leads');
     expect(res.status).toBe(401);
   });
-  
+
   it('should return org-scoped leads with auth', async () => {
     const res = await testRequest('/api/v2/leads', {
       headers: { Cookie: 'rs_user=valid_token' },
@@ -394,7 +397,7 @@ describe('POST /api/v2/leads', () => {
     expect(res.status).toBe(400);
     expect(res.body.error).toContain('Idempotency-Key');
   });
-  
+
   it('should create lead with valid data', async () => {
     const res = await testRequest('/api/v2/leads', {
       method: 'POST',
@@ -466,17 +469,17 @@ export function withTenantAuth(): Wrapper {
     const cookieStore = await cookies();
     const token = cookieStore.get('rs_user')?.value;
     if (!token) return jsonError(401, 'Unauthorized', 'Missing auth token');
-    
+
     // TODO: Decode token and extract orgId/userId
     // For now, use dev values
     const orgId = process.env.DEV_ORG_ID || 'org_dev';
     const userId = 'user_dev';
-    
+
     // Inject into headers
     const headers = new Headers(req.headers);
     headers.set('x-org-id', orgId);
     headers.set('x-user-id', userId);
-    
+
     const newReq = new NextRequest(req, { headers });
     return handler(newReq, ...args);
   };

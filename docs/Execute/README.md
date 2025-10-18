@@ -1,3 +1,6 @@
+<!-- STATUS: Reference-only. Treat binder/Execute docs as non-executable. Use codebase and current docs as the source of truth. See docs/AI_AGENT_REFERENCE.md. -->
+
+
 # Cortiware — Augment Bundle v3.5
 Generated: 2025-10-07 21:27:01
 
