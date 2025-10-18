@@ -16,10 +16,11 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
+      - name: Load Bot Helper Token
+        run: echo "BOT_HELPER_TOKEN=${{ secrets.BOT_HELPER_TOKEN }}" >> "$GITHUB_ENV"
+
       - name: Ensure issues exist in Projects v2 and set Lane
         uses: actions/github-script@v7
-        env:
-          BOT_HELPER_TOKEN: ${{ secrets.BOT_HELPER_TOKEN }}
         with:
           github-token: ${{ env.BOT_HELPER_TOKEN }}
           script: |

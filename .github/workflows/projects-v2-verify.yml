@@ -13,11 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Load Bot Helper Token
+        run: echo "BOT_HELPER_TOKEN=${{ secrets.BOT_HELPER_TOKEN }}" >> "$GITHUB_ENV"
+
       - name: Query GraphQL and ensure user Projects v2 board exists (Bot-Helper)
         id: gql
         uses: actions/github-script@v7
-        env:
-          BOT_HELPER_TOKEN: ${{ secrets.BOT_HELPER_TOKEN }}
         with:
           github-token: ${{ env.BOT_HELPER_TOKEN }}
           script: |
