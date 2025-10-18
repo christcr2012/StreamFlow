@@ -16,8 +16,10 @@ jobs:
       - name: Query GraphQL and ensure user Projects v2 board exists (Bot-Helper)
         id: gql
         uses: actions/github-script@v7
+        env:
+          BOT_HELPER_TOKEN: ${{ secrets.BOT_HELPER_TOKEN }}
         with:
-          github-token: ${{ secrets.BOT_HELPER_TOKEN }}
+          github-token: ${{ env.BOT_HELPER_TOKEN }}
           script: |
             const title = 'Cortiware – Now/Next/Later/Blocked';
             const q = `
@@ -53,8 +55,10 @@ jobs:
 
       - name: Ensure Lane field with options
         uses: actions/github-script@v7
+        env:
+          BOT_HELPER_TOKEN: ${{ secrets.BOT_HELPER_TOKEN }}
         with:
-          github-token: ${{ secrets.BOT_HELPER_TOKEN }}
+          github-token: ${{ env.BOT_HELPER_TOKEN }}
           script: |
             const title = 'Cortiware – Now/Next/Later/Blocked';
             // Fetch user project and fields

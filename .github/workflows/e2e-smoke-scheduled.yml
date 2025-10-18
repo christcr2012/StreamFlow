@@ -26,9 +26,26 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
+      - name: Resolve BASE_URL
+        env:
+          INPUT_BASE_URL: ${{ inputs.base_url }}
+          GH_TOKEN: ${{ github.token }}
+          REPO_SLUG: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          base="${INPUT_BASE_URL:-}"
+          staging="$(gh variable get STAGING_URL -R "$REPO_SLUG" 2>/dev/null || true)"
+          if [ -n "$base" ]; then
+            url="$base"
+          elif [ -n "$staging" ]; then
+            url="$staging"
+          else
+            url="https://cortiware-provider-portal-git-main-chris-projects-de6cd1bf.vercel.app"
+          fi
+          echo "BASE_URL=$url" >> "$GITHUB_ENV"
+
       - name: Run E2E Smoke
         env:
-          BASE_URL: ${{ inputs.base_url || vars.STAGING_URL || 'https://cortiware-provider-portal-git-main-chris-projects-de6cd1bf.vercel.app' }}
           E2E_EXPECT_FED_ENABLED: "true"
         run: npm run test:e2e
 
