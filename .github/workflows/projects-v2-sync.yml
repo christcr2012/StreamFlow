@@ -88,23 +88,24 @@ jobs:
               const issueNode = issueRes.repository.issue;
               const lane = mapMilestoneToLane(issueNode.milestone);
 
-              // If not in project, add
-              const inProject = issueNode.projectItems.nodes.some(n => n.project.id === project.id);
+              // Add to project (idempotent): if already present, fetch existing item id
               let itemId = null;
-              if (!inProject) {
+              try {
                 const added = await github.graphql(mAdd, { projectId: project.id, contentId: issueNode.id });
                 itemId = added.addProjectV2ItemById.item.id;
-              } else {
-                // Fetch item id via separate query
-                const qItems = `query($projectId: ID!, $issueId: ID!) { node(id:$issueId){ ... on Issue { projectItems: projectV2Items(first:50){ nodes { id project { id } } } } } }`;
-                const itemsRes = await github.graphql(qItems, { projectId: project.id, issueId: issueNode.id });
-                const match = itemsRes.node.projectItems.nodes.find(n => n.project.id === project.id);
-                itemId = match ? match.id : null;
+              } catch (e) {
+                // Fallback: fetch existing items for this issue
+                const qItems = `query($issueId: ID!) { node(id:$issueId){ ... on Issue { projectItems: projectV2Items(first:50){ nodes { id } } } } }`;
+                const itemsRes = await github.graphql(qItems, { issueId: issueNode.id });
+                itemId = itemsRes.node?.projectItems?.nodes?.[0]?.id || null;
               }
 
-              if (itemId) {
+              // Optionally set Lane when field/options are available
+              if (itemId && laneField && Object.keys(options).length) {
                 const optionId = options[lane] || options['Later'];
-                await github.graphql(mSet, { projectId: project.id, itemId, fieldId: laneField.id, optionId });
+                if (optionId) {
+                  await github.graphql(mSet, { projectId: project.id, itemId, fieldId: laneField.id, optionId });
+                }
               }
             }
             core.info(`Synced ${issues.length} issue(s) to project ${project.url}`);
