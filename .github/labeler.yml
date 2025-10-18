@@ -1,0 +1,31 @@
+# Path and title-based labeling for PRs
+# Uses actions/labeler@v5
+
+"area: infra":
+  - changed-files:
+      - any-glob-to-any-file: [".github/**", "**/*.yml", "**/*.yaml"]
+"area: marketing":
+  - changed-files:
+      - any-glob-to-any-file: ["apps/marketing-*/*", "apps/marketing-*/**/*"]
+"area: provider-portal":
+  - changed-files:
+      - any-glob-to-any-file: ["apps/provider-portal/**"]
+"area: tenant-app":
+  - changed-files:
+      - any-glob-to-any-file: ["apps/tenant-app/**"]
+"docs":
+  - changed-files:
+      - any-glob-to-any-file: ["docs/**"]
+"ci":
+  - changed-files:
+      - any-glob-to-any-file: [".github/workflows/**"]
+"type: chore":
+  - title:
+      - '/^chore\b/i'
+"type: feature":
+  - title:
+      - '/^feat|feature\b/i'
+"type: bug":
+  - title:
+      - '/^fix|bug\b/i'
+
