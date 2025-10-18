@@ -121,22 +121,19 @@ jobs:
             `;
             const fieldRes = await github.graphql(qField, { projectId: project.id });
             const sField = fieldRes.node.fields.nodes.find(n => n && n.__typename === 'ProjectV2SingleSelectField' && n.id === laneField.id);
-            const existing = new Set((sField?.options || []).map(o => o.name));
-            const optionsToAdd = desired.filter(d => !existing.has(d)).map(name => ({ name }));
+            const existingNames = (sField?.options || []).map(o => o.name);
+            const union = Array.from(new Set([...existingNames, ...desired]));
+            const allOptions = union.map(name => ({ name }));
 
-            if (optionsToAdd.length) {
-              const mUpdate = `
-                mutation($projectId: ID!, $fieldId: ID!, $options: [ProjectV2SingleSelectFieldOptionInput!]!) {
-                  updateProjectV2SingleSelectField(input: { projectId: $projectId, fieldId: $fieldId, options: $options }) {
-                    projectV2SingleSelectField { id name options { id name } }
-                  }
+            const mUpdate = `
+              mutation($projectId: ID!, $fieldId: ID!, $options: [ProjectV2SingleSelectFieldOptionInput!]!) {
+                updateProjectV2SingleSelectField(input: { projectId: $projectId, fieldId: $fieldId, options: $options }) {
+                  projectV2SingleSelectField { id name options { id name } }
                 }
-              `;
-              const upd = await github.graphql(mUpdate, { projectId: project.id, fieldId: laneField.id, options: optionsToAdd });
-              core.info('Updated Lane options: ' + upd.updateProjectV2SingleSelectField.projectV2SingleSelectField.options.map(o => o.name).join(', '));
-            } else {
-              core.info('Lane options already complete');
-            }
+              }
+            `;
+            const upd = await github.graphql(mUpdate, { projectId: project.id, fieldId: laneField.id, options: allOptions });
+            core.info('Lane options now: ' + upd.updateProjectV2SingleSelectField.projectV2SingleSelectField.options.map(o => o.name).join(', '));
 
       - name: Write project link to docs
         run: |
