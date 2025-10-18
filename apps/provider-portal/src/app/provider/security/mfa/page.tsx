@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import QRCode from 'qrcode';
+import Image from 'next/image';
 
 export default function MFASettingsPage() {
   const [mfaEnabled, setMfaEnabled] = useState(false);
@@ -200,7 +201,7 @@ export default function MFASettingsPage() {
               </p>
               {qrCodeUrl && (
                 <div className="flex justify-center mb-4">
-                  <img src={qrCodeUrl} alt="QR Code" className="border p-4 rounded" />
+                  <Image src={qrCodeUrl} alt="QR Code" width={200} height={200} unoptimized className="border p-4 rounded" />
                 </div>
               )}
               <p className="text-sm text-gray-600 mb-2">

@@ -57,16 +57,29 @@ export type FederationVerification = {
 
 /** Enable/disable federation entirely. If disabled, verifier returns ok:false. */
 function isEnabled(): boolean {
-  return (process.env.PROVIDER_FEDERATION_ENABLED || "").trim() === "1";
+  const canon = (process.env.FED_ENABLED || "").trim().toLowerCase();
+  if (["1","true","yes","on","y","t"].includes(canon)) return true;
+  const legacy = (process.env.PROVIDER_FEDERATION_ENABLED || "").trim();
+  if (legacy === "1") {
+    console.warn('[deprecation] Using legacy env PROVIDER_FEDERATION_ENABLED; prefer FED_ENABLED');
+    return true;
+  }
+  return false;
 }
 
 /** Use HMAC-SHA256 (recommended for production). Default is dev-friendly h31. */
-const USE_SHA256 = (process.env.PROVIDER_FEDERATION_SIG_SHA256 || "").trim() === "1";
+const USE_SHA256 = (() => {
+  const canon = (process.env.FED_SIG_SHA256 || "").trim().toLowerCase();
+  if (["1","true","yes","on","y","t"].includes(canon)) return true;
+  return (process.env.PROVIDER_FEDERATION_SIG_SHA256 || "").trim() === "1";
+})();
 
 /** Allowed timestamp skew in seconds (default 300s = ±5 minutes). */
 function getClockSkewSec(): number {
-  const n = parseInt(process.env.PROVIDER_CLOCK_SKEW_SEC || "300", 10);
-  return Number.isFinite(n) && n > 0 ? n : 300;
+  const canon = parseInt(process.env.FED_CLOCK_SKEW_SEC || "", 10);
+  if (Number.isFinite(canon) && canon > 0) return canon;
+  const legacy = parseInt(process.env.PROVIDER_CLOCK_SKEW_SEC || "300", 10);
+  return Number.isFinite(legacy) && legacy > 0 ? legacy : 300;
 }
 
 /** Look up shared secret by keyId from env JSON. */

@@ -6,7 +6,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 
 interface Invoice {
@@ -24,20 +24,15 @@ export default function CleaningBillingPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
 
-  useEffect(() => {
-    fetchInvoices();
-  }, [filter]);
-
-  const fetchInvoices = async () => {
+  const fetchInvoices = useCallback(async () => {
+    setLoading(true);
     try {
       const params = new URLSearchParams();
       if (filter !== 'all') {
         params.set('status', filter);
       }
-      
       const response = await fetch(`/api/invoices?${params}`);
       if (!response.ok) throw new Error('Failed to fetch invoices');
-      
       const data = await response.json();
       setInvoices(data.invoices || []);
     } catch (error) {
@@ -45,7 +40,13 @@ export default function CleaningBillingPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
+
+  useEffect(() => {
+    fetchInvoices();
+  }, [fetchInvoices]);
+
+
 
   const getStatusBadge = (status: string) => {
     const colors: Record<string, string> = {

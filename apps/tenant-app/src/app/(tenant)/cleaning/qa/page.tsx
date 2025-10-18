@@ -6,7 +6,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 
 interface CleaningInspection {
@@ -26,20 +26,15 @@ export default function CleaningQAPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
 
-  useEffect(() => {
-    fetchInspections();
-  }, [filter]);
-
-  const fetchInspections = async () => {
+  const fetchInspections = useCallback(async () => {
+    setLoading(true);
     try {
       const params = new URLSearchParams();
       if (filter !== 'all') {
         params.set('status', filter);
       }
-      
       const response = await fetch(`/api/cleaning/inspections?${params}`);
       if (!response.ok) throw new Error('Failed to fetch inspections');
-      
       const data = await response.json();
       setInspections(data.inspections || []);
     } catch (error) {
@@ -47,7 +42,13 @@ export default function CleaningQAPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
+
+  useEffect(() => {
+    fetchInspections();
+  }, [fetchInspections]);
+
+
 
   const getScoreColor = (score?: number) => {
     if (!score) return 'text-gray-400';

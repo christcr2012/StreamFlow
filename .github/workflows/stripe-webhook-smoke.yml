@@ -1,0 +1,43 @@
+name: Stripe Webhook Smoke (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: Full webhook URL (Preview/Dev) like https://your-app.vercel.app/api/webhooks/stripe
+        required: true
+      secret:
+        description: Stripe webhook signing secret (from Stripe CLI / dashboard)
+        required: true
+      orgId:
+        description: Org ID to include in metadata.orgId
+        required: true
+        default: org_test
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build signed Stripe payload
+        shell: bash
+        run: |
+          ts=$(date +%s)
+          payload=$(jq -n --arg org "$ORG_ID" '{id:"evt_smoke_1", type:"payment_intent.succeeded", data:{object:{id:"pi_smoke_1", metadata:{orgId:$org}, amount:5000}}}')
+          sig=$(printf "%s.%s" "$ts" "$payload" | openssl dgst -sha256 -hmac "$SECRET" -binary | xxd -p -c 256)
+          header="t=$ts,v1=$sig"
+          echo "PAYLOAD=$payload" >> $GITHUB_ENV
+          echo "HEADER=$header" >> $GITHUB_ENV
+        env:
+          SECRET: ${{ github.event.inputs.secret }}
+          ORG_ID: ${{ github.event.inputs.orgId }}
+      - name: POST to webhook URL
+        shell: bash
+        run: |
+          curl -sS -X POST \
+            -H "Content-Type: application/json" \
+            -H "Stripe-Signature: $HEADER" \
+            -d "$PAYLOAD" \
+            "${{ github.event.inputs.url }}" -D /tmp/h -o /tmp/b || true
+          echo "Status:"; head -n 1 /tmp/h || true
+          echo "Body:"; cat /tmp/b || true
+

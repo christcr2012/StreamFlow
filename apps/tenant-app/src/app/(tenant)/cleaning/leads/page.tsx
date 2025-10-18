@@ -6,7 +6,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 
 interface CleaningLead {
@@ -31,20 +31,15 @@ export default function CleaningLeadsPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
 
-  useEffect(() => {
-    fetchLeads();
-  }, [filter]);
-
-  const fetchLeads = async () => {
+  const fetchLeads = useCallback(async () => {
+    setLoading(true);
     try {
       const params = new URLSearchParams();
       if (filter !== 'all') {
         params.set('status', filter);
       }
-      
       const response = await fetch(`/api/cleaning/leads?${params}`);
       if (!response.ok) throw new Error('Failed to fetch leads');
-      
       const data = await response.json();
       setLeads(data.leads || []);
     } catch (error) {
@@ -52,7 +47,13 @@ export default function CleaningLeadsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
+
+  useEffect(() => {
+    fetchLeads();
+  }, [fetchLeads]);
+
+
 
   const getStatusBadge = (status: string) => {
     const colors: Record<string, string> = {
