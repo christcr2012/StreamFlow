@@ -6,3 +6,6 @@ This file exists to verify the hands-off flow:
 - automerge label is applied
 - CI passes and PR merges automatically
 
+Update: trigger synchronize.
+Update 2: synchronize again.
+
