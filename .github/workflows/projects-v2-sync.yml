@@ -4,8 +4,6 @@ on:
   workflow_dispatch: {}
   schedule:
     - cron: '29 7 * * *'
-  issues:
-    types: [opened, edited, milestoned, demilestoned, labeled, unlabeled, reopened]
 
 permissions:
   contents: read

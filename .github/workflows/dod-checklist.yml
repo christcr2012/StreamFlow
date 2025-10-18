@@ -1,10 +1,8 @@
 name: DoD checklist (auto)
 
 on:
-  issues:
-    types: [opened, edited, reopened]
-  pull_request_target:
-    types: [opened, edited, reopened, ready_for_review, synchronize]
+  schedule:
+    - cron: '15 9 * * *'
   workflow_dispatch:
     inputs:
       backfill:
@@ -29,8 +27,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           REPO_SLUG: ${{ github.repository }}
           EVENT_NAME: ${{ github.event_name }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
           INPUT_BACKFILL: ${{ inputs.backfill }}
           INPUT_ISSUE_NUMBER: ${{ inputs.issue_number }}
         run: |
@@ -83,11 +79,10 @@ jobs:
               fi
               echo "No inputs provided; nothing to do."
               ;;
-            pull_request_target)
-              upsert_for_issue "$PR_NUMBER"
-              ;;
-            issues)
-              upsert_for_issue "$ISSUE_NUMBER"
+            schedule)
+              gh api "repos/$REPO_SLUG/issues" -f state=open -f per_page=100 --paginate --jq '.[] | select(has("pull_request") | not) | .number' | while read -r n; do
+                upsert_for_issue "$n"
+              done
               ;;
             *)
               echo "Unsupported event: $EVENT_NAME"
