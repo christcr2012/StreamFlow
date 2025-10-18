@@ -17,53 +17,74 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Generate docs/ISSUES_SUMMARY.md
+      - name: Generate issues docs
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
-            const path = 'docs/ISSUES_SUMMARY.md';
+            fs.mkdirSync('docs', { recursive: true });
             const { owner, repo } = context.repo;
-            const issues = await github.paginate(github.rest.issues.listForRepo, {
+            const issues = (await github.paginate(github.rest.issues.listForRepo, {
               owner, repo, state: 'open', per_page: 100
-            });
+            })).filter(i => !i.pull_request);
 
-            // Group by milestone (title or 'No Milestone')
+            // 1) Summary grouped by milestone
             const byMilestone = new Map();
             for (const i of issues) {
               const m = i.milestone ? i.milestone.title : 'No Milestone';
               if (!byMilestone.has(m)) byMilestone.set(m, []);
               byMilestone.get(m).push(i);
             }
-
-            let out = [];
-            out.push('# Open Issues Summary');
-            out.push('');
-            out.push(`Generated: ${new Date().toISOString()}`);
-            out.push('');
-            out.push(`Total open issues: ${issues.length}`);
-            out.push('');
+            let out1 = [];
+            out1.push('# Open Issues Summary');
+            out1.push('');
+            out1.push(`Generated: ${new Date().toISOString()}`);
+            out1.push('');
+            out1.push(`Total open issues: ${issues.length}`);
+            out1.push('');
             for (const [mTitle, list] of byMilestone) {
-              out.push(`## ${mTitle} (${list.length})`);
+              out1.push(`## ${mTitle} (${list.length})`);
               for (const i of list) {
                 const labels = (i.labels || []).map(l => typeof l === 'string' ? l : l.name).join(', ');
-                out.push(`- #${i.number} ${i.title} ${labels ? '('+labels+')' : ''}`);
+                out1.push(`- #${i.number} ${i.title} ${labels ? '('+labels+')' : ''}`);
               }
-              out.push('');
+              out1.push('');
             }
+            fs.writeFileSync('docs/ISSUES_SUMMARY.md', out1.join('\n'));
+            core.info('Wrote docs/ISSUES_SUMMARY.md');
 
-            fs.writeFileSync(path, out.join('\n'));
-            core.info(`Wrote ${path}`);
+            // 2) Now/Next/Later/Blocked grouping for ACTUAL_REMAINING_WORK
+            const norm = (labels) => labels.map(l => (typeof l === 'string' ? l : l.name)).map(s => s.toLowerCase());
+            const laneFor = (i) => {
+              const labels = norm(i.labels || []);
+              const ms = (i.milestone?.title || '').toLowerCase();
+              if (labels.includes('priority: now') || ms.includes('now')) return 'Now';
+              if (labels.includes('priority: next') || ms.includes('next')) return 'Next';
+              if (labels.includes('blocked') || ms.includes('blocked')) return 'Blocked';
+              return 'Later';
+            };
+            const lanes = { Now: [], Next: [], Later: [], Blocked: [] };
+            for (const i of issues) lanes[laneFor(i)].push(i);
+            const out2 = [];
+            out2.push('# ACTUAL_REMAINING_WORK (auto-generated)');
+            out2.push('');
+            for (const lane of ['Now','Next','Later','Blocked']) {
+              out2.push(`## ${lane}`);
+              for (const i of lanes[lane]) out2.push(`- #${i.number} ${i.title}`);
+              out2.push('');
+            }
+            fs.writeFileSync('docs/ACTUAL_REMAINING_WORK.md', out2.join('\n'));
+            core.info('Wrote docs/ACTUAL_REMAINING_WORK.md');
 
-      - name: Commit summary file
+      - name: Commit updated docs
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/ISSUES_SUMMARY.md
+          git add docs/ISSUES_SUMMARY.md docs/ACTUAL_REMAINING_WORK.md
           if git diff --staged --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "docs: update issues summary (automated)"
+            git commit -m "docs: update issues summary and ACTUAL_REMAINING_WORK (auto)"
             git push
           fi
 

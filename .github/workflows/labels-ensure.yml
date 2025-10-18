@@ -1,0 +1,51 @@
+name: Ensure standard labels
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: '43 6 * * 1'
+
+permissions:
+  issues: write
+
+jobs:
+  ensure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure labels exist and are updated
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const desired = [
+              { name: 'type: feature', color: '1f883d', description: 'New capability' },
+              { name: 'type: bug', color: 'd73a4a', description: 'Something is broken' },
+              { name: 'type: chore', color: '6e7781', description: 'Maintenance task' },
+              { name: 'type: decision', color: '0a8fdc', description: 'Requires a decision' },
+              { name: 'priority: now', color: 'd876e3', description: 'Highest priority' },
+              { name: 'priority: next', color: 'a2eeef', description: 'Next up' },
+              { name: 'priority: later', color: 'bfd4f2', description: 'Later' },
+              { name: 'blocked', color: 'e4e669', description: 'Blocked by dependency' },
+              { name: 'area: provider-portal', color: '0e8a16', description: 'Provider portal area' },
+              { name: 'area: tenant-app', color: '0e8a16', description: 'Tenant app area' },
+              { name: 'area: infra', color: '0e8a16', description: 'Infrastructure / CI' },
+              { name: 'area: docs', color: '0e8a16', description: 'Documentation' },
+              { name: 'docs', color: '0e8a16', description: 'Documentation changes' },
+              { name: 'ci', color: '0e8a16', description: 'CI/CD changes' }
+            ];
+
+            const existing = await github.paginate(github.rest.issues.listLabelsForRepo, { owner, repo, per_page: 100 });
+            const byName = new Map(existing.map(l => [l.name.toLowerCase(), l]));
+
+            for (const l of desired) {
+              const cur = byName.get(l.name.toLowerCase());
+              if (!cur) {
+                await github.rest.issues.createLabel({ owner, repo, ...l });
+                core.info(`Created label ${l.name}`);
+              } else {
+                await github.rest.issues.updateLabel({ owner, repo, name: cur.name, new_name: l.name, color: l.color, description: l.description });
+                core.info(`Ensured label ${l.name}`);
+              }
+            }
+
