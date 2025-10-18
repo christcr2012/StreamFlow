@@ -30,25 +30,47 @@ jobs:
               return 'Later';
             };
 
-            // Fetch viewer projects and find our board
-            const qProj = `query { viewer { id login projectsV2(first: 50) { nodes { id title url fields(first: 20) { nodes { id name dataType ... on ProjectV2SingleSelectField { options { id name } } } } } } } }`;
+            // Fetch viewer projects and find our board (use fragments on unions)
+            const qProj = `
+              query {
+                viewer {
+                  id
+                  login
+                  projectsV2(first: 50) {
+                    nodes {
+                      id
+                      title
+                      url
+                      fields(first: 50) {
+                        nodes {
+                          __typename
+                          ... on ProjectV2FieldCommon { id name dataType }
+                          ... on ProjectV2SingleSelectField { id name options { id name } }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `;
             const projRes = await github.graphql(qProj);
             const viewer = projRes.viewer;
             const project = viewer.projectsV2.nodes.find(n => n.title === title);
             if (!project) throw new Error('Project not found: ' + title);
 
-            // Ensure Lane field exists (single-select)
-            let laneField = project.fields.nodes.find(f => f.name === 'Lane' && f.dataType === 'SINGLE_SELECT');
+            // Ensure Lane field exists (single-select) and build options map
+            const getLaneField = (proj) => (proj.fields.nodes || []).find(f => f && f.name === 'Lane');
+            let laneField = getLaneField(project);
             if (!laneField) {
               const mCreateField = `mutation($projectId: ID!) { createProjectV2Field(input:{ projectId: $projectId, dataType: SINGLE_SELECT, name: "Lane", options: [{name:"Now"},{name:"Next"},{name:"Later"},{name:"Blocked"}] }) { projectV2Field { id } } }`;
-              const created = await github.graphql(mCreateField, { projectId: project.id });
-              laneField = { id: created.createProjectV2Field.projectV2Field.id };
-              // Re-query options to get ids
+              await github.graphql(mCreateField, { projectId: project.id });
+              // Re-query to fetch Lane with options
               const projRes2 = await github.graphql(qProj);
               const project2 = projRes2.viewer.projectsV2.nodes.find(n => n.title === title);
-              laneField = project2.fields.nodes.find(f => f.name === 'Lane');
+              laneField = getLaneField(project2);
             }
-            const options = (laneField.options || []).reduce((acc, o) => { acc[o.name] = o.id; return acc; }, {});
+            const laneOptions = (laneField && laneField.options) ? laneField.options : [];
+            const options = (laneOptions || []).reduce((acc, o) => { acc[o.name] = o.id; return acc; }, {});
 
             // Get issues to process
             const { owner, repo } = context.repo;
