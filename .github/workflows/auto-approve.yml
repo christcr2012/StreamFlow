@@ -8,6 +8,7 @@ permissions:
   contents: write
   pull-requests: write
   statuses: write
+  actions: write
 
 jobs:
   approve-and-label:
@@ -15,26 +16,15 @@ jobs:
       ${{ github.actor == 'christcr2012' || github.actor == 'Bot-Helper' || github.actor == 'github-actions[bot]' || github.actor == 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Approve PR as Bot-Helper
+      - name: Approve PR and add automerge label (first-party)
         if: ${{ !github.event.pull_request.draft }}
-        env:
-          GH_TOKEN: ${{ secrets.BOT_HELPER_TOKEN }}
-        run: |
-          set -e
-          curl -s -X POST \
-            -H "Authorization: token ${GH_TOKEN}" \
-            -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews \
-            -d '{"event":"APPROVE"}'
-
-      - name: Add automerge label
-        env:
-          GH_TOKEN: ${{ secrets.BOT_HELPER_TOKEN }}
-        run: |
-          set -e
-          curl -s -X POST \
-            -H "Authorization: token ${GH_TOKEN}" \
-            -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels \
-            -d '{"labels":["automerge"]}'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const {owner, repo} = context.repo;
+            const number = context.payload.pull_request.number;
+            // Approve PR
+            await github.rest.pulls.createReview({ owner, repo, pull_number: number, event: 'APPROVE' });
+            // Add automerge label
+            await github.rest.issues.addLabels({ owner, repo, issue_number: number, labels: ['automerge'] });
 

@@ -1,0 +1,96 @@
+name: DoD checklist (auto)
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+  pull_request_target:
+    types: [opened, edited, reopened, ready_for_review, synchronize]
+  workflow_dispatch:
+    inputs:
+      backfill:
+        description: Backfill all open issues
+        required: false
+        default: "false"
+      issue_number:
+        description: Target a single issue or PR number (optional)
+        required: false
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  ensure-dod:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure DoD checklist comment exists (or update)
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            const MARKER = '<!-- DOD-CHECKLIST v1 -->';
+            const CHECKLIST = `\
+${MARKER}\n\
+### Definition of Done (DoD)\n\
+- [ ] Implementation complete and matches acceptance criteria\n\
+- [ ] Lint, typecheck, and unit tests all passing\n\
+- [ ] New/updated unit tests cover the change\n\
+- [ ] Security review done (secrets, authN/Z, PII); CodeQL clean\n\
+- [ ] CI/CD workflows updated if the change requires it\n\
+- [ ] Docs updated (README/ops docs/CHANGELOG as appropriate)\n\
+- [ ] UX smoke checks for any new/changed routes (no 500s; controls render; error/success states)\n`;
+
+            async function upsertForIssue(number) {
+              const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number: number, per_page: 100 });
+              const existing = comments.find(c => c.user && c.user.login === 'github-actions[bot]' && (c.body || '').includes(MARKER));
+              if (!existing) {
+                await github.rest.issues.createComment({ owner, repo, issue_number: number, body: CHECKLIST });
+                core.info(`Created DoD checklist on #${number}`);
+              } else if ((existing.body || '') !== CHECKLIST) {
+                await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body: CHECKLIST });
+                core.info(`Updated DoD checklist on #${number}`);
+              } else {
+                core.info(`DoD checklist already up-to-date on #${number}`);
+              }
+            }
+
+            const inputs = (context.payload.inputs || {});
+            const isDispatch = context.eventName === 'workflow_dispatch';
+            const backfill = isDispatch && (String(inputs.backfill || 'false').toLowerCase() === 'true');
+            const targetIssue = isDispatch && inputs.issue_number ? Number(inputs.issue_number) : null;
+
+            if (isDispatch) {
+              if (targetIssue) {
+                await upsertForIssue(targetIssue);
+                return;
+              }
+              if (backfill) {
+                // Backfill all open issues (first 200)
+                const issues = await github.paginate(github.rest.issues.listForRepo, { owner, repo, state: 'open', per_page: 100 });
+                for (const iss of issues) {
+                  if (!iss.pull_request) {
+                    await upsertForIssue(iss.number);
+                  }
+                }
+                return;
+              }
+              core.info('No inputs provided; nothing to do.');
+              return;
+            }
+
+            // Issues/PR events
+            if (context.eventName === 'pull_request_target') {
+              const prNumber = context.payload.pull_request.number;
+              await upsertForIssue(prNumber);
+              return;
+            }
+            const issue = context.payload.issue;
+            if (!issue) {
+              core.info('No issue in payload; skipping');
+              return;
+            }
+            await upsertForIssue(issue.number);
+
