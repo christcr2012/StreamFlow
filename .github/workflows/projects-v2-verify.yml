@@ -13,28 +13,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Load Bot Helper Token
-        run: echo "BOT_HELPER_TOKEN=${{ secrets.BOT_HELPER_TOKEN }}" >> "$GITHUB_ENV"
-
-      - name: Query GraphQL and ensure user Projects v2 board exists (Bot-Helper)
-        id: gql
+      - name: Ensure Projects v2 board and Lane field (Bot-Helper)
         uses: actions/github-script@v7
         with:
-          github-token: ${{ env.BOT_HELPER_TOKEN }}
+          github-token: ${{ secrets.BOT_HELPER_TOKEN }}
           script: |
             const title = 'Cortiware – Now/Next/Later/Blocked';
+            // Fetch user projects including fields
             const q = `
               query {
                 viewer {
                   id
-                  projectsV2(first: 50) { nodes { id title url } }
+                  projectsV2(first: 50) {
+                    nodes {
+                      id
+                      title
+                      url
+                      fields(first: 50) {
+                        nodes {
+                          __typename
+                          ... on ProjectV2FieldCommon { id name dataType }
+                          ... on ProjectV2SingleSelectField { id name options { id name } }
+                        }
+                      }
+                    }
+                  }
                 }
               }
             `;
             const res = await github.graphql(q);
-            core.info('GraphQL query succeeded');
-            core.info(JSON.stringify(res, null, 2));
-
             let project = res.viewer.projectsV2.nodes.find(n => n.title === title);
             if (!project) {
               const m = `
@@ -51,77 +58,15 @@ jobs:
               core.info('User project exists: ' + project.url);
             }
 
-            core.setOutput('project_url', project.url);
-
-            const fs = require('fs');
-            fs.mkdirSync('docs', { recursive: true });
-            const md = `# Projects v2 Board\n\nURL: ${project.url}\n`;
-            fs.writeFileSync('docs/PROJECTS.md', md);
-
-
-      - name: Ensure Lane field with options
-        uses: actions/github-script@v7
-        env:
-          BOT_HELPER_TOKEN: ${{ secrets.BOT_HELPER_TOKEN }}
-        with:
-          github-token: ${{ env.BOT_HELPER_TOKEN }}
-          script: |
-            const title = 'Cortiware – Now/Next/Later/Blocked';
-            // Fetch user project and fields
-            const q = `
-              query {
-                viewer {
-                  projectsV2(first: 50) {
-                    nodes {
-                      id
-                      title
-                      fields(first: 50) {
-                        nodes {
-                          __typename
-                          ... on ProjectV2FieldCommon { id name dataType }
-                          ... on ProjectV2SingleSelectField { id name options { id name } }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            `;
-            const res = await github.graphql(q);
-            const project = res.viewer.projectsV2.nodes.find(n => n.title === title);
-            if (!project) throw new Error('Project not found: ' + title);
-
-            // Find or create Lane field
-            let laneField = (project.fields.nodes || []).find(f => f && f.name === 'Lane');
-            if (!laneField) {
-              const mCreateField = `
-                mutation($projectId: ID!, $name: String!) {
-                  createProjectV2Field(input: { projectId: $projectId, dataType: SINGLE_SELECT, name: $name }) {
-                    projectV2Field {
-                      __typename
-                      ... on ProjectV2FieldCommon { id name dataType }
-                    }
-                  }
-                }
-              `;
-              const created = await github.graphql(mCreateField, { projectId: project.id, name: 'Lane' });
-              const createdField = created.createProjectV2Field.projectV2Field;
-              laneField = { id: createdField.id, name: createdField.name };
-              core.info('Created Lane field');
-            } else {
-              core.info('Lane field exists');
-            }
-
-            // Ensure options exist: Now, Next, Later, Blocked
-            const desired = ['Now','Next','Later','Blocked'];
-            // Refresh field details to read options
-            const qField = `
+            // Ensure Lane field exists
+            const ensureFieldQuery = `
               query($projectId: ID!) {
                 node(id: $projectId) {
                   ... on ProjectV2 {
                     fields(first: 50) {
                       nodes {
                         __typename
+                        ... on ProjectV2FieldCommon { id name dataType }
                         ... on ProjectV2SingleSelectField { id name options { id name } }
                       }
                     }
@@ -129,8 +74,28 @@ jobs:
                 }
               }
             `;
-            const fieldRes = await github.graphql(qField, { projectId: project.id });
-            const sField = fieldRes.node.fields.nodes.find(n => n && n.__typename === 'ProjectV2SingleSelectField' && n.id === laneField.id);
+            let fieldSnap = await github.graphql(ensureFieldQuery, { projectId: project.id });
+            let laneField = (fieldSnap.node.fields.nodes || []).find(f => f && f.name === 'Lane');
+            if (!laneField) {
+              const mCreateField = `
+                mutation($projectId: ID!, $name: String!) {
+                  createProjectV2Field(input: { projectId: $projectId, dataType: SINGLE_SELECT, name: $name }) {
+                    projectV2Field { __typename ... on ProjectV2FieldCommon { id name dataType } }
+                  }
+                }
+              `;
+              const createdFieldRes = await github.graphql(mCreateField, { projectId: project.id, name: 'Lane' });
+              const createdField = createdFieldRes.createProjectV2Field.projectV2Field;
+              laneField = { id: createdField.id, name: createdField.name };
+              core.info('Created Lane field');
+              fieldSnap = await github.graphql(ensureFieldQuery, { projectId: project.id });
+            } else {
+              core.info('Lane field exists');
+            }
+
+            // Ensure options: Now, Next, Later, Blocked
+            const desired = ['Now','Next','Later','Blocked'];
+            const sField = fieldSnap.node.fields.nodes.find(n => n && n.__typename === 'ProjectV2SingleSelectField' && n.id === laneField.id);
             const existingOptions = (sField?.options || []);
             const desiredSet = new Set(desired);
             const merged = [];
@@ -143,7 +108,6 @@ jobs:
             for (const name of desiredSet) {
               merged.push({ name });
             }
-
             if (merged.length) {
               const mUpdate = `
                 mutation($projectId: ID!, $fieldId: ID!, $options: [ProjectV2SingleSelectFieldOptionInput!]!) {
@@ -157,6 +121,11 @@ jobs:
             } else {
               core.info('Lane options already match desired set.');
             }
+
+            // Write docs/PROJECTS.md
+            const fs = require('fs');
+            fs.mkdirSync('docs', { recursive: true });
+            fs.writeFileSync('docs/PROJECTS.md', `# Projects v2 Board\n\nURL: ${project.url}\n`);
 
 
       - name: Commit project link
