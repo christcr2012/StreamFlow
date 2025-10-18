@@ -10,15 +10,15 @@ on:
 permissions:
   contents: read
   issues: read
+  repository-projects: write
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Ensure issues exist in Projects v2 and set Lane
+      - name: Ensure issues exist in repo Projects v2 and set Lane
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.BOT_HELPER_TOKEN }}
           script: |
             const title = 'Cortiware – Now/Next/Later/Blocked';
             const getLane = (issue, labels) => {
@@ -37,12 +37,11 @@ jobs:
               return 'Later';
             };
 
-            // Fetch viewer projects and find our board (use fragments on unions)
+            // Fetch repo projects and find our board
             const qProj = `
-              query {
-                viewer {
+              query($owner:String!, $repo:String!){
+                repository(owner:$owner, name:$repo){
                   id
-                  login
                   projectsV2(first: 50) {
                     nodes {
                       id
@@ -60,10 +59,10 @@ jobs:
                 }
               }
             `;
-            const projRes = await github.graphql(qProj);
-            const viewer = projRes.viewer;
-            const project = viewer.projectsV2.nodes.find(n => n.title === title);
-            if (!project) throw new Error('Project not found: ' + title);
+            const { owner, repo } = context.repo;
+            const projRes = await github.graphql(qProj, { owner, repo });
+            const project = projRes.repository.projectsV2.nodes.find(n => n.title === title);
+            if (!project) throw new Error('Repo project not found: ' + title);
 
             // Try to read existing Lane field (optional). If missing, we still add items without setting Lane.
             const getLaneField = (proj) => (proj.fields.nodes || []).find(f => f && f.name === 'Lane');

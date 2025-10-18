@@ -5,6 +5,7 @@ on:
 
 permissions:
   contents: write
+  repository-projects: write
 
 jobs:
   verify-and-create:
@@ -12,27 +13,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Query GraphQL and ensure a Projects v2 board exists
+      - name: Query GraphQL and ensure a repo Projects v2 board exists
         id: gql
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.BOT_HELPER_TOKEN }}
           script: |
             const title = 'Cortiware – Now/Next/Later/Blocked';
+            const { owner, repo } = context.repo;
             const q = `
-              query {
-                viewer {
+              query($owner:String!, $repo:String!){
+                repository(owner:$owner, name:$repo){
                   id
-                  login
-                  projectsV2(first: 20) { nodes { id title url } }
+                  name
+                  projectsV2(first: 50) { nodes { id title url } }
                 }
               }
             `;
-            const res = await github.graphql(q);
+            const res = await github.graphql(q, { owner, repo });
             core.info('GraphQL query succeeded');
             core.info(JSON.stringify(res, null, 2));
 
-            let project = res.viewer.projectsV2.nodes.find(n => n.title === title);
+            let project = res.repository.projectsV2.nodes.find(n => n.title === title);
             if (!project) {
               const m = `
                 mutation($ownerId: ID!, $title: String!) {
@@ -41,11 +42,11 @@ jobs:
                   }
                 }
               `;
-              const created = await github.graphql(m, { ownerId: res.viewer.id, title });
+              const created = await github.graphql(m, { ownerId: res.repository.id, title });
               project = created.createProjectV2.projectV2;
-              core.info('Created project: ' + project.url);
+              core.info('Created repo project: ' + project.url);
             } else {
-              core.info('Project exists: ' + project.url);
+              core.info('Repo project exists: ' + project.url);
             }
 
             core.setOutput('project_url', project.url);
@@ -54,13 +55,13 @@ jobs:
       - name: Ensure Lane field with options
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.BOT_HELPER_TOKEN }}
           script: |
             const title = 'Cortiware – Now/Next/Later/Blocked';
-            // Fetch project and fields with fragments
+            const { owner, repo } = context.repo;
+            // Fetch repo project and fields
             const q = `
-              query {
-                viewer {
+              query($owner:String!, $repo:String!){
+                repository(owner:$owner, name:$repo){
                   projectsV2(first: 50) {
                     nodes {
                       id
@@ -77,9 +78,9 @@ jobs:
                 }
               }
             `;
-            const res = await github.graphql(q);
-            const project = res.viewer.projectsV2.nodes.find(n => n.title === title);
-            if (!project) throw new Error('Project not found: ' + title);
+            const res = await github.graphql(q, { owner, repo });
+            const project = res.repository.projectsV2.nodes.find(n => n.title === title);
+            if (!project) throw new Error('Repo project not found: ' + title);
 
             // Find or create Lane field
             let laneField = (project.fields.nodes || []).find(f => f && f.name === 'Lane');
@@ -134,15 +135,19 @@ jobs:
               merged.push({ name });
             }
 
-            const mUpdate = `
-              mutation($projectId: ID!, $fieldId: ID!, $options: [ProjectV2SingleSelectFieldOptionInput!]!) {
-                updateProjectV2SingleSelectField(input: { projectId: $projectId, fieldId: $fieldId, options: $options }) {
-                  projectV2SingleSelectField { id name options { id name } }
+            if (merged.length) {
+              const mUpdate = `
+                mutation($projectId: ID!, $fieldId: ID!, $options: [ProjectV2SingleSelectFieldOptionInput!]!) {
+                  updateProjectV2SingleSelectField(input: { projectId: $projectId, fieldId: $fieldId, options: $options }) {
+                    projectV2SingleSelectField { id name options { id name } }
+                  }
                 }
-              }
-            `;
-            const upd = await github.graphql(mUpdate, { projectId: project.id, fieldId: laneField.id, options: merged });
-            core.info('Lane options now: ' + upd.updateProjectV2SingleSelectField.projectV2SingleSelectField.options.map(o => o.name).join(', '));
+              `;
+              const upd = await github.graphql(mUpdate, { projectId: project.id, fieldId: laneField.id, options: merged });
+              core.info('Lane options now: ' + upd.updateProjectV2SingleSelectField.projectV2SingleSelectField.options.map(o => o.name).join(', '));
+            } else {
+              core.info('Lane options already match desired set.');
+            }
 
       - name: Write project link to docs
         run: |
