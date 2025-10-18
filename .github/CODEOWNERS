@@ -1,0 +1,18 @@
+# Code owners for fast routing
+# Syntax: https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+* @christcr2012
+
+# Apps
+/apps/provider-portal/** @christcr2012
+/apps/tenant-app/** @christcr2012
+/apps/company-website/** @christcr2012
+/apps/cortiware-marketing/** @christcr2012
+
+# Packages
+/packages/** @christcr2012
+
+# CI / Docs
+/.github/** @christcr2012
+/docs/** @christcr2012
+
