@@ -83,7 +83,7 @@ jobs:
 
             for (const i of issues) {
               // Get node id and milestone
-              const issueQ = `query($owner:String!, $repo:String!, $number:Int!) { repository(owner:$owner, name:$repo){ issue(number:$number){ id milestone { title } projectItems: projectsV2(first: 50) { nodes { id project { id title } } } } } }`;
+              const issueQ = `query($owner:String!, $repo:String!, $number:Int!) { repository(owner:$owner, name:$repo){ issue(number:$number){ id milestone { title } } } }`;
               const issueRes = await github.graphql(issueQ, { owner, repo, number: i.number });
               const issueNode = issueRes.repository.issue;
               const lane = mapMilestoneToLane(issueNode.milestone);
