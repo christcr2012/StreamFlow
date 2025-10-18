@@ -121,9 +121,18 @@ jobs:
             `;
             const fieldRes = await github.graphql(qField, { projectId: project.id });
             const sField = fieldRes.node.fields.nodes.find(n => n && n.__typename === 'ProjectV2SingleSelectField' && n.id === laneField.id);
-            const existingNames = (sField?.options || []).map(o => o.name);
-            const union = Array.from(new Set([...existingNames, ...desired]));
-            const allOptions = union.map(name => ({ name }));
+            const existingOptions = (sField?.options || []);
+            const desiredSet = new Set(desired);
+            const merged = [];
+            for (const opt of existingOptions) {
+              if (desiredSet.has(opt.name)) {
+                merged.push({ id: opt.id, name: opt.name });
+                desiredSet.delete(opt.name);
+              }
+            }
+            for (const name of desiredSet) {
+              merged.push({ name });
+            }
 
             const mUpdate = `
               mutation($projectId: ID!, $fieldId: ID!, $options: [ProjectV2SingleSelectFieldOptionInput!]!) {
@@ -132,7 +141,7 @@ jobs:
                 }
               }
             `;
-            const upd = await github.graphql(mUpdate, { projectId: project.id, fieldId: laneField.id, options: allOptions });
+            const upd = await github.graphql(mUpdate, { projectId: project.id, fieldId: laneField.id, options: merged });
             core.info('Lane options now: ' + upd.updateProjectV2SingleSelectField.projectV2SingleSelectField.options.map(o => o.name).join(', '));
 
       - name: Write project link to docs
