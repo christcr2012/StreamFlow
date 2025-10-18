@@ -1,0 +1,63 @@
+name: Sync issues to docs
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: '17 7 * * *'
+  issues:
+    types: [opened, edited, labeled, unlabeled, reopened, closed]
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate docs/ISSUES_SUMMARY.md
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = 'docs/ISSUES_SUMMARY.md';
+            const { owner, repo } = context.repo;
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner, repo, state: 'open', per_page: 100
+            });
+
+            // Group by milestone (title or 'No Milestone')
+            const byMilestone = new Map();
+            for (const i of issues) {
+              const m = i.milestone ? i.milestone.title : 'No Milestone';
+              if (!byMilestone.has(m)) byMilestone.set(m, []);
+              byMilestone.get(m).push(i);
+            }
+
+            let out = [];
+            out.push('# Open Issues Summary');
+            out.push('');
+            out.push(`Generated: ${new Date().toISOString()}`);
+            out.push('');
+            out.push(`Total open issues: ${issues.length}`);
+            out.push('');
+            for (const [mTitle, list] of byMilestone) {
+              out.push(`## ${mTitle} (${list.length})`);
+              for (const i of list) {
+                const labels = (i.labels || []).map(l => typeof l === 'string' ? l : l.name).join(', ');
+                out.push(`- #${i.number} ${i.title} ${labels ? '('+labels+')' : ''}`);
+              }
+              out.push('');
+            }
+
+            fs.writeFileSync(path, out.join('\n'));
+            core.info(`Wrote ${path}`);
+
+      - name: Commit summary file
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "docs: update issues summary (automated)"
+          file_pattern: docs/ISSUES_SUMMARY.md
+
