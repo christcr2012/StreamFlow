@@ -1,7 +1,6 @@
 # ACTUAL_REMAINING_WORK (auto-generated)
 
 ## Now
-- #70 Labels: standardize taxonomy + add auto-labeler Action
 - #61 Deployment secrets (Option C) – complete required secrets for auth flows
 - #60 M2 Phase 6 – Fix TypeScript build blockers for Vercel
 - #53 Backlog migration tracker: convert docs + TODOs into GitHub Issues

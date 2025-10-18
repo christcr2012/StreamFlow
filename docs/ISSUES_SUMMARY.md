@@ -1,8 +1,8 @@
 # Open Issues Summary
 
-Generated: 2025-10-18T22:30:14.518Z
+Generated: 2025-10-18T22:30:54.223Z
 
-Total open issues: 53
+Total open issues: 52
 
 ## Next (12)
 - #76 Tenant auth – RefreshToken model or logout refactor (priority: next, area: tenant-app, type: decision)
@@ -18,8 +18,7 @@ Total open issues: 53
 - #62 Decide which disabled features to enable next (priority: next, area: provider-portal, area: tenant-app, type: decision)
 - #57 Documentation cleanup + binder archival (mark reference-only, index active vs archived) (priority: next, area: infra, type: chore)
 
-## No Milestone (33)
-- #70 Labels: standardize taxonomy + add auto-labeler Action (priority: now, area: infra, type: chore)
+## No Milestone (32)
 - #69 Agreement models – DB schema, API, UI per TODO_AGREEMENT_MODELS.md (priority: later, area: tenant-app, type: feature)
 - #52 Enable Stripe webhook (basic) via Vercel env + smoke test (priority: next, area: provider-portal, area: infra, type: feature)
 - #51 Retire legacy federation env toggles and docs (standardize on FED_ENABLED/FED_OIDC_ENABLED) (priority: now, area: provider-portal, area: infra, type: chore)
