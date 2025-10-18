@@ -21,12 +21,19 @@ jobs:
           github-token: ${{ secrets.BOT_HELPER_TOKEN }}
           script: |
             const title = 'Cortiware – Now/Next/Later/Blocked';
-            const mapMilestoneToLane = (ms) => {
-              if (!ms) return 'Later';
-              const t = ms.title.toLowerCase();
-              if (t.includes('now')) return 'Now';
-              if (t.includes('next')) return 'Next';
-              if (t.includes('blocked')) return 'Blocked';
+            const getLane = (issue, labels) => {
+              if (issue && issue.milestone) {
+                const t = (issue.milestone.title || '').toLowerCase();
+                if (t.includes('now')) return 'Now';
+                if (t.includes('next')) return 'Next';
+                if (t.includes('blocked')) return 'Blocked';
+                if (t.includes('later')) return 'Later';
+              }
+              const names = (labels || []).map(l => (l.name || '').toLowerCase());
+              if (names.includes('priority: now')) return 'Now';
+              if (names.includes('priority: next')) return 'Next';
+              if (names.includes('priority: later')) return 'Later';
+              if (names.includes('blocked')) return 'Blocked';
               return 'Later';
             };
 
@@ -88,7 +95,7 @@ jobs:
                 const issueQ = `query($owner:String!, $repo:String!, $number:Int!) { repository(owner:$owner, name:$repo){ issue(number:$number){ id milestone { title } } } }`;
                 const issueRes = await github.graphql(issueQ, { owner, repo, number: i.number });
                 const issueNode = issueRes.repository.issue;
-                const lane = mapMilestoneToLane(issueNode.milestone);
+                const lane = getLane(issueNode, i.labels);
 
                 // Add to project (idempotent): if already present, fetch existing item id
                 let itemId = null;
