@@ -1,21 +1,42 @@
-# Phase 1: v2 API Migration - Detailed Plan
+# Phase 1: v2 API Migration - Detailed Plan (REVISED)
 
-**Status**: In Progress  
-**Started**: 2025-01-19  
-**Goal**: Migrate all v2 APIs from `src/` to `apps/tenant-app/src/` with full functionality
+**Status**: In Progress
+**Started**: 2025-01-19
+**Goal**: Merge the best of legacy v2 and current tenant-app APIs
 
 ---
 
-## Overview
+## CRITICAL REVISION (2025-01-19)
 
-The v2 APIs in `src/app/api/v2/` are production-ready with superior architecture:
-- Middleware composition pattern
-- Service layer separation
-- Validation schemas
-- Rate limiting, idempotency, audit logging
-- Proper error handling
+**User caught a major mistake**: I was about to blindly replace tenant-app APIs with v2 APIs without proper comparison!
 
-Current tenant-app has simpler APIs without these features. We need to migrate the v2 APIs to upgrade the system.
+**Key Finding**:
+- Legacy v2 APIs have BETTER **architecture** (middleware, service layer, security)
+- Current tenant-app APIs have BETTER **features** (AI scoring, tags, includes)
+- **Solution**: HYBRID APPROACH - merge strengths, don't replace blindly
+
+See `docs/API_COMPARISON.md` for detailed analysis.
+
+---
+
+## Revised Strategy
+
+### 1. Infrastructure Migration (Non-Breaking)
+- Migrate middleware composition framework
+- Migrate rate-limiter and idempotency-store
+- Migrate service layers
+- Migrate validation schemas
+- **DO NOT** replace existing APIs yet
+
+### 2. Additive Endpoints (New Features)
+- Add `/api/v2/opportunities` (tenant-app has none)
+- Add `/api/v2/leads` (enhanced version with AI scoring)
+- Keep existing `/api/leads` for backward compatibility
+
+### 3. Enhance Existing (Non-Breaking)
+- Add middleware to existing `/api/customers`
+- Add middleware to existing `/api/leads`
+- Add rate limiting across the board
 
 ---
 
