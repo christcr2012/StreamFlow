@@ -1,8 +1,7 @@
-name: Auto-approve and label trusted PRs
+name: Auto-approve and label trusted PRs (manual only)
 
 on:
-  pull_request_target:
-    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch: {}
 
 permissions:
   contents: write

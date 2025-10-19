@@ -1,8 +1,6 @@
 name: Performance Monitoring
 
 on:
-  pull_request:
-    branches: [ main ]
   workflow_dispatch:
     inputs:
       compare_against:
