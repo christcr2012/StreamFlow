@@ -1,6 +1,8 @@
-name: DoD checklist (manual-only)
+name: DoD checklist (auto)
 
 on:
+  issues:
+    types: [opened, edited, reopened]
   workflow_dispatch:
     inputs:
       backfill:
@@ -8,81 +10,76 @@ on:
         required: false
         default: "false"
       issue_number:
-        description: Target a single issue or PR number (optional)
+        description: Target a single issue number (optional)
         required: false
 
 permissions:
   contents: read
   issues: write
-  pull-requests: write
 
 jobs:
-  ensure-dod:
+  upsert-dod:
     runs-on: ubuntu-latest
     steps:
-      - name: Ensure DoD checklist comment exists (or update)
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPO_SLUG: ${{ github.repository }}
-          EVENT_NAME: ${{ github.event_name }}
-          INPUT_BACKFILL: ${{ inputs.backfill }}
-          INPUT_ISSUE_NUMBER: ${{ inputs.issue_number }}
-        run: |
-          set -euo pipefail
-          MARKER='<!-- DOD-CHECKLIST v1 -->'
-          read -r -d '' CHECKLIST <<'EOF'
-          <!-- DOD-CHECKLIST v1 -->
-          ### Definition of Done (DoD)
-          - [ ] Implementation complete and matches acceptance criteria
-          - [ ] Lint, typecheck, and unit tests all passing
-          - [ ] New/updated unit tests cover the change
-          - [ ] Security review done (secrets, authN/Z, PII); CodeQL clean
-          - [ ] CI/CD workflows updated if the change requires it
-          - [ ] Docs updated (README/ops docs/CHANGELOG as appropriate)
-          - [ ] UX smoke checks for any new/changed routes (no 500s; controls render; error/success states)
-          EOF
+      - name: Upsert DoD checklist
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.USER_GH_TOKEN != '' && secrets.USER_GH_TOKEN || secrets.CHRIS_GH_PAT != '' && secrets.CHRIS_GH_PAT || secrets.GH_PAT != '' && secrets.GH_PAT || secrets.BOT_HELPER_TOKEN != '' && secrets.BOT_HELPER_TOKEN || github.token }}
+          script: |
+            const core = require('@actions/core');
+            const {owner, repo} = context.repo;
+            const marker = '<!-- DOD-CHECKLIST v1 -->';
+            const checklist = `${marker}
+            ### Definition of Done (DoD)
+            - [ ] Implementation complete and matches acceptance criteria
+            - [ ] Lint, typecheck, and unit tests all passing
+            - [ ] New/updated unit tests cover the change
+            - [ ] Security review done (secrets, authN/Z, PII); CodeQL clean
+            - [ ] CI/CD workflows updated if the change requires it
+            - [ ] Docs updated (README/ops docs/CHANGELOG as appropriate)
+            - [ ] UX smoke checks for any new/changed routes (no 500s; controls render; error/success states)
+            `;
 
-          upsert_for_issue() {
-            local number="$1"
-            local existing_id
-            existing_id="$(gh api "repos/$REPO_SLUG/issues/$number/comments" --paginate --jq ".[] | select(.user.login==\"github-actions[bot]\") | select(.body | contains(\"$MARKER\")) | .id" | head -n1 || true)"
-            if [ -z "${existing_id:-}" ]; then
-              gh api -X POST "repos/$REPO_SLUG/issues/$number/comments" -f body="$CHECKLIST" >/dev/null
-              echo "Created DoD checklist on #$number"
-            else
-              local body
-              body="$(gh api "repos/$REPO_SLUG/issues/comments/$existing_id" --jq .body)"
-              if [ "$body" != "$CHECKLIST" ]; then
-                gh api -X PATCH "repos/$REPO_SLUG/issues/comments/$existing_id" -f body="$CHECKLIST" >/dev/null
-                echo "Updated DoD checklist on #$number"
-              else
-                echo "DoD checklist already up-to-date on #$number"
-              fi
-            fi
-          }
+            async function upsertForIssue(number) {
+              const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number: number, per_page: 100 });
+              const existing = comments.find(c => c.user?.login === 'github-actions[bot]' && (c.body || '').includes(marker));
+              if (!existing) {
+                await github.rest.issues.createComment({ owner, repo, issue_number: number, body: checklist });
+                core.info(`Created DoD checklist on #${number}`);
+              } else if (existing.body !== checklist) {
+                await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body: checklist });
+                core.info(`Updated DoD checklist on #${number}`);
+              } else {
+                core.info(`DoD checklist already up-to-date on #${number}`);
+              }
+            }
 
-          case "$EVENT_NAME" in
-            workflow_dispatch)
-              backfill="${INPUT_BACKFILL:-false}"
-              issue_num="${INPUT_ISSUE_NUMBER:-}"
-              if [ -n "$issue_num" ]; then
-                upsert_for_issue "$issue_num"
-                exit 0
-              fi
-              if [ "${backfill,,}" = "true" ]; then
-                gh api "repos/$REPO_SLUG/issues" -f state=open -f per_page=100 --paginate --jq '.[] | select(has("pull_request") | not) | .number' | while read -r n; do
-                  upsert_for_issue "$n"
-                done
-                exit 0
-              fi
-              echo "No inputs provided; nothing to do."
-              ;;
-            schedule)
-              gh api "repos/$REPO_SLUG/issues" -f state=open -f per_page=100 --paginate --jq '.[] | select(has("pull_request") | not) | .number' | while read -r n; do
-                upsert_for_issue "$n"
-              done
-              ;;
-            *)
-              echo "Unsupported event: $EVENT_NAME"
-              ;;
-          esac
+            if (context.eventName === 'issues') {
+              const number = context.payload.issue.number;
+              if (!context.payload.issue.pull_request) {
+                await upsertForIssue(number);
+              } else {
+                core.info('PR event detected via issues webhook; skipping.');
+              }
+              return;
+            }
+
+            // Manual backfill via workflow_dispatch
+            const backfill = (core.getInput('backfill') || 'false').toLowerCase() === 'true';
+            const issueNum = core.getInput('issue_number');
+            if (issueNum) {
+              await upsertForIssue(Number(issueNum));
+              return;
+            }
+            if (backfill) {
+              let page = 1; const per_page = 100;
+              while (true) {
+                const res = await github.rest.issues.listForRepo({ owner, repo, state: 'open', per_page, page });
+                const issues = res.data.filter(i => !i.pull_request);
+                for (const i of issues) { await upsertForIssue(i.number); }
+                if (res.data.length < per_page) break;
+                page++;
+              }
+            } else {
+              core.info('No inputs provided; nothing to do.');
+            }
