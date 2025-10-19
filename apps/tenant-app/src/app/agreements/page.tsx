@@ -106,7 +106,7 @@ export default async function AgreementsPage() {
                         </Link>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {agreement.template.name}
+                        {agreement.AgreementTemplate.name}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <Badge variant={

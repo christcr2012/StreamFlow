@@ -17,7 +17,7 @@ export const CreateAgreementSchema = z.object({
 });
 
 export const UpdateAgreementSchema = z.object({
-  status: z.enum(['DRAFT', 'SENT', 'SIGNED', 'EXPIRED', 'CANCELLED']).optional(),
+  status: z.enum(['draft', 'sent', 'signed', 'expired', 'cancelled']).optional(),
   signedAt: z.string().datetime().optional(),
   signedBy: z.string().optional(),
   renewalAt: z.string().datetime().optional(),
@@ -25,7 +25,7 @@ export const UpdateAgreementSchema = z.object({
 
 export const AgreementFilterSchema = z.object({
   customerId: z.string().cuid().optional(),
-  status: z.enum(['DRAFT', 'SENT', 'SIGNED', 'EXPIRED', 'CANCELLED']).optional(),
+  status: z.enum(['draft', 'sent', 'signed', 'expired', 'cancelled']).optional(),
   page: z.coerce.number().int().positive().default(1),
   limit: z.coerce.number().int().positive().max(100).default(20),
 });

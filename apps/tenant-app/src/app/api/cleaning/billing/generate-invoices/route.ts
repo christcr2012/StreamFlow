@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Get contracts for these work orders
-    const contractIds = [...new Set(workOrders.map(wo => wo.contractId).filter(Boolean))];
+    const contractIds = [...new Set(workOrders.map((wo) => wo.contractId).filter(Boolean))];
     const contracts = await prisma.cleaningContract.findMany({
       where: {
         id: { in: contractIds as string[] }
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    const contractMap = new Map(contracts.map(c => [c.id, c]));
+    const contractMap = new Map(contracts.map((c) => [c.id, c]));
 
     let invoicesCreated = 0;
     let itemsCreated = 0;
@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Calculate total amount
-        const subtotal = customerWorkOrders.reduce((sum, wo) => {
+        const subtotal = customerWorkOrders.reduce((sum: number, wo: typeof customerWorkOrders[0]) => {
           return sum + Number(contract.basePrice);
         }, 0);
 
@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
             status: 'open',
             issuedAt: new Date(),
             items: JSON.stringify(
-              customerWorkOrders.map(wo => ({
+              customerWorkOrders.map((wo) => ({
                 description: `Cleaning service - ${wo.spaceType} (${wo.squareFeet} sq ft)`,
                 date: wo.scheduledDate.toISOString().split('T')[0],
                 workOrderId: wo.id,

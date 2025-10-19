@@ -123,7 +123,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Agreement not found' }, { status: 404 });
     }
 
-    if (agreement.status !== 'DRAFT') {
+    if (agreement.status !== 'draft') {
       return NextResponse.json(
         { error: 'Only draft agreements can be deleted' },
         { status: 400 }

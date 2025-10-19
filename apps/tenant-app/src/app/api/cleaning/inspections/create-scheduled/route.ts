@@ -40,17 +40,17 @@ export async function POST(request: NextRequest) {
     // Get existing inspections for these work orders
     const existingInspections = await prisma.cleaningInspection.findMany({
       where: {
-        workOrderId: { in: workOrders.map(wo => wo.id) }
+        workOrderId: { in: workOrders.map((wo) => wo.id) }
       },
       select: {
         workOrderId: true
       }
     });
 
-    const existingWorkOrderIds = new Set(existingInspections.map(i => i.workOrderId));
+    const existingWorkOrderIds = new Set(existingInspections.map((i) => i.workOrderId));
 
     // Filter to only work orders without inspections
-    const workOrdersNeedingInspection = workOrders.filter(wo => !existingWorkOrderIds.has(wo.id));
+    const workOrdersNeedingInspection = workOrders.filter((wo) => !existingWorkOrderIds.has(wo.id));
 
     let created = 0;
     const errors: string[] = [];
