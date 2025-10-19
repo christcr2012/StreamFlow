@@ -7,7 +7,7 @@ Canonical variables
 - FED_IDEMPOTENCY_ENABLED: enable idempotency checks
 
 Notes
-- Legacy PROVIDER_FEDERATION_* variables exist in older code. Phase-2 task will add a compatibility shim that reads legacy names and emits a deprecation warning, then normalize to canonical names above.
+- Legacy PROVIDER_FEDERATION_* variables have been removed. Use only the canonical FED_* variables listed above.
 - UI should gate owner-only toggles in the Provider portal; server must still enforce.
 
 Guardrails
