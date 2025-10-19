@@ -62,13 +62,13 @@ function getDeveloperSession(request: NextRequest): { email: string } | null {
  */
 function hasProviderRole(session: { role?: ProviderRole } | null, requiredRole: ProviderRole): boolean {
   if (!session || !session.role) return false;
-  
+
   // provider_admin has access to everything
   if (session.role === 'provider_admin') return true;
-  
+
   // provider_analyst only has read access
   if (session.role === 'provider_analyst' && requiredRole === 'provider_analyst') return true;
-  
+
   return false;
 }
 
@@ -82,23 +82,23 @@ function isWriteOperation(request: NextRequest): boolean {
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  
+
   // ============================================
   // PROVIDER ROUTES: /provider/*
   // ============================================
   if (pathname.startsWith('/provider')) {
     const session = getProviderSession(request);
-    
+
     // Require authentication
     if (!session) {
       return NextResponse.redirect(new URL('/login', request.url));
     }
-    
+
     // Check write permissions for sensitive routes
-    if (pathname.startsWith('/provider/federation') || 
+    if (pathname.startsWith('/provider/federation') ||
         pathname.startsWith('/provider/monetization') ||
         pathname.startsWith('/provider/billing')) {
-      
+
       // Write operations require provider_admin
       if (isWriteOperation(request) && !hasProviderRole(session, 'provider_admin')) {
         return NextResponse.json(
@@ -107,24 +107,51 @@ export function middleware(request: NextRequest) {
         );
       }
     }
-    
+
+    // Admin Pricing pages require provider_admin role for any access
+    if (pathname.startsWith('/provider/admin/pricing')) {
+      if (!hasProviderRole(session, 'provider_admin')) {
+        return NextResponse.redirect(new URL('/provider', request.url));
+      }
+    }
+
+
     return NextResponse.next();
   }
-  
+
   // ============================================
   // DEVELOPER ROUTES: /developer/*
   // ============================================
   if (pathname.startsWith('/developer')) {
     const session = getDeveloperSession(request);
-    
+
     // Require authentication
     if (!session) {
       return NextResponse.redirect(new URL('/developer/login', request.url));
     }
-    
+
+    // Admin Pricing API requires provider_admin role for all operations
+    if (pathname.startsWith('/api/admin/pricing')) {
+      const session = getProviderSession(request);
+      if (!session) {
+        return NextResponse.json(
+          { error: 'Unauthorized: Provider authentication required' },
+          { status: 401 }
+        );
+      }
+      if (!hasProviderRole(session, 'provider_admin')) {
+        return NextResponse.json(
+          { error: 'Forbidden: Admin role required for pricing admin APIs' },
+          { status: 403 }
+        );
+      }
+      return NextResponse.next();
+    }
+
+
     return NextResponse.next();
   }
-  
+
   // ============================================
   // API ROUTES: /api/*
   // ============================================
@@ -132,14 +159,14 @@ export function middleware(request: NextRequest) {
     // Federation API routes
     if (pathname.startsWith('/api/federation')) {
       const session = getProviderSession(request);
-      
+
       if (!session) {
         return NextResponse.json(
           { error: 'Unauthorized: Provider authentication required' },
           { status: 401 }
         );
       }
-      
+
       // Write operations require provider_admin
       if (isWriteOperation(request) && !hasProviderRole(session, 'provider_admin')) {
         return NextResponse.json(
@@ -147,21 +174,21 @@ export function middleware(request: NextRequest) {
           { status: 403 }
         );
       }
-      
+
       return NextResponse.next();
     }
-    
+
     // Monetization API routes
     if (pathname.startsWith('/api/monetization')) {
       const session = getProviderSession(request);
-      
+
       if (!session) {
         return NextResponse.json(
           { error: 'Unauthorized: Provider authentication required' },
           { status: 401 }
         );
       }
-      
+
       // All write operations require provider_admin
       if (isWriteOperation(request) && !hasProviderRole(session, 'provider_admin')) {
         return NextResponse.json(
@@ -169,39 +196,39 @@ export function middleware(request: NextRequest) {
           { status: 403 }
         );
       }
-      
+
       return NextResponse.next();
     }
-    
+
     // Provider API routes
     if (pathname.startsWith('/api/provider')) {
       const session = getProviderSession(request);
-      
+
       if (!session) {
         return NextResponse.json(
           { error: 'Unauthorized: Provider authentication required' },
           { status: 401 }
         );
       }
-      
+
       return NextResponse.next();
     }
-    
+
     // Developer API routes
     if (pathname.startsWith('/api/developer')) {
       const session = getDeveloperSession(request);
-      
+
       if (!session) {
         return NextResponse.json(
           { error: 'Unauthorized: Developer authentication required' },
           { status: 401 }
         );
       }
-      
+
       return NextResponse.next();
     }
   }
-  
+
   // Allow all other routes
   return NextResponse.next();
 }
