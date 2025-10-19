@@ -22,6 +22,7 @@ jobs:
       - name: Wait and merge without external actions
         uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.USER_GH_TOKEN != '' && secrets.USER_GH_TOKEN || secrets.CHRIS_GH_PAT != '' && secrets.CHRIS_GH_PAT || secrets.GH_PAT != '' && secrets.GH_PAT || secrets.BOT_HELPER_TOKEN != '' && secrets.BOT_HELPER_TOKEN || secrets.GITHUB_TOKEN }}
           script: |
             const core = require('@actions/core');
             const {owner, repo} = context.repo;
