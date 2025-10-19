@@ -130,6 +130,13 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/developer/login', request.url));
     }
 
+    return NextResponse.next();
+  }
+
+  // ============================================
+  // API ROUTES: /api/*
+  // ============================================
+  if (pathname.startsWith('/api')) {
     // Admin Pricing API requires provider_admin role for all operations
     if (pathname.startsWith('/api/admin/pricing')) {
       const session = getProviderSession(request);
@@ -148,14 +155,6 @@ export function middleware(request: NextRequest) {
       return NextResponse.next();
     }
 
-
-    return NextResponse.next();
-  }
-
-  // ============================================
-  // API ROUTES: /api/*
-  // ============================================
-  if (pathname.startsWith('/api')) {
     // Federation API routes
     if (pathname.startsWith('/api/federation')) {
       const session = getProviderSession(request);
