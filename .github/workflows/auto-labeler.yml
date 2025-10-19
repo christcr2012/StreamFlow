@@ -17,6 +17,6 @@ jobs:
     steps:
       - uses: actions/labeler@v5
         with:
-          repo-token: ${{ secrets.USER_GH_TOKEN != '' && secrets.USER_GH_TOKEN || secrets.CHRIS_GH_PAT != '' && secrets.CHRIS_GH_PAT || secrets.GH_PAT != '' && secrets.GH_PAT || secrets.BOT_HELPER_TOKEN != '' && secrets.BOT_HELPER_TOKEN || secrets.GITHUB_TOKEN }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
           sync-labels: true
 
