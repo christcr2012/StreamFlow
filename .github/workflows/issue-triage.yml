@@ -1,9 +1,7 @@
-name: Auto-triage issues (manual/scheduled)
+name: Auto-triage issues (manual-only)
 
 on:
   workflow_dispatch: {}
-  schedule:
-    - cron: '7 8 * * *'
 
 permissions:
   issues: write
