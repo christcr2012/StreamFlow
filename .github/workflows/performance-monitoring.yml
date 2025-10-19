@@ -1,6 +1,8 @@
 name: Performance Monitoring
 
 on:
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
     inputs:
       compare_against:
@@ -8,11 +10,18 @@ on:
         required: false
         default: ''
 
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 jobs:
   performance_check:
+    if: >-
+      ${{ github.event_name != 'pull_request' || (!github.event.pull_request.head.repo.fork && (github.actor == 'christcr2012' || github.actor == 'github-actions[bot]' || github.actor == 'dependabot[bot]' || github.actor == 'Bot-Helper')) }}
     name: Performance Regression Check
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout PR
         uses: actions/checkout@v4

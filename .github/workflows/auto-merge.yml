@@ -1,6 +1,8 @@
-name: Auto-merge PRs when green (no PR event)
+name: Auto-merge PRs when green
 
 on:
+  pull_request:
+    types: [labeled, opened, synchronize, ready_for_review, reopened]
   check_suite:
     types: [completed]
   workflow_dispatch: {}
@@ -13,7 +15,8 @@ permissions:
 
 jobs:
   automerge:
-    if: github.event_name == 'check_suite'
+    if: >-
+      ${{ (github.event_name == 'pull_request' && !github.event.pull_request.head.repo.fork && (github.actor == 'christcr2012' || github.actor == 'github-actions[bot]' || github.actor == 'dependabot[bot]' || github.actor == 'Bot-Helper')) || github.event_name == 'check_suite' }}
     runs-on: ubuntu-latest
     steps:
       - name: Wait and merge without external actions
