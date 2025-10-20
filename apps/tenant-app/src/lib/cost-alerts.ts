@@ -6,7 +6,12 @@
  */
 
 import { prisma } from './prisma';
-import { sendEmail } from '@cortiware/notifications';
+
+// TODO: Implement email sending when @cortiware/notifications package is created
+async function sendEmail(options: { to: string; subject: string; html: string }) {
+  console.log('Email would be sent:', options);
+  // Placeholder for now - will be implemented with actual email service
+}
 
 export interface CostAlert {
   id: string;

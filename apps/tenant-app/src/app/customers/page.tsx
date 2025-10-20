@@ -2,10 +2,9 @@ import { getAuthContext } from '@/lib/auth-context';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { CustomersClient } from './customers-client';
-import { ISR_REVALIDATION } from '@/config/isr-revalidation';
 
 // ISR: Revalidate customer list every 5 minutes
-export const revalidate = ISR_REVALIDATION.CUSTOMERS;
+export const revalidate = 300;
 
 async function getCustomers(orgId: string) {
   const customers = await prisma.customer.findMany({
