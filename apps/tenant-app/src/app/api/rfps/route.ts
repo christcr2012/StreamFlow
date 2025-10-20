@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 
+// Edge runtime for better performance on pure read operations
+export const runtime = 'edge';
+
 /**
  * GET /api/rfps
  * List RFPs for the authenticated tenant
