@@ -19,6 +19,7 @@
     "clean": "turbo run clean && rm -rf node_modules/.cache",
     "seed": "tsx prisma/seed.ts",
     "seed:provider": "cd apps/provider-portal && npm run prisma:seed",
+    "db:seed:preview": "tsx prisma/seed-preview.ts",
     "prisma:generate": "npx prisma generate --schema=prisma/schema.prisma && cd apps/provider-portal && npx prisma generate",
     "prisma:studio:tenant": "npx prisma studio --schema=prisma/schema.prisma",
     "prisma:studio:provider": "cd apps/provider-portal && npx prisma studio",
