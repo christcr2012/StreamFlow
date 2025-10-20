@@ -53,7 +53,7 @@ model Agreement {
   signedBy          String?
   renewalAt         DateTime?
   createdAt         DateTime          @default(now())
-  updatedAt         DateTime @updatedAt
+  updatedAt         DateTime          @updatedAt
   Customer          Customer          @relation(fields: [customerId], references: [id])
   AgreementTemplate AgreementTemplate @relation(fields: [templateId], references: [id])
 
@@ -70,7 +70,7 @@ model AgreementTemplate {
   mergeFields Json        @default("[]")
   isActive    Boolean     @default(true)
   createdAt   DateTime    @default(now())
-  updatedAt   DateTime @updatedAt
+  updatedAt   DateTime    @updatedAt
   Agreement   Agreement[]
 
   @@index([orgId, isActive])
@@ -89,7 +89,7 @@ model AiModelTest {
   startedAt         DateTime            @default(now())
   endedAt           DateTime?
   createdAt         DateTime            @default(now())
-  updatedAt         DateTime @updatedAt
+  updatedAt         DateTime            @updatedAt
   Org               Org                 @relation(fields: [orgId], references: [id])
   AiModelTestResult AiModelTestResult[]
 
@@ -149,6 +149,61 @@ model AiUsageEvent {
   @@index([orgId, createdAt])
   @@index([orgId, feature, createdAt])
   @@index([orgId, feature])
+}
+
+model AIUsageLog {
+  id          String   @id @default(cuid())
+  orgId       String
+  userId      String?
+  feature     String
+  model       String
+  tokensIn    Int
+  tokensOut   Int
+  costCents   Int // Cost in cents for easier aggregation
+  costUsd     Decimal  @db.Decimal(8, 6)
+  creditsUsed Int
+  requestId   String?
+  createdAt   DateTime @default(now())
+  Org         Org      @relation("OrgAIUsageLogs", fields: [orgId], references: [id])
+
+  @@index([orgId, createdAt])
+  @@index([orgId, feature, createdAt])
+}
+
+model SMSLog {
+  id         String   @id @default(cuid())
+  orgId      String
+  userId     String?
+  toNumber   String
+  fromNumber String?
+  message    String
+  status     String // 'sent', 'delivered', 'failed'
+  costCents  Int // Cost in cents
+  provider   String   @default("twilio")
+  sid        String? // Provider message ID
+  createdAt  DateTime @default(now())
+  Org        Org      @relation("OrgSMSLogs", fields: [orgId], references: [id])
+
+  @@index([orgId, createdAt])
+  @@index([orgId, status, createdAt])
+}
+
+model CostAlert {
+  id            String    @id @default(cuid())
+  orgId         String
+  alertType     String // 'AI_USAGE', 'SMS_USAGE', 'TOTAL_USAGE'
+  threshold     Int // Threshold in cents
+  period        String // 'DAILY', 'WEEKLY', 'MONTHLY'
+  email         String
+  webhookUrl    String?
+  enabled       Boolean   @default(true)
+  lastTriggered DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  Org           Org       @relation("OrgCostAlerts", fields: [orgId], references: [id])
+
+  @@index([orgId, enabled])
+  @@index([orgId, alertType, enabled])
 }
 
 model AnalyticsSnapshot {
@@ -268,7 +323,7 @@ model CleaningContract {
   slaCompletionHours Int?
   status             String              @default("ACTIVE")
   createdAt          DateTime            @default(now())
-  updatedAt          DateTime @updatedAt
+  updatedAt          DateTime            @updatedAt
   CleaningEstimate   CleaningEstimate    @relation(fields: [estimateId], references: [id])
   Org                Org                 @relation(fields: [orgId], references: [id])
   CleaningWorkOrder  CleaningWorkOrder[]
@@ -292,7 +347,7 @@ model CleaningEstimate {
   signedBy         String?
   signatureUrl     String?
   createdAt        DateTime          @default(now())
-  updatedAt        DateTime @updatedAt
+  updatedAt        DateTime          @updatedAt
   CleaningContract CleaningContract?
   CleaningLead     CleaningLead?     @relation(fields: [leadId], references: [id])
   Org              Org               @relation(fields: [orgId], references: [id])
@@ -312,7 +367,7 @@ model CleaningInspection {
   defectsCount      Int                 @default(0)
   status            String              @default("PENDING")
   createdAt         DateTime            @default(now())
-  updatedAt         DateTime @updatedAt
+  updatedAt         DateTime            @updatedAt
   Org               Org                 @relation(fields: [orgId], references: [id])
   CleaningWorkOrder CleaningWorkOrder[]
 
@@ -340,7 +395,7 @@ model CleaningLead {
   aiEstimateJson   Json?
   aiTokensUsed     Int?
   createdAt        DateTime           @default(now())
-  updatedAt        DateTime @updatedAt
+  updatedAt        DateTime           @updatedAt
   CleaningEstimate CleaningEstimate[]
   Org              Org                @relation(fields: [orgId], references: [id])
 
@@ -371,7 +426,7 @@ model CleaningWorkOrder {
   signedBy               String?
   signedAt               DateTime?
   createdAt              DateTime                 @default(now())
-  updatedAt              DateTime @updatedAt
+  updatedAt              DateTime                 @updatedAt
   CleaningContract       CleaningContract?        @relation(fields: [contractId], references: [id])
   CleaningInspection     CleaningInspection?      @relation(fields: [inspectionId], references: [id])
   Org                    Org                      @relation(fields: [orgId], references: [id])
@@ -407,7 +462,7 @@ model Coupon {
   maxRedemptions   Int?
   active           Boolean            @default(true)
   createdAt        DateTime           @default(now())
-  updatedAt        DateTime @updatedAt
+  updatedAt        DateTime           @updatedAt
   OnboardingInvite OnboardingInvite[]
 }
 
@@ -421,7 +476,7 @@ model Customer {
   primaryPhone     String?
   notes            String?
   createdAt        DateTime           @default(now())
-  updatedAt        DateTime @updatedAt
+  updatedAt        DateTime           @updatedAt
   billingSettings  Json               @default("{}")
   tags             String[]           @default([])
   Agreement        Agreement[]
@@ -490,7 +545,7 @@ model GlobalMonetizationConfig {
   defaultTrialDays Int?       @default(0)
   publicOnboarding Boolean    @default(true)
   createdAt        DateTime   @default(now())
-  updatedAt        DateTime @updatedAt
+  updatedAt        DateTime   @updatedAt
   PricePlan        PricePlan? @relation(fields: [defaultPlanId], references: [id])
   PlanPrice        PlanPrice? @relation(fields: [defaultPriceId], references: [id])
 }
@@ -533,7 +588,7 @@ model ImportJob {
   completedAt      DateTime?
   errorSummary     String?
   createdAt        DateTime         @default(now())
-  updatedAt        DateTime @updatedAt
+  updatedAt        DateTime         @updatedAt
   ImportError      ImportError[]
   ImportMapping    ImportMapping?   @relation(fields: [mappingId], references: [id])
   Org              Org              @relation(fields: [orgId], references: [id])
@@ -556,7 +611,7 @@ model ImportMapping {
   useCount        Int              @default(0)
   lastUsedAt      DateTime?
   createdAt       DateTime         @default(now())
-  updatedAt       DateTime @updatedAt
+  updatedAt       DateTime         @updatedAt
   ImportJob       ImportJob[]
   Org             Org              @relation(fields: [orgId], references: [id])
 
@@ -579,7 +634,7 @@ model Incident {
   resolvedAt          DateTime?
   closedAt            DateTime?
   createdAt           DateTime         @default(now())
-  updatedAt           DateTime @updatedAt
+  updatedAt           DateTime         @updatedAt
   Org                 Org              @relation(fields: [orgId], references: [id])
 
   @@index([orgId, severity])
@@ -595,7 +650,7 @@ model InfrastructureLimit {
   warningPercent  Float                 @default(75)
   criticalPercent Float                 @default(90)
   createdAt       DateTime              @default(now())
-  updatedAt       DateTime @updatedAt
+  updatedAt       DateTime              @updatedAt
 
   @@unique([service, metric, currentPlan])
 }
@@ -634,7 +689,7 @@ model Invoice {
   subtotal             Decimal           @default(0) @db.Decimal(12, 2)
   taxAmount            Decimal           @default(0) @db.Decimal(12, 2)
   terms                String?
-  updatedAt            DateTime @updatedAt
+  updatedAt            DateTime          @updatedAt
   Customer             Customer?         @relation(fields: [customerId], references: [id])
   Org                  Org               @relation(fields: [orgId], references: [id])
   InvoiceLine          InvoiceLine[]
@@ -688,7 +743,7 @@ model Job {
   assignedTo  String?
   checklist   Json          @default("[]")
   createdAt   DateTime      @default(now())
-  updatedAt   DateTime @updatedAt
+  updatedAt   DateTime      @updatedAt
   assignees   String[]      @default([])
   completedAt DateTime?
   description String?
@@ -795,7 +850,7 @@ model LeadInvoice {
   currency        String            @default("usd")
   stripeInvoiceId String?
   createdAt       DateTime          @default(now())
-  updatedAt       DateTime @updatedAt
+  updatedAt       DateTime          @updatedAt
   leadCount       Int               @default(0)
   Org             Org?              @relation(fields: [orgId], references: [id])
   LeadInvoiceLine LeadInvoiceLine[]
@@ -841,7 +896,7 @@ model OIDCConfig {
   clientSecret String
   scopes       String    @default("openid profile email")
   createdAt    DateTime  @default(now())
-  updatedAt    DateTime @updatedAt
+  updatedAt    DateTime  @updatedAt
   lastTestedAt DateTime?
 }
 
@@ -857,7 +912,7 @@ model Offer {
   endsAt           DateTime?
   active           Boolean            @default(true)
   createdAt        DateTime           @default(now())
-  updatedAt        DateTime @updatedAt
+  updatedAt        DateTime           @updatedAt
   PricePlan        PricePlan?         @relation(fields: [appliesToPlanId], references: [id])
   OnboardingInvite OnboardingInvite[]
 }
@@ -894,7 +949,7 @@ model Opportunity {
   sourceLeadId   String?
   classification Json      @default("{}")
   createdAt      DateTime  @default(now())
-  updatedAt      DateTime @updatedAt
+  updatedAt      DateTime  @updatedAt
   Customer       Customer  @relation(fields: [customerId], references: [id])
   Org            Org       @relation(fields: [orgId], references: [id])
 }
@@ -904,7 +959,7 @@ model Org {
   name                      String
   featureFlags              Json                        @default("{}")
   createdAt                 DateTime                    @default(now())
-  updatedAt                 DateTime @updatedAt
+  updatedAt                 DateTime                    @updatedAt
   brandConfig               Json?                       @default("{}")
   settingsJson              Json?                       @default("{}")
   aiAlerts                  Json                        @default("{}")
@@ -936,6 +991,9 @@ model Org {
   AiModelTest               AiModelTest[]
   AiMonthlySummary          AiMonthlySummary[]
   AiUsageEvent              AiUsageEvent[]
+  AIUsageLogs               AIUsageLog[]                @relation("OrgAIUsageLogs")
+  SMSLogs                   SMSLog[]                    @relation("OrgSMSLogs")
+  CostAlerts                CostAlert[]                 @relation("OrgCostAlerts")
   AuditLog                  AuditLog[]
   BillingLedger             BillingLedger[]
   CleaningChecklistTemplate CleaningChecklistTemplate[]
@@ -1001,7 +1059,7 @@ model PlanPrice {
   active                   Boolean                    @default(true)
   stripePriceId            String?
   createdAt                DateTime                   @default(now())
-  updatedAt                DateTime @updatedAt
+  updatedAt                DateTime                   @updatedAt
   GlobalMonetizationConfig GlobalMonetizationConfig[]
   OnboardingInvite         OnboardingInvite[]
   PricePlan                PricePlan                  @relation(fields: [planId], references: [id], onDelete: Cascade)
@@ -1018,7 +1076,7 @@ model PricePlan {
   description              String?
   active                   Boolean                    @default(true)
   createdAt                DateTime                   @default(now())
-  updatedAt                DateTime @updatedAt
+  updatedAt                DateTime                   @updatedAt
   GlobalMonetizationConfig GlobalMonetizationConfig[]
   Offer                    Offer[]
   OnboardingInvite         OnboardingInvite[]
@@ -1052,7 +1110,7 @@ model ProviderIntegration {
   config            Json      @default("{}")
   enabled           Boolean   @default(true)
   createdAt         DateTime  @default(now())
-  updatedAt         DateTime @updatedAt
+  updatedAt         DateTime  @updatedAt
   lastSyncAt        DateTime?
   errorMessage      String?
   healthStatus      String?
@@ -1146,7 +1204,7 @@ model RecurringInvoice {
   notes           String?
   currency        String    @default("USD")
   createdAt       DateTime  @default(now())
-  updatedAt       DateTime @updatedAt
+  updatedAt       DateTime  @updatedAt
   Customer        Customer  @relation(fields: [customerId], references: [id])
   Org             Org       @relation(fields: [orgId], references: [id])
 
@@ -1164,7 +1222,7 @@ model Referral {
   status        String    @default("new")
   convertedAt   DateTime?
   createdAt     DateTime  @default(now())
-  updatedAt     DateTime @updatedAt
+  updatedAt     DateTime  @updatedAt
   Org           Org       @relation(fields: [orgId], references: [id])
 }
 
@@ -1178,7 +1236,7 @@ model RefreshToken {
   revoked   Boolean   @default(false)
   revokedAt DateTime?
   createdAt DateTime  @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime  @updatedAt
 
   @@index([expiresAt])
   @@index([sessionId])
@@ -1196,7 +1254,7 @@ model Rfp {
   aiBidFit    Int?
   aiPriceHint Json      @default("{}")
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime @updatedAt
+  updatedAt   DateTime  @updatedAt
   Job         Job[]
   Org         Org       @relation(fields: [orgId], references: [id])
 }
@@ -1212,7 +1270,7 @@ model Subscription {
   priceCents Int
   meta       Json      @default("{}")
   createdAt  DateTime  @default(now())
-  updatedAt  DateTime @updatedAt
+  updatedAt  DateTime  @updatedAt
   Org        Org       @relation(fields: [orgId], references: [id])
 
   @@index([orgId, status])
@@ -1232,7 +1290,7 @@ model TenantPriceOverride {
   endsAt         DateTime?
   reason         String?
   createdAt      DateTime     @default(now())
-  updatedAt      DateTime @updatedAt
+  updatedAt      DateTime     @updatedAt
   Org            Org          @relation(fields: [orgId], references: [id], onDelete: Cascade)
   PricePlan      PricePlan?   @relation(fields: [planId], references: [id])
   PlanPrice      PlanPrice?   @relation(fields: [priceId], references: [id])
@@ -1260,7 +1318,7 @@ model UpgradeRecommendation {
   estimatedSavings Float?
   roiMonths        Int?
   createdAt        DateTime               @default(now())
-  updatedAt        DateTime @updatedAt
+  updatedAt        DateTime               @updatedAt
   acknowledgedAt   DateTime?
   implementedAt    DateTime?
   benefits         String?
@@ -1296,7 +1354,7 @@ model User {
   role                  Role                    @default(STAFF)
   status                String                  @default("active")
   createdAt             DateTime                @default(now())
-  updatedAt             DateTime @updatedAt
+  updatedAt             DateTime                @updatedAt
   mustChangePassword    Boolean                 @default(false)
   passwordHash          String?                 @db.VarChar(255)
   backupCodesHash       String?

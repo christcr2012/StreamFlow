@@ -5,9 +5,10 @@ import { Card } from '@cortiware/ui';
 import { Button } from '@cortiware/ui';
 import Link from 'next/link';
 import { InvoicesClient } from './invoices-client';
+import { ISR_REVALIDATION } from '@/config/isr-revalidation';
 
-// ISR: Revalidate invoice list every 5 minutes
-export const revalidate = 300;
+// ISR: Revalidate invoice list every 10 minutes
+export const revalidate = ISR_REVALIDATION.INVOICES;
 
 async function getInvoices(orgId: string) {
   const invoices = await prisma.invoice.findMany({

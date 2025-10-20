@@ -5,9 +5,10 @@ import { Card } from '@cortiware/ui';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@cortiware/ui';
 import Link from 'next/link';
+import { ISR_REVALIDATION } from '@/config/isr-revalidation';
 
-// ISR: Revalidate agreements list every 5 minutes
-export const revalidate = 300;
+// ISR: Revalidate agreements list every 15 minutes
+export const revalidate = ISR_REVALIDATION.AGREEMENTS;
 
 async function getAgreements(orgId: string) {
   const agreements = await prisma.agreement.findMany({
