@@ -12,8 +12,6 @@
 - #75 Provider DB guardrail – verify Prisma migrate status in CI
 - #74 Performance monitoring guardrails: thresholds, baseline capture policy, retention
 - #73 Pricing Admin – Enforce super admin role check
-- #72 Pricing Admin – History viewer UI
-- #71 Pricing Admin – Plan editor UI (/provider/admin/pricing/new, /[id]/edit)
 - #68 Import Wizard – verify deployment status, add smoke test and docs
 - #67 SAM.gov integration – verify E2E; seed test tenant; smoke tests
 - #66 _disabled endpoints inventory → per-route decisions and archiving
@@ -27,6 +25,183 @@
 - #48 Deployment secrets (Option C): finalize required secrets via Vercel CLI
 
 ## Later
+- #258 Implement AI Cost Management for Provider Portal
+- #257 Implement AI Cost Management for Tenant Portal
+- #256 [MCP] Build Google Workspace MCP Server (100+ tools)
+- #255 [MCP] Robinson AI MCP Servers - Progress Update & Roadmap
+- #253 [MCP] Design and Build Custom Multi-Account Stripe MCP
+- #251 Provider Observability & AI Monitoring Dashboard
+- #250 Vertical Pack: Pet Services (Grooming, Boarding, Training)
+- #249 Vertical Pack: Fitness & Personal Training Services
+- #248 Vertical Pack: Event Services (AV, Staging, Catering)
+- #247 Vertical Pack: IT & Managed Services
+- #246 Vertical Pack: Property Management Services
+- #245 Vertical Pack: Solar Installation Services
+- #244 Vertical Pack: Snow Removal Services
+- #243 Vertical Pack: Moving & Relocation Services
+- #242 Core Feature: AI-Powered Anomaly Detection & Monitoring
+- #241 Core Feature: Third-Party Integration Marketplace
+- #240 Core Feature: Advanced Reporting & Analytics Dashboard
+- #239 Core Feature: AI-Powered Job Costing & Estimation Engine
+- #238 Core Feature: Role-Based Access Control (RBAC) System
+- #237 Vertical Pack: Roofing Services
+- #236 Vertical Pack: Pest Control Services
+- #235 Vertical Pack: Security & Fire Safety Services
+- #234 Vertical Pack: Courier & Delivery Services
+- #233 Vertical Pack: Handyman Services
+- #232 Vertical Pack: Junk Removal Services
+- #231 Vertical Pack: Septic Services
+- #230 Vertical Pack: Windows & Doors Services
+- #229 Core Feature: Provider Observability & Profitability Dashboard
+- #228 Core Feature: Advanced Search & Global Indexing
+- #227 Core Feature: Loyalty & Referral Programs
+- #226 Core Feature: Service Contracts & SLA Management
+- #225 Vertical Pack: HVAC Services
+- #224 Core Feature: Field Inspection Forms & Checklists
+- #223 Core Feature: Change Order Management
+- #222 Vertical Pack: Flooring Services
+- #221 Core Feature: Subcontractor Management & Marketplace
+- #220 Core Feature: Marketing Automation & Email Campaign Builder
+- #219 Vertical Pack: Painting Services
+- #218 Vertical Pack: Concrete Services
+- #217 Vertical Pack: Pool Services
+- #216 Core Feature: Data Import/Export & Bulk Operations
+- #215 Vertical Pack: Moving Services
+- #214 Vertical Pack: Pest Control Services
+- #213 Vertical Pack: Roofing Services
+- #212 Vertical Pack: Appliance Services
+- #211 Vertical Pack: Auto/Mechanic Services
+- #210 Core Feature: Compliance & Safety Management
+- #209 Core Feature: Webhooks & API Platform
+- #208 Core Feature: Knowledge Base & Help Center
+- #207 Core Feature: Crew & Team Management with Dispatch Board
+- #206 Core Feature: Multi-Location & Franchise Management
+- #205 Vertical Pack: Landscaping Services
+- #204 Vertical Pack: Trucking & Logistics Services
+- #203 Vertical Pack: Electrical Services
+- #202 Vertical Pack: Plumbing Services
+- #201 Vertical Pack: Fencing Services (ProDBX Competitor)
+- #200 Vertical Pack: Cleaning Services (First Client - Mountain Vista)
+- #199 Vertical Pack: Porta-John/Portable Restroom Services
+- #198 Vertical Pack: Roll-Off Dumpster Services
+- #197 Vertical Pack: HVAC Services
+- #196 Data Import/Export & Bulk Operations
+- #195 Provider Observability & Profitability Dashboard
+- #194 Advanced Search & Global Indexing
+- #193 Customer Loyalty & Referral Programs
+- #192 Service Contracts & SLA Management
+- #191 Field Inspection Forms & Checklists
+- #190 Change Order Management System
+- #189 Subcontractor Management & Marketplace
+- #188 Email/SMS Campaign Builder & Marketing Automation
+- #187 Customer Self-Service Portal
+- #186 Advanced Reporting & Custom Report Builder
+- #185 Mobile Field Tech PWA (Progressive Web App)
+- #184 Time Tracking & Payroll Integration System
+- #183 Document Management & E-Signature System
+- #182 Multi-Crew & Multi-Location Management System
+- #181 Knowledge Base & Help Center System
+- #180 Webhooks & External API Integration Platform
+- #179 Customer Equipment Registry & Warranty Tracking System
+- #178 Customer Equipment Registry & Warranty Tracking System
+- #177 [Epic] Advanced RBAC & Permissions System
+- #176 [Epic] Notification System & Inbox
+- #175 [Epic] GPS Tracking & Geolocation Services
+- #174 [Epic] Job Costing & Profitability Analysis
+- #173 [Epic] Recurring Services & Maintenance Contracts
+- #172 [Epic] Document Management & E-Signatures
+- #171 [Epic] Email/SMS Campaigns & Marketing Automation
+- #170 [Epic] Migration Frameworks - Competitor Data Import (Jobber, ServiceTitan, ProDBX)
+- #169 [Epic] Time Tracking & Payroll Integration - Labor Cost Management
+- #168 [Epic] Reporting & Analytics - Business Intelligence Dashboard
+- #167 [Epic] Payment Processing & Billing - Dual Stripe Architecture
+- #166 [Epic] Estimates & Invoicing System - Quote-to-Cash Workflow
+- #165 [Epic] Scheduling & Dispatch System - Advanced Route Optimization
+- #164 [Architecture] Tiered Vertical Subscription System - Standardized Module Bundles
+- #163 [Epic] Mobile Field Tech PWA - Offline-First Progressive Web App
+- #162 [Epic] Subcontractor & Vendor Management + Marketplace
+- #161 [Epic] Feature Toggle & Module System - Per-Tenant Feature Enablement
+- #160 [Epic] Inventory Management System
+- #159 [Epic] Customer Portal - Branded Self-Service Portal
+- #158 [Epic] Work Orders & Job Tickets System
+- #157 [Integration] Holman Fuel Card Integration
+- #156 [Integration] Paylocity HR/Payroll API Integration
+- #155 [Integration] Geotab MyGeotab API Integration (DVIR, ELD, Telematics)
+- #154 [Epic] Fleet Management & Asset Tracking System
+- #153 [Epic] Multi-Location & Multi-Vertical Architecture
+- #152 [UX] Comprehensive Tutorial & Onboarding System
+- #151 [AI Agent] AI Concierge System - Baseline Implementation
+- #150 [Self-Healing] Implement Zero-Downtime Federation Updates
+- #149 [Self-Healing] Build Automated Incident Resolution
+- #148 [EPIC] Self-Healing Federation (Phase 1)
+- #147 [Network Effects] Build Federation Marketplace
+- #146 [Network Effects] Build Cross-Client Intelligence
+- #145 [EPIC] Federation Network Effects (Phase 1)
+- #144 [AI Intelligence] Build Intelligent Resource Allocation
+- #143 [AI Intelligence] Build Predictive Escalation Prevention
+- #142 [EPIC] AI-Powered Provider Intelligence Layer (Phase 1)
+- #141 [Analytics] Implement Fraud/Abuse Detection
+- #140 [Analytics] Build Federation Analytics API
+- #139 [Analytics] Build Role Insights & Error Heatmaps
+- #138 [EPIC] Cross-Client Analytics
+- #137 [Federation] Implement Policy Engine as Code
+- #136 [Federation] Build Approval Workbench
+- #135 [Federation] Build Role Simulator & Impersonation
+- #134 [EPIC] Governance & Access Control
+- #133 [Federation] Build Change Broadcasts System
+- #132 [Federation] Implement Release Channels
+- #131 [Federation] Build Product & Bundle Catalog
+- #130 [EPIC] Provider Marketplace & Packaging
+- #129 [Federation] Build Budgets & Kill-switches
+- #128 [Federation] Implement Disputes & Write-offs
+- #127 [Federation] Build Invoice Mediation System
+- #126 [EPIC] Billing & Revenue Operations
+- #125 [Federation] Build SLA/SLO Board
+- #124 [Federation] Implement Lifecycle Tracking
+- #123 [Federation] Build Escalation Inbox
+- #122 [EPIC] Incident & Escalation Operations
+- #121 [Federation] Build Audit & Compliance Hub
+- #120 [Federation] Implement API Versioning + Idempotency
+- #119 [Federation] Build Webhook Gateway (Provider→Client)
+- #118 [Federation] Implement Key & Signature Operations
+- #117 [Federation] Build Federated Client Directory
+- #116 [EPIC] Federation Control Plane - Multi-System, Multi-Tenant
+- #115 [AI Agent] Build Provider-Side AI Developer Agent + Dev Portal
+- #114 [META] Complete GitHub Issues System - All Work Tracked
+- #113 [AI Agent] Build Conversational AI Assistant
+- #112 [AI Agent] Build Document Generation Agent
+- #111 [AI Agent] Build Customer Insights Agent
+- #110 [AI Agent] Build Follow-Up Automation Agent
+- #109 [AI Agent] Build Scheduling Optimization Agent
+- #108 [AI Agent] Build Lead Qualification Agent
+- #107 [Provider Portal] Implement Advanced Analytics & Reporting
+- #106 [Provider Portal] Implement Billing Automation (Stripe Integration)
+- #105 [Provider Portal] Implement Tenant Provisioning Automation
+- #104 [Provider Portal] Complete RBAC Implementation
+- #103 [Marketing] Improve Robinson AI Systems Corporate Site
+- #102 [Marketing] Fix Cortiware Site - Align with Product Reality
+- #101 [Infrastructure] Security Hardening & Audit
+- #100 [Infrastructure] Performance Optimization (Caching, CDN, Code Splitting)
+- #99 [Infrastructure] Implement Comprehensive Testing Infrastructure
+- #98 [Infrastructure] Set Up Observability Stack (DataDog, Sentry, LogRocket)
+- #97 [Infrastructure] Implement Real-Time Features (SSE/WebSockets)
+- #96 [EPIC] Infrastructure & Real-Time Features
+- #95 [MCP] Document MCP Setup and Usage Guide
+- #94 [MCP] Custom Redis MCP for Cortiware
+- #93 [MCP] Neon Official MCP (OAuth)
+- #92 [MCP] Create Test Stripe Account for Tenant Development
+- #91 [MCP] Set up Augment Stripe MCP for Provider Billing
+- #90 [EPIC] MCP Infrastructure Setup & Optimization
+- #89 [Tenant App] Implement Reports/Analytics System
+- #88 [Tenant App] Implement Settings/Configuration System
+- #87 [Tenant App] Implement Agreements/Contracts System
+- #86 [Tenant App] Implement Wallet/Payments System
+- #85 [Tenant App] Recover Opportunities Management from Legacy
+- #84 [Tenant App] Recover SAM.gov Integration from Legacy
+- #81 [EPIC] Fix Marketing Sites
+- #80 [EPIC] Enhance Provider Portal
+- #79 [EPIC] Build AI Agent System
+- #78 [EPIC] Complete Tenant App MVP
 - #69 Agreement models – DB schema, API, UI per TODO_AGREEMENT_MODELS.md
 - #65 Stripe Connect – enablement plan or keep disabled
 - #56 Code TODOs sweep – security/federation/metrics
