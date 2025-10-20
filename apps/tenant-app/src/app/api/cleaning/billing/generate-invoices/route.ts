@@ -1,155 +1,68 @@
 /**
  * Cleaning Billing - Generate Invoices API
- * 
+ *
  * POST /api/cleaning/billing/generate-invoices - Generate invoices for completed work orders
- * 
+ *
  * This endpoint is designed to be called by a cron job (nightly)
  * to generate invoices for completed work orders that haven't been billed yet.
+ *
+ * Now uses BullMQ queue for background processing.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAuthContext } from '@/lib/auth-context';
+import { enqueue } from '@/lib/queue/enqueue';
+import { QUEUE_NAMES } from '@cortiware/queue';
+import { randomUUID } from 'crypto';
 
 export async function POST(request: NextRequest) {
   try {
     const authContext = await getAuthContext();
-    
+
     // Allow both authenticated users and cron jobs
     const cronSecret = request.headers.get('x-cron-secret');
     const isValidCron = cronSecret === process.env.CRON_SECRET;
-    
+
     if (!authContext.isAuthenticated && !isValidCron) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get billing period from request or use default (last 24 hours)
+    // Get billing date from request or use yesterday
     const body = await request.json().catch(() => ({}));
-    const hoursBack = body.hoursBack || 24;
-    
-    const cutoffDate = new Date(Date.now() - hoursBack * 60 * 60 * 1000);
+    const dateISO = body.dateISO || new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
-    // Find completed work orders
-    const workOrders = await prisma.cleaningWorkOrder.findMany({
+    // Get all unique orgIds that have completed work orders
+    const orgs = await prisma.cleaningWorkOrder.findMany({
       where: {
         status: 'COMPLETED',
-        actualEnd: { gte: cutoffDate }
-      }
-    });
-
-    // Get contracts for these work orders
-    const contractIds = [...new Set(workOrders.map((wo) => wo.contractId).filter(Boolean))];
-    const contracts = await prisma.cleaningContract.findMany({
-      where: {
-        id: { in: contractIds as string[] }
+        actualEnd: { gte: new Date(dateISO) }
       },
-      include: { CleaningEstimate: {
-          select: { CleaningLead: {
-              select: {
-                contactName: true,
-                email: true,
-                company: true
-              }
-            }
-          }
-        }
-      }
+      select: { orgId: true },
+      distinct: ['orgId'],
     });
 
-    const contractMap = new Map(contracts.map((c) => [c.id, c]));
-
-    let invoicesCreated = 0;
-    let itemsCreated = 0;
-    const errors: string[] = [];
-
-    // Group work orders by customer/contract
-    const workOrdersByCustomer = new Map<string, typeof workOrders>();
-
-    for (const wo of workOrders) {
-      const contract = wo.contractId ? contractMap.get(wo.contractId) : null;
-      const key = contract?.customerId || wo.contractId || wo.orgId;
-      if (!workOrdersByCustomer.has(key)) {
-        workOrdersByCustomer.set(key, []);
-      }
-      workOrdersByCustomer.get(key)!.push(wo);
-    }
-
-    // Create invoices for each customer
-    for (const [customerId, customerWorkOrders] of workOrdersByCustomer) {
-      try {
-        const firstWO = customerWorkOrders[0];
-        const contract = firstWO.contractId ? contractMap.get(firstWO.contractId) : null;
-
-        if (!contract) {
-          errors.push(`Work order ${firstWO.id}: No contract found`);
-          continue;
+    // Enqueue a billing job for each org
+    const jobs = [];
+    for (const org of orgs) {
+      const job = await enqueue(
+        QUEUE_NAMES.BILLING,
+        'billing.closeDay',
+        {
+          orgId: org.orgId,
+          dateISO,
+          idempotencyKey: randomUUID(),
         }
-
-        // Calculate total amount
-        const subtotal = customerWorkOrders.reduce((sum: number, wo: typeof customerWorkOrders[0]) => {
-          return sum + Number(contract.basePrice);
-        }, 0);
-
-        const taxRate = Number(contract.taxRate || 0) / 100;
-        const taxAmount = subtotal * taxRate;
-        const total = subtotal + taxAmount;
-
-        // Create invoice
-        const invoice = await prisma.invoice.create({
-          data: {
-            orgId: firstWO.orgId,
-            amount: total.toFixed(2),
-            status: 'open',
-            issuedAt: new Date(),
-            items: JSON.stringify(
-              customerWorkOrders.map((wo) => ({
-                description: `Cleaning service - ${wo.spaceType} (${wo.squareFeet} sq ft)`,
-                date: wo.scheduledDate.toISOString().split('T')[0],
-                workOrderId: wo.id,
-                quantity: 1,
-                unitPrice: Number(contract.basePrice),
-                total: Number(contract.basePrice)
-              }))
-            )
-          }
-        });
-
-        invoicesCreated++;
-        itemsCreated += customerWorkOrders.length;
-
-        // Log activity
-        await prisma.activity.create({
-          data: {
-            orgId: firstWO.orgId,
-            actorType: 'system',
-            actorId: 'billing-cron',
-            entityType: 'invoice',
-            entityId: invoice.id,
-            action: 'created',
-            meta: JSON.stringify({
-              workOrderCount: customerWorkOrders.length,
-              subtotal,
-              taxAmount,
-              total,
-              customerId
-            })
-          }
-        });
-      } catch (error) {
-        console.error(`Error creating invoice for customer ${customerId}:`, error);
-        errors.push(`Customer ${customerId}: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      }
+      );
+      jobs.push(job.id);
     }
 
     return NextResponse.json({
       success: true,
-      summary: {
-        workOrdersProcessed: workOrders.length,
-        invoicesCreated,
-        itemsCreated,
-        errors: errors.length
-      },
-      errors: errors.length > 0 ? errors : undefined
+      message: `Queued ${jobs.length} billing job(s) for background processing`,
+      jobIds: jobs,
+      orgsQueued: orgs.length,
+      dateISO,
     });
   } catch (error) {
     console.error('Error generating invoices:', error);

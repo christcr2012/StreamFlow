@@ -15,26 +15,302 @@ import type {
   StripeFanoutJob,
 } from '../index.js';
 
+// Note: These imports will be resolved at runtime in the worker environment
+// The worker has access to the full monorepo via Docker build
+declare const require: any;
+const { parseFile } = require('../../../src/lib/import/file-parser');
+const { processImport } = require('../../../src/lib/import/batch-processor');
+const { PrismaClient } = require('@prisma/client');
+const { ImportStatus } = require('@prisma/client');
+const { RRule } = require('rrule');
+
+const prisma = new PrismaClient({
+  datasourceUrl: process.env.DATABASE_URL,
+});
+
 // ============================================================================
 // Processor Signatures
 // ============================================================================
 
 export async function csvImport(job: Job<CsvImportJob>) {
-  console.log(`[csv-import] Processing ${job.data.kind} for org ${job.data.orgId}`);
-  // TODO: Implement CSV parsing, validation, staging, upsert
-  return { status: 'pending', rows: 0 };
+  const { orgId, importJobId, kind, fileContent, fileName, fieldMappings, transformRules, validationRules, batchSize = 100 } = job.data;
+
+  console.log(`[csv-import] Processing ${kind} import for org ${orgId}, job ${importJobId}`);
+
+  try {
+    // Parse the file
+    const parsed = parseFile(fileName, fileContent);
+    console.log(`[csv-import] Parsed ${parsed.rows.length} rows from ${fileName}`);
+
+    // Update job with total records
+    await prisma.importJob.update({
+      where: { id: importJobId },
+      data: {
+        totalRecords: parsed.rows.length,
+        status: ImportStatus.PROCESSING,
+      },
+    });
+
+    // Process the import using the existing batch processor
+    await processImport({
+      importJobId,
+      orgId,
+      entityType: kind.toUpperCase(),
+      records: parsed.rows,
+      fieldMappings,
+      transformRules,
+      validationRules,
+      dedupeFields: [],
+      batchSize,
+    });
+
+    console.log(`[csv-import] Successfully completed import job ${importJobId}`);
+    return {
+      status: 'completed',
+      rows: parsed.rows.length,
+      importJobId,
+    };
+  } catch (error: any) {
+    console.error(`[csv-import] Error processing job ${importJobId}:`, error);
+
+    // Update job status to failed
+    await prisma.importJob.update({
+      where: { id: importJobId },
+      data: {
+        status: ImportStatus.FAILED,
+        errorSummary: error.message || 'Import processing failed',
+        completedAt: new Date(),
+      },
+    });
+
+    throw error;
+  }
 }
 
 export async function scheduleExpand(job: Job<ScheduleExpandJob>) {
-  console.log(`[schedule-expand] Expanding schedules for org ${job.data.orgId}`);
-  // TODO: Implement RRULE expansion, WO creation
-  return { status: 'pending', created: 0 };
+  const { orgId, contractId, horizonDays } = job.data;
+
+  console.log(`[schedule-expand] Expanding schedules for org ${orgId}, horizon ${horizonDays} days`);
+
+  const now = new Date();
+  const endDate = new Date(now.getTime() + horizonDays * 24 * 60 * 60 * 1000);
+
+  // Find active contracts with recurrence rules
+  const contracts = await prisma.cleaningContract.findMany({
+    where: {
+      orgId,
+      status: 'ACTIVE',
+      recurrenceRule: { not: null },
+      startDate: { lte: endDate },
+      ...(contractId && { id: contractId }),
+      OR: [
+        { endDate: null },
+        { endDate: { gte: now } }
+      ]
+    },
+  });
+
+  let created = 0;
+  let skipped = 0;
+
+  for (const contract of contracts) {
+    try {
+      // Parse RRULE
+      const rrule = RRule.fromString(contract.recurrenceRule);
+
+      // Get occurrences in the window
+      const occurrences = rrule.between(now, endDate, true);
+
+      for (const occurrence of occurrences) {
+        // Check if work order already exists for this date
+        const existing = await prisma.cleaningWorkOrder.findFirst({
+          where: {
+            contractId: contract.id,
+            scheduledDate: occurrence
+          }
+        });
+
+        if (existing) {
+          skipped++;
+          continue;
+        }
+
+        // Generate unique public ID
+        const publicId = `WO-${contract.id.slice(0, 8)}-${occurrence.getTime()}`;
+
+        // Calculate scheduled start/end times (default 8 AM - 5 PM)
+        const scheduledStart = new Date(occurrence);
+        scheduledStart.setHours(8, 0, 0, 0);
+
+        const scheduledEnd = new Date(occurrence);
+        scheduledEnd.setHours(17, 0, 0, 0);
+
+        // Create work order
+        await prisma.cleaningWorkOrder.create({
+          data: {
+            orgId: contract.orgId,
+            contractId: contract.id,
+            publicId,
+            siteAddress: contract.siteAddress,
+            spaceType: contract.spaceType,
+            squareFeet: contract.squareFeet,
+            scheduledDate: occurrence,
+            scheduledStart,
+            scheduledEnd,
+            status: 'SCHEDULED'
+          }
+        });
+
+        created++;
+      }
+    } catch (error: any) {
+      console.error(`[schedule-expand] Error expanding contract ${contract.id}:`, error);
+      // Continue with other contracts
+    }
+  }
+
+  console.log(`[schedule-expand] Completed: ${created} created, ${skipped} skipped`);
+  return {
+    status: 'completed',
+    created,
+    skipped,
+    contractsProcessed: contracts.length,
+  };
 }
 
 export async function billingCloseDay(job: Job<BillingCloseDayJob>) {
-  console.log(`[billing-close-day] Closing day ${job.data.dateISO} for org ${job.data.orgId}`);
-  // TODO: Implement billable generation, invoice creation
-  return { status: 'pending', billables: 0 };
+  const { orgId, dateISO } = job.data;
+
+  console.log(`[billing-close-day] Closing day ${dateISO} for org ${orgId}`);
+
+  const cutoffDate = new Date(dateISO);
+
+  // Find completed work orders for this org on this date
+  const workOrders = await prisma.cleaningWorkOrder.findMany({
+    where: {
+      orgId,
+      status: 'COMPLETED',
+      actualEnd: { gte: cutoffDate }
+    }
+  });
+
+  if (workOrders.length === 0) {
+    console.log(`[billing-close-day] No completed work orders found for org ${orgId} on ${dateISO}`);
+    return { status: 'completed', invoicesCreated: 0, itemsCreated: 0 };
+  }
+
+  // Get contracts for these work orders
+  const contractIds = [...new Set(workOrders.map((wo) => wo.contractId).filter(Boolean))];
+  const contracts = await prisma.cleaningContract.findMany({
+    where: {
+      id: { in: contractIds as string[] }
+    },
+    include: {
+      CleaningEstimate: {
+        select: {
+          CleaningLead: {
+            select: {
+              contactName: true,
+              email: true,
+              company: true
+            }
+          }
+        }
+      }
+    }
+  });
+
+  const contractMap = new Map(contracts.map((c: any) => [c.id, c]));
+
+  let invoicesCreated = 0;
+  let itemsCreated = 0;
+
+  // Group work orders by customer/contract
+  const workOrdersByCustomer = new Map<string, typeof workOrders>();
+
+  for (const wo of workOrders) {
+    const contract = wo.contractId ? contractMap.get(wo.contractId) : null;
+    const key = (contract as any)?.customerId || wo.contractId || wo.orgId;
+    if (!workOrdersByCustomer.has(key)) {
+      workOrdersByCustomer.set(key, []);
+    }
+    workOrdersByCustomer.get(key)!.push(wo);
+  }
+
+  // Create invoices for each customer
+  for (const [customerId, customerWorkOrders] of workOrdersByCustomer) {
+    try {
+      const firstWO = customerWorkOrders[0];
+      const contract = firstWO.contractId ? contractMap.get(firstWO.contractId) : null;
+
+      if (!contract) {
+        console.error(`[billing-close-day] Work order ${firstWO.id}: No contract found`);
+        continue;
+      }
+
+      // Calculate total amount
+      const subtotal = customerWorkOrders.reduce((sum: number, wo: typeof customerWorkOrders[0]) => {
+        return sum + Number((contract as any).basePrice);
+      }, 0);
+
+      const taxRate = Number((contract as any).taxRate || 0) / 100;
+      const taxAmount = subtotal * taxRate;
+      const total = subtotal + taxAmount;
+
+      // Create invoice
+      const invoice = await prisma.invoice.create({
+        data: {
+          orgId: firstWO.orgId,
+          amount: total.toFixed(2),
+          status: 'open',
+          issuedAt: new Date(),
+          items: JSON.stringify(
+            customerWorkOrders.map((wo) => ({
+              description: `Cleaning service - ${wo.spaceType} (${wo.squareFeet} sq ft)`,
+              date: wo.scheduledDate.toISOString().split('T')[0],
+              workOrderId: wo.id,
+              quantity: 1,
+              unitPrice: Number((contract as any).basePrice),
+              total: Number((contract as any).basePrice)
+            }))
+          )
+        }
+      });
+
+      invoicesCreated++;
+      itemsCreated += customerWorkOrders.length;
+
+      // Log activity
+      await prisma.activity.create({
+        data: {
+          orgId: firstWO.orgId,
+          actorType: 'system',
+          actorId: 'billing-worker',
+          entityType: 'invoice',
+          entityId: invoice.id,
+          action: 'created',
+          meta: JSON.stringify({
+            workOrderCount: customerWorkOrders.length,
+            subtotal,
+            taxAmount,
+            total,
+            customerId
+          })
+        }
+      });
+    } catch (error: any) {
+      console.error(`[billing-close-day] Error creating invoice for customer ${customerId}:`, error);
+      // Continue with other customers
+    }
+  }
+
+  console.log(`[billing-close-day] Completed: ${invoicesCreated} invoices created, ${itemsCreated} items`);
+  return {
+    status: 'completed',
+    invoicesCreated,
+    itemsCreated,
+    workOrdersProcessed: workOrders.length,
+  };
 }
 
 export async function inspectionsGenerate(job: Job<InspectionGenerateJob>) {

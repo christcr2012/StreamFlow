@@ -23,14 +23,21 @@ export interface JobBase extends OrgScoped {
 // ============================================================================
 
 export interface CsvImportJob extends JobBase {
-  kind: 'customers' | 'sites' | 'assets' | 'pricing' | 'tax_profiles' | 'contracts' | 'schedules';
-  s3Key: string;
+  importJobId: string;
+  kind: string;
+  fileContent: string;
+  fileName: string;
+  fieldMappings: any[];
+  transformRules: any[];
+  validationRules: any[];
+  batchSize?: number;
+  s3Key?: string; // Optional: for S3-based imports
   dryRun?: boolean;
 }
 
 export interface ScheduleExpandJob extends JobBase {
-  contractId?: string;
-  horizonDays: number;
+  contractId?: string; // Optional: expand specific contract only
+  horizonDays: number; // Number of days ahead to expand
 }
 
 export interface BillingCloseDayJob extends JobBase {
