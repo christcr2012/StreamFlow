@@ -53,6 +53,9 @@ passwords.txt
 mcp-config.json
 mcp-config-working.json
 mcp-config-test.json
+
+# Old MCP tools (moved to robinsonai-mcp-servers repo)
+tools/
 secrets.txt
 credentials.txt
 *.credentials
