@@ -3,6 +3,9 @@ import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { JobsClient } from './jobs-client';
 
+// ISR: Revalidate job list every 5 minutes
+export const revalidate = 300;
+
 async function getJobs(orgId: string) {
   const jobs = await prisma.job.findMany({
     where: { orgId },
