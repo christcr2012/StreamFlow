@@ -8,8 +8,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 
-// Edge runtime for better performance
-export const runtime = 'edge';
+// Note: Cannot use edge runtime with Prisma due to WASM limitations
+// export const runtime = 'edge';
 
 /**
  * GET /api/analytics/schedule-adherence

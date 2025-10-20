@@ -9,7 +9,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./connection": "./src/connection.ts",
-    "./middleware/slow-query-logger": "./src/middleware/slow-query-logger.ts"
+    "./middleware/slow-query-logger": "./src/middleware/slow-query-logger.ts",
+    "./src/errors": "./src/errors.ts"
   }
 }
 
