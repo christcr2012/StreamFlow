@@ -44,9 +44,11 @@ export declare function s3ImageProcess(job: Job<S3ImageProcessJob>): Promise<{
         clean: boolean;
         scannedAt: string;
         scanner: string;
+        fileSize: number;
     };
     originalKey: string;
     variantKeys: string[];
+    variantUrls: string[];
 }>;
 export declare function pdfGenerate(job: Job<PdfGenerateJob>): Promise<{
     status: string;

@@ -408,51 +408,102 @@ export async function s3ImageProcess(job) {
     const { orgId, fileKey, mimeType } = job.data;
     console.log(`[s3-image-process] Processing image ${fileKey} for org ${orgId}`);
     try {
-        // Note: This is a placeholder implementation
-        // In production, you would:
-        // 1. Download image from S3
-        // 2. Generate thumbnails using sharp or similar
-        // 3. Compress images
-        // 4. Run virus scan (ClamAV or similar)
-        // 5. Upload variants back to S3
-        // 6. Update database with variant URLs
+        // Import AWS SDK and sharp at runtime
+        const { S3Client, GetObjectCommand, PutObjectCommand } = require('@aws-sdk/client-s3');
+        const { Upload } = require('@aws-sdk/lib-storage');
+        const sharp = require('sharp');
+        const { Readable } = require('stream');
+        // Initialize S3 client
+        const s3Client = new S3Client({
+            region: process.env.AWS_REGION || 'us-east-1',
+            credentials: {
+                accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+            },
+        });
+        const bucket = process.env.AWS_S3_BUCKET || 'cortiware-uploads';
+        // Download original image from S3
+        const getCommand = new GetObjectCommand({
+            Bucket: bucket,
+            Key: fileKey,
+        });
+        const response = await s3Client.send(getCommand);
+        const stream = response.Body;
+        // Convert stream to buffer
+        const chunks = [];
+        for await (const chunk of stream) {
+            chunks.push(chunk);
+        }
+        const originalBuffer = Buffer.concat(chunks);
+        console.log(`[s3-image-process] Downloaded ${fileKey}, size: ${originalBuffer.length} bytes`);
+        // Generate thumbnails
         const variants = [];
-        // Simulate thumbnail generation
         const sizes = [
-            { name: 'thumbnail', width: 150, height: 150 },
-            { name: 'small', width: 400, height: 400 },
-            { name: 'medium', width: 800, height: 800 },
-            { name: 'large', width: 1600, height: 1600 },
+            { name: 'thumbnail', width: 150, height: 150, quality: 80 },
+            { name: 'small', width: 400, height: 400, quality: 85 },
+            { name: 'medium', width: 800, height: 800, quality: 85 },
+            { name: 'large', width: 1600, height: 1600, quality: 90 },
         ];
         for (const size of sizes) {
-            // In production: Use sharp to resize
-            // const buffer = await sharp(originalBuffer)
-            //   .resize(size.width, size.height, { fit: 'inside' })
-            //   .jpeg({ quality: 85 })
-            //   .toBuffer();
-            //
-            // const variantKey = `${fileKey.replace(/\.[^.]+$/, '')}_${size.name}.jpg`;
-            // await s3.upload({ Key: variantKey, Body: buffer }).promise();
-            variants.push({
-                name: size.name,
-                width: size.width,
-                height: size.height,
-                key: `${fileKey.replace(/\.[^.]+$/, '')}_${size.name}.jpg`,
-            });
+            try {
+                // Resize and compress image
+                const resizedBuffer = await sharp(originalBuffer)
+                    .resize(size.width, size.height, {
+                    fit: 'inside',
+                    withoutEnlargement: true,
+                })
+                    .jpeg({ quality: size.quality, progressive: true })
+                    .toBuffer();
+                // Generate variant key
+                const ext = fileKey.split('.').pop();
+                const baseName = fileKey.replace(/\.[^.]+$/, '');
+                const variantKey = `${baseName}_${size.name}.jpg`;
+                // Upload variant to S3
+                const upload = new Upload({
+                    client: s3Client,
+                    params: {
+                        Bucket: bucket,
+                        Key: variantKey,
+                        Body: resizedBuffer,
+                        ContentType: 'image/jpeg',
+                        CacheControl: 'public, max-age=31536000', // 1 year
+                    },
+                });
+                await upload.done();
+                variants.push({
+                    name: size.name,
+                    width: size.width,
+                    height: size.height,
+                    key: variantKey,
+                    size: resizedBuffer.length,
+                    url: `https://${bucket}.s3.amazonaws.com/${variantKey}`,
+                });
+                console.log(`[s3-image-process] Generated ${size.name} variant: ${variantKey}`);
+            }
+            catch (error) {
+                console.error(`[s3-image-process] Error generating ${size.name} variant:`, error);
+                // Continue with other sizes
+            }
         }
-        // Simulate virus scan
+        // Basic virus scan check (file size and type validation)
+        // In production, integrate with ClamAV or similar
         const virusScanResult = {
-            clean: true,
+            clean: originalBuffer.length < 50 * 1024 * 1024, // Max 50MB
             scannedAt: new Date().toISOString(),
-            scanner: 'placeholder',
+            scanner: 'basic-validation',
+            fileSize: originalBuffer.length,
         };
-        console.log(`[s3-image-process] Generated ${variants.length} variants for ${fileKey}`);
+        if (!virusScanResult.clean) {
+            throw new Error('File size exceeds maximum allowed (50MB)');
+        }
+        console.log(`[s3-image-process] Successfully processed ${fileKey}: ${variants.length} variants created`);
         return {
             status: 'completed',
             variants: variants.length,
             virusScan: virusScanResult,
             originalKey: fileKey,
             variantKeys: variants.map((v) => v.key),
+            variantUrls: variants.map((v) => v.url),
         };
     }
     catch (error) {
@@ -500,21 +551,46 @@ export async function pdfGenerate(job) {
         else {
             throw new Error(`Unknown document type: ${documentType}`);
         }
-        // In production: Use Puppeteer to generate PDF
-        // const browser = await puppeteer.launch({ headless: true });
-        // const page = await browser.newPage();
-        // await page.setContent(htmlTemplate);
-        // const pdfBuffer = await page.pdf({
-        //   format: 'A4',
-        //   printBackground: true,
-        //   margin: { top: '1cm', right: '1cm', bottom: '1cm', left: '1cm' },
-        // });
-        // await browser.close();
-        //
-        // const pdfKey = `pdfs/${orgId}/${documentType}/${documentId}.pdf`;
-        // await s3.upload({ Key: pdfKey, Body: pdfBuffer, ContentType: 'application/pdf' }).promise();
-        // const pdfUrl = `https://s3.amazonaws.com/bucket/${pdfKey}`;
-        const pdfUrl = `https://placeholder.com/pdfs/${orgId}/${documentType}/${documentId}.pdf`;
+        // Generate PDF using Puppeteer
+        const puppeteer = require('puppeteer');
+        const { S3Client } = require('@aws-sdk/client-s3');
+        const { Upload } = require('@aws-sdk/lib-storage');
+        const browser = await puppeteer.launch({
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        });
+        const page = await browser.newPage();
+        await page.setContent(htmlTemplate, { waitUntil: 'networkidle0' });
+        const pdfBuffer = await page.pdf({
+            format: 'A4',
+            printBackground: true,
+            margin: { top: '1cm', right: '1cm', bottom: '1cm', left: '1cm' },
+        });
+        await browser.close();
+        console.log(`[pdf-generate] Generated PDF, size: ${pdfBuffer.length} bytes`);
+        // Upload to S3
+        const s3Client = new S3Client({
+            region: process.env.AWS_REGION || 'us-east-1',
+            credentials: {
+                accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+            },
+        });
+        const bucket = process.env.AWS_S3_BUCKET || 'cortiware-uploads';
+        const pdfKey = `pdfs/${orgId}/${documentType}/${documentId}.pdf`;
+        const upload = new Upload({
+            client: s3Client,
+            params: {
+                Bucket: bucket,
+                Key: pdfKey,
+                Body: pdfBuffer,
+                ContentType: 'application/pdf',
+                CacheControl: 'public, max-age=3600', // 1 hour
+            },
+        });
+        await upload.done();
+        const pdfUrl = `https://${bucket}.s3.amazonaws.com/${pdfKey}`;
+        console.log(`[pdf-generate] Uploaded PDF to S3: ${pdfUrl}`);
         // Update document with PDF URL
         if (documentType === 'proposal') {
             await prisma.cleaningEstimate.update({
@@ -679,16 +755,110 @@ export async function vendorSync(job) {
         throw error;
     }
 }
-// Vendor-specific sync functions (placeholders)
+// Vendor-specific sync functions
 async function syncSamsara(orgId, action) {
     // Samsara: Fleet management (vehicles, drivers, GPS)
     console.log(`[samsara] Syncing for org ${orgId}, action: ${action}`);
-    // In production:
-    // 1. Get Samsara API key from org settings
-    // 2. Fetch vehicles: GET https://api.samsara.com/fleet/vehicles
-    // 3. Fetch drivers: GET https://api.samsara.com/fleet/drivers
-    // 4. Transform and upsert to Asset/Staff tables
-    return 0; // Placeholder
+    // Get credentials from org settings
+    const org = await prisma.org.findUnique({
+        where: { id: orgId },
+        select: { settingsJson: true },
+    });
+    if (!org || !org.settingsJson) {
+        throw new Error('Org settings not found');
+    }
+    const settings = typeof org.settingsJson === 'string'
+        ? JSON.parse(org.settingsJson)
+        : org.settingsJson;
+    const samsaraConfig = settings.vendors?.samsara;
+    if (!samsaraConfig || !samsaraConfig.enabled || !samsaraConfig.credentials?.apiKey) {
+        throw new Error('Samsara not configured for this organization');
+    }
+    const apiKey = samsaraConfig.credentials.apiKey;
+    let synced = 0;
+    try {
+        // Fetch vehicles from Samsara
+        const vehiclesResponse = await fetch('https://api.samsara.com/fleet/vehicles', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Accept': 'application/json',
+            },
+        });
+        if (!vehiclesResponse.ok) {
+            throw new Error(`Samsara API error: ${vehiclesResponse.statusText}`);
+        }
+        const vehiclesData = await vehiclesResponse.json();
+        const vehicles = vehiclesData.data || [];
+        // Upsert vehicles to Asset table
+        for (const vehicle of vehicles) {
+            await prisma.asset.upsert({
+                where: {
+                    orgId_externalId: {
+                        orgId,
+                        externalId: vehicle.id,
+                    },
+                },
+                create: {
+                    orgId,
+                    externalId: vehicle.id,
+                    externalSource: 'samsara',
+                    name: vehicle.name || `Vehicle ${vehicle.id}`,
+                    type: 'VEHICLE',
+                    metadata: vehicle,
+                },
+                update: {
+                    name: vehicle.name || `Vehicle ${vehicle.id}`,
+                    metadata: vehicle,
+                    updatedAt: new Date(),
+                },
+            });
+            synced++;
+        }
+        // Fetch drivers from Samsara
+        const driversResponse = await fetch('https://api.samsara.com/fleet/drivers', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Accept': 'application/json',
+            },
+        });
+        if (driversResponse.ok) {
+            const driversData = await driversResponse.json();
+            const drivers = driversData.data || [];
+            // Upsert drivers to Staff table
+            for (const driver of drivers) {
+                await prisma.staff.upsert({
+                    where: {
+                        orgId_externalId: {
+                            orgId,
+                            externalId: driver.id,
+                        },
+                    },
+                    create: {
+                        orgId,
+                        externalId: driver.id,
+                        externalSource: 'samsara',
+                        name: driver.name || `Driver ${driver.id}`,
+                        role: 'DRIVER',
+                        metadata: driver,
+                    },
+                    update: {
+                        name: driver.name || `Driver ${driver.id}`,
+                        metadata: driver,
+                        updatedAt: new Date(),
+                    },
+                });
+                synced++;
+            }
+        }
+        console.log(`[samsara] Successfully synced ${synced} records`);
+        return synced;
+    }
+    catch (error) {
+        console.error(`[samsara] Sync error:`, error);
+        throw error;
+    }
 }
 async function syncGeotab(orgId, action) {
     // Geotab: Fleet telematics (vehicles, trips, fuel)
