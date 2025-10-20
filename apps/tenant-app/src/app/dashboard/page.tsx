@@ -3,6 +3,10 @@ import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { DashboardClient } from './dashboard-client';
 
+// ISR: Revalidate dashboard data every 5 minutes
+// This reduces database load while keeping data reasonably fresh
+export const revalidate = 300;
+
 async function getDashboardData(orgId: string) {
   const [
     totalCustomers,

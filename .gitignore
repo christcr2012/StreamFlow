@@ -32,6 +32,7 @@ scripts/set-vercel-env.*
 .env.staging
 .env.staging.local
 .env.vercel.production
+.env.fly
 
 # Backup files that might contain secrets
 *.env.backup
@@ -155,3 +156,5 @@ ops/manifests/
 
 # Local-only documentation (not tracked)
 Reference/
+
+.vercel

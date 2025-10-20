@@ -24,6 +24,24 @@ if (process.env.NODE_ENV !== 'production') {
   globalThis.__cortiware_prisma__ = prisma;
 }
 
+// Slow query logging middleware
+prisma.$use(async (params, next) => {
+  const start = Date.now();
+  const result = await next(params);
+  const duration = Date.now() - start;
+
+  // Log queries that take longer than 1 second
+  if (duration > 1000) {
+    console.warn(`[slow-query] ${params.model}.${params.action} took ${duration}ms`, {
+      model: params.model,
+      action: params.action,
+      duration,
+    });
+  }
+
+  return result;
+});
+
 export type { Prisma } from '@prisma/client-provider';
 
 // Export error handling utilities

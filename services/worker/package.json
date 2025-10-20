@@ -1,0 +1,22 @@
+{
+  "name": "cortiware-worker",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/src/server.js",
+    "dev": "tsx src/server.ts",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@cortiware/queue": "file:../../packages/queue",
+    "bullmq": "^5.14.0",
+    "ioredis": "^5.8.1"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
+
