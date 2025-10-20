@@ -43,9 +43,9 @@ export async function POST(request: NextRequest) {
     });
 
     // Enqueue a billing job for each org
-    const jobs = [];
+    const jobs: string[] = [];
     for (const org of orgs) {
-      const job = await enqueue(
+      const jobId = await enqueue(
         QUEUE_NAMES.BILLING,
         'billing.closeDay',
         {
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
           idempotencyKey: randomUUID(),
         }
       );
-      jobs.push(job.id);
+      jobs.push(jobId);
     }
 
     return NextResponse.json({
