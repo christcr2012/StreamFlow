@@ -8,7 +8,7 @@
  *   npx tsx scripts/run-materialized-views-migration.ts
  */
 
-import { PrismaClient } from '@prisma/client-tenant';
+import { PrismaClient } from '@prisma/client';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
