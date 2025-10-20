@@ -48,6 +48,11 @@ scripts/set-vercel-env.*
 
 # Password files
 passwords.txt
+
+# MCP configuration files with tokens
+mcp-config.json
+mcp-config-working.json
+mcp-config-test.json
 secrets.txt
 credentials.txt
 *.credentials
