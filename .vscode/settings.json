@@ -4,6 +4,9 @@
   "problems.exclude": {
     "**/.github/workflows/projects-v2-sync.yml": true,
     "**/.github/workflows/projects-v2-verify.yml": true
-  }
+  },
+  "cSpell.words": [
+    "robinsonai"
+  ]
 }
 
