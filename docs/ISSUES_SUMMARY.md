@@ -1,10 +1,15 @@
 # Open Issues Summary
 
-Generated: 2025-10-20T07:30:07.249Z
+Generated: 2025-10-21T07:29:35.410Z
 
-Total open issues: 227
+Total open issues: 232
 
-## No Milestone (209)
+## No Milestone (214)
+- #263 [Action Required] Migrate Domain Names from Spaceship.com to Cloudflare (infrastructure, action-required, domains)
+- #262 [MCP] Domain Registrar MCP Server - Research & Implementation (enhancement, infrastructure, mcp)
+- #261 [MCP] Build Comprehensive Twilio MCP Server (enhancement, infrastructure, mcp)
+- #260 [MCP] Build Comprehensive Resend MCP Server (enhancement, infrastructure, mcp)
+- #259 [Feature] Type 2 Communications - Client-to-Customer Messaging System (enhancement, high-priority)
 - #258 Implement AI Cost Management for Provider Portal (enhancement, provider-portal, high-priority, ai, cost-management)
 - #257 Implement AI Cost Management for Tenant Portal (enhancement, high-priority, ai, cost-management)
 - #256 [MCP] Build Google Workspace MCP Server (100+ tools) (enhancement, infrastructure, mcp, high-priority)

@@ -25,6 +25,11 @@
 - #48 Deployment secrets (Option C): finalize required secrets via Vercel CLI
 
 ## Later
+- #263 [Action Required] Migrate Domain Names from Spaceship.com to Cloudflare
+- #262 [MCP] Domain Registrar MCP Server - Research & Implementation
+- #261 [MCP] Build Comprehensive Twilio MCP Server
+- #260 [MCP] Build Comprehensive Resend MCP Server
+- #259 [Feature] Type 2 Communications - Client-to-Customer Messaging System
 - #258 Implement AI Cost Management for Provider Portal
 - #257 Implement AI Cost Management for Tenant Portal
 - #256 [MCP] Build Google Workspace MCP Server (100+ tools)
