@@ -33,56 +33,66 @@
 
 ## Phase 1 Issue Breakdown
 
-### 1.1 Infrastructure & MCP Servers (Issues #253, 255-256, 260-262)
+### 1.1 Runtime Service Integration Packages (Issues #253, 260-262)
+
+**IMPORTANT**: MCP (Model Context Protocol) servers are DEVELOPMENT TOOLS for AI agents, NOT runtime packages.
+- MCP servers help AI agents build/configure Cortiware (GitHub, Vercel, Stripe config, etc.)
+- They are separate tools, not part of the Cortiware monorepo
+- DO NOT confuse MCP servers with runtime service integrations
 
 **Issues**:
-- #253: Custom Multi-Account Stripe MCP
-- #255: Robinson AI MCP Servers Progress
-- #256: Google Workspace MCP (100+ tools)
-- #260: Resend MCP Server
-- #261: Twilio MCP Server
-- #262: Domain Registrar MCP
+- #253: Stripe Payment Processing Integration
+- #260: Resend Email Integration
+- #261: Twilio SMS/Voice Integration
+- #262: Domain Management (Cloudflare migration)
 
 **Phase 1 Scaffolding**:
 ```typescript
-// packages/mcp-stripe/src/index.ts
-export class StripeMCPServer {
-  async createCustomer(data: any) {
-    // TODO: Implement Stripe customer creation
+// packages/stripe-service/src/index.ts
+// Runtime Stripe integration (NOT an MCP server)
+export class StripeService {
+  async createCustomer(data: CreateCustomerInput) {
+    console.log('[STUB] Creating Stripe customer:', data);
+    // TODO Phase 2: Real Stripe API call
     return { id: 'cus_stub', ...data };
   }
   
-  async createPaymentIntent(amount: number) {
-    // TODO: Implement payment intent
-    return { id: 'pi_stub', status: 'succeeded' };
+  async createPaymentIntent(data: CreatePaymentIntentInput) {
+    console.log('[STUB] Creating payment intent:', data);
+    // TODO Phase 2: Real Stripe API call
+    return { id: 'pi_stub', client_secret: 'secret_stub', status: 'succeeded' };
   }
 }
 
-// packages/mcp-twilio/src/index.ts
-export class TwilioMCPServer {
-  async sendSMS(to: string, body: string) {
-    // TODO: Implement Twilio SMS
-    console.log(`[STUB] SMS to ${to}: ${body}`);
+// packages/twilio-service/src/index.ts
+// Runtime Twilio integration (NOT an MCP server)
+export class TwilioService {
+  async sendSMS(data: SendSMSInput) {
+    console.log('[STUB] Sending SMS:', data);
+    // TODO Phase 2: Real Twilio API call
     return { sid: 'SM_stub', status: 'sent' };
   }
 }
 
-// packages/mcp-resend/src/index.ts
-export class ResendMCPServer {
-  async sendEmail(to: string, subject: string, html: string) {
-    // TODO: Implement Resend email
-    console.log(`[STUB] Email to ${to}: ${subject}`);
+// packages/resend-service/src/index.ts
+// Runtime Resend integration (NOT an MCP server)
+export class ResendService {
+  async sendEmail(data: SendEmailInput) {
+    console.log('[STUB] Sending email:', data);
+    // TODO Phase 2: Real Resend API call
     return { id: 'email_stub' };
   }
 }
 ```
 
 **Deliverables**:
-- ✅ MCP package structure created
-- ✅ Stub methods for all operations
-- ✅ TypeScript interfaces defined
-- ✅ Basic tests with mock responses
+- ✅ Runtime service package structure created
+- ✅ Stub methods with proper TypeScript types
+- ✅ Logging for Phase 1 visibility
+- ✅ Clear Phase 2 TODO markers
 - ⏸️ Real API integration (Phase 2)
+- ⏸️ Error handling & retries (Phase 2)
+- ⏸️ Comprehensive tests (Phase 2)
 
 ---
 
@@ -530,21 +540,22 @@ export default function VerticalDashboard({ params }: { params: { vertical: stri
 
 ## Phase 2 Issue Breakdown
 
-### 2.1 Infrastructure Production Code
+### 2.1 Runtime Service Integration Production Code
 
-**Issues**: #253, 255-256, 260-262
+**Issues**: #253, 260-262
 
 **Phase 2 Implementation**:
 ```typescript
-// packages/mcp-stripe/src/index.ts (PRODUCTION)
+// packages/stripe-service/src/index.ts (PRODUCTION)
 import Stripe from 'stripe';
 
-export class StripeMCPServer {
+export class StripeService {
   private stripe: Stripe;
   
-  constructor(accountId: string) {
-    this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      stripeAccount: accountId // Multi-account support
+  constructor(secretKey: string, accountId?: string) {
+    this.stripe = new Stripe(secretKey, {
+      apiVersion: '2023-10-16',
+      ...(accountId && { stripeAccount: accountId }) // Multi-account support
     });
   }
   
@@ -557,29 +568,40 @@ export class StripeMCPServer {
         metadata: data.metadata
       });
       
+      // Audit logging
+      await this.logOperation('customer.created', customer.id);
+      
       return customer;
     } catch (error) {
+      // Error handling with retries
       throw new StripeError('Failed to create customer', error);
     }
   }
   
-  async createPaymentIntent(amount: number, currency = 'usd'): Promise<Stripe.PaymentIntent> {
-    // Real implementation with error handling
-    // Idempotency keys
-    // Webhook verification
+  async createPaymentIntent(data: CreatePaymentIntentInput): Promise<Stripe.PaymentIntent> {
+    // Real implementation with:
+    // - Idempotency keys
+    // - Webhook verification
+    // - Error handling and retries
+    // - Audit logging
     // ...
   }
 }
+
+// Similar production implementations for:
+// - TwilioService (real SMS/voice)
+// - ResendService (real email)
 ```
 
 **Deliverables**:
 - ✅ Real Stripe multi-account integration
 - ✅ Real Twilio SMS/voice integration
 - ✅ Real Resend email integration
-- ✅ Real Google Workspace integration
-- ✅ Domain registrar integrations
-- ✅ Error handling and retries
-- ✅ Comprehensive tests
+- ✅ Error handling with exponential backoff
+- ✅ Webhook handling and verification
+- ✅ Idempotency for safe retries
+- ✅ Comprehensive tests (unit + integration)
+- ✅ Audit logging
 
 ---
 
