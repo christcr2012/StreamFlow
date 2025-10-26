@@ -26,5 +26,6 @@ export const QUEUE_CONFIG = {
 // ============================================================================
 // Exports
 // ============================================================================
-export * from './jobs/index.js';
+// Note: Job processor implementations are exposed via the subpath export "@cortiware/queue/jobs"
+// to avoid bundling worker-only code into apps (like Next.js) during build.
 //# sourceMappingURL=index.js.map

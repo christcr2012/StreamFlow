@@ -72,4 +72,3 @@ export declare const QUEUE_CONFIG: {
     readonly removeOnCompleteCount: 500;
     readonly removeOnFailCount: 1000;
 };
-export * from './jobs/index.js';
