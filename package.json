@@ -1,3 +1,4 @@
+
 {
   "name": "cortiware",
   "private": true,
@@ -47,7 +48,11 @@
     "perf:baseline": "node scripts/performance/measure-baseline.js",
     "perf:measure": "node scripts/performance/measure-baseline.js && mv scripts/performance/baseline.json scripts/performance/current.json",
     "perf:compare": "node scripts/performance/compare-results.js",
-    "prepare": "node -e \"try{require('husky').install()}catch(e){process.exit(0)}\""
+    "prepare": "node -e \"try{require('husky').install()}catch(e){process.exit(0)}\"",
+    "mcp:dryrun": "tsx scripts/mcp-launcher.ts --dry",
+    "mcp:launch": "tsx scripts/mcp-launcher.ts",
+    "mcp:stop": "tsx scripts/mcp-stop.ts"
+    ,"dev:with-mcp": "npx tsx scripts/mcp-launcher.ts --detach --servers=github-robinsonai,vercel-robinsonai,neon-robinsonai && npm run dev"
   },
   "dependencies": {
     "@prisma/client": "^6.16.2",
