@@ -573,6 +573,7 @@ model ImportJob {
   status           ImportStatus     @default(PENDING)
   fileName         String
   fileSize         Int
+  fileUrl          String?
   totalRecords     Int              @default(0)
   processedRecords Int              @default(0)
   successCount     Int              @default(0)

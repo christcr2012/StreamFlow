@@ -86,6 +86,7 @@ export async function POST(request: NextRequest) {
         entityType: entityType as 'CUSTOMERS' | 'JOBS' | 'INVOICES' | 'ESTIMATES' | 'CONTACTS' | 'ADDRESSES' | 'NOTES',
         fileName: file.name,
         fileSize: file.size,
+        fileUrl: blob.url,
         status: 'PENDING',
         totalRecords: 0,
         processedRecords: 0,

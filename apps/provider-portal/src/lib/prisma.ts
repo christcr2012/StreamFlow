@@ -72,36 +72,41 @@ function getOptimizedDatabaseUrl(): string {
 declare global {
   // Allow global `var` redeclaration in dev
   // eslint-disable-next-line no-var
-  var prisma: PrismaClient | undefined;
+  var prisma: ReturnType<typeof createPrismaClient> | undefined;
 }
 
-export const prisma =
-  global.prisma ??
-  new PrismaClient({
+function createPrismaClient() {
+  return new PrismaClient({
     datasources: {
       db: {
         url: getOptimizedDatabaseUrl(),
       },
     },
     log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
+  }).$extends({
+    query: {
+      $allModels: {
+        async $allOperations({ operation, model, args, query }) {
+          const start = Date.now();
+          const result = await query(args);
+          const duration = Date.now() - start;
+
+          // Log queries that take longer than 1 second
+          if (duration > 1000) {
+            console.warn(`[slow-query] ${model}.${operation} took ${duration}ms`, {
+              model,
+              operation,
+              duration,
+            });
+          }
+
+          return result;
+        },
+      },
+    },
   });
+}
+
+export const prisma = global.prisma ?? createPrismaClient();
 
 if (process.env.NODE_ENV !== "production") global.prisma = prisma;
-
-// Slow query logging middleware
-prisma.$use(async (params, next) => {
-  const start = Date.now();
-  const result = await next(params);
-  const duration = Date.now() - start;
-
-  // Log queries that take longer than 1 second
-  if (duration > 1000) {
-    console.warn(`[slow-query] ${params.model}.${params.action} took ${duration}ms`, {
-      model: params.model,
-      action: params.action,
-      duration,
-    });
-  }
-
-  return result;
-});
