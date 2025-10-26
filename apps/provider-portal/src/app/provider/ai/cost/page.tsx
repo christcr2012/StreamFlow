@@ -24,6 +24,7 @@ interface AlertItem {
 }
 
 export default function ProviderAICostPage() {
+  const [flags, setFlags] = useState<Record<string, unknown> | null>(null);
   const [budget, setBudget] = useState<Budget | null>(null);
   const [alerts, setAlerts] = useState<AlertItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,10 +37,12 @@ export default function ProviderAICostPage() {
       setLoading(true);
       setError(null);
       try {
-        const [b, a] = await Promise.all([
+        const [f, b, a] = await Promise.all([
+          fetch('/api/feature-flags').then((r) => r.json()).catch(() => ({ flags: {} })),
           fetch('/api/ai/budget').then((r) => r.json()),
           fetch('/api/ai/alerts').then((r) => r.json()),
         ]);
+        setFlags(f.flags || {});
         setBudget(b);
         setAlerts(a.alerts || []);
       } catch (e) {
@@ -106,6 +109,12 @@ export default function ProviderAICostPage() {
         </div>
       </header>
 
+      {flags && (flags as any)['ai-cost'] === false && (
+        <div className="premium-card spacing-responsive-sm" style={{ backgroundColor: 'var(--warning-bg)', borderColor: 'var(--warning-border)' }}>
+          <p className="text-sm" style={{ color: 'var(--warning-text)' }}>This feature is currently disabled by configuration.</p>
+        </div>
+      )}
+
       {loading ? (
         <div className="premium-card spacing-responsive-sm">
           <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Loading AI cost data...</p>
@@ -113,6 +122,10 @@ export default function ProviderAICostPage() {
       ) : error ? (
         <div className="premium-card spacing-responsive-sm" style={{ backgroundColor: 'var(--error-bg)', borderColor: 'var(--error-border)' }}>
           <p className="text-sm" style={{ color: 'var(--error-text)' }}>{error}</p>
+        </div>
+      ) : flags && (flags as any)['ai-cost'] === false ? (
+        <div className="premium-card spacing-responsive-sm">
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>AI Cost Management is disabled.</p>
         </div>
       ) : (
         <>

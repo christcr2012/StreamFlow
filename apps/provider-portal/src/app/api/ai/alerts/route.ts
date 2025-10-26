@@ -3,9 +3,15 @@
  */
 
 import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
 export async function GET() {
   console.log('[STUB][provider] GET /api/ai/alerts');
+  try {
+    const cfg = await prisma.providerConfig.findFirst();
+    const disabled = (cfg?.featureFlags as any)?.['ai-cost'] === false;
+    if (disabled) return NextResponse.json({ alerts: [] });
+  } catch (_) {}
   return NextResponse.json({
     alerts: [
       {
@@ -33,11 +39,21 @@ export async function GET() {
 export async function PUT(req: Request) {
   const body = await req.json();
   console.log('[STUB][provider] PUT /api/ai/alerts', body);
+  try {
+    const cfg = await prisma.providerConfig.findFirst();
+    const disabled = (cfg?.featureFlags as any)?.['ai-cost'] === false;
+    if (disabled) return NextResponse.json({ success: false, acknowledged: [] });
+  } catch (_) {}
   return NextResponse.json({ success: true, acknowledged: body?.ids || [] });
 }
 
 export async function POST(req: Request) {
   const body = await req.json();
   console.log('[STUB][provider] POST /api/ai/alerts', body);
+  try {
+    const cfg = await prisma.providerConfig.findFirst();
+    const disabled = (cfg?.featureFlags as any)?.['ai-cost'] === false;
+    if (disabled) return NextResponse.json({ success: false });
+  } catch (_) {}
   return NextResponse.json({ success: true, created: { id: 'prov-alert-new', ...body, createdAt: new Date().toISOString() } });
 }
