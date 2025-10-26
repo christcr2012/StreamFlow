@@ -49,10 +49,8 @@ export function FileUploadWithCompression({
   const [isUploading, setIsUploading] = useState(false);
   
   const compression = useAutoImageCompression({
-    preset,
-    onProgress: (progress) => {
-      console.log('Compression progress:', progress);
-    },
+    ...COMPRESSION_PRESETS[preset],
+    showProgress: true,
   });
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -154,7 +152,7 @@ export function FileUploadWithCompression({
       {compression.state.error && (
         <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
           <p className="text-sm text-red-800">
-            {compression.state.error}
+            {compression.state.error.message}
           </p>
         </div>
       )}

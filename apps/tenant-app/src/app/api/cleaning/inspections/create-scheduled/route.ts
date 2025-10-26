@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
           idempotencyKey: randomUUID(),
         }
       );
-      jobs.push(job.id);
+      jobs.push(job);
     }
 
     return NextResponse.json({

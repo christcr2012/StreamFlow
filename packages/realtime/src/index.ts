@@ -205,7 +205,7 @@ export async function generateAblyToken(
   
   const tokenRequest = await client.auth.createTokenRequest({
     clientId: userId,
-    capability: capabilities || defaultCapabilities,
+    capability: (capabilities || defaultCapabilities) as any,
     ttl: 3600000, // 1 hour
   });
   

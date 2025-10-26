@@ -79,8 +79,8 @@ declare global {
   var prisma: PrismaClient | undefined;
 }
 
-// Prisma client with optimized connection
-export const prisma = global.prisma || new PrismaClient({
+// Prisma client with optimized connection and Client Extensions for slow query logging
+const basePrisma = new PrismaClient({
   datasources: {
     db: {
       url: getOptimizedDatabaseUrl(),
@@ -89,43 +89,36 @@ export const prisma = global.prisma || new PrismaClient({
   log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
 });
 
+// Apply Client Extension for slow query logging (replaces deprecated $use middleware)
+export const prisma = basePrisma.$extends({
+  query: {
+    $allModels: {
+      async $allOperations({ operation, model, args, query }: {
+        operation: string;
+        model: string;
+        args: any;
+        query: (args: any) => Promise<any>;
+      }) {
+        const start = Date.now();
+        const result = await query(args);
+        const duration = Date.now() - start;
+
+        // Log queries that take longer than 1 second
+        if (duration > 1000) {
+          console.warn(`[slow-query] ${model}.${operation} took ${duration}ms`, {
+            model,
+            operation,
+            duration,
+          });
+        }
+
+        return result;
+      },
+    },
+  },
+});
+
 if (process.env.NODE_ENV !== 'production') {
-  global.prisma = prisma;
+  global.prisma = prisma as any;
 }
-
-// Slow query logging middleware
-prisma.$use(async (params, next) => {
-  const start = Date.now();
-  const result = await next(params);
-  const duration = Date.now() - start;
-
-  // Log queries that take longer than 1 second
-  if (duration > 1000) {
-    console.warn(`[slow-query] ${params.model}.${params.action} took ${duration}ms`, {
-      model: params.model,
-      action: params.action,
-      duration,
-    });
-  }
-
-  return result;
-});
-
-// Slow query logging middleware
-prisma.$use(async (params, next) => {
-  const start = Date.now();
-  const result = await next(params);
-  const duration = Date.now() - start;
-
-  // Log queries that take longer than 1 second
-  if (duration > 1000) {
-    console.warn(`[slow-query] ${params.model}.${params.action} took ${duration}ms`, {
-      model: params.model,
-      action: params.action,
-      duration,
-    });
-  }
-
-  return result;
-});
 

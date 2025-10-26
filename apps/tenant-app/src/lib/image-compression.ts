@@ -21,7 +21,7 @@ export interface CompressionOptions {
   /**
    * Use WebWorker for compression (default: true)
    */
-  useWebWorker?: number;
+  useWebWorker?: boolean;
   
   /**
    * Initial quality (0-1, default: 0.8)
@@ -40,7 +40,7 @@ export interface CompressionOptions {
 const DEFAULT_OPTIONS: CompressionOptions = {
   maxSizeMB: 1, // Max 1MB file size
   maxWidthOrHeight: 1920, // Max 1920px width/height
-  useWebWorker: true,
+  useWebWorker: true, // Boolean, not number
   initialQuality: 0.8, // 80% quality
 };
 

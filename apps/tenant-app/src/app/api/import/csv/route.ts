@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
     const importJob = await prisma.importJob.create({
       data: {
         orgId: authContext.orgId,
-        entityType,
+        entityType: entityType as 'CUSTOMERS' | 'JOBS' | 'INVOICES' | 'ESTIMATES' | 'CONTACTS' | 'ADDRESSES' | 'NOTES',
         fileName: file.name,
         fileSize: file.size,
         fileUrl: blob.url,

@@ -1,11 +1,11 @@
 /**
- * Prisma Middleware for Slow Query Logging
+ * Prisma Client Extension for Slow Query Logging
  * 
  * Logs queries that exceed a configurable threshold to help identify
  * performance bottlenecks.
+ * 
+ * Updated to use Prisma Client Extensions (replaces deprecated middleware)
  */
-
-import { Prisma } from '@prisma/client';
 
 export interface SlowQueryLog {
   timestamp: string;
@@ -86,71 +86,97 @@ export function getSlowQueryStats() {
 }
 
 /**
- * Prisma middleware for slow query logging
+ * Prisma Client Extension for slow query logging
+ * Use this instead of the deprecated middleware
+ * 
+ * Example usage:
+ * const prisma = new PrismaClient().$extends(slowQueryLoggerExtension())
  */
-export const slowQueryLoggerMiddleware: Prisma.Middleware = async (params, next) => {
-  const start = Date.now();
-  
-  try {
-    const result = await next(params);
-    const duration = Date.now() - start;
-    
-    // Log if query exceeded threshold
-    if (duration > SLOW_QUERY_THRESHOLD_MS) {
-      const log: SlowQueryLog = {
-        timestamp: new Date().toISOString(),
-        model: params.model || 'unknown',
-        action: params.action,
-        duration_ms: duration,
-        params: {
-          // Sanitize params to avoid logging sensitive data
-          where: params.args?.where ? '...' : undefined,
-          data: params.args?.data ? '...' : undefined,
-          select: params.args?.select ? Object.keys(params.args.select) : undefined,
-          include: params.args?.include ? Object.keys(params.args.include) : undefined,
-          take: params.args?.take,
-          skip: params.args?.skip,
+export function slowQueryLoggerExtension(thresholdMs: number = SLOW_QUERY_THRESHOLD_MS) {
+  return {
+    query: {
+      $allModels: {
+        async $allOperations({ operation, model, args, query }: {
+          operation: string;
+          model: string;
+          args: any;
+          query: (args: any) => Promise<any>;
+        }) {
+          const start = Date.now();
+
+          try {
+            const result = await query(args);
+            const duration = Date.now() - start;
+
+            // Log if query exceeded threshold
+            if (duration > thresholdMs) {
+              const log: SlowQueryLog = {
+                timestamp: new Date().toISOString(),
+                model: model || 'unknown',
+                action: operation,
+                duration_ms: duration,
+                params: {
+                  // Sanitize params to avoid logging sensitive data
+                  where: args?.where ? '...' : undefined,
+                  data: args?.data ? '...' : undefined,
+                  select: args?.select ? Object.keys(args.select) : undefined,
+                  include: args?.include ? Object.keys(args.include) : undefined,
+                  take: args?.take,
+                  skip: args?.skip,
+                },
+              };
+
+              // Add to history
+              addToHistory(log);
+
+              // Log to console in development
+              if (process.env.NODE_ENV === 'development') {
+                console.warn(
+                  `🐌 Slow query detected: ${log.model}.${log.action} took ${duration}ms`
+                );
+              }
+
+              // In production, you might want to send to a monitoring service
+              if (process.env.NODE_ENV === 'production') {
+                // Example: Send to monitoring service
+                // await sendToMonitoring(log);
+              }
+            }
+
+            return result;
+          } catch (error) {
+            const duration = Date.now() - start;
+
+            // Log failed queries that took a long time
+            if (duration > thresholdMs) {
+              const log: SlowQueryLog = {
+                timestamp: new Date().toISOString(),
+                model: model || 'unknown',
+                action: operation,
+                duration_ms: duration,
+                params: {
+                  error: error instanceof Error ? error.message : 'Unknown error',
+                },
+              };
+
+              addToHistory(log);
+            }
+
+            throw error;
+          }
         },
-      };
-      
-      // Add to history
-      addToHistory(log);
-      
-      // Log to console in development
-      if (process.env.NODE_ENV === 'development') {
-        console.warn(
-          `🐌 Slow query detected: ${log.model}.${log.action} took ${duration}ms`
-        );
-      }
-      
-      // In production, you might want to send to a monitoring service
-      if (process.env.NODE_ENV === 'production') {
-        // Example: Send to monitoring service
-        // await sendToMonitoring(log);
-      }
-    }
-    
-    return result;
-  } catch (error) {
-    const duration = Date.now() - start;
-    
-    // Log failed queries that took a long time
-    if (duration > SLOW_QUERY_THRESHOLD_MS) {
-      const log: SlowQueryLog = {
-        timestamp: new Date().toISOString(),
-        model: params.model || 'unknown',
-        action: params.action,
-        duration_ms: duration,
-        params: {
-          error: error instanceof Error ? error.message : 'Unknown error',
-        },
-      };
-      
-      addToHistory(log);
-    }
-    
-    throw error;
-  }
+      },
+    },
+  };
+}
+
+/**
+ * @deprecated Use slowQueryLoggerExtension() instead
+ * Prisma middleware is deprecated in Prisma 5+
+ */
+export const slowQueryLoggerMiddleware = (params: any, next: any) => {
+  console.warn('slowQueryLoggerMiddleware is deprecated. Use slowQueryLoggerExtension() instead.');
+  return next(params);
 };
 
 /**

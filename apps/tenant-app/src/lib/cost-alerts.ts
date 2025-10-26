@@ -109,10 +109,10 @@ export async function checkCostAlerts(orgId: string): Promise<void> {
 
   for (const alert of alerts) {
     // Get usage summary for the alert period
-    const summary = await getUsageSummary(orgId, alert.period);
+    const summary = await getUsageSummary(orgId, alert.period as 'DAILY' | 'WEEKLY' | 'MONTHLY');
 
     // Determine which usage to check based on alert type
-    let currentUsage: number;
+    let currentUsage = 0;
     switch (alert.alertType) {
       case 'AI_USAGE':
         currentUsage = summary.aiUsage;
@@ -129,7 +129,7 @@ export async function checkCostAlerts(orgId: string): Promise<void> {
     if (currentUsage >= alert.threshold) {
       // Check if we've already triggered this alert recently (within the period)
       const shouldTrigger = !alert.lastTriggered || 
-        isNewPeriod(alert.lastTriggered, alert.period);
+        isNewPeriod(alert.lastTriggered, alert.period as 'DAILY' | 'WEEKLY' | 'MONTHLY');
 
       if (shouldTrigger) {
         await triggerAlert(alert, summary, currentUsage);

@@ -958,6 +958,7 @@ model Org {
   id                        String                      @id @default(cuid())
   name                      String
   featureFlags              Json                        @default("{}")
+  metadata                  Json?                       @default("{}")
   createdAt                 DateTime                    @default(now())
   updatedAt                 DateTime                    @updatedAt
   brandConfig               Json?                       @default("{}")

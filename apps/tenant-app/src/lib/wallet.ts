@@ -211,9 +211,12 @@ async function logWalletTransaction(
   await prisma.activity.create({
     data: {
       orgId,
-      type: 'WALLET_TRANSACTION',
-      description: transaction.description,
-      metadata: JSON.stringify({
+      actorType: 'system',
+      actorId: 'wallet',
+      entityType: 'wallet',
+      entityId: orgId,
+      action: 'transaction',
+      meta: JSON.stringify({
         ...transaction,
         timestamp: new Date().toISOString(),
       }),
@@ -231,7 +234,8 @@ export async function getWalletTransactions(
   const activities = await prisma.activity.findMany({
     where: {
       orgId,
-      type: 'WALLET_TRANSACTION',
+      entityType: 'wallet',
+      action: 'transaction',
     },
     orderBy: {
       createdAt: 'desc',
@@ -239,7 +243,7 @@ export async function getWalletTransactions(
     take: limit,
   });
   
-  return activities.map((activity) => {
+  return activities.map((activity: any) => {
     const metadata = typeof activity.metadata === 'string'
       ? JSON.parse(activity.metadata)
       : activity.metadata;

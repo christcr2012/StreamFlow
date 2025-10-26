@@ -5,6 +5,7 @@ import { Card, CardHeader } from '@cortiware/ui';
 import { Button } from '@cortiware/ui';
 import { Input } from '@cortiware/ui';
 import { useAutoImageCompression } from '@/hooks/useImageCompression';
+import { COMPRESSION_PRESETS } from '@/lib/image-compression';
 import { showToast } from './ui/toast';
 import Image from 'next/image';
 
@@ -30,7 +31,7 @@ export function JobPhotoGallery({ jobId, initialPhotos, onPhotosChange }: JobPho
 
   // Image compression hook
   const compression = useAutoImageCompression({
-    preset: 'STANDARD',
+    ...COMPRESSION_PRESETS.STANDARD,
     autoCompress: true,
   });
 
