@@ -73,7 +73,7 @@ async function getDatabaseStats() {
     
     return {
       database_size_mb: dbSize[0]?.size_mb || 0,
-      largest_tables: tableStats.map(t => ({
+      largest_tables: tableStats.map((t: any) => ({
         table: t.table_name,
         rows: Number(t.row_count),
         size_mb: t.total_size_mb,

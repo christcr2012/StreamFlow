@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
   try {
     const authContext = await getAuthContext();
     
-    if (!authContext.isAuthenticated || !authContext.orgId) {
+    if (!authContext.isAuthenticated || !authContext.orgId || !authContext.userId) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
@@ -82,10 +82,10 @@ export async function POST(request: NextRequest) {
     const importJob = await prisma.importJob.create({
       data: {
         orgId: authContext.orgId,
+        userId: authContext.userId,
         entityType: entityType as 'CUSTOMERS' | 'JOBS' | 'INVOICES' | 'ESTIMATES' | 'CONTACTS' | 'ADDRESSES' | 'NOTES',
         fileName: file.name,
         fileSize: file.size,
-        fileUrl: blob.url,
         status: 'PENDING',
         totalRecords: 0,
         processedRecords: 0,
