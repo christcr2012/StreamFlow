@@ -56,7 +56,7 @@ export function AIDisclosureBanner({
             AI-Powered Feature
           </h3>
           <p className="text-sm text-blue-800 dark:text-blue-200 mb-2">
-            This {featureName} feature uses OpenAI's artificial intelligence technology. 
+            This {featureName} feature uses OpenAI&apos;s artificial intelligence technology. 
             When you use this feature, your input data is sent to OpenAI for processing and may be used to improve their services.
           </p>
           <div className="flex flex-wrap gap-3 text-xs">

@@ -104,12 +104,12 @@ export function AISettingsClient({ orgId }: AISettingsClientProps) {
               About AI Features
             </h2>
             <p className="text-sm text-blue-800 dark:text-blue-200 mb-3">
-              Cortiware uses OpenAI's artificial intelligence technology to provide intelligent features that help you work more efficiently. 
+              Cortiware uses OpenAI&apos;s artificial intelligence technology to provide intelligent features that help you work more efficiently. 
               When you use AI features, your data is sent to OpenAI for processing.
             </p>
             <div className="space-y-2 text-sm text-blue-800 dark:text-blue-200">
               <p><strong>Data Usage:</strong> Input data sent to AI features may be used by OpenAI to improve their services.</p>
-              <p><strong>Privacy:</strong> We do not share personally identifiable information beyond what's necessary for the feature to function.</p>
+              <p><strong>Privacy:</strong> We do not share personally identifiable information beyond what&apos;s necessary for the feature to function.</p>
               <p><strong>Control:</strong> You can disable any AI feature at any time using the toggles below.</p>
             </div>
             <div className="mt-4">
@@ -119,7 +119,7 @@ export function AISettingsClient({ orgId }: AISettingsClientProps) {
                 rel="noopener noreferrer"
                 className="text-sm text-blue-700 dark:text-blue-300 hover:underline font-medium"
               >
-                Read OpenAI's Privacy Policy ↗
+                Read OpenAI&apos;s Privacy Policy ↗
               </a>
             </div>
           </div>
