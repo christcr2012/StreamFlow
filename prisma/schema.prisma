@@ -486,6 +486,8 @@ model Customer {
   Job              Job[]
   Opportunity      Opportunity[]
   RecurringInvoice RecurringInvoice[]
+  Communication    Communication[] // Phase 1: Type 2 communications
+  CommunicationThread CommunicationThread[] // Phase 1: Message threading
 
   @@index([orgId, company])
   @@index([orgId, createdAt])
@@ -1026,6 +1028,12 @@ model Org {
   TenantPriceOverride       TenantPriceOverride[]
   UsageMeter                UsageMeter[]
   User                      User[]
+  AIBudget                  AIBudget? // Phase 1: AI cost management
+  AIAlert                   AIAlert[] // Phase 1: AI cost alerts
+  Communication             Communication[] // Phase 1: Type 2 communications
+  CommunicationThread       CommunicationThread[] // Phase 1: Message threading
+  TenantSubscription        TenantSubscription? // Phase 1: Subscription system
+  TenantUsage               TenantUsage[] // Phase 1: Usage tracking
 }
 
 model Payment {
@@ -1377,6 +1385,7 @@ model User {
   UserLoginHistory      UserLoginHistory[]
   UserRecoveryCode      UserRecoveryCode[]
   UserSecurityQuestion  UserSecurityQuestion[]
+  Communication         Communication[] // Phase 1: Type 2 communications
 
   @@index([isActive, isLocked])
   @@index([orgId, role])
@@ -1607,4 +1616,198 @@ enum Role {
 enum ValueType {
   RELATIONSHIP
   JOB
+}
+
+// ============================================================================
+// PHASE 1 SCAFFOLDING: Feature Flags & Module System
+// ============================================================================
+
+model FeatureFlag {
+  id          String   @id @default(cuid())
+  key         String   @unique // 'ai_cost_management', 'scheduling_advanced', etc.
+  name        String
+  description String?
+  enabled     Boolean  @default(false)
+  global      Boolean  @default(true) // applies to all orgs if true
+  rules       Json     @default("{}") // targeting rules: {orgIds: [], verticals: [], tiers: []}
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([key, enabled])
+}
+
+model FeatureModule {
+  id              String   @id @default(cuid())
+  moduleKey       String   @unique // 'estimates_invoicing', 'payment_processing', etc.
+  name            String
+  description     String?
+  category        String // 'core', 'vertical_specific', 'advanced'
+  defaultEnabled  Boolean  @default(false)
+  requiresTier    String? // 'starter', 'professional', 'enterprise'
+  verticals       String[] // empty = all verticals
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([moduleKey])
+  @@index([category])
+}
+
+// ============================================================================
+// PHASE 1 SCAFFOLDING: Enhanced AI Cost Management
+// ============================================================================
+
+model AIBudget {
+  id              String   @id @default(cuid())
+  orgId           String   @unique
+  monthlyBudget   Decimal  @db.Decimal(10, 2) // dollars
+  currentSpend    Decimal  @db.Decimal(10, 2) @default(0)
+  alertThreshold  Int      @default(80) // percent (80 = alert at 80% of budget)
+  hardLimit       Boolean  @default(false) // disable AI when budget exceeded
+  resetDay        Int      @default(1) // day of month to reset (1-28)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  Org             Org      @relation(fields: [orgId], references: [id])
+
+  @@index([orgId])
+}
+
+model AIAlert {
+  id          String   @id @default(cuid())
+  orgId       String
+  alertType   String // 'budget_threshold', 'budget_exceeded', 'unusual_spike'
+  message     String
+  metadata    Json     @default("{}")
+  acknowledged Boolean @default(false)
+  acknowledgedBy String?
+  acknowledgedAt DateTime?
+  createdAt   DateTime @default(now())
+  Org         Org      @relation(fields: [orgId], references: [id])
+
+  @@index([orgId, acknowledged, createdAt])
+  @@index([orgId, alertType])
+}
+
+// ============================================================================
+// PHASE 1 SCAFFOLDING: Type 2 Communications (Client-to-Customer)
+// ============================================================================
+
+model Communication {
+  id              String   @id @default(cuid())
+  orgId           String
+  contactId       String // customer/contact
+  userId          String? // staff member who sent/received
+  type            String // 'sms', 'email', 'call'
+  direction       String // 'inbound', 'outbound'
+  subject         String? // for emails
+  content         String   @db.Text
+  metadata        Json     @default("{}") // phone numbers, email addresses, etc.
+  status          String // 'sent', 'delivered', 'failed', 'received'
+  externalId      String? // Twilio SID, Resend ID, etc.
+  threadId        String? // group messages into threads
+  createdAt       DateTime @default(now())
+  Org             Org      @relation(fields: [orgId], references: [id])
+  Customer        Customer @relation(fields: [contactId], references: [id])
+  User            User?    @relation(fields: [userId], references: [id])
+
+  @@index([orgId, contactId, createdAt])
+  @@index([orgId, userId, createdAt])
+  @@index([threadId])
+  @@index([type, status])
+}
+
+model CommunicationThread {
+  id              String   @id @default(cuid())
+  orgId           String
+  contactId       String
+  subject         String?
+  lastMessageAt   DateTime
+  lastMessagePreview String?
+  unreadCount     Int      @default(0)
+  participants    Json     @default("[]") // array of user IDs
+  metadata        Json     @default("{}")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  Org             Org      @relation(fields: [orgId], references: [id])
+  Customer        Customer @relation(fields: [contactId], references: [id])
+
+  @@index([orgId, lastMessageAt])
+  @@index([contactId])
+}
+
+// ============================================================================
+// PHASE 1 SCAFFOLDING: Subscription Tiers & Vertical Configs
+// ============================================================================
+
+model SubscriptionTier {
+  id              String   @id @default(cuid())
+  tierKey         String   @unique // 'starter', 'professional', 'enterprise'
+  name            String
+  description     String?
+  basePrice       Decimal  @db.Decimal(10, 2) // monthly price in dollars
+  annualDiscount  Int      @default(20) // percent discount for annual billing
+  billingPeriod   String   @default("monthly") // 'monthly', 'annual'
+  displayOrder    Int      @default(0)
+  active          Boolean  @default(true)
+  features        String[] // human-readable feature list for marketing
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  VerticalTierConfig VerticalTierConfig[]
+  TenantSubscription TenantSubscription[]
+
+  @@index([tierKey, active])
+}
+
+model VerticalTierConfig {
+  id                  String   @id @default(cuid())
+  verticalKey         String // 'hvac', 'plumbing', 'cleaning', etc.
+  subscriptionTierId  String
+  featureModules      String[] // array of module keys enabled for this tier
+  limits              Json     @default("{}") // {max_users: 5, max_locations: 1, max_jobs_per_month: 100, storage_gb: 1}
+  pricingOverride     Decimal? @db.Decimal(10, 2) // null = use tier base price
+  customFields        Json     @default("{}") // vertical-specific field definitions
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  Tier                SubscriptionTier @relation(fields: [subscriptionTierId], references: [id])
+
+  @@unique([verticalKey, subscriptionTierId])
+  @@index([verticalKey])
+}
+
+model TenantSubscription {
+  id                    String   @id @default(cuid())
+  orgId                 String   @unique
+  verticalKey           String
+  subscriptionTierId    String
+  status                String // 'trial', 'active', 'past_due', 'cancelled', 'suspended'
+  trialEndsAt           DateTime?
+  currentPeriodStart    DateTime
+  currentPeriodEnd      DateTime
+  stripeSubscriptionId  String? // for Stripe integration (Phase 2)
+  stripeCustomerId      String?
+  metadata              Json     @default("{}")
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  Org                   Org      @relation(fields: [orgId], references: [id])
+  Tier                  SubscriptionTier @relation(fields: [subscriptionTierId], references: [id])
+
+  @@index([orgId, status])
+  @@index([verticalKey])
+  @@index([status, currentPeriodEnd])
+}
+
+model TenantUsage {
+  id              String   @id @default(cuid())
+  orgId           String
+  usageMonth      DateTime // first day of month
+  activeUsers     Int      @default(0)
+  activeLocations Int      @default(0)
+  jobsCreated     Int      @default(0)
+  storageUsedGb   Decimal  @db.Decimal(10, 2) @default(0)
+  metadata        Json     @default("{}")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  Org             Org      @relation(fields: [orgId], references: [id])
+
+  @@unique([orgId, usageMonth])
+  @@index([usageMonth])
 }
