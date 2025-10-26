@@ -92,7 +92,7 @@ export async function processCsvImport(job: Job<CSVImportJobData>) {
             processedRecords,
             successCount,
             errorCount,
-            errors: errors.slice(0, 100), // Keep only first 100 errors
+            errorSummary: errors.length > 0 ? JSON.stringify(errors.slice(0, 100)) : null,
           },
         });
         
@@ -127,7 +127,7 @@ export async function processCsvImport(job: Job<CSVImportJobData>) {
         processedRecords,
         successCount,
         errorCount,
-        errors: errors.slice(0, 100),
+        errorSummary: errors.length > 0 ? JSON.stringify(errors.slice(0, 100)) : null,
         completedAt: new Date(),
       },
     });
@@ -148,12 +148,12 @@ export async function processCsvImport(job: Job<CSVImportJobData>) {
       where: { id: importJobId },
       data: {
         status: 'FAILED',
-        errors: [
+        errorSummary: JSON.stringify([
           {
             message: error instanceof Error ? error.message : 'Unknown error',
             timestamp: new Date().toISOString(),
           },
-        ],
+        ]),
         completedAt: new Date(),
       },
     });
