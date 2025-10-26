@@ -33,12 +33,18 @@ module.exports = {
         'bg-elevated': 'var(--bg-elevated)',
         surface: 'var(--surface)',
         'surface-hover': 'var(--surface-hover)',
+        'surface-2': 'var(--surface-2)',
+        'glass-bg': 'var(--glass-bg)',
+        'glass-bg-light': 'var(--glass-bg-light)',
         border: 'var(--border)',
         'border-hover': 'var(--border-hover)',
+        'border-accent': 'var(--border-accent)',
         // Text colors
         text: 'var(--text)',
         'text-muted': 'var(--text-muted)',
         'text-subtle': 'var(--text-subtle)',
+        'text-secondary': 'var(--text-secondary)',
+        'text-tertiary': 'var(--text-tertiary)',
         'text-on-brand': 'var(--text-on-brand)',
         // Semantic accents
         success: 'var(--accent-success)',
@@ -96,6 +102,27 @@ module.exports = {
         'slide-in-right': 'slideInRight var(--duration-normal) var(--ease-out)',
         'pulse-glow': 'pulseGlow var(--duration-slow) var(--ease-in-out) infinite',
         'spin': 'spin 1s linear infinite',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        fadeInUp: {
+          '0%': { opacity: '0', transform: 'translateY(8px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        slideInRight: {
+          '0%': { opacity: '0', transform: 'translateX(12px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        pulseGlow: {
+          '0%, 100%': { boxShadow: 'var(--shadow-glow)' },
+          '50%': { boxShadow: 'var(--shadow-glow-intense)' },
+        },
+      },
+      backgroundImage: {
+        'brand-gradient': 'var(--brand-gradient)',
       },
       zIndex: {
         base: 'var(--z-base)',
