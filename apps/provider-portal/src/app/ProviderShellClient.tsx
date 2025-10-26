@@ -72,6 +72,9 @@ export default function ProviderShellClient({ children }: { children: React.Reac
           <ProviderNavLink href="/provider/ai" active={active('/provider/ai')}>
             AI
           </ProviderNavLink>
+          <ProviderNavLink href="/provider/ai/cost" active={active('/provider/ai/cost')}>
+            AI Cost
+          </ProviderNavLink>
           <ProviderNavLink href="/provider/clients" active={active('/provider/clients')}>
             Client Accounts
           </ProviderNavLink>
