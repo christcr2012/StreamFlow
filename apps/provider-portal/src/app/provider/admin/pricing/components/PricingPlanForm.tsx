@@ -372,7 +372,7 @@ export default function PricingPlanForm({ mode, initialData }: Props) {
 
           {features.length === 0 && (
             <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
-              No features added yet. Click "Add Feature" to get started.
+              No features added yet. Click &quot;Add Feature&quot; to get started.
             </p>
           )}
         </div>

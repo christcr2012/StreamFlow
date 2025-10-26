@@ -163,7 +163,7 @@ export default async function PricingPlanHistoryPage({
                     {/* Reason */}
                     {record.reason && (
                       <div className="mt-3 text-sm text-gray-700 dark:text-gray-300 italic">
-                        Reason: "{record.reason}"
+                        Reason: &quot;{record.reason}&quot;
                       </div>
                     )}
                   </div>
