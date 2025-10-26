@@ -180,7 +180,7 @@ export async function GET(request: NextRequest) {
         processedRecords: importJob.processedRecords,
         successCount: importJob.successCount,
         errorCount: importJob.errorCount,
-        errors: importJob.errors,
+        errorSummary: importJob.errorSummary,
         createdAt: importJob.createdAt,
         completedAt: importJob.completedAt,
       },
