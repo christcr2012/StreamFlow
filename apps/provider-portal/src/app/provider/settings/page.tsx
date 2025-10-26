@@ -26,7 +26,7 @@ interface ProviderSettings {
 }
 
 export default function ProviderSettingsPage() {
-  const [activeTab, setActiveTab] = useState<'general' | 'security' | 'notifications' | 'integrations'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'security' | 'notifications' | 'integrations' | 'features'>('general');
 
   return (
     <div className="container-responsive spacing-responsive-md">
@@ -81,13 +81,24 @@ export default function ProviderSettingsPage() {
         >
           Integrations
         </button>
+        <button
+          onClick={() => setActiveTab('features')}
+          className="px-4 py-2 font-medium transition-colors touch-target"
+          style={{
+            color: activeTab === 'features' ? 'var(--brand-primary)' : 'var(--text-secondary)',
+            borderBottom: activeTab === 'features' ? '2px solid var(--brand-primary)' : 'none'
+          }}
+        >
+          Features
+        </button>
       </div>
 
       {/* Tab Content */}
       {activeTab === 'general' && <GeneralSettings />}
       {activeTab === 'security' && <SecuritySettings />}
       {activeTab === 'notifications' && <NotificationSettings />}
-      {activeTab === 'integrations' && <IntegrationSettings />}
+  {activeTab === 'integrations' && <IntegrationSettings />}
+  {activeTab === 'features' && <FeatureFlagsSettings />}
     </div>
   );
 }
@@ -241,6 +252,106 @@ function GeneralSettings() {
             {saving ? 'Saving...' : 'Save Changes'}
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// Feature Flags Settings Component
+function FeatureFlagsSettings() {
+  const [flags, setFlags] = useState<Record<string, boolean>>({});
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await fetch('/api/feature-flags');
+        const j = await res.json();
+        setFlags(j.flags || {});
+      } catch (e) {
+        setError('Failed to load feature flags');
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
+
+  const toggle = (key: string) => {
+    setFlags((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    setError(null);
+    setSuccess(null);
+    try {
+      const res = await fetch('/api/feature-flags', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ flags }),
+      });
+      if (!res.ok) throw new Error('Failed to save feature flags');
+      setSuccess('Feature flags updated');
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to save feature flags');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="premium-card spacing-responsive-sm">
+        <p className="text-responsive-base" style={{ color: 'var(--text-secondary)' }}>Loading feature flags...</p>
+      </div>
+    );
+  }
+
+  const knownFlags: Array<{ key: string; label: string; desc: string }> = [
+    { key: 'ai-cost', label: 'AI Cost Management', desc: 'Enable provider-level AI budget policy and alerts' },
+    { key: 'analytics-v2', label: 'Analytics v2', desc: 'New analytics experience for providers' },
+    { key: 'action-center', label: 'Action Center', desc: 'Unified action feed across tenants' },
+    { key: 'advanced-monitoring', label: 'Advanced Monitoring', desc: 'Deep system metrics and anomaly detection' },
+    { key: 'multi-region', label: 'Multi-Region', desc: 'Enable multi-region deployment controls' },
+  ];
+
+  return (
+    <div className="space-y-6">
+      {error && (
+        <div className="premium-card spacing-responsive-sm" style={{ backgroundColor: 'var(--error-bg)', borderColor: 'var(--error-border)' }}>
+          <p className="text-responsive-sm" style={{ color: 'var(--error-text)' }}>{error}</p>
+        </div>
+      )}
+      {success && (
+        <div className="premium-card spacing-responsive-sm" style={{ backgroundColor: 'var(--success-bg)', borderColor: 'var(--success-border)' }}>
+          <p className="text-responsive-sm" style={{ color: 'var(--success-text)' }}>{success}</p>
+        </div>
+      )}
+
+      <div className="premium-card spacing-responsive-sm">
+        <h2 className="text-responsive-lg font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>Feature Flags</h2>
+        <div className="space-y-4">
+          {knownFlags.map((f) => (
+            <div key={f.key} className="flex items-start justify-between p-3 rounded-lg" style={{ background: 'var(--surface-2)', border: '1px solid var(--border-accent)' }}>
+              <div>
+                <div className="text-responsive-base font-medium" style={{ color: 'var(--text-primary)' }}>{f.label}</div>
+                <div className="text-responsive-sm" style={{ color: 'var(--text-secondary)' }}>{f.desc}</div>
+              </div>
+              <div className="flex items-center gap-2">
+                <input type="checkbox" checked={Boolean(flags[f.key])} onChange={() => toggle(f.key)} className="w-5 h-5" />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <button onClick={handleSave} disabled={saving} className="btn-primary touch-target-comfortable mt-4">
+          {saving ? 'Saving...' : 'Save Feature Flags'}
+        </button>
       </div>
     </div>
   );
