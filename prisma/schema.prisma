@@ -1691,48 +1691,72 @@ model AIAlert {
 // PHASE 1 SCAFFOLDING: Type 2 Communications (Client-to-Customer)
 // ============================================================================
 
+// ============================================================================
+// Type 2 Communications: Tenant ↔ Customer (System 3)
+// ============================================================================
+// Purpose: Field service businesses communicate with their end customers via SMS/email
+// Examples: Appointment confirmations, job updates, invoice delivery, customer inquiries
+// Technology: Uses tenant's own Twilio account and email domain
+// Security: Each tenant's communications are isolated by orgId
+
 model Communication {
   id              String   @id @default(cuid())
+  threadId        String?  // Link to thread for conversation grouping
   orgId           String
-  contactId       String // customer/contact
-  userId          String? // staff member who sent/received
-  type            String // 'sms', 'email', 'call'
-  direction       String // 'inbound', 'outbound'
-  subject         String? // for emails
+  contactId       String   // customer/contact (renamed from customerId for consistency)
+  userId          String?  // staff member who sent/received (null for automated)
+  type            String   // 'sms', 'email', 'call', 'voicemail'
+  direction       String   // 'inbound', 'outbound'
+  subject         String?  // for emails
   content         String   @db.Text
-  metadata        Json     @default("{}") // phone numbers, email addresses, etc.
-  status          String // 'sent', 'delivered', 'failed', 'received'
-  externalId      String? // Twilio SID, Resend ID, etc.
-  threadId        String? // group messages into threads
+  metadata        Json     @default("{}") // { to, from, duration (call), etc. }
+  status          String   // 'queued', 'sent', 'delivered', 'failed', 'read'
+  externalId      String?  // Twilio SID, Resend ID, etc.
+  errorMessage    String?  // If failed, store error details (Phase 1 stub)
+  readAt          DateTime? // When read (Phase 2)
+  deliveredAt     DateTime? // When delivered from provider webhook (Phase 2)
   createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  Thread          CommunicationThread? @relation(fields: [threadId], references: [id])
   Org             Org      @relation(fields: [orgId], references: [id])
   Customer        Customer @relation(fields: [contactId], references: [id])
   User            User?    @relation(fields: [userId], references: [id])
 
   @@index([orgId, contactId, createdAt])
   @@index([orgId, userId, createdAt])
-  @@index([threadId])
+  @@index([threadId, createdAt])
   @@index([type, status])
+  @@index([externalId])
 }
 
 model CommunicationThread {
-  id              String   @id @default(cuid())
-  orgId           String
-  contactId       String
-  subject         String?
-  lastMessageAt   DateTime
-  lastMessagePreview String?
-  unreadCount     Int      @default(0)
-  participants    Json     @default("[]") // array of user IDs
-  metadata        Json     @default("{}")
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  Org             Org      @relation(fields: [orgId], references: [id])
-  Customer        Customer @relation(fields: [contactId], references: [id])
+  id                 String          @id @default(cuid())
+  orgId              String
+  contactId          String          // customer being communicated with
+  subject            String?         // Optional thread subject/title
+  lastMessageAt      DateTime        @default(now())
+  lastMessagePreview String?         @db.VarChar(200)
+  unreadCount        Int             @default(0) // Unread by staff
+  status             String          @default("active") // 'active', 'archived', 'blocked' (Phase 2)
+  participants       Json            @default("[]") // Array of user IDs involved
+  metadata           Json            @default("{}") // Job ref, preferred contact method, etc.
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  
+  Communications     Communication[]
+  Org                Org             @relation(fields: [orgId], references: [id])
+  Customer           Customer        @relation(fields: [contactId], references: [id])
 
-  @@index([orgId, lastMessageAt])
+  @@index([orgId, lastMessageAt(sort: Desc)])
+  @@index([orgId, contactId])
   @@index([contactId])
 }
+
+// TODO Phase 2: Add CommunicationTemplate model for reusable message templates
+// TODO Phase 2: Add CommunicationSchedule model for scheduled/automated messages
+// TODO Phase 2: Add CommunicationPreference model for customer's preferred contact method/times
+// TODO Phase 2: Add webhook handlers for Twilio/Resend delivery/read receipts
 
 // ============================================================================
 // PHASE 1 SCAFFOLDING: Subscription Tiers & Vertical Configs
@@ -1811,3 +1835,4 @@ model TenantUsage {
   @@unique([orgId, usageMonth])
   @@index([usageMonth])
 }
+
