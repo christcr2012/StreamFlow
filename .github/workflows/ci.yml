@@ -45,6 +45,14 @@ jobs:
         env:
           PLACEHOLDER_STRICT: "false"
 
+      - name: Sync Placeholder Issues (dry-run)
+        run: npm run ci:placeholders:sync
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          # Set SYNC_ISSUES=true in a manual rerun with workflow_dispatch or env override to create issues
+          SYNC_ISSUES: "false"
+        continue-on-error: true
+
       # NOTE: We do NOT run builds in CI/CD anymore
       # Local builds are fundamentally different from Vercel builds
       # Testing builds locally repeatedly broke production deployments

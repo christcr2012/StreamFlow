@@ -255,24 +255,34 @@ if (violations.length > 0) {
       blocked: blocked.length,
       documentation: documentation.length,
     },
-    actionable: actionable.map((v) => ({
-      file: v.file.replace(ROOT + /[\\/]/, ""),
-      line: v.line,
-      marker: v.label,
-      snippet: v.snippet,
-      reasoning: v.classification?.reasoning,
-      confidence: v.classification?.confidence,
-    })),
-    blocked: blocked.map((v) => ({
-      file: v.file.replace(ROOT + /[\\/]/, ""),
-      line: v.line,
-      marker: v.label,
-      snippet: v.snippet,
-      phase: v.classification?.phaseMarker,
-      dependencies: v.classification?.dependencies,
-      reasoning: v.classification?.reasoning,
-      confidence: v.classification?.confidence,
-    })),
+    actionable: actionable.map((v) => {
+      const rel = v.file.replace(ROOT + /[\\/]/, "");
+      const id = `${rel}:${v.line}:${v.label}`;
+      return {
+        id,
+        file: rel,
+        line: v.line,
+        marker: v.label,
+        snippet: v.snippet,
+        reasoning: v.classification?.reasoning,
+        confidence: v.classification?.confidence,
+      };
+    }),
+    blocked: blocked.map((v) => {
+      const rel = v.file.replace(ROOT + /[\\/]/, "");
+      const id = `${rel}:${v.line}:${v.label}`;
+      return {
+        id,
+        file: rel,
+        line: v.line,
+        marker: v.label,
+        snippet: v.snippet,
+        phase: v.classification?.phaseMarker,
+        dependencies: v.classification?.dependencies,
+        reasoning: v.classification?.reasoning,
+        confidence: v.classification?.confidence,
+      };
+    }),
   };
 
   writeFileSync(
@@ -283,9 +293,13 @@ if (violations.length > 0) {
 
   // Generate GitHub issues file
   const issuesData = blocked
-    .map((v) =>
-      v.classification ? generateGitHubIssue(v.classification) : null,
-    )
+    .map((v) => {
+      if (!v.classification) return null;
+      const rel = v.file.replace(ROOT + /[\\/]/, "");
+      const id = `${rel}:${v.line}:${v.label}`;
+      const payload = generateGitHubIssue(v.classification);
+      return { id, ...payload };
+    })
     .filter(Boolean);
   writeFileSync(
     join(trackingDir, "github-issues.json"),

@@ -52,6 +52,7 @@
     "perf:compare": "node scripts/performance/compare-results.js",
     "trace:update": "tsx scripts/trace/update-trace-matrix.ts",
     "ci:placeholders": "tsx scripts/ci/verify_no_placeholders.ts",
+    "ci:placeholders:sync": "tsx scripts/ci/sync_placeholder_issues.ts",
     "prepare": "node -e \"try{require('husky').install()}catch(e){process.exit(0)}\"",
     "mcp:dryrun": "tsx scripts/mcp-launcher.ts --dry",
     "mcp:launch": "tsx scripts/mcp-launcher.ts",
