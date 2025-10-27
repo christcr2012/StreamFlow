@@ -1,23 +1,26 @@
 /**
  * Pricing Plan History Page
- * 
+ *
  * Shows the complete history of changes to a pricing plan
  */
 
-import { redirect, notFound } from 'next/navigation';
-import { cookies } from 'next/headers';
-import { prisma } from '@/lib/prisma';
-import Link from 'next/link';
-import { Button } from '@cortiware/ui';
+import { redirect, notFound } from "next/navigation";
+import { cookies } from "next/headers";
+import { prisma } from "@/lib/prisma";
+import Link from "next/link";
+import { Button } from "@cortiware/ui";
 
 async function checkSuperAdminAccess() {
   const cookieStore = await cookies();
-  const hasProviderSession = cookieStore.get('rs_provider') || cookieStore.get('provider-session') || cookieStore.get('ws_provider');
-  
+  const hasProviderSession =
+    cookieStore.get("rs_provider") ||
+    cookieStore.get("provider-session") ||
+    cookieStore.get("ws_provider");
+
   if (!hasProviderSession) {
-    redirect('/login');
+    redirect("/login");
   }
-  
+
   // TODO: Add actual super admin role check when user/role system is implemented
   // For now, allow access if authenticated as provider
   return true;
@@ -29,18 +32,24 @@ export default async function PricingPlanHistoryPage({
   params: Promise<{ id: string }>;
 }) {
   await checkSuperAdminAccess();
-  
+
   const { id } = await params;
 
-  // Fetch the plan with full history
-  const plan = await prisma.marketingPricingPlan.findUnique({
-    where: { id },
-    include: {
-      history: {
-        orderBy: { createdAt: 'desc' },
+  // Fetch the plan with full history (with build-time guard)
+  let plan = null;
+  try {
+    plan = await prisma.marketingPricingPlan.findUnique({
+      where: { id },
+      include: {
+        history: {
+          orderBy: { createdAt: "desc" },
+        },
       },
-    },
-  });
+    });
+  } catch (error) {
+    console.log("PricingPlanHistoryPage: Database not available during build");
+    // plan remains null, will trigger notFound() below
+  }
 
   if (!plan) {
     notFound();
@@ -59,34 +68,44 @@ export default async function PricingPlanHistoryPage({
           </p>
         </div>
         <Link href="/provider/admin/pricing">
-          <Button variant="outline">
-            ← Back to Pricing
-          </Button>
+          <Button variant="outline">← Back to Pricing</Button>
         </Link>
       </div>
 
       {/* Current Plan Info */}
       <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Current Plan</h2>
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          Current Plan
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <div className="text-sm text-gray-600 dark:text-gray-400">Name</div>
-            <div className="text-lg font-medium text-gray-900 dark:text-white">{plan.name}</div>
-          </div>
-          <div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Price</div>
             <div className="text-lg font-medium text-gray-900 dark:text-white">
-              {plan.price ? `$${(plan.price / 100).toFixed(2)}` : 'Custom'}
+              {plan.name}
             </div>
           </div>
           <div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Status</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              Price
+            </div>
+            <div className="text-lg font-medium text-gray-900 dark:text-white">
+              {plan.price ? `$${(plan.price / 100).toFixed(2)}` : "Custom"}
+            </div>
+          </div>
+          <div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              Status
+            </div>
             <div className="text-lg font-medium">
-              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                plan.status === 'PUBLISHED' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400' :
-                plan.status === 'PENDING_REVIEW' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400'
-              }`}>
+              <span
+                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                  plan.status === "PUBLISHED"
+                    ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400"
+                    : plan.status === "PENDING_REVIEW"
+                      ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
+                      : "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400"
+                }`}
+              >
                 {plan.status}
               </span>
             </div>
@@ -96,7 +115,9 @@ export default async function PricingPlanHistoryPage({
 
       {/* History Timeline */}
       <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Change History</h2>
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
+          Change History
+        </h2>
 
         {plan.history.length === 0 ? (
           <p className="text-center text-gray-500 dark:text-gray-400 py-8">
@@ -125,12 +146,12 @@ export default async function PricingPlanHistoryPage({
                           {record.action}
                         </div>
                         <div className="text-sm text-gray-600 dark:text-gray-400">
-                          {new Date(record.createdAt).toLocaleString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
+                          {new Date(record.createdAt).toLocaleString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
                           })}
                         </div>
                       </div>
@@ -142,17 +163,23 @@ export default async function PricingPlanHistoryPage({
                     </div>
 
                     {/* Changes */}
-                    {record.changes && typeof record.changes === 'object' && (
+                    {record.changes && typeof record.changes === "object" && (
                       <div className="mt-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4">
                         <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                           Changes:
                         </div>
                         <div className="space-y-1 text-sm">
-                          {Object.entries(record.changes as Record<string, any>).map(([key, value]) => (
+                          {Object.entries(
+                            record.changes as Record<string, any>,
+                          ).map(([key, value]) => (
                             <div key={key} className="flex gap-2">
-                              <span className="text-gray-600 dark:text-gray-400 font-mono">{key}:</span>
+                              <span className="text-gray-600 dark:text-gray-400 font-mono">
+                                {key}:
+                              </span>
                               <span className="text-gray-900 dark:text-white">
-                                {typeof value === 'object' ? JSON.stringify(value) : String(value)}
+                                {typeof value === "object"
+                                  ? JSON.stringify(value)
+                                  : String(value)}
                               </span>
                             </div>
                           ))}
@@ -177,19 +204,25 @@ export default async function PricingPlanHistoryPage({
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-          <div className="text-sm text-gray-600 dark:text-gray-400">Total Changes</div>
+          <div className="text-sm text-gray-600 dark:text-gray-400">
+            Total Changes
+          </div>
           <div className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
             {plan.history.length}
           </div>
         </div>
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-          <div className="text-sm text-gray-600 dark:text-gray-400">Created</div>
+          <div className="text-sm text-gray-600 dark:text-gray-400">
+            Created
+          </div>
           <div className="text-lg font-medium text-gray-900 dark:text-white mt-1">
             {new Date(plan.createdAt).toLocaleDateString()}
           </div>
         </div>
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-          <div className="text-sm text-gray-600 dark:text-gray-400">Last Updated</div>
+          <div className="text-sm text-gray-600 dark:text-gray-400">
+            Last Updated
+          </div>
           <div className="text-lg font-medium text-gray-900 dark:text-white mt-1">
             {new Date(plan.updatedAt).toLocaleDateString()}
           </div>
@@ -198,4 +231,3 @@ export default async function PricingPlanHistoryPage({
     </div>
   );
 }
-

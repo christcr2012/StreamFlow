@@ -1,22 +1,25 @@
 /**
  * Edit Pricing Plan Page
- * 
+ *
  * Allows super admins to edit an existing pricing plan
  */
 
-import { redirect, notFound } from 'next/navigation';
-import { cookies } from 'next/headers';
-import { prisma } from '@/lib/prisma';
-import PricingPlanForm from '../../components/PricingPlanForm';
+import { redirect, notFound } from "next/navigation";
+import { cookies } from "next/headers";
+import { prisma } from "@/lib/prisma";
+import PricingPlanForm from "../../components/PricingPlanForm";
 
 async function checkSuperAdminAccess() {
   const cookieStore = await cookies();
-  const hasProviderSession = cookieStore.get('rs_provider') || cookieStore.get('provider-session') || cookieStore.get('ws_provider');
-  
+  const hasProviderSession =
+    cookieStore.get("rs_provider") ||
+    cookieStore.get("provider-session") ||
+    cookieStore.get("ws_provider");
+
   if (!hasProviderSession) {
-    redirect('/login');
+    redirect("/login");
   }
-  
+
   // TODO: Add actual super admin role check when user/role system is implemented
   // For now, allow access if authenticated as provider
   return true;
@@ -28,18 +31,24 @@ export default async function EditPricingPlanPage({
   params: Promise<{ id: string }>;
 }) {
   await checkSuperAdminAccess();
-  
+
   const { id } = await params;
 
-  // Fetch the plan with features
-  const plan = await prisma.marketingPricingPlan.findUnique({
-    where: { id },
-    include: {
-      features: {
-        orderBy: { sortOrder: 'asc' },
+  // Fetch the plan with features (with build-time guard)
+  let plan = null;
+  try {
+    plan = await prisma.marketingPricingPlan.findUnique({
+      where: { id },
+      include: {
+        features: {
+          orderBy: { sortOrder: "asc" },
+        },
       },
-    },
-  });
+    });
+  } catch (error) {
+    console.log("EditPricingPlanPage: Database not available during build");
+    // plan remains null, will trigger notFound() below
+  }
 
   if (!plan) {
     notFound();
@@ -60,4 +69,3 @@ export default async function EditPricingPlanPage({
     </div>
   );
 }
-

@@ -9,65 +9,74 @@
  * - One-click upgrade actions
  */
 
-import { PrismaClient } from '@prisma/client-provider';
-import { InfrastructureMonitoringService } from '@/services/infrastructure';
-import { InfrastructureDashboard } from './InfrastructureDashboard';
+import { PrismaClient } from "@prisma/client-provider";
+import { InfrastructureMonitoringService } from "@/services/infrastructure";
+import { InfrastructureDashboard } from "./InfrastructureDashboard";
 
 const prisma = new PrismaClient();
 
 export const metadata = {
-  title: 'Infrastructure Monitoring | Cortiware',
-  description: 'Monitor infrastructure usage, costs, and get upgrade recommendations',
+  title: "Infrastructure Monitoring | Cortiware",
+  description:
+    "Monitor infrastructure usage, costs, and get upgrade recommendations",
 };
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 async function getInfrastructureData() {
-  const monitoring = new InfrastructureMonitoringService(prisma);
+  // Guard for build-time when DATABASE_URL may not be available
+  try {
+    const monitoring = new InfrastructureMonitoringService(prisma);
 
-  // Get current usage summary
-  const usageSummary = await monitoring.getUsageSummary();
+    // Get current usage summary
+    const usageSummary = await monitoring.getUsageSummary();
 
-  // Get recent metrics (last 30 days)
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    // Get recent metrics (last 30 days)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-  const recentMetrics = await prisma.infrastructureMetric.findMany({
-    where: {
-      timestamp: { gte: thirtyDaysAgo },
-    },
-    orderBy: { timestamp: 'asc' },
-  });
-
-  // Get active recommendations
-  const recommendations = await prisma.upgradeRecommendation.findMany({
-    where: {
-      status: {
-        in: ['PENDING', 'REVIEWED'],
+    const recentMetrics = await prisma.infrastructureMetric.findMany({
+      where: {
+        timestamp: { gte: thirtyDaysAgo },
       },
-    },
-    orderBy: [
-      { priority: 'desc' },
-      { createdAt: 'desc' },
-    ],
-    take: 10,
-  });
+      orderBy: { timestamp: "asc" },
+    });
 
-  // Get service limits
-  const limits = await prisma.infrastructureLimit.findMany({
-    orderBy: [
-      { service: 'asc' },
-      { metric: 'asc' },
-    ],
-  });
+    // Get active recommendations
+    const recommendations = await prisma.upgradeRecommendation.findMany({
+      where: {
+        status: {
+          in: ["PENDING", "REVIEWED"],
+        },
+      },
+      orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
+      take: 10,
+    });
 
-  return {
-    usageSummary,
-    recentMetrics,
-    recommendations,
-    limits,
-  };
+    // Get service limits
+    const limits = await prisma.infrastructureLimit.findMany({
+      orderBy: [{ service: "asc" }, { metric: "asc" }],
+    });
+
+    return {
+      usageSummary,
+      recentMetrics,
+      recommendations,
+      limits,
+    };
+  } catch (error) {
+    console.log(
+      "InfrastructurePage: Database not available during build, using empty data",
+    );
+    // Return empty data structures for build-time
+    return {
+      usageSummary: {},
+      recentMetrics: [],
+      recommendations: [],
+      limits: [],
+    };
+  }
 }
 
 export default async function InfrastructurePage() {
@@ -78,7 +87,8 @@ export default async function InfrastructurePage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Infrastructure Monitoring</h1>
         <p className="text-gray-600">
-          Monitor usage across all services and get proactive upgrade recommendations
+          Monitor usage across all services and get proactive upgrade
+          recommendations
         </p>
       </div>
 
@@ -91,4 +101,3 @@ export default async function InfrastructurePage() {
     </div>
   );
 }
-
