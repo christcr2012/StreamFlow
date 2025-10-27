@@ -23,10 +23,6 @@
       "source": "/portal/:path*",
       "destination": "https://provider-portal.vercel.app/:path*"
     }
-  ],
-  "github": {
-    "silent": true,
-    "autoJobCancelation": false
-  }
+  ]
 }
 

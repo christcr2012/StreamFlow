@@ -15,10 +15,6 @@
       "source": "/app/:path*",
       "destination": "https://tenant-app.vercel.app/:path*"
     }
-  ],
-  "github": {
-    "silent": true,
-    "autoJobCancelation": false
-  }
+  ]
 }
 
