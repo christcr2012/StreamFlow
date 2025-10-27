@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Sparkles, AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
+import Link from 'next/link';
+import { Sparkles, AlertCircle, CheckCircle2, Loader2, DollarSign, ArrowRight } from 'lucide-react';
 import { AIFeatureBadge } from '@/components/ai/AIFeatureBadge';
 
 interface AISettingsClientProps {
@@ -95,6 +96,29 @@ export function AISettingsClient({ orgId }: AISettingsClientProps) {
 
   return (
     <div className="space-y-8">
+      {/* AI Cost Management Link */}
+      <Link
+        href="/settings/ai/cost"
+        className="block bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 hover:shadow-md transition-shadow"
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-start gap-4">
+            <div className="p-3 bg-blue-500 rounded-lg">
+              <DollarSign className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                AI Cost Management
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Track your AI usage, monitor spending, and set budget alerts
+              </p>
+            </div>
+          </div>
+          <ArrowRight className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+        </div>
+      </Link>
+
       {/* OpenAI Disclosure */}
       <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
         <div className="flex items-start gap-3 mb-4">
