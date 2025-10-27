@@ -2,10 +2,10 @@
 // Type 2 Communications: Tenant staff messaging their customers
 // System 3 from COMMUNICATION_SYSTEMS_ARCHITECTURE.md
 
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { MessageSquare, Mail, Phone, Search, Send } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { MessageSquare, Mail, Phone, Search, Send } from "lucide-react";
 
 interface Customer {
   id: string;
@@ -44,7 +44,7 @@ export default function CommunicationsPage() {
   const [threads, setThreads] = useState<Thread[]>([]);
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Communication[]>([]);
-  const [messageText, setMessageText] = useState('');
+  const [messageText, setMessageText] = useState("");
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
 
@@ -62,11 +62,11 @@ export default function CommunicationsPage() {
 
   async function fetchThreads() {
     try {
-      const res = await fetch('/api/communications/threads');
+      const res = await fetch("/api/communications/threads");
       const data = await res.json();
       setThreads(data.threads || []);
     } catch (error) {
-      console.error('Failed to fetch threads:', error);
+      console.error("Failed to fetch threads:", error);
     } finally {
       setLoading(false);
     }
@@ -77,11 +77,13 @@ export default function CommunicationsPage() {
       const thread = threads.find((t) => t.id === threadId);
       if (!thread) return;
 
-      const res = await fetch(`/api/communications?contactId=${thread.contactId}`);
+      const res = await fetch(
+        `/api/communications?contactId=${thread.contactId}`,
+      );
       const data = await res.json();
       setMessages(data.communications || []);
     } catch (error) {
-      console.error('Failed to fetch messages:', error);
+      console.error("Failed to fetch messages:", error);
     }
   }
 
@@ -94,32 +96,35 @@ export default function CommunicationsPage() {
     setSending(true);
     try {
       // TODO Phase 2: Detect type (sms vs email) based on customer preference
-      const type = thread.customer.primaryPhone ? 'sms' : 'email';
+      const type = thread.customer.primaryPhone ? "sms" : "email";
 
-      const res = await fetch('/api/communications', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/communications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contactId: thread.contactId,
           type,
           content: messageText,
           metadata: {
-            to: type === 'sms' ? thread.customer.primaryPhone : thread.customer.primaryEmail,
+            to:
+              type === "sms"
+                ? thread.customer.primaryPhone
+                : thread.customer.primaryEmail,
           },
         }),
       });
 
       if (res.ok) {
-        setMessageText('');
+        setMessageText("");
         // Reload messages
         await fetchMessages(selectedThreadId);
         // Reload threads to update preview
         await fetchThreads();
       } else {
-        console.error('Failed to send message');
+        console.error("Failed to send message");
       }
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error("Error sending message:", error);
     } finally {
       setSending(false);
     }
@@ -139,7 +144,9 @@ export default function CommunicationsPage() {
     <div className="h-screen flex flex-col">
       {/* Header */}
       <div className="border-b bg-white px-6 py-4">
-        <h1 className="text-2xl font-bold text-gray-900">Customer Communications</h1>
+        <h1 className="text-2xl font-bold text-gray-900">
+          Customer Communications
+        </h1>
         <p className="text-sm text-gray-600 mt-1">
           Messages with your customers via SMS and email
         </p>
@@ -167,7 +174,9 @@ export default function CommunicationsPage() {
               <div className="p-8 text-center text-gray-500">
                 <MessageSquare className="w-12 h-12 mx-auto mb-3 text-gray-400" />
                 <p>No conversations yet</p>
-                <p className="text-sm mt-1">Messages with customers will appear here</p>
+                <p className="text-sm mt-1">
+                  Messages with customers will appear here
+                </p>
               </div>
             ) : (
               threads.map((thread) => (
@@ -175,12 +184,14 @@ export default function CommunicationsPage() {
                   key={thread.id}
                   onClick={() => setSelectedThreadId(thread.id)}
                   className={`w-full text-left p-4 border-b hover:bg-white transition-colors ${
-                    selectedThreadId === thread.id ? 'bg-white border-l-4 border-l-blue-500' : ''
+                    selectedThreadId === thread.id
+                      ? "bg-white border-l-4 border-l-blue-500"
+                      : ""
                   }`}
                 >
                   <div className="flex items-start justify-between mb-1">
                     <div className="font-semibold text-gray-900">
-                      {thread.customer?.primaryName || 'Unknown Customer'}
+                      {thread.customer?.primaryName || "Unknown Customer"}
                     </div>
                     {thread.unreadCount > 0 && (
                       <span className="bg-blue-500 text-white text-xs rounded-full px-2 py-0.5">
@@ -189,10 +200,12 @@ export default function CommunicationsPage() {
                     )}
                   </div>
                   {thread.customer?.company && (
-                    <div className="text-sm text-gray-600 mb-1">{thread.customer.company}</div>
+                    <div className="text-sm text-gray-600 mb-1">
+                      {thread.customer.company}
+                    </div>
                   )}
                   <div className="text-sm text-gray-500 truncate">
-                    {thread.lastMessagePreview || 'No messages yet'}
+                    {thread.lastMessagePreview || "No messages yet"}
                   </div>
                   <div className="text-xs text-gray-400 mt-1">
                     {new Date(thread.lastMessageAt).toLocaleString()}
@@ -210,7 +223,9 @@ export default function CommunicationsPage() {
               <div className="text-center">
                 <MessageSquare className="w-16 h-16 mx-auto mb-4 text-gray-300" />
                 <p className="text-lg">Select a conversation</p>
-                <p className="text-sm mt-2">Choose a customer to view messages</p>
+                <p className="text-sm mt-2">
+                  Choose a customer to view messages
+                </p>
               </div>
             </div>
           ) : (
@@ -220,10 +235,13 @@ export default function CommunicationsPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-xl font-semibold text-gray-900">
-                      {selectedThread.customer?.primaryName || 'Unknown Customer'}
+                      {selectedThread.customer?.primaryName ||
+                        "Unknown Customer"}
                     </h2>
                     {selectedThread.customer?.company && (
-                      <p className="text-sm text-gray-600">{selectedThread.customer.company}</p>
+                      <p className="text-sm text-gray-600">
+                        {selectedThread.customer.company}
+                      </p>
                     )}
                     <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
                       {selectedThread.customer?.primaryPhone && (
@@ -251,30 +269,34 @@ export default function CommunicationsPage() {
                   </div>
                 ) : (
                   messages.map((msg) => {
-                    const isOutbound = msg.direction === 'outbound';
+                    const isOutbound = msg.direction === "outbound";
                     return (
                       <div
                         key={msg.id}
-                        className={`flex ${isOutbound ? 'justify-end' : 'justify-start'}`}
+                        className={`flex ${isOutbound ? "justify-end" : "justify-start"}`}
                       >
                         <div
                           className={`max-w-lg rounded-lg px-4 py-3 ${
                             isOutbound
-                              ? 'bg-blue-500 text-white'
-                              : 'bg-gray-100 text-gray-900'
+                              ? "bg-blue-500 text-white"
+                              : "bg-gray-100 text-gray-900"
                           }`}
                         >
                           {msg.subject && (
-                            <div className="font-semibold mb-1">{msg.subject}</div>
+                            <div className="font-semibold mb-1">
+                              {msg.subject}
+                            </div>
                           )}
-                          <div className="whitespace-pre-wrap">{msg.content}</div>
+                          <div className="whitespace-pre-wrap">
+                            {msg.content}
+                          </div>
                           <div
                             className={`text-xs mt-2 ${
-                              isOutbound ? 'text-blue-100' : 'text-gray-500'
+                              isOutbound ? "text-blue-100" : "text-gray-500"
                             }`}
                           >
-                            {new Date(msg.createdAt).toLocaleString()} • {msg.type.toUpperCase()} •{' '}
-                            {msg.status}
+                            {new Date(msg.createdAt).toLocaleString()} •{" "}
+                            {msg.type.toUpperCase()} • {msg.status}
                           </div>
                         </div>
                       </div>
@@ -300,11 +322,12 @@ export default function CommunicationsPage() {
                     className="self-end px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                   >
                     <Send className="w-4 h-4" />
-                    {sending ? 'Sending...' : 'Send'}
+                    {sending ? "Sending..." : "Send"}
                   </button>
                 </div>
                 <p className="text-xs text-gray-500 mt-2">
-                  📌 Phase 1: Stub implementation. Messages won't actually send yet.
+                  📌 Phase 2: Stub implementation (blocked by [service] Twilio
+                  and [service] Resend). Messages won&apos;t actually send yet.
                 </p>
               </div>
             </>

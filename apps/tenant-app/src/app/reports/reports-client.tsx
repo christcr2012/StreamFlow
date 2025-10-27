@@ -1,9 +1,9 @@
 // apps/tenant-app/src/app/reports/reports-client.tsx
 // Reporting & Analytics UI - Phase 1
 
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   BarChart3,
   TrendingUp,
@@ -13,7 +13,7 @@ import {
   Calendar,
   Download,
   Filter,
-} from 'lucide-react';
+} from "lucide-react";
 
 interface ReportsClientProps {
   orgId: string;
@@ -52,7 +52,7 @@ interface ReportData {
 export function ReportsClient({ orgId }: ReportsClientProps) {
   const [reportData, setReportData] = useState<ReportData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [dateRange, setDateRange] = useState('30');
+  const [dateRange, setDateRange] = useState("30");
 
   useEffect(() => {
     fetchReportData();
@@ -66,7 +66,7 @@ export function ReportsClient({ orgId }: ReportsClientProps) {
         setReportData(data.reportData);
       }
     } catch (error) {
-      console.error('Failed to fetch report data:', error);
+      console.error("Failed to fetch report data:", error);
     } finally {
       setLoading(false);
     }
@@ -87,8 +87,12 @@ export function ReportsClient({ orgId }: ReportsClientProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Reports & Analytics</h1>
-              <p className="text-gray-600 mt-1">Business intelligence and insights</p>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Reports & Analytics
+              </h1>
+              <p className="text-gray-600 mt-1">
+                Business intelligence and insights
+              </p>
             </div>
             <div className="flex items-center gap-3">
               <select
@@ -157,13 +161,17 @@ export function ReportsClient({ orgId }: ReportsClientProps) {
             </h3>
             <div className="space-y-4">
               {reportData.revenue.byMonth.map((item, index) => {
-                const maxAmount = Math.max(...reportData.revenue.byMonth.map((d) => d.amount));
+                const maxAmount = Math.max(
+                  ...reportData.revenue.byMonth.map((d) => d.amount),
+                );
                 const percentage = (item.amount / maxAmount) * 100;
 
                 return (
                   <div key={index}>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-medium text-gray-700">{item.month}</span>
+                      <span className="text-sm font-medium text-gray-700">
+                        {item.month}
+                      </span>
                       <span className="text-sm font-semibold text-gray-900">
                         ${item.amount.toLocaleString()}
                       </span>
@@ -189,12 +197,14 @@ export function ReportsClient({ orgId }: ReportsClientProps) {
             <div className="space-y-4">
               {reportData.jobs.byStatus.map((item, index) => {
                 const percentage = (item.count / reportData.jobs.total) * 100;
-                const colors = ['bg-green-600', 'bg-yellow-600', 'bg-blue-600'];
+                const colors = ["bg-green-600", "bg-yellow-600", "bg-blue-600"];
 
                 return (
                   <div key={index}>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-medium text-gray-700">{item.status}</span>
+                      <span className="text-sm font-medium text-gray-700">
+                        {item.status}
+                      </span>
                       <span className="text-sm font-semibold text-gray-900">
                         {item.count} ({percentage.toFixed(0)}%)
                       </span>
@@ -216,11 +226,22 @@ export function ReportsClient({ orgId }: ReportsClientProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           {/* Customer Insights */}
           <div className="bg-white rounded-lg border p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Customer Insights</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Customer Insights
+            </h3>
             <div className="space-y-3">
-              <InsightRow label="Total Customers" value={reportData.customers.total} />
-              <InsightRow label="New This Period" value={reportData.customers.new} />
-              <InsightRow label="Active Customers" value={reportData.customers.active} />
+              <InsightRow
+                label="Total Customers"
+                value={reportData.customers.total}
+              />
+              <InsightRow
+                label="New This Period"
+                value={reportData.customers.new}
+              />
+              <InsightRow
+                label="Active Customers"
+                value={reportData.customers.active}
+              />
               <InsightRow
                 label="Avg Satisfaction"
                 value={`${reportData.customers.satisfaction}/5.0`}
@@ -230,14 +251,22 @@ export function ReportsClient({ orgId }: ReportsClientProps) {
 
           {/* Technician Performance */}
           <div className="bg-white rounded-lg border p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Technician Performance</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Technician Performance
+            </h3>
             <div className="space-y-3">
-              <InsightRow label="Total Technicians" value={reportData.technicians.total} />
+              <InsightRow
+                label="Total Technicians"
+                value={reportData.technicians.total}
+              />
               <InsightRow
                 label="Avg Jobs/Tech"
                 value={reportData.technicians.avgJobsPerTech.toFixed(1)}
               />
-              <InsightRow label="Top Performer" value={reportData.technicians.topPerformer} />
+              <InsightRow
+                label="Top Performer"
+                value={reportData.technicians.topPerformer}
+              />
               <InsightRow
                 label="Top Performer Jobs"
                 value={reportData.technicians.topPerformerJobs}
@@ -248,7 +277,9 @@ export function ReportsClient({ orgId }: ReportsClientProps) {
 
         {/* Quick Reports */}
         <div className="bg-white rounded-lg border p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Reports</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Quick Reports
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <ReportButton
               title="Revenue by Service"
@@ -268,16 +299,16 @@ export function ReportsClient({ orgId }: ReportsClientProps) {
           </div>
         </div>
 
-        {/* Phase 1 Notice */}
+        {/* Phase 2 Notice: blocked by real analytics queries */}
         <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
           <div className="flex items-start gap-3">
             <BarChart3 className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
             <div className="text-sm text-yellow-800">
-              <p className="font-medium mb-1">Phase 1: Stub Implementation</p>
+              <p className="font-medium mb-1">Phase 2: Stub Implementation</p>
               <p>
-                Reports dashboard showing example data and charts. Phase 2 will implement real-time
-                data queries, advanced filtering, custom report builder, and PDF/CSV export
-                functionality.
+                Reports dashboard showing example data and charts. Phase 2 will
+                implement real-time data queries, advanced filtering, custom
+                report builder, and PDF/CSV export functionality.
               </p>
             </div>
           </div>
@@ -303,27 +334,39 @@ function MetricCard({
   color: string;
 }) {
   const colorClasses = {
-    green: 'bg-green-100 text-green-600',
-    blue: 'bg-blue-100 text-blue-600',
-    purple: 'bg-purple-100 text-purple-600',
-    yellow: 'bg-yellow-100 text-yellow-600',
+    green: "bg-green-100 text-green-600",
+    blue: "bg-blue-100 text-blue-600",
+    purple: "bg-purple-100 text-purple-600",
+    yellow: "bg-yellow-100 text-yellow-600",
   };
 
   return (
     <div className="bg-white rounded-lg border p-6">
       <div className="flex items-center justify-between mb-2">
         <p className="text-sm text-gray-600">{label}</p>
-        <div className={`p-2 rounded-lg ${colorClasses[color as keyof typeof colorClasses]}`}>
+        <div
+          className={`p-2 rounded-lg ${colorClasses[color as keyof typeof colorClasses]}`}
+        >
           <Icon className="w-5 h-5" />
         </div>
       </div>
       <p className="text-2xl font-bold text-gray-900 mb-1">{value}</p>
-      <p className={`text-sm ${changePositive ? 'text-green-600' : 'text-red-600'}`}>{change}</p>
+      <p
+        className={`text-sm ${changePositive ? "text-green-600" : "text-red-600"}`}
+      >
+        {change}
+      </p>
     </div>
   );
 }
 
-function InsightRow({ label, value }: { label: string; value: string | number }) {
+function InsightRow({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | number;
+}) {
   return (
     <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
       <span className="text-sm text-gray-600">{label}</span>

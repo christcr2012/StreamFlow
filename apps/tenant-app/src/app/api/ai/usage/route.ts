@@ -1,106 +1,274 @@
 /**
- * AI Usage Tracking API - PHASE 1 STUB
- * 
+ * AI Usage Tracking API
+ *
  * Tracks AI usage across features and provides cost analytics
- * Issue: #257 - AI Cost Management for Tenant Portal
- * 
- * Phase 1: Returns stub/placeholder data
- * Phase 2: Will query real AIUsageEvent and AIBudget data
+ * Uses real Prisma models: AiUsageEvent and AIBudget
  */
 
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { getAuthContext } from "@/lib/auth-context";
+import { Prisma } from "@prisma/client-tenant";
+
+type Period = "day" | "week" | "month" | "year";
+
+function getDateRange(period: Period): { start: Date; end: Date } {
+  const end = new Date();
+  const start = new Date(end);
+  switch (period) {
+    case "day":
+      start.setDate(end.getDate() - 1);
+      break;
+    case "week":
+      start.setDate(end.getDate() - 7);
+      break;
+    case "month":
+      start.setMonth(end.getMonth() - 1);
+      break;
+    case "year":
+      start.setFullYear(end.getFullYear() - 1);
+      break;
+  }
+  return { start, end };
+}
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const period = searchParams.get('period') || 'month'; // 'day', 'week', 'month', 'year'
-  
-  console.log('[STUB] GET /api/ai/usage - period:', period);
-  
-  // TODO Phase 2: Query real data from AIUsageEvent table
-  // const usage = await prisma.aIUsageEvent.findMany({
-  //   where: {
-  //     orgId: session.user.orgId,
-  //     createdAt: { gte: startDate, lte: endDate }
-  //   }
-  // });
-  
-  // STUB: Return placeholder analytics data
-  return NextResponse.json({
-    period,
-    summary: {
-      totalCost: 45.67,
-      totalTokensIn: 456789,
-      totalTokensOut: 234567,
-      totalCalls: 1234,
-      averageCostPerCall: 0.037
-    },
-    byFeature: [
-      { feature: 'ai_concierge', cost: 25.40, calls: 567, tokens: 345678 },
-      { feature: 'email_generation', cost: 12.30, calls: 423, tokens: 198765 },
-      { feature: 'scheduling_suggestions', cost: 5.50, calls: 189, tokens: 87654 },
-      { feature: 'smart_search', cost: 2.47, calls: 55, tokens: 23456 }
-    ],
-    byModel: [
-      { model: 'gpt-4', cost: 30.25, calls: 890, tokens: 456789 },
-      { model: 'claude-3.5-sonnet', cost: 12.42, calls: 234, tokens: 198765 },
-      { model: 'gpt-3.5-turbo', cost: 3.00, calls: 110, tokens: 45678 }
-    ],
-    byDay: [
-      { date: '2025-10-20', cost: 6.23, calls: 187 },
-      { date: '2025-10-21', cost: 7.15, calls: 205 },
-      { date: '2025-10-22', cost: 5.89, calls: 165 },
-      { date: '2025-10-23', cost: 8.45, calls: 243 },
-      { date: '2025-10-24', cost: 9.12, calls: 267 },
-      { date: '2025-10-25', cost: 4.56, calls: 98 },
-      { date: '2025-10-26', cost: 4.27, calls: 69 }
-    ],
-    budget: {
-      monthlyLimit: 100.00,
-      currentSpend: 45.67,
-      remaining: 54.33,
-      percentUsed: 45.67,
-      daysRemaining: 5,
-      projectedEndOfMonth: 91.34,
-      alertThreshold: 80,
-      alertsEnabled: true
+  try {
+    const auth = await getAuthContext();
+    if (!auth.isAuthenticated || !auth.orgId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-  });
+
+    const { searchParams } = new URL(req.url);
+    const period = (searchParams.get("period") || "month") as Period;
+    const { start, end } = getDateRange(period);
+
+    const events = await prisma.aiUsageEvent.findMany({
+      where: {
+        orgId: auth.orgId,
+        createdAt: { gte: start, lte: end },
+      },
+      select: {
+        feature: true,
+        model: true,
+        tokensIn: true,
+        tokensOut: true,
+        costUsd: true,
+        createdAt: true,
+      },
+    });
+
+    // Aggregate totals
+    const totals = events.reduce(
+      (acc, e) => {
+        acc.totalTokensIn += e.tokensIn;
+        acc.totalTokensOut += e.tokensOut;
+        acc.totalCost += parseFloat(e.costUsd.toString());
+        acc.totalCalls += 1;
+        return acc;
+      },
+      { totalTokensIn: 0, totalTokensOut: 0, totalCost: 0, totalCalls: 0 },
+    );
+
+    const averageCostPerCall =
+      totals.totalCalls > 0 ? totals.totalCost / totals.totalCalls : 0;
+
+    // Group by feature
+    const byFeatureMap = new Map<
+      string,
+      { cost: number; calls: number; tokens: number }
+    >();
+    for (const e of events) {
+      const key = e.feature;
+      const cur = byFeatureMap.get(key) || { cost: 0, calls: 0, tokens: 0 };
+      cur.cost += parseFloat(e.costUsd.toString());
+      cur.calls += 1;
+      cur.tokens += e.tokensIn + e.tokensOut;
+      byFeatureMap.set(key, cur);
+    }
+
+    const byFeature = Array.from(byFeatureMap.entries()).map(
+      ([feature, v]) => ({
+        feature,
+        cost: Number(v.cost.toFixed(2)),
+        calls: v.calls,
+        tokens: v.tokens,
+      }),
+    );
+
+    // Group by model
+    const byModelMap = new Map<
+      string,
+      { cost: number; calls: number; tokens: number }
+    >();
+    for (const e of events) {
+      const key = e.model;
+      const cur = byModelMap.get(key) || { cost: 0, calls: 0, tokens: 0 };
+      cur.cost += parseFloat(e.costUsd.toString());
+      cur.calls += 1;
+      cur.tokens += e.tokensIn + e.tokensOut;
+      byModelMap.set(key, cur);
+    }
+
+    const byModel = Array.from(byModelMap.entries()).map(([model, v]) => ({
+      model,
+      cost: Number(v.cost.toFixed(2)),
+      calls: v.calls,
+      tokens: v.tokens,
+    }));
+
+    // Group by day (YYYY-MM-DD)
+    const byDayMap = new Map<string, { cost: number; calls: number }>();
+    for (const e of events) {
+      const d = new Date(e.createdAt);
+      const key = d.toISOString().slice(0, 10);
+      const cur = byDayMap.get(key) || { cost: 0, calls: 0 };
+      cur.cost += parseFloat(e.costUsd.toString());
+      cur.calls += 1;
+      byDayMap.set(key, cur);
+    }
+
+    const byDay = Array.from(byDayMap.entries())
+      .sort(([a], [b]) => (a < b ? -1 : 1))
+      .map(([date, v]) => ({
+        date,
+        cost: Number(v.cost.toFixed(2)),
+        calls: v.calls,
+      }));
+
+    // Budget information
+    const budget = await prisma.aIBudget.findUnique({
+      where: { orgId: auth.orgId },
+    });
+    const monthlyLimit = budget
+      ? parseFloat(budget.monthlyBudget.toString())
+      : 0;
+    const currentSpend = budget
+      ? parseFloat(budget.currentSpend.toString())
+      : totals.totalCost;
+    const remaining = Math.max(0, monthlyLimit - currentSpend);
+    const percentUsed =
+      monthlyLimit > 0 ? Math.min(100, (currentSpend / monthlyLimit) * 100) : 0;
+
+    // Rough days remaining based on resetDay
+    const now = new Date();
+    const resetDay = budget?.resetDay ?? 1;
+    const nextReset = new Date(now.getFullYear(), now.getMonth(), resetDay);
+    if (now > nextReset) nextReset.setMonth(nextReset.getMonth() + 1);
+    const daysRemaining = Math.max(
+      0,
+      Math.ceil((nextReset.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)),
+    );
+
+    // Projected EOM by simple linear extrapolation
+    const daysElapsed = Math.max(
+      1,
+      Math.ceil(
+        (now.getTime() -
+          new Date(now.getFullYear(), now.getMonth(), 1).getTime()) /
+          (1000 * 60 * 60 * 24),
+      ),
+    );
+    const projectedEndOfMonth = Number(
+      ((currentSpend / daysElapsed) * 30).toFixed(2),
+    );
+
+    return NextResponse.json({
+      period,
+      summary: {
+        totalCost: Number(totals.totalCost.toFixed(2)),
+        totalTokensIn: totals.totalTokensIn,
+        totalTokensOut: totals.totalTokensOut,
+        totalCalls: totals.totalCalls,
+        averageCostPerCall: Number(averageCostPerCall.toFixed(3)),
+      },
+      byFeature,
+      byModel,
+      byDay,
+      budget: {
+        monthlyLimit,
+        currentSpend,
+        remaining: Number(remaining.toFixed(2)),
+        percentUsed: Number(percentUsed.toFixed(2)),
+        daysRemaining,
+        projectedEndOfMonth,
+        alertThreshold: budget?.alertThreshold ?? 80,
+        alertsEnabled: true,
+      },
+    });
+  } catch (error: any) {
+    console.error("GET /api/ai/usage error:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch AI usage" },
+      { status: 500 },
+    );
+  }
 }
 
 export async function POST(req: Request) {
-  const body = await req.json();
-  const { feature, model, tokensIn, tokensOut, costUsd, metadata } = body;
-  
-  console.log('[STUB] POST /api/ai/usage - tracking usage:', {
-    feature,
-    model,
-    tokensIn,
-    tokensOut,
-    costUsd
-  });
-  
-  // TODO Phase 2: Save to AIUsageEvent table
-  // const usage = await prisma.aIUsageEvent.create({
-  //   data: {
-  //     orgId: session.user.orgId,
-  //     userId: session.user.id,
-  //     feature,
-  //     model,
-  //     tokensIn,
-  //     tokensOut,
-  //     costUsd,
-  //     creditsUsed: Math.ceil(costUsd * 100),
-  //     requestId: metadata?.requestId
-  //   }
-  // });
-  
-  // TODO Phase 2: Update AIBudget currentSpend
-  // TODO Phase 2: Check budget threshold and create alerts
-  
-  // STUB: Return success
-  return NextResponse.json({
-    success: true,
-    id: `usage_stub_${Date.now()}`,
-    tracked: { feature, model, tokensIn, tokensOut, costUsd }
-  });
+  try {
+    const auth = await getAuthContext();
+    if (!auth.isAuthenticated || !auth.orgId || !auth.userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = await req.json();
+    const { feature, model, tokensIn, tokensOut, costUsd, metadata } = body as {
+      feature: string;
+      model: string;
+      tokensIn: number;
+      tokensOut: number;
+      costUsd: number;
+      metadata?: { requestId?: string };
+    };
+
+    if (
+      !feature ||
+      !model ||
+      typeof tokensIn !== "number" ||
+      typeof tokensOut !== "number" ||
+      typeof costUsd !== "number"
+    ) {
+      return NextResponse.json(
+        { error: "Invalid request body" },
+        { status: 400 },
+      );
+    }
+
+    const created = await prisma.aiUsageEvent.create({
+      data: {
+        orgId: auth.orgId,
+        userId: auth.userId,
+        feature,
+        model,
+        tokensIn,
+        tokensOut,
+        costUsd: new Prisma.Decimal(costUsd),
+        creditsUsed: Math.ceil(costUsd * 100),
+        requestId: metadata?.requestId,
+      },
+      select: { id: true, createdAt: true },
+    });
+
+    // Best-effort update to AIBudget currentSpend
+    await prisma.aIBudget.updateMany({
+      where: { orgId: auth.orgId },
+      data: { currentSpend: { increment: new Prisma.Decimal(costUsd) } },
+    });
+
+    return NextResponse.json(
+      {
+        success: true,
+        id: created.id,
+        createdAt: created.createdAt.toISOString(),
+      },
+      { status: 201 },
+    );
+  } catch (error: any) {
+    console.error("POST /api/ai/usage error:", error);
+    return NextResponse.json(
+      { error: "Failed to record AI usage" },
+      { status: 500 },
+    );
+  }
 }

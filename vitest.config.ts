@@ -8,13 +8,17 @@ export default defineConfig({
     include: [
       "packages/*/src/**/*.{test,spec}.?(c|m)[jt]s?(x)",
       "apps/*/src/**/*.{test,spec}.?(c|m)[jt]s?(x)",
+      "tests/unit/**/*.{test,spec}.?(c|m)[jt]s?(x)", // Phase 1.6: Unit tests per COPILOT_OPERATING_PROCEDURE.md
     ],
     exclude: [
       "node_modules/**",
       "dist/**",
       "build/**",
       ".next/**",
-      "tests/**", // keep existing test harnesses separate for now
+      "tests/e2e/**", // E2E tests use Playwright, not vitest
+      "tests/e2e-playwright/**", // Playwright tests
+      "tests/acceptance/**", // Separate test harness
+      "tests/integration/**", // May use different runner
     ],
     reporters: ["default"],
     coverage: {

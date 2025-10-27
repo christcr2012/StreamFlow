@@ -1,9 +1,9 @@
 // apps/tenant-app/src/app/subcontractors/subcontractors-client.tsx
 // Subcontractor management UI - Phase 1
 
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   Users,
   Plus,
@@ -17,7 +17,7 @@ import {
   Phone,
   Mail,
   Briefcase,
-} from 'lucide-react';
+} from "lucide-react";
 
 interface SubcontractorsClientProps {
   orgId: string;
@@ -49,9 +49,9 @@ interface Subcontractor {
 export function SubcontractorsClient({ orgId }: SubcontractorsClientProps) {
   const [subcontractors, setSubcontractors] = useState<Subcontractor[]>([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [availabilityFilter, setAvailabilityFilter] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [availabilityFilter, setAvailabilityFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetchSubcontractors();
@@ -60,8 +60,9 @@ export function SubcontractorsClient({ orgId }: SubcontractorsClientProps) {
   async function fetchSubcontractors() {
     try {
       const params = new URLSearchParams();
-      if (statusFilter !== 'all') params.append('status', statusFilter);
-      if (availabilityFilter !== 'all') params.append('availability', availabilityFilter);
+      if (statusFilter !== "all") params.append("status", statusFilter);
+      if (availabilityFilter !== "all")
+        params.append("availability", availabilityFilter);
 
       const res = await fetch(`/api/subcontractors?${params.toString()}`);
       if (res.ok) {
@@ -69,7 +70,7 @@ export function SubcontractorsClient({ orgId }: SubcontractorsClientProps) {
         setSubcontractors(data.subcontractors || []);
       }
     } catch (error) {
-      console.error('Failed to fetch subcontractors:', error);
+      console.error("Failed to fetch subcontractors:", error);
     } finally {
       setLoading(false);
     }
@@ -79,24 +80,30 @@ export function SubcontractorsClient({ orgId }: SubcontractorsClientProps) {
     (sub) =>
       sub.companyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       sub.contactName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      sub.specialties.some((s) => s.toLowerCase().includes(searchQuery.toLowerCase()))
+      sub.specialties.some((s) =>
+        s.toLowerCase().includes(searchQuery.toLowerCase()),
+      ),
   );
 
   const statusConfig = {
-    active: { icon: CheckCircle2, color: 'green', label: 'Active' },
-    pending: { icon: Clock, color: 'yellow', label: 'Pending' },
-    inactive: { icon: XCircle, color: 'gray', label: 'Inactive' },
+    active: { icon: CheckCircle2, color: "green", label: "Active" },
+    pending: { icon: Clock, color: "yellow", label: "Pending" },
+    inactive: { icon: XCircle, color: "gray", label: "Inactive" },
   };
 
   const availabilityConfig = {
-    available: { color: 'green', label: 'Available' },
-    busy: { color: 'yellow', label: 'Busy' },
-    unavailable: { color: 'red', label: 'Unavailable' },
+    available: { color: "green", label: "Available" },
+    busy: { color: "yellow", label: "Busy" },
+    unavailable: { color: "red", label: "Unavailable" },
   };
 
-  const activeCount = subcontractors.filter((s) => s.status === 'active').length;
+  const activeCount = subcontractors.filter(
+    (s) => s.status === "active",
+  ).length;
   const avgRating =
-    subcontractors.filter((s) => s.rating > 0).reduce((sum, s) => sum + s.rating, 0) /
+    subcontractors
+      .filter((s) => s.rating > 0)
+      .reduce((sum, s) => sum + s.rating, 0) /
       subcontractors.filter((s) => s.rating > 0).length || 0;
   const totalJobs = subcontractors.reduce((sum, s) => sum + s.completedJobs, 0);
 
@@ -115,8 +122,12 @@ export function SubcontractorsClient({ orgId }: SubcontractorsClientProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Subcontractors</h1>
-              <p className="text-gray-600 mt-1">Manage your subcontractor network</p>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Subcontractors
+              </h1>
+              <p className="text-gray-600 mt-1">
+                Manage your subcontractor network
+              </p>
             </div>
             <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center gap-2">
               <Plus className="w-5 h-5" />
@@ -208,11 +219,16 @@ export function SubcontractorsClient({ orgId }: SubcontractorsClientProps) {
             </div>
           ) : (
             filteredSubcontractors.map((sub) => {
-              const statusConf = statusConfig[sub.status as keyof typeof statusConfig];
-              const availConf = availabilityConfig[sub.availability as keyof typeof availabilityConfig];
+              const statusConf =
+                statusConfig[sub.status as keyof typeof statusConfig];
+              const availConf =
+                availabilityConfig[
+                  sub.availability as keyof typeof availabilityConfig
+                ];
               const StatusIcon = statusConf?.icon || Users;
-              
-              const insuranceExpired = sub.insurance.expiresAt && 
+
+              const insuranceExpired =
+                sub.insurance.expiresAt &&
                 new Date(sub.insurance.expiresAt) < new Date();
 
               return (
@@ -230,24 +246,26 @@ export function SubcontractorsClient({ orgId }: SubcontractorsClientProps) {
                           </h3>
                           <span
                             className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold
-                              ${statusConf?.color === 'green' ? 'bg-green-100 text-green-800' : ''}
-                              ${statusConf?.color === 'yellow' ? 'bg-yellow-100 text-yellow-800' : ''}
-                              ${statusConf?.color === 'gray' ? 'bg-gray-100 text-gray-800' : ''}
+                              ${statusConf?.color === "green" ? "bg-green-100 text-green-800" : ""}
+                              ${statusConf?.color === "yellow" ? "bg-yellow-100 text-yellow-800" : ""}
+                              ${statusConf?.color === "gray" ? "bg-gray-100 text-gray-800" : ""}
                             `}
                           >
                             <StatusIcon className="w-3 h-3" />
                             {statusConf?.label}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-600">{sub.contactName}</p>
+                        <p className="text-sm text-gray-600">
+                          {sub.contactName}
+                        </p>
                       </div>
-                      
+
                       {/* Availability Badge */}
                       <span
                         className={`px-2.5 py-1 rounded-full text-xs font-semibold
-                          ${availConf?.color === 'green' ? 'bg-green-100 text-green-800' : ''}
-                          ${availConf?.color === 'yellow' ? 'bg-yellow-100 text-yellow-800' : ''}
-                          ${availConf?.color === 'red' ? 'bg-red-100 text-red-800' : ''}
+                          ${availConf?.color === "green" ? "bg-green-100 text-green-800" : ""}
+                          ${availConf?.color === "yellow" ? "bg-yellow-100 text-yellow-800" : ""}
+                          ${availConf?.color === "red" ? "bg-red-100 text-red-800" : ""}
                         `}
                       >
                         {availConf?.label}
@@ -284,7 +302,7 @@ export function SubcontractorsClient({ orgId }: SubcontractorsClientProps) {
                         <div className="flex items-center justify-center gap-1 text-yellow-600 mb-1">
                           <Star className="w-4 h-4 fill-current" />
                           <span className="text-sm font-semibold">
-                            {sub.rating > 0 ? sub.rating.toFixed(1) : 'N/A'}
+                            {sub.rating > 0 ? sub.rating.toFixed(1) : "N/A"}
                           </span>
                         </div>
                         <p className="text-xs text-gray-500">Rating</p>
@@ -313,20 +331,26 @@ export function SubcontractorsClient({ orgId }: SubcontractorsClientProps) {
                     <div className="mt-4 pt-4 border-t border-gray-100">
                       <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center gap-2">
-                          <Shield className={`w-4 h-4 ${insuranceExpired ? 'text-red-500' : 'text-green-500'}`} />
+                          <Shield
+                            className={`w-4 h-4 ${insuranceExpired ? "text-red-500" : "text-green-500"}`}
+                          />
                           <span className="text-gray-700">Insurance</span>
                         </div>
                         <div className="flex gap-3">
                           <span
                             className={`text-xs ${
-                              sub.insurance.hasLiability ? 'text-green-600' : 'text-gray-400'
+                              sub.insurance.hasLiability
+                                ? "text-green-600"
+                                : "text-gray-400"
                             }`}
                           >
                             Liability
                           </span>
                           <span
                             className={`text-xs ${
-                              sub.insurance.hasWorkersComp ? 'text-green-600' : 'text-gray-400'
+                              sub.insurance.hasWorkersComp
+                                ? "text-green-600"
+                                : "text-gray-400"
                             }`}
                           >
                             Workers Comp
@@ -335,7 +359,10 @@ export function SubcontractorsClient({ orgId }: SubcontractorsClientProps) {
                       </div>
                       {insuranceExpired && (
                         <p className="text-xs text-red-600 mt-1">
-                          Insurance expired {new Date(sub.insurance.expiresAt!).toLocaleDateString()}
+                          Insurance expired{" "}
+                          {new Date(
+                            sub.insurance.expiresAt!,
+                          ).toLocaleDateString()}
                         </p>
                       )}
                     </div>
@@ -346,16 +373,24 @@ export function SubcontractorsClient({ orgId }: SubcontractorsClientProps) {
           )}
         </div>
 
-        {/* Phase 1 Notice */}
+        {/* PHASE 2: Stub implementation (blocked by dependencies)
+            Blocked by:
+            - [prisma_model] Subcontractor
+            - [feature] onboarding workflows + document collection
+            - [feature] job assignment + scheduling
+            - [service] Stripe (payouts/payment tracking)
+        */}
         <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
           <div className="flex items-start gap-3">
             <Users className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
             <div className="text-sm text-yellow-800">
-              <p className="font-medium mb-1">Phase 1: Stub Implementation</p>
+              <p className="font-medium mb-1">
+                📌 Phase 2: Stub implementation
+              </p>
               <p>
-                Subcontractor directory showing example data. Add subcontractor form, job
-                assignments, payment tracking, and onboarding workflows will be fully implemented
-                in Phase 2.
+                Example data only. Blocked by Subcontractor model,
+                onboarding/document workflows, job assignment, and
+                payment/payout tracking.
               </p>
             </div>
           </div>
@@ -377,10 +412,10 @@ function StatsCard({
   color: string;
 }) {
   const colorClasses = {
-    blue: 'bg-blue-100 text-blue-600',
-    green: 'bg-green-100 text-green-600',
-    yellow: 'bg-yellow-100 text-yellow-600',
-    purple: 'bg-purple-100 text-purple-600',
+    blue: "bg-blue-100 text-blue-600",
+    green: "bg-green-100 text-green-600",
+    yellow: "bg-yellow-100 text-yellow-600",
+    purple: "bg-purple-100 text-purple-600",
   };
 
   return (
@@ -390,7 +425,9 @@ function StatsCard({
           <p className="text-sm text-gray-600 mb-1">{label}</p>
           <p className="text-2xl font-bold text-gray-900">{value}</p>
         </div>
-        <div className={`p-3 rounded-lg ${colorClasses[color as keyof typeof colorClasses]}`}>
+        <div
+          className={`p-3 rounded-lg ${colorClasses[color as keyof typeof colorClasses]}`}
+        >
           <Icon className="w-6 h-6" />
         </div>
       </div>

@@ -6,10 +6,11 @@
  * Optimized for Neon + Vercel with pooled connections
  */
 
-import { PrismaClient } from '@prisma/client-tenant';
+import { PrismaClient } from "@prisma/client-tenant";
 
 // Detect if we're in a serverless environment
-const isServerless = process.env.VERCEL === '1' || process.env.AWS_LAMBDA_FUNCTION_NAME;
+const isServerless =
+  process.env.VERCEL === "1" || process.env.AWS_LAMBDA_FUNCTION_NAME;
 
 // Connection pool configuration
 const SERVERLESS_POOL_CONFIG = {
@@ -30,12 +31,12 @@ const LOCAL_POOL_CONFIG = {
  * Ensure we're using Neon's pooler endpoint
  */
 function ensurePoolerEndpoint(url: string): string {
-  if (!url || url.includes('-pooler.')) return url;
+  if (!url || url.includes("-pooler.")) return url;
 
   // Convert direct endpoint to pooler endpoint
   const poolerUrl = url.replace(
     /(@ep-[^.]+)(\.[^.]+\.aws\.neon\.tech)/,
-    '$1-pooler$2'
+    "$1-pooler$2",
   );
 
   return poolerUrl;
@@ -45,6 +46,7 @@ function ensurePoolerEndpoint(url: string): string {
  * Add connection parameters to URL
  */
 function addConnectionParams(url: string, params: Record<string, any>): string {
+  if (!url) return url;
   const urlObj = new URL(url);
 
   Object.entries(params).forEach(([key, value]) => {
@@ -58,18 +60,20 @@ function addConnectionParams(url: string, params: Record<string, any>): string {
  * Get optimized DATABASE_URL for current environment
  */
 function getOptimizedDatabaseUrl(): string {
-  let url = process.env.DATABASE_URL || '';
+  let url = process.env.DATABASE_URL || "";
 
   // Ensure we're using pooler endpoint
   url = ensurePoolerEndpoint(url);
 
-  // Add connection parameters based on environment
-  const config = isServerless ? SERVERLESS_POOL_CONFIG : LOCAL_POOL_CONFIG;
-  url = addConnectionParams(url, config);
+  // Add connection parameters based on environment (only if URL present)
+  if (url) {
+    const config = isServerless ? SERVERLESS_POOL_CONFIG : LOCAL_POOL_CONFIG;
+    url = addConnectionParams(url, config);
+  }
 
   // Always require SSL
-  if (!url.includes('sslmode=')) {
-    url = addConnectionParams(url, { sslmode: 'require' });
+  if (url && !url.includes("sslmode=")) {
+    url = addConnectionParams(url, { sslmode: "require" });
   }
 
   return url;
@@ -80,20 +84,28 @@ declare global {
 }
 
 // Prisma client with optimized connection and Client Extensions for slow query logging
-const basePrisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: getOptimizedDatabaseUrl(),
-    },
-  },
-  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-});
+const optimizedUrl = getOptimizedDatabaseUrl();
+const baseOptions: ConstructorParameters<typeof PrismaClient>[0] = {
+  log:
+    process.env.NODE_ENV === "development"
+      ? ["query", "error", "warn"]
+      : ["error"],
+};
+if (optimizedUrl) {
+  baseOptions.datasources = { db: { url: optimizedUrl } } as any;
+}
+const basePrisma = new PrismaClient(baseOptions);
 
 // Apply Client Extension for slow query logging (replaces deprecated $use middleware)
 export const prisma = basePrisma.$extends({
   query: {
     $allModels: {
-      async $allOperations({ operation, model, args, query }: {
+      async $allOperations({
+        operation,
+        model,
+        args,
+        query,
+      }: {
         operation: string;
         model: string;
         args: any;
@@ -105,11 +117,14 @@ export const prisma = basePrisma.$extends({
 
         // Log queries that take longer than 1 second
         if (duration > 1000) {
-          console.warn(`[slow-query] ${model}.${operation} took ${duration}ms`, {
-            model,
-            operation,
-            duration,
-          });
+          console.warn(
+            `[slow-query] ${model}.${operation} took ${duration}ms`,
+            {
+              model,
+              operation,
+              duration,
+            },
+          );
         }
 
         return result;
@@ -118,7 +133,6 @@ export const prisma = basePrisma.$extends({
   },
 });
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== "production") {
   global.prisma = prisma as any;
 }
-

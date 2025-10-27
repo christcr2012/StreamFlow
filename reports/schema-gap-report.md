@@ -1,6 +1,6 @@
 # Schema Gap Report
 
-Generated: 2025-10-27T17:59:21.457Z
+Generated: 2025-10-27T18:29:27.640Z
 
 ## Schemas
 
@@ -56,9 +56,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/AUDIT_PROGRESS_REPORT_2025-10-10.md
   - C:/Users/chris/Git Local/Cortiware/docs/COMPREHENSIVE_AUDIT_COMPLETE_2025-10-10.md
   - C:/Users/chris/Git Local/Cortiware/docs/PROVIDER_PORTAL_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
   - C:/Users/chris/Git Local/Cortiware/docs/TYPECHECK_ERROR_INVENTORY_2025-10-10.md
-  - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
-  - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/provider/addons/page.tsx
 - Test candidates:
@@ -114,6 +114,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/lib/validations/agreement.ts
   - C:/Users/chris/Git Local/Cortiware/docs/tenant-app/SYSTEM_ARCHITECTURE.md
   - C:/Users/chris/Git Local/Cortiware/docs/TODO_AGREEMENT_MODELS.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/agreements/page.tsx
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/agreements/route.ts
@@ -142,7 +145,10 @@ Generated: 2025-10-27T17:59:21.457Z
   - AiModelTest.AiModelTestResult → AiModelTestResult
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/AI_PHASE_5_COMPLETION_REPORT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -165,7 +171,10 @@ Generated: 2025-10-27T17:59:21.457Z
   - AiModelTestResult.AiModelTest → AiModelTest
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/AI_PHASE_5_COMPLETION_REPORT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -191,9 +200,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/COMPREHENSIVE_CODEBASE_REVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/INFRASTRUCTURE_MONITORING.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/IMPLEMENTATION_CHECKLIST.md
-  - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
-  - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
 - Frontend candidates:
 - Test candidates:
 
@@ -245,7 +254,10 @@ Generated: 2025-10-27T17:59:21.457Z
 - Relations:
   - AIUsageLog.Org → Org
 - Backend candidates:
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -267,7 +279,10 @@ Generated: 2025-10-27T17:59:21.457Z
 - Relations:
   - SMSLog.Org → Org
 - Backend candidates:
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -290,7 +305,10 @@ Generated: 2025-10-27T17:59:21.457Z
   - CostAlert.Org → Org
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/lib/cost-alerts.ts
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/cost-alerts/route.ts
 - Test candidates:
@@ -308,11 +326,14 @@ Generated: 2025-10-27T17:59:21.457Z
   - totalRevenue: Int
   - metricsJson: Json
 - Backend candidates:
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/IMPLEMENTATION_CHECKLIST.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/PHASE3_COMPLETE.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_COMPLETE_SUMMARY.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PHASE1_PHASE3_COMPLETE.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -385,6 +406,8 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/AUTONOMOUS_EXECUTION_PROGRESS_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/PROJECT_COMPLETION_SUMMARY_2025-10-16.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/HANDOFF_GPT5.md
   - C:/Users/chris/Git Local/Cortiware/Reference/Provider/PROVIDER_OPERATIONS_BLUEPRINT.md
@@ -411,6 +434,8 @@ Generated: 2025-10-27T17:59:21.457Z
   - timestamp: DateTime
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/AUTH_IMPLEMENTATION_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/IMPLEMENTATION_STATUS.md
@@ -440,7 +465,8 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/FINAL_IMPLEMENTATION_SUMMARY_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/MASTER_IMPLEMENTATION_PLAN_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/PROJECT_COMPLETION_SUMMARY_2025-10-16.md
-  - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
 - Frontend candidates:
 - Test candidates:
 
@@ -481,7 +507,7 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/MASTER_IMPLEMENTATION_PLAN_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/PROJECT_COMPLETION_SUMMARY_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
-  - C:/Users/chris/Git Local/Cortiware/packages/queue/src/jobs/index.ts
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/(tenant)/cleaning/contracts/page.tsx
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/cleaning/contracts/route.ts
@@ -525,7 +551,7 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/MASTER_IMPLEMENTATION_PLAN_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/PROJECT_COMPLETION_SUMMARY_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
-  - C:/Users/chris/Git Local/Cortiware/packages/queue/src/jobs/index.ts
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/(tenant)/cleaning/estimates/page.tsx
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/cleaning/contracts/route.ts
@@ -563,7 +589,7 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/MASTER_IMPLEMENTATION_PLAN_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/PROJECT_COMPLETION_SUMMARY_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
-  - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/(tenant)/cleaning/qa/page.tsx
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/cleaning/inspections/route.ts
@@ -605,7 +631,7 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/MASTER_IMPLEMENTATION_PLAN_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/PROJECT_COMPLETION_SUMMARY_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
-  - C:/Users/chris/Git Local/Cortiware/packages/queue/src/jobs/index.ts
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/(tenant)/cleaning/leads/page.tsx
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/cleaning/estimates/route.ts
@@ -685,7 +711,8 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/FINAL_IMPLEMENTATION_SUMMARY_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/MASTER_IMPLEMENTATION_PLAN_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/PROJECT_COMPLETION_SUMMARY_2025-10-16.md
-  - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/cleaning/work-orders/route.ts
 - Test candidates:
@@ -777,7 +804,10 @@ Generated: 2025-10-27T17:59:21.457Z
   - CustomerContact.Customer → Customer
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/lib/validations/customer.ts
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/customers/route.ts
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/customers/[id]/route.ts
@@ -805,8 +835,10 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/lib/email-service.ts
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_COMPLETE_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_PROGRESS_2025-10-16.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
-  - C:/Users/chris/Git Local/Cortiware/src/\_disabled/pages/api/provider/branding.ts
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/webhooks/stripe/route.ts
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/settings/email-templates/email-templates-client.tsx
@@ -858,12 +890,13 @@ Generated: 2025-10-27T17:59:21.457Z
   - GlobalMonetizationConfig.PlanPrice → PlanPrice
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/GPT5_NEXT_PHASE_HANDOFF.md
   - C:/Users/chris/Git Local/Cortiware/Reference/MONETIZATION_BLUEPRINT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/SONNET_PROGRESS_TRACKER.md
-  - C:/Users/chris/Git Local/Cortiware/SONNET_4_5_HANDOFF.md
 - Frontend candidates:
 - Test candidates:
 
@@ -888,6 +921,7 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/IMPORT_WIZARD_DEPLOYMENT.md
   - C:/Users/chris/Git Local/Cortiware/docs/IMPORT_WIZARD_IMPLEMENTATION.md
   - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
 - Frontend candidates:
 - Test candidates:
@@ -936,7 +970,7 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/IMPORT_WIZARD_DEPLOYMENT.md
   - C:/Users/chris/Git Local/Cortiware/docs/IMPORT_WIZARD_IMPLEMENTATION.md
   - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
-  - C:/Users/chris/Git Local/Cortiware/packages/queue/src/index.ts
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/src/app/(owner)/import-wizard/components/ProgressTracker.tsx
   - C:/Users/chris/Git Local/Cortiware/src/app/(owner)/import-wizard/ImportWizard.tsx
@@ -1033,7 +1067,10 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/prisma/migrations/MIGRATION_INSTRUCTIONS.md
   - C:/Users/chris/Git Local/Cortiware/docs/AUTONOMOUS_IMPLEMENTATION_SUMMARY.md
   - C:/Users/chris/Git Local/Cortiware/docs/INFRASTRUCTURE_MONITORING.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/(provider)/infrastructure/InfrastructureDashboard.tsx
 - Test candidates:
@@ -1051,8 +1088,11 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/prisma/migrations/MIGRATION_INSTRUCTIONS.md
   - C:/Users/chris/Git Local/Cortiware/docs/AUTONOMOUS_IMPLEMENTATION_SUMMARY.md
   - C:/Users/chris/Git Local/Cortiware/docs/INFRASTRUCTURE_MONITORING.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
   - C:/Users/chris/Git Local/Cortiware/docs/TWO_PERSONA_PORTALS_IMPLEMENTATION_PLAN.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/(provider)/infrastructure/InfrastructureDashboard.tsx
 - Test candidates:
@@ -1139,8 +1179,8 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/archive/FINAL_COMPLETION_REPORT.md
   - C:/Users/chris/Git Local/Cortiware/docs/tenant-app/SYSTEM_ARCHITECTURE.md
-  - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
-  - C:/Users/chris/Git Local/Cortiware/Reference/GPT5_NEXT_PHASE_HANDOFF.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/invoices/route.ts
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/invoices/[id]/route.ts
@@ -1162,7 +1202,10 @@ Generated: 2025-10-27T17:59:21.457Z
   - InvoiceReminder.Invoice → Invoice
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/INVOICE_REMINDERS_CRON.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/invoices/[id]/page.tsx
 - Test candidates:
@@ -1215,7 +1258,10 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/lib/validations/job.ts
   - C:/Users/chris/Git Local/Cortiware/docs/PHASE_2_COMPLETION_REPORT.md
   - C:/Users/chris/Git Local/Cortiware/docs/tenant-app/SYSTEM_ARCHITECTURE.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/jobs/route.ts
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/jobs/[id]/photos/route.ts
@@ -1235,7 +1281,10 @@ Generated: 2025-10-27T17:59:21.457Z
   - metadata: Json
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/PHASE_2_COMPLETION_REPORT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/jobs/route.ts
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/jobs/[id]/route.ts
@@ -1315,11 +1364,11 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/services/provider/billing.service.ts
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/archive/FINAL_COMPLETION_REPORT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/Provider/PROVIDER_OPERATIONS_BLUEPRINT.md
-  - C:/Users/chris/Git Local/Cortiware/src/services/provider/billing.service.ts
-  - C:/Users/chris/Git Local/Cortiware/src/\_disabled/pages/api/billing/invoices.create.ts
-  - C:/Users/chris/Git Local/Cortiware/src/\_disabled/pages/api/integrations/stripe/create-hosted-invoice.ts
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -1344,9 +1393,11 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/services/provider/billing.service.ts
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/archive/FINAL_COMPLETION_REPORT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/Provider/PROVIDER_OPERATIONS_BLUEPRINT.md
-  - C:/Users/chris/Git Local/Cortiware/src/services/provider/billing.service.ts
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -1473,12 +1524,12 @@ Generated: 2025-10-27T17:59:21.457Z
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/DOCUMENTATION_AUDIT_REPORT_2025-10-12.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/PRODUCTION_READINESS.md
   - C:/Users/chris/Git Local/Cortiware/Reference/GPT5_NEXT_PHASE_HANDOFF.md
-  - C:/Users/chris/Git Local/Cortiware/Reference/MONETIZATION_BLUEPRINT.md
-  - C:/Users/chris/Git Local/Cortiware/Reference/SONNET_PROGRESS_TRACKER.md
 - Frontend candidates:
 - Test candidates:
 
@@ -1620,11 +1671,11 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/APP_ROUTER_IMPLEMENTATION_SUMMARY.md
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/archive/COMPLETION_REPORT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/IMPLEMENTATION_STATUS.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
-  - C:/Users/chris/Git Local/Cortiware/Reference/GPT5_NEXT_PHASE_HANDOFF.md
-  - C:/Users/chris/Git Local/Cortiware/Reference/MONETIZATION_BLUEPRINT.md
 - Frontend candidates:
 - Test candidates:
 
@@ -1653,11 +1704,11 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/architecture/diagrams/data-flow.md
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/DOCUMENTATION_AUDIT_REPORT_2025-10-12.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/GPT5_NEXT_PHASE_HANDOFF.md
-  - C:/Users/chris/Git Local/Cortiware/Reference/MONETIZATION_BLUEPRINT.md
-  - C:/Users/chris/Git Local/Cortiware/Reference/SONNET_PROGRESS_TRACKER.md
 - Frontend candidates:
 - Test candidates:
 
@@ -1676,8 +1727,11 @@ Generated: 2025-10-27T17:59:21.457Z
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/marketing-cortiware/src/lib/pricing.ts
   - C:/Users/chris/Git Local/Cortiware/docs/PRICING_MANAGEMENT_PLAN.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/prisma/seed-marketing-pricing.ts
   - C:/Users/chris/Git Local/Cortiware/Reference/PROVIDER_CONTROL_CENTER_BLUEPRINT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
   - C:/Users/chris/Git Local/Cortiware/src/\_disabled/pages/api/integrations/sam/fetch.ts
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/api/admin/pricing/plans/route.ts
@@ -1705,7 +1759,7 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_PROGRESS_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/PROVIDER_PORTAL_INVESTIGATION_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/PROVIDER_PORTAL_ISSUES_AND_FIXES_2025-10-16.md
-  - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/api/feature-flags/route.ts
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/api/provider/settings/route.ts
@@ -1745,9 +1799,12 @@ Generated: 2025-10-27T17:59:21.457Z
 - Relations:
   - RbacPermission.RbacRolePermission → RbacRolePermission
 - Backend candidates:
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
   - C:/Users/chris/Git Local/Cortiware/PHASE_2_FINAL_STATUS.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/permissions/route.ts
 - Test candidates:
@@ -1771,9 +1828,12 @@ Generated: 2025-10-27T17:59:21.457Z
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/provider-portal/\_incoming/v2/PROVIDER_PORTAL_END_TO_END_DELIVERY_RUNBOOK_v2.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
   - C:/Users/chris/Git Local/Cortiware/PHASE_2_FINAL_STATUS.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/permissions/route.ts
 - Test candidates:
@@ -1790,7 +1850,10 @@ Generated: 2025-10-27T17:59:21.457Z
   - RbacRolePermission.RbacRole → RbacRole
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/permissions/route.ts
 - Test candidates:
@@ -1812,8 +1875,11 @@ Generated: 2025-10-27T17:59:21.457Z
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/provider-portal/\_incoming/v2/PROVIDER_PORTAL_END_TO_END_DELIVERY_RUNBOOK_v2.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
   - C:/Users/chris/Git Local/Cortiware/src/\_disabled/pages/api/tenant/register.ts
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/permissions/route.ts
@@ -1840,12 +1906,13 @@ Generated: 2025-10-27T17:59:21.457Z
   - completedAt: DateTime?
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/lib/auth/automated-breakglass.ts
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/AUTH_IMPLEMENTATION_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/IMPLEMENTATION_STATUS.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/PRODUCTION_DEPLOYMENT_CHECKLIST.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/WHATS_WORKING_NOW.md
-  - C:/Users/chris/Git Local/Cortiware/src/lib/auth/automated-breakglass.ts
 - Frontend candidates:
 - Test candidates:
 
@@ -1873,7 +1940,10 @@ Generated: 2025-10-27T17:59:21.457Z
   - RecurringInvoice.Customer → Customer
   - RecurringInvoice.Org → Org
 - Backend candidates:
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/invoices/recurring/route.ts
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/invoices/recurring/[id]/route.ts
@@ -1904,8 +1974,8 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/ISSUES_SUMMARY.md
   - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/IMPLEMENTATION_CHECKLIST.md
-  - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/provider/leads/LeadsManagementClient.tsx
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/(tenant)/leads/page.tsx
@@ -1933,8 +2003,8 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/ISSUES_SUMMARY.md
   - C:/Users/chris/Git Local/Cortiware/docs/PHASE_2_IMPLEMENTATION.md
   - C:/Users/chris/Git Local/Cortiware/docs/security/SECURITY_IMPROVEMENTS_SUMMARY.md
-  - C:/Users/chris/Git Local/Cortiware/FEATURE_COMPLETION_STATUS.md
-  - C:/Users/chris/Git Local/Cortiware/FINAL_STATUS_REPORT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/api/provider/email/connect/callback/route.ts
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/api/provider/email/status/route.ts
@@ -1956,8 +2026,10 @@ Generated: 2025-10-27T17:59:21.457Z
   - aiPriceHint: Json
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/IMPLEMENTATION_CHECKLIST.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/(tenant)/rfps/page.tsx
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/(tenant)/rfps/[id]/page.tsx
@@ -2020,6 +2092,8 @@ Generated: 2025-10-27T17:59:21.457Z
   - TenantPriceOverride.PlanPrice → PlanPrice
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/GPT5_NEXT_PHASE_HANDOFF.md
@@ -2065,7 +2139,7 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/AUTONOMOUS_IMPLEMENTATION_SUMMARY.md
   - C:/Users/chris/Git Local/Cortiware/docs/IMPORT_WIZARD_DEPLOYMENT.md
   - C:/Users/chris/Git Local/Cortiware/docs/INFRASTRUCTURE_MONITORING.md
-  - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/(provider)/infrastructure/InfrastructureDashboard.tsx
 - Test candidates:
@@ -2089,9 +2163,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/AUDIT_PROGRESS_REPORT_2025-10-10.md
   - C:/Users/chris/Git Local/Cortiware/docs/COMPREHENSIVE_AUDIT_COMPLETE_2025-10-10.md
   - C:/Users/chris/Git Local/Cortiware/docs/PROVIDER_PORTAL_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
   - C:/Users/chris/Git Local/Cortiware/docs/TYPECHECK_ERROR_INVENTORY_2025-10-10.md
-  - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
-  - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/provider/usage/page.tsx
 - Test candidates:
@@ -2184,10 +2258,13 @@ Generated: 2025-10-27T17:59:21.457Z
   - UserBreakglassAccount.User → User
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/AUTH_IMPLEMENTATION_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/IMPLEMENTATION_STATUS.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/WHATS_WORKING_NOW.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -2209,10 +2286,13 @@ Generated: 2025-10-27T17:59:21.457Z
   - UserDeviceFingerprint.User → User
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/AUTH_IMPLEMENTATION_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/IMPLEMENTATION_STATUS.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/WHATS_WORKING_NOW.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -2238,11 +2318,11 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/lib/audit-log.ts
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/runbooks/SSO_OUTAGE_RECOVERY.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/AUTH_IMPLEMENTATION_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/GPT5_HANDOFF.md
-  - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/GPT5_HANDOFF_SUMMARY.md
-  - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/IMPLEMENTATION_STATUS.md
 - Frontend candidates:
 - Test candidates:
 
@@ -2261,6 +2341,8 @@ Generated: 2025-10-27T17:59:21.457Z
   - UserRecoveryCode.User → User
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/AUTH_IMPLEMENTATION_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/DEV_ACCOUNT_ACCESS_GUIDE.md
@@ -2282,10 +2364,13 @@ Generated: 2025-10-27T17:59:21.457Z
   - UserSecurityQuestion.User → User
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/AUTH_IMPLEMENTATION_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/IMPLEMENTATION_STATUS.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/WHATS_WORKING_NOW.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -2329,7 +2414,10 @@ Generated: 2025-10-27T17:59:21.457Z
   - updatedAt: DateTime
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/COPILOT_OPERATING_PROCEDURE.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -2354,9 +2442,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/COPILOT_OPERATING_PROCEDURE.md
   - C:/Users/chris/Git Local/Cortiware/docs/PLACEHOLDER_INTELLIGENCE.md
   - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/GITHUB_ISSUES_2PHASE_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/IMPLEMENTATION_CHECKLIST.md
-  - C:/Users/chris/Git Local/Cortiware/PHASE_2_COMPLETION_REPORT.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/ai/budget/route.ts
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/ai/usage/route.ts
@@ -2375,10 +2463,10 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/COPILOT_OPERATING_PROCEDURE.md
   - C:/Users/chris/Git Local/Cortiware/docs/PLACEHOLDER_INTELLIGENCE.md
   - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/IMPLEMENTATION_CHECKLIST.md
   - C:/Users/chris/Git Local/Cortiware/PHASE_2_COMPLETION_REPORT.md
   - C:/Users/chris/Git Local/Cortiware/PHASE_2_SESSION_PROGRESS.md
-  - C:/Users/chris/Git Local/Cortiware/PHASE_2_STUB_AUDIT.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/ai/alerts/route.ts
 - Test candidates:
@@ -2431,10 +2519,10 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/COMMUNICATION_SYSTEMS_ARCHITECTURE.md
   - C:/Users/chris/Git Local/Cortiware/COPILOT_OPERATING_PROCEDURE.md
   - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/GITHUB_ISSUES_2PHASE_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/PHASE_2_COMPLETION_REPORT.md
   - C:/Users/chris/Git Local/Cortiware/PHASE_2_FINAL_STATUS.md
-  - C:/Users/chris/Git Local/Cortiware/PHASE_2_SESSION_PROGRESS.md
 - Frontend candidates:
 - Test candidates:
 
@@ -2461,8 +2549,10 @@ Generated: 2025-10-27T17:59:21.457Z
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/COPILOT_OPERATING_PROCEDURE.md
   - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/GITHUB_ISSUES_2PHASE_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -2475,8 +2565,11 @@ Generated: 2025-10-27T17:59:21.457Z
   - featureModules: String[]
   - limits: Json
 - Backend candidates:
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/GITHUB_ISSUES_2PHASE_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -2498,11 +2591,11 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/services/owner/subscription.service.ts
   - C:/Users/chris/Git Local/Cortiware/COPILOT_OPERATING_PROCEDURE.md
   - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/GITHUB_ISSUES_2PHASE_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/OWNER_PORTAL_BLUEPRINT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/OWNER_PROVIDER_PHASED_CROSSWALK.md
-  - C:/Users/chris/Git Local/Cortiware/Reference/SONNET_PROGRESS_TRACKER.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/src/app/api/owner/subscription/status/route.ts
 - Test candidates:
@@ -2521,8 +2614,10 @@ Generated: 2025-10-27T17:59:21.457Z
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/COPILOT_OPERATING_PROCEDURE.md
   - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/IMPLEMENTATION_CHECKLIST.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -2546,11 +2641,11 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/AUDIT_SUMMARY.md
   - C:/Users/chris/Git Local/Cortiware/COPILOT_OPERATING_PROCEDURE.md
   - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/IMPLEMENTATION_CHECKLIST.md
   - C:/Users/chris/Git Local/Cortiware/packages/queue/src/jobs/index.ts
   - C:/Users/chris/Git Local/Cortiware/PHASE_2_FINAL_STATUS.md
   - C:/Users/chris/Git Local/Cortiware/PHASE_2_STUB_AUDIT.md
-  - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
 - Frontend candidates:
 - Test candidates:
 
@@ -2576,8 +2671,8 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/ACTUAL_REMAINING_WORK.md
   - C:/Users/chris/Git Local/Cortiware/docs/ISSUES_SUMMARY.md
   - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/GITHUB_ISSUES_2PHASE_PLAN.md
-  - C:/Users/chris/Git Local/Cortiware/IMPLEMENTATION_CHECKLIST.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/subcontractors/route.ts
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/subcontractors/page.tsx
@@ -2608,10 +2703,11 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/AUDIT_SUMMARY.md
   - C:/Users/chris/Git Local/Cortiware/COPILOT_OPERATING_PROCEDURE.md
   - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PHASE_2_FINAL_STATUS.md
   - C:/Users/chris/Git Local/Cortiware/PHASE_2_STUB_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
-  - C:/Users/chris/Git Local/Cortiware/scripts/ci/placeholder-analyzer.ts
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/recurring-services/page.tsx
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/recurring-services/recurring-services-client.tsx
@@ -2647,11 +2743,11 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/AUDIT_SUMMARY.md
   - C:/Users/chris/Git Local/Cortiware/COPILOT_OPERATING_PROCEDURE.md
   - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/IMPLEMENTATION_CHECKLIST.md
   - C:/Users/chris/Git Local/Cortiware/PHASE_2_FINAL_STATUS.md
   - C:/Users/chris/Git Local/Cortiware/PHASE_2_STUB_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
-  - C:/Users/chris/Git Local/Cortiware/scripts/ci/placeholder-analyzer.ts
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/job-costing/job-costing-client.tsx
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/job-costing/page.tsx
@@ -2679,8 +2775,8 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/Execute/packages/verticals/src/index.ts
   - C:/Users/chris/Git Local/Cortiware/docs/Execute/packages/verticals/src/packs/port-a-john.ts
   - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/IMPLEMENTATION_CHECKLIST.md
-  - C:/Users/chris/Git Local/Cortiware/packages/verticals/README.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/vertical-packs/route.ts
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/settings/vertical-pack/page.tsx
@@ -2796,6 +2892,8 @@ Generated: 2025-10-27T17:59:21.457Z
   - UserRecoveryCode.user → User
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/AUTH_IMPLEMENTATION_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/DEV_ACCOUNT_ACCESS_GUIDE.md
@@ -2817,10 +2915,13 @@ Generated: 2025-10-27T17:59:21.457Z
   - UserSecurityQuestion.user → User
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/AUTH_IMPLEMENTATION_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/IMPLEMENTATION_STATUS.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/WHATS_WORKING_NOW.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -2844,10 +2945,13 @@ Generated: 2025-10-27T17:59:21.457Z
   - UserBreakglassAccount.user → User
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/AUTH_IMPLEMENTATION_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/IMPLEMENTATION_STATUS.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/WHATS_WORKING_NOW.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -2869,10 +2973,13 @@ Generated: 2025-10-27T17:59:21.457Z
   - UserDeviceFingerprint.user → User
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/AUTH_IMPLEMENTATION_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/IMPLEMENTATION_STATUS.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/WHATS_WORKING_NOW.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -2898,11 +3005,11 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/lib/audit-log.ts
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/runbooks/SSO_OUTAGE_RECOVERY.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/AUTH_IMPLEMENTATION_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/GPT5_HANDOFF.md
-  - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/GPT5_HANDOFF_SUMMARY.md
-  - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/IMPLEMENTATION_STATUS.md
 - Frontend candidates:
 - Test candidates:
 
@@ -2926,6 +3033,8 @@ Generated: 2025-10-27T17:59:21.457Z
   - timestamp: DateTime
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/AUTH_IMPLEMENTATION_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/IMPLEMENTATION_STATUS.md
@@ -2955,12 +3064,13 @@ Generated: 2025-10-27T17:59:21.457Z
   - completedAt: DateTime?
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/lib/auth/automated-breakglass.ts
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/AUTH_IMPLEMENTATION_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/IMPLEMENTATION_STATUS.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/PRODUCTION_DEPLOYMENT_CHECKLIST.md
   - C:/Users/chris/Git Local/Cortiware/Reference/repo-docs/docs/WHATS_WORKING_NOW.md
-  - C:/Users/chris/Git Local/Cortiware/src/lib/auth/automated-breakglass.ts
 - Frontend candidates:
 - Test candidates:
 
@@ -3188,8 +3298,10 @@ Generated: 2025-10-27T17:59:21.457Z
   - aiPriceHint: Json
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/IMPLEMENTATION_CHECKLIST.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/(tenant)/rfps/page.tsx
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/(tenant)/rfps/[id]/page.tsx
@@ -3252,8 +3364,8 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/ISSUES_SUMMARY.md
   - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/IMPLEMENTATION_CHECKLIST.md
-  - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/provider/leads/LeadsManagementClient.tsx
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/(tenant)/leads/page.tsx
@@ -3273,6 +3385,8 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/AUTONOMOUS_EXECUTION_PROGRESS_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/PROJECT_COMPLETION_SUMMARY_2025-10-16.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/HANDOFF_GPT5.md
   - C:/Users/chris/Git Local/Cortiware/Reference/Provider/PROVIDER_OPERATIONS_BLUEPRINT.md
@@ -3305,11 +3419,11 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/services/provider/billing.service.ts
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/archive/FINAL_COMPLETION_REPORT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/Provider/PROVIDER_OPERATIONS_BLUEPRINT.md
-  - C:/Users/chris/Git Local/Cortiware/src/services/provider/billing.service.ts
-  - C:/Users/chris/Git Local/Cortiware/src/\_disabled/pages/api/billing/invoices.create.ts
-  - C:/Users/chris/Git Local/Cortiware/src/\_disabled/pages/api/integrations/stripe/create-hosted-invoice.ts
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -3334,9 +3448,11 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/services/provider/billing.service.ts
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/archive/FINAL_COMPLETION_REPORT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/Provider/PROVIDER_OPERATIONS_BLUEPRINT.md
-  - C:/Users/chris/Git Local/Cortiware/src/services/provider/billing.service.ts
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -3383,9 +3499,12 @@ Generated: 2025-10-27T17:59:21.457Z
 - Relations:
   - RbacPermission.rolePerms → RbacRolePermission
 - Backend candidates:
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
   - C:/Users/chris/Git Local/Cortiware/PHASE_2_FINAL_STATUS.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/permissions/route.ts
 - Test candidates:
@@ -3409,9 +3528,12 @@ Generated: 2025-10-27T17:59:21.457Z
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/provider-portal/\_incoming/v2/PROVIDER_PORTAL_END_TO_END_DELIVERY_RUNBOOK_v2.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
   - C:/Users/chris/Git Local/Cortiware/PHASE_2_FINAL_STATUS.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/permissions/route.ts
 - Test candidates:
@@ -3428,7 +3550,10 @@ Generated: 2025-10-27T17:59:21.457Z
   - RbacRolePermission.permission → RbacPermission
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/permissions/route.ts
 - Test candidates:
@@ -3450,8 +3575,11 @@ Generated: 2025-10-27T17:59:21.457Z
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/provider-portal/\_incoming/v2/PROVIDER_PORTAL_END_TO_END_DELIVERY_RUNBOOK_v2.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
   - C:/Users/chris/Git Local/Cortiware/src/\_disabled/pages/api/tenant/register.ts
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/permissions/route.ts
@@ -3472,7 +3600,7 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_PROGRESS_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/PROVIDER_PORTAL_INVESTIGATION_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/PROVIDER_PORTAL_ISSUES_AND_FIXES_2025-10-16.md
-  - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/api/feature-flags/route.ts
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/api/provider/settings/route.ts
@@ -3495,8 +3623,11 @@ Generated: 2025-10-27T17:59:21.457Z
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/marketing-cortiware/src/lib/pricing.ts
   - C:/Users/chris/Git Local/Cortiware/docs/PRICING_MANAGEMENT_PLAN.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/prisma/seed-marketing-pricing.ts
   - C:/Users/chris/Git Local/Cortiware/Reference/PROVIDER_CONTROL_CENTER_BLUEPRINT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
   - C:/Users/chris/Git Local/Cortiware/src/\_disabled/pages/api/integrations/sam/fetch.ts
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/api/admin/pricing/plans/route.ts
@@ -3560,9 +3691,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/COMPREHENSIVE_CODEBASE_REVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/INFRASTRUCTURE_MONITORING.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/IMPLEMENTATION_CHECKLIST.md
-  - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
-  - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
 - Frontend candidates:
 - Test candidates:
 
@@ -3579,8 +3710,11 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/prisma/migrations/MIGRATION_INSTRUCTIONS.md
   - C:/Users/chris/Git Local/Cortiware/docs/AUTONOMOUS_IMPLEMENTATION_SUMMARY.md
   - C:/Users/chris/Git Local/Cortiware/docs/INFRASTRUCTURE_MONITORING.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
   - C:/Users/chris/Git Local/Cortiware/docs/TWO_PERSONA_PORTALS_IMPLEMENTATION_PLAN.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/(provider)/infrastructure/InfrastructureDashboard.tsx
 - Test candidates:
@@ -3600,7 +3734,10 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/prisma/migrations/MIGRATION_INSTRUCTIONS.md
   - C:/Users/chris/Git Local/Cortiware/docs/AUTONOMOUS_IMPLEMENTATION_SUMMARY.md
   - C:/Users/chris/Git Local/Cortiware/docs/INFRASTRUCTURE_MONITORING.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/(provider)/infrastructure/InfrastructureDashboard.tsx
 - Test candidates:
@@ -3640,7 +3777,7 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/AUTONOMOUS_IMPLEMENTATION_SUMMARY.md
   - C:/Users/chris/Git Local/Cortiware/docs/IMPORT_WIZARD_DEPLOYMENT.md
   - C:/Users/chris/Git Local/Cortiware/docs/INFRASTRUCTURE_MONITORING.md
-  - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/(provider)/infrastructure/InfrastructureDashboard.tsx
 - Test candidates:
@@ -3726,9 +3863,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/AUDIT_PROGRESS_REPORT_2025-10-10.md
   - C:/Users/chris/Git Local/Cortiware/docs/COMPREHENSIVE_AUDIT_COMPLETE_2025-10-10.md
   - C:/Users/chris/Git Local/Cortiware/docs/PROVIDER_PORTAL_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
   - C:/Users/chris/Git Local/Cortiware/docs/TYPECHECK_ERROR_INVENTORY_2025-10-10.md
-  - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
-  - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/provider/usage/page.tsx
 - Test candidates:
@@ -3750,9 +3887,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/AUDIT_PROGRESS_REPORT_2025-10-10.md
   - C:/Users/chris/Git Local/Cortiware/docs/COMPREHENSIVE_AUDIT_COMPLETE_2025-10-10.md
   - C:/Users/chris/Git Local/Cortiware/docs/PROVIDER_PORTAL_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
   - C:/Users/chris/Git Local/Cortiware/docs/TYPECHECK_ERROR_INVENTORY_2025-10-10.md
-  - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
-  - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/provider/addons/page.tsx
 - Test candidates:
@@ -3869,11 +4006,14 @@ Generated: 2025-10-27T17:59:21.457Z
   - totalRevenue: Int
   - metricsJson: Json
 - Backend candidates:
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/IMPLEMENTATION_CHECKLIST.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/PHASE3_COMPLETE.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_COMPLETE_SUMMARY.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PHASE1_PHASE3_COMPLETE.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -3940,8 +4080,8 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/archive/FINAL_COMPLETION_REPORT.md
   - C:/Users/chris/Git Local/Cortiware/docs/tenant-app/SYSTEM_ARCHITECTURE.md
-  - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
-  - C:/Users/chris/Git Local/Cortiware/Reference/GPT5_NEXT_PHASE_HANDOFF.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/invoices/route.ts
   - C:/Users/chris/Git Local/Cortiware/apps/tenant-app/src/app/api/invoices/[id]/route.ts
@@ -4008,11 +4148,11 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/architecture/diagrams/data-flow.md
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/DOCUMENTATION_AUDIT_REPORT_2025-10-12.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/GPT5_NEXT_PHASE_HANDOFF.md
-  - C:/Users/chris/Git Local/Cortiware/Reference/MONETIZATION_BLUEPRINT.md
-  - C:/Users/chris/Git Local/Cortiware/Reference/SONNET_PROGRESS_TRACKER.md
 - Frontend candidates:
 - Test candidates:
 
@@ -4042,11 +4182,11 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/APP_ROUTER_IMPLEMENTATION_SUMMARY.md
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/archive/COMPLETION_REPORT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/IMPLEMENTATION_STATUS.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
-  - C:/Users/chris/Git Local/Cortiware/Reference/GPT5_NEXT_PHASE_HANDOFF.md
-  - C:/Users/chris/Git Local/Cortiware/Reference/MONETIZATION_BLUEPRINT.md
 - Frontend candidates:
 - Test candidates:
 
@@ -4141,6 +4281,8 @@ Generated: 2025-10-27T17:59:21.457Z
   - TenantPriceOverride.price → PlanPrice
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/GPT5_NEXT_PHASE_HANDOFF.md
@@ -4166,12 +4308,13 @@ Generated: 2025-10-27T17:59:21.457Z
   - GlobalMonetizationConfig.defaultPrice → PlanPrice
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/GPT5_NEXT_PHASE_HANDOFF.md
   - C:/Users/chris/Git Local/Cortiware/Reference/MONETIZATION_BLUEPRINT.md
   - C:/Users/chris/Git Local/Cortiware/Reference/SONNET_PROGRESS_TRACKER.md
-  - C:/Users/chris/Git Local/Cortiware/SONNET_4_5_HANDOFF.md
 - Frontend candidates:
 - Test candidates:
 
@@ -4202,12 +4345,12 @@ Generated: 2025-10-27T17:59:21.457Z
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/ARCHITECTURE_OVERVIEW.md
   - C:/Users/chris/Git Local/Cortiware/docs/DOCUMENTATION_AUDIT_REPORT_2025-10-12.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
   - C:/Users/chris/Git Local/Cortiware/ops/reports/ROLLUP_PRECHECK.md
   - C:/Users/chris/Git Local/Cortiware/PRISMA_SCHEMA_AUDIT.md
   - C:/Users/chris/Git Local/Cortiware/PRODUCTION_READINESS.md
   - C:/Users/chris/Git Local/Cortiware/Reference/GPT5_NEXT_PHASE_HANDOFF.md
-  - C:/Users/chris/Git Local/Cortiware/Reference/MONETIZATION_BLUEPRINT.md
-  - C:/Users/chris/Git Local/Cortiware/Reference/SONNET_PROGRESS_TRACKER.md
 - Frontend candidates:
 - Test candidates:
 
@@ -4233,6 +4376,8 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/PHASE_1_AUTONOMOUS_PROGRESS.md
   - C:/Users/chris/Git Local/Cortiware/docs/provider-portal/\_incoming/COMPREHENSIVE_IMPLEMENTATION_TRACKER.md
   - C:/Users/chris/Git Local/Cortiware/docs/provider-portal/\_incoming/v2/FEDERATION_V3_IMPLEMENTATION_REPORT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/provider/analytics/FederationAnalyticsSection.tsx
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/provider/clients/FederatedClientsSection.tsx
@@ -4254,6 +4399,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/FEDERATION_V3_IMPLEMENTATION_REPORT.md
   - C:/Users/chris/Git Local/Cortiware/docs/provider-portal/\_incoming/COMPREHENSIVE_IMPLEMENTATION_TRACKER.md
   - C:/Users/chris/Git Local/Cortiware/docs/provider-portal/\_incoming/v2/FEDERATION_V3_IMPLEMENTATION_REPORT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -4275,6 +4423,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/FEDERATION_V3_IMPLEMENTATION_REPORT.md
   - C:/Users/chris/Git Local/Cortiware/docs/provider-portal/\_incoming/COMPREHENSIVE_IMPLEMENTATION_TRACKER.md
   - C:/Users/chris/Git Local/Cortiware/docs/provider-portal/\_incoming/v2/FEDERATION_V3_IMPLEMENTATION_REPORT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/provider/analytics/FederationAnalyticsSection.tsx
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/provider/incidents/FederationEscalationsSection.tsx
@@ -4292,6 +4443,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - createdAt: DateTime
   - status: String
 - Backend candidates:
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -4312,7 +4466,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/Execute/Provider v3/AugmentCode_Implementation_Guide_v3_plus.md
   - C:/Users/chris/Git Local/Cortiware/docs/Execute/Provider v3/AugmentCode_PR_Plan_and_Templates_v3_plus.md
   - C:/Users/chris/Git Local/Cortiware/docs/Execute/Provider v3/ProviderFederation_Design_Rationale_v3_plus.md
-  - C:/Users/chris/Git Local/Cortiware/src/lib/idempotency-store.ts
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -4333,6 +4489,9 @@ Generated: 2025-10-27T17:59:21.457Z
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/HANDOFF_PROVIDER_PORTAL_2025-10-10.md
   - C:/Users/chris/Git Local/Cortiware/docs/PROVIDER_PORTAL_COMPLETE_IMPLEMENTATION_2025-10-10.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -4353,6 +4512,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - createdAt: DateTime
   - updatedAt: DateTime
 - Backend candidates:
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -4370,6 +4532,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - reason: String
   - metadata: Json?
 - Backend candidates:
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -4395,6 +4560,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - CustomFieldDefinition.values → CustomFieldValue
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/CACHING_STRATEGY.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -4412,6 +4580,9 @@ Generated: 2025-10-27T17:59:21.457Z
 - Relations:
   - CustomFieldValue.field → CustomFieldDefinition
 - Backend candidates:
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
   - C:/Users/chris/Git Local/Cortiware/scripts/ci/placeholder-analyzer.ts
 - Frontend candidates:
 - Test candidates:
@@ -4437,6 +4608,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_COMPLETE_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_IMPLEMENTATION_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_PROGRESS_2025-10-16.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -4461,6 +4635,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_COMPLETE_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_IMPLEMENTATION_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_PROGRESS_2025-10-16.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -4489,6 +4666,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_COMPLETE_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_IMPLEMENTATION_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_PROGRESS_2025-10-16.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -4509,6 +4689,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_COMPLETE_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_IMPLEMENTATION_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_PROGRESS_2025-10-16.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/provider/compliance/ComplianceClient.tsx
 - Test candidates:
@@ -4529,6 +4712,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_COMPLETE_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_IMPLEMENTATION_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_PROGRESS_2025-10-16.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -4553,6 +4739,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_COMPLETE_2025-10-16.md
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_IMPLEMENTATION_PLAN.md
   - C:/Users/chris/Git Local/Cortiware/docs/PRODUCTION_GRADE_PROGRESS_2025-10-16.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/api/provider/compliance/route.ts
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/provider/compliance/ComplianceClient.tsx
@@ -4575,7 +4764,10 @@ Generated: 2025-10-27T17:59:21.457Z
 - Relations:
   - WebhookEndpoint.deliveries → WebhookDelivery
 - Backend candidates:
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
   - C:/Users/chris/Git Local/Cortiware/docs/TWO_PERSONA_PORTALS_IMPLEMENTATION_PLAN.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -4600,7 +4792,10 @@ Generated: 2025-10-27T17:59:21.457Z
   - WebhookDelivery.endpoint → WebhookEndpoint
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/docs/FEDERATION_V3_IMPLEMENTATION_REPORT.md
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
   - C:/Users/chris/Git Local/Cortiware/docs/TWO_PERSONA_PORTALS_IMPLEMENTATION_PLAN.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -4619,7 +4814,10 @@ Generated: 2025-10-27T17:59:21.457Z
   - createdAt: DateTime
   - updatedAt: DateTime
 - Backend candidates:
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
   - C:/Users/chris/Git Local/Cortiware/docs/TWO_PERSONA_PORTALS_IMPLEMENTATION_PLAN.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -4637,6 +4835,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - timestamp: DateTime
 - Backend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/services/provider/api-usage.service.ts
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/provider/api-usage/ApiUsageClient.tsx
   - C:/Users/chris/Git Local/Cortiware/apps/provider-portal/src/app/provider/api-usage/page.tsx
@@ -4652,6 +4853,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - metadata: Json?
   - createdAt: DateTime
 - Backend candidates:
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -4680,6 +4884,9 @@ Generated: 2025-10-27T17:59:21.457Z
   - MarketingPricingPlan.features → MarketingPricingFeature
   - MarketingPricingPlan.history → MarketingPricingHistory
 - Backend candidates:
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -4696,6 +4903,9 @@ Generated: 2025-10-27T17:59:21.457Z
 - Relations:
   - MarketingPricingFeature.plan → MarketingPricingPlan
 - Backend candidates:
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:
 
@@ -4714,5 +4924,8 @@ Generated: 2025-10-27T17:59:21.457Z
 - Relations:
   - MarketingPricingHistory.plan → MarketingPricingPlan
 - Backend candidates:
+  - C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md
+  - C:/Users/chris/Git Local/Cortiware/docs/work-plan.md
+  - C:/Users/chris/Git Local/Cortiware/reports/schema-gap-report.md
 - Frontend candidates:
 - Test candidates:

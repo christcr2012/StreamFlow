@@ -28,6 +28,7 @@ Visit:
 
 ## 📚 Documentation
 
+- **[Phase Automation Workflow](docs/PHASE_AUTOMATION_WORKFLOW.md)** - **READ THIS FIRST** for development workflow
 - **[Quick Start Guide](docs/QUICK_START.md)** - Get up and running quickly
 - **[Architecture Overview](docs/ARCH_MONOREPO.md)** - Understand the monorepo structure
 - **[Build & Deploy Guide](docs/BUILD_AND_DEPLOY_GUIDE.md)** - Build and deployment instructions

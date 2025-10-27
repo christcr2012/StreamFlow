@@ -1,25 +1,25 @@
 // apps/tenant-app/src/app/api/job-costing/route.ts
 // Job costing API - Phase 2: Real database implementation
 
-import { NextRequest, NextResponse } from 'next/server';
-import { getAuthContext } from '@/lib/auth-context';
-import { prisma } from '@/lib/prisma';
-import { createSafeErrorResponse } from '@/lib/error-handler';
-import { Decimal } from '@prisma/client-tenant/runtime/library';
+import { NextRequest, NextResponse } from "next/server";
+import { getAuthContext } from "@/lib/auth-context";
+import { prisma } from "@/lib/prisma";
+import { createSafeErrorResponse } from "@/lib/error-handler";
+import { Prisma } from "@prisma/client-tenant";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   try {
     const authContext = await getAuthContext();
     if (!authContext.isAuthenticated || !authContext.orgId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { searchParams } = new URL(req.url);
-    const jobId = searchParams.get('jobId');
-    const status = searchParams.get('status');
-    const limit = searchParams.get('limit');
+    const jobId = searchParams.get("jobId");
+    const status = searchParams.get("status");
+    const limit = searchParams.get("limit");
 
     const where: any = { orgId: authContext.orgId };
 
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
       where.jobId = jobId;
     }
 
-    if (status && status !== 'all') {
+    if (status && status !== "all") {
       where.status = status;
     }
 
@@ -43,10 +43,7 @@ export async function GET(req: NextRequest) {
           },
         },
       },
-      orderBy: [
-        { completedAt: 'desc' },
-        { createdAt: 'desc' },
-      ],
+      orderBy: [{ completedAt: "desc" }, { createdAt: "desc" }],
       take: limit ? parseInt(limit) : undefined,
     });
 
@@ -76,15 +73,28 @@ export async function GET(req: NextRequest) {
 
     // Calculate summary statistics
     const summary = {
-      totalRevenue: formatted.reduce((sum: number, c: any) => sum + c.revenue, 0),
-      totalCost: formatted.reduce((sum: number, c: any) => sum + c.actualCost, 0),
+      totalRevenue: formatted.reduce(
+        (sum: number, c: any) => sum + c.revenue,
+        0,
+      ),
+      totalCost: formatted.reduce(
+        (sum: number, c: any) => sum + c.actualCost,
+        0,
+      ),
       totalProfit: formatted.reduce((sum: number, c: any) => sum + c.profit, 0),
       avgMargin:
         formatted.length > 0
-          ? formatted.reduce((sum: number, c: any) => sum + c.profitMargin, 0) / formatted.length
+          ? formatted.reduce((sum: number, c: any) => sum + c.profitMargin, 0) /
+            formatted.length
           : 0,
-      totalEstimated: formatted.reduce((sum: number, c: any) => sum + c.estimatedCost, 0),
-      totalVariance: formatted.reduce((sum: number, c: any) => sum + c.variance, 0),
+      totalEstimated: formatted.reduce(
+        (sum: number, c: any) => sum + c.estimatedCost,
+        0,
+      ),
+      totalVariance: formatted.reduce(
+        (sum: number, c: any) => sum + c.variance,
+        0,
+      ),
     };
 
     return NextResponse.json({
@@ -93,8 +103,8 @@ export async function GET(req: NextRequest) {
       summary,
     });
   } catch (error) {
-    console.error('Failed to fetch job costing data:', error);
-    return createSafeErrorResponse(error, 'job-costing-get', 500);
+    console.error("Failed to fetch job costing data:", error);
+    return createSafeErrorResponse(error, "job-costing-get", 500);
   }
 }
 
@@ -102,15 +112,25 @@ export async function POST(req: NextRequest) {
   try {
     const authContext = await getAuthContext();
     if (!authContext.isAuthenticated || !authContext.orgId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await req.json();
-    const { jobId, laborCost, materialsCost, equipmentCost, overheadCost, estimatedCost, revenue, status, notes } = body;
+    const {
+      jobId,
+      laborCost,
+      materialsCost,
+      equipmentCost,
+      overheadCost,
+      estimatedCost,
+      revenue,
+      status,
+      notes,
+    } = body;
 
     // Validate required fields
     if (!jobId) {
-      return NextResponse.json({ error: 'jobId is required' }, { status: 400 });
+      return NextResponse.json({ error: "jobId is required" }, { status: 400 });
     }
 
     // Verify job belongs to org
@@ -120,26 +140,26 @@ export async function POST(req: NextRequest) {
     });
 
     if (!job || job.orgId !== authContext.orgId) {
-      return NextResponse.json({ error: 'Job not found' }, { status: 404 });
+      return NextResponse.json({ error: "Job not found" }, { status: 404 });
     }
 
     // Calculate totals
-    const labor = new Decimal(laborCost || 0);
-    const materials = new Decimal(materialsCost || 0);
-    const equipment = new Decimal(equipmentCost || 0);
-    const overhead = new Decimal(overheadCost || 0);
-    
+    const labor = new Prisma.Decimal(laborCost || 0);
+    const materials = new Prisma.Decimal(materialsCost || 0);
+    const equipment = new Prisma.Decimal(equipmentCost || 0);
+    const overhead = new Prisma.Decimal(overheadCost || 0);
+
     const totalCost = labor.plus(materials).plus(equipment).plus(overhead);
-    const estimated = new Decimal(estimatedCost || 0);
-    const revenueDecimal = new Decimal(revenue || 0);
-    
+    const estimated = new Prisma.Decimal(estimatedCost || 0);
+    const revenueDecimal = new Prisma.Decimal(revenue || 0);
+
     const variance = totalCost.minus(estimated);
     const profit = revenueDecimal.minus(totalCost);
-    
+
     // Calculate profit margin as percentage: (profit / revenue) * 100
     const profitMargin = revenueDecimal.greaterThan(0)
       ? profit.dividedBy(revenueDecimal).times(100)
-      : new Decimal(0);
+      : new Prisma.Decimal(0);
 
     const jobCost = await prisma.jobCost.create({
       data: {
@@ -155,7 +175,7 @@ export async function POST(req: NextRequest) {
         revenue: revenueDecimal,
         profit,
         profitMargin,
-        status: status || 'in_progress',
+        status: status || "in_progress",
         notes,
       },
       include: {
@@ -195,8 +215,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(formatted, { status: 201 });
   } catch (error) {
-    console.error('Failed to create job cost:', error);
-    return createSafeErrorResponse(error, 'job-costing-post', 500);
+    console.error("Failed to create job cost:", error);
+    return createSafeErrorResponse(error, "job-costing-post", 500);
   }
 }
 
@@ -204,14 +224,25 @@ export async function PATCH(req: NextRequest) {
   try {
     const authContext = await getAuthContext();
     if (!authContext.isAuthenticated || !authContext.orgId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await req.json();
-    const { id, laborCost, materialsCost, equipmentCost, overheadCost, estimatedCost, revenue, status, notes, completedAt } = body;
+    const {
+      id,
+      laborCost,
+      materialsCost,
+      equipmentCost,
+      overheadCost,
+      estimatedCost,
+      revenue,
+      status,
+      notes,
+      completedAt,
+    } = body;
 
     if (!id) {
-      return NextResponse.json({ error: 'id is required' }, { status: 400 });
+      return NextResponse.json({ error: "id is required" }, { status: 400 });
     }
 
     // Verify ownership
@@ -221,33 +252,58 @@ export async function PATCH(req: NextRequest) {
     });
 
     if (!existing || existing.orgId !== authContext.orgId) {
-      return NextResponse.json({ error: 'Job cost not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: "Job cost not found" },
+        { status: 404 },
+      );
     }
 
     // Build update data with recalculations
     const updateData: any = {};
 
     // If any cost component is being updated, recalculate totals
-    if (laborCost !== undefined || materialsCost !== undefined || equipmentCost !== undefined || overheadCost !== undefined || estimatedCost !== undefined || revenue !== undefined) {
+    if (
+      laborCost !== undefined ||
+      materialsCost !== undefined ||
+      equipmentCost !== undefined ||
+      overheadCost !== undefined ||
+      estimatedCost !== undefined ||
+      revenue !== undefined
+    ) {
       // Get current values
       const current = await prisma.jobCost.findUnique({ where: { id } });
       if (!current) {
-        return NextResponse.json({ error: 'Job cost not found' }, { status: 404 });
+        return NextResponse.json(
+          { error: "Job cost not found" },
+          { status: 404 },
+        );
       }
 
-      const labor = new Decimal(laborCost !== undefined ? laborCost : current.laborCost);
-      const materials = new Decimal(materialsCost !== undefined ? materialsCost : current.materialsCost);
-      const equipment = new Decimal(equipmentCost !== undefined ? equipmentCost : current.equipmentCost);
-      const overhead = new Decimal(overheadCost !== undefined ? overheadCost : current.overheadCost);
-      const estimated = new Decimal(estimatedCost !== undefined ? estimatedCost : current.estimatedCost);
-      const revenueDecimal = new Decimal(revenue !== undefined ? revenue : current.revenue);
+      const labor = new Prisma.Decimal(
+        laborCost !== undefined ? laborCost : current.laborCost,
+      );
+      const materials = new Prisma.Decimal(
+        materialsCost !== undefined ? materialsCost : current.materialsCost,
+      );
+      const equipment = new Prisma.Decimal(
+        equipmentCost !== undefined ? equipmentCost : current.equipmentCost,
+      );
+      const overhead = new Prisma.Decimal(
+        overheadCost !== undefined ? overheadCost : current.overheadCost,
+      );
+      const estimated = new Prisma.Decimal(
+        estimatedCost !== undefined ? estimatedCost : current.estimatedCost,
+      );
+      const revenueDecimal = new Prisma.Decimal(
+        revenue !== undefined ? revenue : current.revenue,
+      );
 
       const totalCost = labor.plus(materials).plus(equipment).plus(overhead);
       const variance = totalCost.minus(estimated);
       const profit = revenueDecimal.minus(totalCost);
       const profitMargin = revenueDecimal.greaterThan(0)
         ? profit.dividedBy(revenueDecimal).times(100)
-        : new Decimal(0);
+        : new Prisma.Decimal(0);
 
       if (laborCost !== undefined) updateData.laborCost = labor;
       if (materialsCost !== undefined) updateData.materialsCost = materials;
@@ -308,7 +364,7 @@ export async function PATCH(req: NextRequest) {
 
     return NextResponse.json(formatted);
   } catch (error) {
-    console.error('Failed to update job cost:', error);
-    return createSafeErrorResponse(error, 'job-costing-patch', 500);
+    console.error("Failed to update job cost:", error);
+    return createSafeErrorResponse(error, "job-costing-patch", 500);
   }
 }

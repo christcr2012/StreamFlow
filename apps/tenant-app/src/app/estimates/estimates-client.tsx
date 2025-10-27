@@ -1,10 +1,10 @@
 // apps/tenant-app/src/app/estimates/estimates-client.tsx
 // Estimates list and management UI - Phase 1
 
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   FileText,
   Plus,
@@ -17,7 +17,7 @@ import {
   CheckCircle2,
   XCircle,
   Clock,
-} from 'lucide-react';
+} from "lucide-react";
 
 interface EstimatesClientProps {
   orgId: string;
@@ -52,7 +52,7 @@ interface Estimate {
 export function EstimatesClient({ orgId }: EstimatesClientProps) {
   const [estimates, setEstimates] = useState<Estimate[]>([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState("all");
 
   useEffect(() => {
     fetchEstimates();
@@ -66,7 +66,7 @@ export function EstimatesClient({ orgId }: EstimatesClientProps) {
         setEstimates(data.estimates || []);
       }
     } catch (error) {
-      console.error('Failed to fetch estimates:', error);
+      console.error("Failed to fetch estimates:", error);
     } finally {
       setLoading(false);
     }
@@ -75,18 +75,18 @@ export function EstimatesClient({ orgId }: EstimatesClientProps) {
   const statusConfig = {
     pending: {
       icon: Clock,
-      color: 'yellow',
-      label: 'Pending',
+      color: "yellow",
+      label: "Pending",
     },
     approved: {
       icon: CheckCircle2,
-      color: 'green',
-      label: 'Approved',
+      color: "green",
+      label: "Approved",
     },
     declined: {
       icon: XCircle,
-      color: 'red',
-      label: 'Declined',
+      color: "red",
+      label: "Declined",
     },
   };
 
@@ -105,8 +105,12 @@ export function EstimatesClient({ orgId }: EstimatesClientProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Estimates & Quotes</h1>
-              <p className="text-gray-600 mt-1">Create and manage customer estimates</p>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Estimates & Quotes
+              </h1>
+              <p className="text-gray-600 mt-1">
+                Create and manage customer estimates
+              </p>
             </div>
             <Link
               href="/estimates/new"
@@ -164,13 +168,17 @@ export function EstimatesClient({ orgId }: EstimatesClientProps) {
           />
           <StatsCard
             label="Pending"
-            value={estimates.filter((e) => e.status === 'pending').length.toString()}
+            value={estimates
+              .filter((e) => e.status === "pending")
+              .length.toString()}
             icon={Clock}
             color="yellow"
           />
           <StatsCard
             label="Approved"
-            value={estimates.filter((e) => e.status === 'approved').length.toString()}
+            value={estimates
+              .filter((e) => e.status === "approved")
+              .length.toString()}
             icon={CheckCircle2}
             color="green"
           />
@@ -213,15 +221,21 @@ export function EstimatesClient({ orgId }: EstimatesClientProps) {
             <tbody className="bg-white divide-y divide-gray-200">
               {estimates.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
+                  <td
+                    colSpan={7}
+                    className="px-6 py-12 text-center text-gray-500"
+                  >
                     <FileText className="w-12 h-12 mx-auto mb-3 text-gray-400" />
                     <p>No estimates found</p>
-                    <p className="text-sm mt-1">Create your first estimate to get started</p>
+                    <p className="text-sm mt-1">
+                      Create your first estimate to get started
+                    </p>
                   </td>
                 </tr>
               ) : (
                 estimates.map((estimate) => {
-                  const config = statusConfig[estimate.status as keyof typeof statusConfig];
+                  const config =
+                    statusConfig[estimate.status as keyof typeof statusConfig];
                   const StatusIcon = config?.icon || FileText;
 
                   return (
@@ -238,17 +252,21 @@ export function EstimatesClient({ orgId }: EstimatesClientProps) {
                         <div className="text-sm font-medium text-gray-900">
                           {estimate.customerName}
                         </div>
-                        <div className="text-sm text-gray-500">{estimate.customerEmail}</div>
+                        <div className="text-sm text-gray-500">
+                          {estimate.customerEmail}
+                        </div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm text-gray-900">{estimate.jobTitle}</div>
+                        <div className="text-sm text-gray-900">
+                          {estimate.jobTitle}
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
                           className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold
-                            ${config?.color === 'yellow' ? 'bg-yellow-100 text-yellow-800' : ''}
-                            ${config?.color === 'green' ? 'bg-green-100 text-green-800' : ''}
-                            ${config?.color === 'red' ? 'bg-red-100 text-red-800' : ''}
+                            ${config?.color === "yellow" ? "bg-yellow-100 text-yellow-800" : ""}
+                            ${config?.color === "green" ? "bg-green-100 text-green-800" : ""}
+                            ${config?.color === "red" ? "bg-red-100 text-red-800" : ""}
                           `}
                         >
                           <StatusIcon className="w-3 h-3" />
@@ -282,15 +300,15 @@ export function EstimatesClient({ orgId }: EstimatesClientProps) {
           </table>
         </div>
 
-        {/* Phase 1 Notice */}
+        {/* Phase 2 Notice: blocked by real Estimates endpoints */}
         <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
           <div className="flex items-start gap-3">
             <FileText className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
             <div className="text-sm text-yellow-800">
-              <p className="font-medium mb-1">Phase 1: Stub Implementation</p>
+              <p className="font-medium mb-1">Phase 2: Stub Implementation</p>
               <p>
-                Estimates page showing example data. Edit, send, and conversion to invoice features
-                will be fully implemented in Phase 2.
+                Estimates page showing example data. Edit, send, and conversion
+                to invoice features will be fully implemented in Phase 2.
               </p>
             </div>
           </div>
@@ -312,10 +330,10 @@ function StatsCard({
   color: string;
 }) {
   const colorClasses = {
-    blue: 'bg-blue-100 text-blue-600',
-    yellow: 'bg-yellow-100 text-yellow-600',
-    green: 'bg-green-100 text-green-600',
-    purple: 'bg-purple-100 text-purple-600',
+    blue: "bg-blue-100 text-blue-600",
+    yellow: "bg-yellow-100 text-yellow-600",
+    green: "bg-green-100 text-green-600",
+    purple: "bg-purple-100 text-purple-600",
   };
 
   return (
@@ -325,7 +343,9 @@ function StatsCard({
           <p className="text-sm text-gray-600 mb-1">{label}</p>
           <p className="text-2xl font-bold text-gray-900">{value}</p>
         </div>
-        <div className={`p-3 rounded-lg ${colorClasses[color as keyof typeof colorClasses]}`}>
+        <div
+          className={`p-3 rounded-lg ${colorClasses[color as keyof typeof colorClasses]}`}
+        >
           <Icon className="w-6 h-6" />
         </div>
       </div>
