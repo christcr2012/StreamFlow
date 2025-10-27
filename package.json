@@ -12,6 +12,8 @@
     "node": "22.x"
   },
   "scripts": {
+    "phase:0": "tsx scripts/operating/phase0_schema_audit.ts",
+    "ci:slices:sync": "tsx scripts/ci/sync_slice_issues.ts",
     "setpwd": "tsx scripts/set-password.ts",
     "setup-accounts": "tsx scripts/setup-accounts.ts",
     "dev": "turbo run dev --parallel",
