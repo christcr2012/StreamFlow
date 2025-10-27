@@ -45,9 +45,11 @@ jobs:
 
       - name: Placeholder/Stub Detection
         run: npm run ci:placeholders
-        continue-on-error: true
+        continue-on-error: true # Set to false once actionable count reduced to <10
         env:
-          PLACEHOLDER_STRICT: "false"
+          PLACEHOLDER_STRICT: "false" # Set to "true" to enforce zero actionable items on PRs
+          # Current actionable count: 26 (mostly Phase 1 architecture decisions)
+          # To enable strict gate: reduce actionable to <10, then set STRICT=true and continue-on-error=false
 
       - name: Sync Placeholder Issues
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

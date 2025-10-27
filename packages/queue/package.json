@@ -19,7 +19,9 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@prisma/client": "^6.16.2",
     "bullmq": "^5.14.0",
+    "csv-parse": "^6.1.0",
     "ioredis": "^5.8.1"
   },
   "devDependencies": {
