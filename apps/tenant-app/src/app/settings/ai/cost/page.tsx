@@ -1,9 +1,7 @@
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { getAuthContext } from '@/lib/auth-context';
-import dynamic from 'next/dynamic';
-
-const AICostDashboard = dynamic(() => import('@/components/ai/AICostDashboard'), { ssr: false });
+import AICostDashboard from '@/components/ai/AICostDashboard';
 
 export const metadata: Metadata = {
   title: 'AI Cost Management | Cortiware',
