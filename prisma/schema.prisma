@@ -967,6 +967,7 @@ model Org {
   name                      String
   featureFlags              Json                        @default("{}")
   metadata                  Json?                       @default("{}")
+  activeVerticalPacks       Json                        @default("[]") // Array of vertical pack keys that are active for this org
   createdAt                 DateTime                    @default(now())
   updatedAt                 DateTime                    @updatedAt
   brandConfig               Json?                       @default("{}")
@@ -1977,6 +1978,26 @@ model JobCost {
   @@index([orgId, status])
   @@index([jobId])
   @@index([orgId, completedAt])
+}
+
+// Vertical industry-specific feature packs
+model VerticalPack {
+  id             String   @id @default(cuid())
+  key            String   @unique // 'hvac', 'plumbing', 'electrical', 'landscaping', 'pool', 'cleaning'
+  name           String
+  description    String?  @db.Text
+  icon           String?
+  category       String   @default("Trade Services") // 'Trade Services', 'Home Services', etc.
+  features       Json     @default("[]") // Array of feature names
+  customFields   Json     @default("[]") // Array of custom field definitions
+  isActive       Boolean  @default(true) // Is this pack available at all
+  displayOrder   Int      @default(0)
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  @@index([category, displayOrder])
+  @@index([isActive])
 }
 
 
