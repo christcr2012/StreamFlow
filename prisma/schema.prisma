@@ -490,6 +490,7 @@ model Customer {
   RecurringInvoice RecurringInvoice[]
   Communication    Communication[] // Phase 1: Type 2 communications
   CommunicationThread CommunicationThread[] // Phase 1: Message threading
+  RecurringService RecurringService[] // Phase 2: Recurring services
 
   @@index([orgId, company])
   @@index([orgId, createdAt])
@@ -1039,6 +1040,7 @@ model Org {
   TenantUsage               TenantUsage[] // Phase 1: Usage tracking
   TimeEntry                 TimeEntry[] // Phase 2: Time tracking
   Subcontractor             Subcontractor[] // Phase 2: Subcontractor management
+  RecurringService          RecurringService[] // Phase 2: Recurring services
 }
 
 model Payment {
@@ -1906,5 +1908,34 @@ model Subcontractor {
   @@index([orgId, status])
   @@index([orgId, availability])
   @@index([companyName])
+}
+
+model RecurringService {
+  id                 String    @id @default(cuid())
+  orgId              String
+  customerId         String
+  serviceName        String
+  description        String?   @db.Text
+  frequency          String    // 'daily', 'weekly', 'monthly', 'quarterly', 'yearly'
+  price              Decimal   @db.Decimal(10, 2)
+  status             String    @default("active") // 'active', 'paused', 'cancelled', 'expired'
+  nextServiceDate    DateTime?
+  lastServiceDate    DateTime?
+  startDate          DateTime
+  contractEndDate    DateTime?
+  autoRenew          Boolean   @default(false)
+  totalServices      Int       @default(0) // Expected total services per year
+  completedServices  Int       @default(0)
+  notes              String?   @db.Text
+  metadata           Json      @default("{}")
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  
+  Org                Org       @relation(fields: [orgId], references: [id])
+  Customer           Customer  @relation(fields: [customerId], references: [id])
+
+  @@index([orgId, status])
+  @@index([orgId, nextServiceDate])
+  @@index([customerId])
 }
 
