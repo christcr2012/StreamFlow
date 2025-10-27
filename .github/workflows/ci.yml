@@ -1,5 +1,9 @@
 name: CI/CD
 
+permissions:
+  contents: read
+  issues: write
+
 on:
   pull_request:
   push:
@@ -45,12 +49,12 @@ jobs:
         env:
           PLACEHOLDER_STRICT: "false"
 
-      - name: Sync Placeholder Issues (dry-run)
+      - name: Sync Placeholder Issues
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: npm run ci:placeholders:sync
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
-          # Set SYNC_ISSUES=true in a manual rerun with workflow_dispatch or env override to create issues
-          SYNC_ISSUES: "false"
+          SYNC_ISSUES: "true"
         continue-on-error: true
 
       # NOTE: We do NOT run builds in CI/CD anymore
