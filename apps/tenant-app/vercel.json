@@ -1,8 +1,14 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "cd ../.. && npm install && cd apps/tenant-app && npm run build",
   "outputDirectory": ".next",
   "framework": "nextjs",
   "installCommand": "cd ../.. && npm install",
-  "ignoreCommand": "npx turbo-ignore tenant-app"
+  "ignoreCommand": "npx turbo-ignore tenant-app",
+  "git": {
+    "deploymentEnabled": {
+      "main": false
+    }
+  }
 }
 
