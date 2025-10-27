@@ -157,4 +157,7 @@ ops/manifests/
 # Local-only documentation (not tracked)
 Reference/
 
+# Generated placeholder analysis (AI-readable tracking)
+.ai-placeholders/
+
 .vercel

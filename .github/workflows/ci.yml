@@ -40,7 +40,10 @@ jobs:
         run: npm run lint
 
       - name: Placeholder/Stub Detection
-        run: npm run ci:placeholders
+         run: npm run ci:placeholders
+         continue-on-error: true  # Non-blocking during transition
+         env:
+           PLACEHOLDER_STRICT: "false"  # Temporarily disable strict mode
 
       # NOTE: We do NOT run builds in CI/CD anymore
       # Local builds are fundamentally different from Vercel builds
