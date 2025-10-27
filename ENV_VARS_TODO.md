@@ -11,8 +11,8 @@ Required on Vercel:
 - NEXTAUTH_URL = https://provider.<your-domain> (if NextAuth is used)
 
 Status:
-- Local: DATABASE_URL present in repo `.env` (used by build helper)
-- Vercel: Add DATABASE_URL and DIRECT_DATABASE_URL via CLI (see scripts below)
+- Local: DATABASE_URL and DIRECT_DATABASE_URL present in repo `.env`
+- Vercel: ✅ DATABASE_URL and DIRECT_DATABASE_URL added for Production, Preview, and Development environments
 
 ## Tenant App (apps/tenant-app)
 
