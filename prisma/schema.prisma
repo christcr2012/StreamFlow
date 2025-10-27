@@ -763,6 +763,7 @@ model Job {
   JobPhoto    JobPhoto[]
   JobTimeline JobTimeline[]
   TimeEntry   TimeEntry[] // Phase 2: Time tracking
+  JobCost     JobCost[] // Phase 2: Job costing
 
   @@index([orgId, createdAt])
   @@index([orgId, customerId])
@@ -1041,6 +1042,7 @@ model Org {
   TimeEntry                 TimeEntry[] // Phase 2: Time tracking
   Subcontractor             Subcontractor[] // Phase 2: Subcontractor management
   RecurringService          RecurringService[] // Phase 2: Recurring services
+  JobCost                   JobCost[] // Phase 2: Job costing
 }
 
 model Payment {
@@ -1938,4 +1940,43 @@ model RecurringService {
   @@index([orgId, nextServiceDate])
   @@index([customerId])
 }
+
+// Job costing tracking for financial analysis
+model JobCost {
+  id             String   @id @default(cuid())
+  orgId          String
+  jobId          String
+  
+  // Cost breakdown by category
+  laborCost      Decimal  @default(0) @db.Decimal(10, 2)
+  materialsCost  Decimal  @default(0) @db.Decimal(10, 2)
+  equipmentCost  Decimal  @default(0) @db.Decimal(10, 2)
+  overheadCost   Decimal  @default(0) @db.Decimal(10, 2)
+  
+  // Totals and analysis
+  totalCost      Decimal  @default(0) @db.Decimal(10, 2) // Sum of all costs
+  estimatedCost  Decimal  @default(0) @db.Decimal(10, 2)
+  variance       Decimal  @default(0) @db.Decimal(10, 2) // totalCost - estimatedCost
+  
+  // Revenue and profit
+  revenue        Decimal  @default(0) @db.Decimal(10, 2)
+  profit         Decimal  @default(0) @db.Decimal(10, 2) // revenue - totalCost
+  profitMargin   Decimal  @default(0) @db.Decimal(5, 2)  // (profit / revenue) * 100
+  
+  status         String   @default("in_progress") // in_progress, completed, cancelled
+  notes          String?  @db.Text
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  completedAt    DateTime?
+  
+  // Relations
+  org            Org      @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  job            Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  
+  @@index([orgId, status])
+  @@index([jobId])
+  @@index([orgId, completedAt])
+}
+
 
