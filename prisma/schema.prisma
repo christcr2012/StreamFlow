@@ -761,6 +761,7 @@ model Job {
   Rfp         Rfp?          @relation(fields: [rfpId], references: [id])
   JobPhoto    JobPhoto[]
   JobTimeline JobTimeline[]
+  TimeEntry   TimeEntry[] // Phase 2: Time tracking
 
   @@index([orgId, createdAt])
   @@index([orgId, customerId])
@@ -1036,6 +1037,8 @@ model Org {
   CommunicationThread       CommunicationThread[] // Phase 1: Message threading
   TenantSubscription        TenantSubscription? // Phase 1: Subscription system
   TenantUsage               TenantUsage[] // Phase 1: Usage tracking
+  TimeEntry                 TimeEntry[] // Phase 2: Time tracking
+  Subcontractor             Subcontractor[] // Phase 2: Subcontractor management
 }
 
 model Payment {
@@ -1388,6 +1391,7 @@ model User {
   UserRecoveryCode      UserRecoveryCode[]
   UserSecurityQuestion  UserSecurityQuestion[]
   Communication         Communication[] // Phase 1: Type 2 communications
+  TimeEntry             TimeEntry[] // Phase 2: Time tracking
 
   @@index([isActive, isLocked])
   @@index([orgId, role])
@@ -1836,5 +1840,71 @@ model TenantUsage {
 
   @@unique([orgId, usageMonth])
   @@index([usageMonth])
+}
+
+// ============================================================================
+// PHASE 2: Time Tracking & Payroll
+// ============================================================================
+
+model TimeEntry {
+  id           String    @id @default(cuid())
+  orgId        String
+  userId       String
+  jobId        String?   // Optional: link to specific job
+  clockIn      DateTime
+  clockOut     DateTime?
+  breakMinutes Int       @default(0)
+  totalHours   Decimal?  @db.Decimal(5, 2) // Calculated on clock out
+  hourlyRate   Decimal   @db.Decimal(10, 2)
+  totalPay     Decimal?  @db.Decimal(10, 2) // Calculated on clock out
+  status       String    @default("active") // 'active', 'pending', 'approved', 'rejected'
+  notes        String?   @db.Text
+  gpsClockIn   Json?     // { lat, lon, accuracy, timestamp }
+  gpsClockOut  Json?     // { lat, lon, accuracy, timestamp }
+  approvedBy   String?
+  approvedAt   DateTime?
+  rejectedBy   String?
+  rejectedAt   DateTime?
+  rejectionReason String?
+  metadata     Json      @default("{}")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  
+  Org          Org       @relation(fields: [orgId], references: [id])
+  User         User      @relation(fields: [userId], references: [id])
+  Job          Job?      @relation(fields: [jobId], references: [id])
+
+  @@index([orgId, userId, clockIn])
+  @@index([orgId, status])
+  @@index([jobId])
+  @@index([userId, clockIn])
+}
+
+model Subcontractor {
+  id             String    @id @default(cuid())
+  orgId          String
+  companyName    String
+  contactName    String?
+  email          String?
+  phone          String?
+  specialties    String[]  @default([])
+  status         String    @default("pending") // 'pending', 'active', 'inactive', 'suspended'
+  rating         Decimal?  @db.Decimal(3, 2) // 0.00 to 5.00
+  completedJobs  Int       @default(0)
+  hourlyRate     Decimal?  @db.Decimal(10, 2)
+  insurance      Json      @default("{}") // { hasLiability, hasWorkersComp, expiresAt }
+  availability   String    @default("available") // 'available', 'busy', 'unavailable'
+  notes          String?   @db.Text
+  onboardedAt    DateTime  @default(now())
+  lastJobAt      DateTime?
+  metadata       Json      @default("{}")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  
+  Org            Org       @relation(fields: [orgId], references: [id])
+
+  @@index([orgId, status])
+  @@index([orgId, availability])
+  @@index([companyName])
 }
 

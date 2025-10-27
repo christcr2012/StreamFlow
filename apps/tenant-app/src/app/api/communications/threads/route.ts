@@ -1,123 +1,150 @@
 /**
- * Communication Threads API - PHASE 1 STUB
+ * Communication Threads API - PHASE 2
  * 
  * Manages conversation threads with customers
  * Issue: #259 - Type 2 Communications System
- * 
- * Phase 1: Returns stub/placeholder data
- * Phase 2: Will query real CommunicationThread data
  */
 
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { getAuthContext } from '@/lib/auth-context';
+import { prisma } from '@/lib/prisma';
 
-export async function GET(req: Request) {
-  console.log('[STUB] GET /api/communications/threads');
-  
-  // TODO Phase 2: Query real threads from CommunicationThread table
-  // const threads = await prisma.communicationThread.findMany({
-  //   where: { orgId: session.user.orgId },
-  //   include: {
-  //     Customer: {
-  //       select: {
-  //         id: true,
-  //         primaryName: true,
-  //         primaryEmail: true,
-  //         primaryPhone: true
-  //       }
-  //     }
-  //   },
-  //   orderBy: { lastMessageAt: 'desc' },
-  //   take: 50
-  // });
-  
-  // STUB: Return placeholder threads
-  return NextResponse.json({
-    threads: [
-      {
-        id: 'thread_stub_1',
-        contactId: 'contact_123',
-        contact: {
-          id: 'contact_123',
-          primaryName: 'John Doe',
-          primaryPhone: '+15555551234',
-          primaryEmail: 'john@example.com'
+export async function GET(req: NextRequest) {
+  try {
+    const authContext = await getAuthContext();
+    if (!authContext.isAuthenticated || !authContext.orgId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const limit = parseInt(searchParams.get('limit') || '50');
+    const status = searchParams.get('status') || 'active';
+    
+    // Query threads with customer details
+    const threads = await prisma.communicationThread.findMany({
+      where: { 
+        orgId: authContext.orgId,
+        status
+      },
+      include: {
+        Customer: {
+          select: {
+            id: true,
+            primaryName: true,
+            primaryEmail: true,
+            primaryPhone: true,
+            company: true
+          }
         },
-        subject: null,
-        lastMessageAt: '2025-10-26T14:35:00Z',
-        lastMessagePreview: 'Perfect, thank you!',
-        unreadCount: 1,
-        participants: ['user_456'],
-        metadata: {
-          lastMessageType: 'sms',
-          lastMessageDirection: 'inbound'
+        _count: {
+          select: {
+            Communications: true
+          }
         }
       },
-      {
-        id: 'thread_stub_2',
-        contactId: 'contact_456',
-        contact: {
-          id: 'contact_456',
-          primaryName: 'Jane Smith',
-          primaryEmail: 'jane@example.com'
-        },
-        subject: 'Service Estimate Discussion',
-        lastMessageAt: '2025-10-26T10:15:00Z',
-        lastMessagePreview: 'Hi Jane, attached is your estimate for the requested service...',
-        unreadCount: 0,
-        participants: ['user_456'],
-        metadata: {
-          lastMessageType: 'email',
-          lastMessageDirection: 'outbound'
-        }
+      orderBy: { lastMessageAt: 'desc' },
+      take: limit
+    });
+
+    // Calculate total unread across all threads
+    const unreadTotal = threads.reduce((sum, thread) => sum + thread.unreadCount, 0);
+
+    // Transform to API response format
+    const formattedThreads = threads.map(thread => ({
+      id: thread.id,
+      contactId: thread.contactId,
+      contact: {
+        id: thread.Customer.id,
+        primaryName: thread.Customer.primaryName,
+        primaryEmail: thread.Customer.primaryEmail,
+        primaryPhone: thread.Customer.primaryPhone,
+        company: thread.Customer.company
       },
-      {
-        id: 'thread_stub_3',
-        contactId: 'contact_789',
-        contact: {
-          id: 'contact_789',
-          primaryName: 'Bob Johnson',
-          primaryPhone: '+15555557890',
-          primaryEmail: 'bob@example.com'
-        },
-        subject: null,
-        lastMessageAt: '2025-10-25T16:20:00Z',
-        lastMessagePreview: 'Is the technician on the way?',
-        unreadCount: 1,
-        participants: ['user_456', 'user_789'],
-        metadata: {
-          lastMessageType: 'sms',
-          lastMessageDirection: 'inbound',
-          urgent: true
-        }
-      }
-    ],
-    total: 3,
-    unreadTotal: 2
-  });
+      subject: thread.subject,
+      lastMessageAt: thread.lastMessageAt,
+      lastMessagePreview: thread.lastMessagePreview,
+      unreadCount: thread.unreadCount,
+      participants: thread.participants as string[],
+      metadata: thread.metadata as Record<string, any>,
+      messageCount: thread._count.Communications
+    }));
+
+    return NextResponse.json({
+      threads: formattedThreads,
+      total: threads.length,
+      unreadTotal
+    });
+  } catch (error: any) {
+    console.error('GET /api/communications/threads error:', error);
+    const { createSafeErrorResponse } = await import('@/lib/error-handler');
+    return createSafeErrorResponse(error, 'GET /api/communications/threads');
+  }
 }
 
-export async function POST(req: Request) {
-  const body = await req.json();
-  const { threadId, action } = body;
-  
-  if (action === 'mark_read') {
-    console.log('[STUB] POST /api/communications/threads - mark read:', threadId);
+export async function POST(req: NextRequest) {
+  try {
+    const authContext = await getAuthContext();
+    if (!authContext.isAuthenticated || !authContext.orgId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const body = await req.json();
+    const { threadId, action } = body;
     
-    // TODO Phase 2: Update thread unreadCount
-    // await prisma.communicationThread.update({
-    //   where: { id: threadId },
-    //   data: { unreadCount: 0 }
-    // });
+    if (action === 'mark_read') {
+      // Verify thread belongs to this org
+      const thread = await prisma.communicationThread.findUnique({
+        where: { id: threadId },
+        select: { orgId: true }
+      });
+
+      if (!thread || thread.orgId !== authContext.orgId) {
+        return NextResponse.json({ error: 'Thread not found' }, { status: 404 });
+      }
+
+      // Mark all messages in thread as read
+      await prisma.communicationThread.update({
+        where: { id: threadId },
+        data: { unreadCount: 0 }
+      });
+      
+      return NextResponse.json({
+        success: true,
+        threadId,
+        unreadCount: 0
+      });
+    }
+
+    if (action === 'archive') {
+      // Verify thread belongs to this org
+      const thread = await prisma.communicationThread.findUnique({
+        where: { id: threadId },
+        select: { orgId: true }
+      });
+
+      if (!thread || thread.orgId !== authContext.orgId) {
+        return NextResponse.json({ error: 'Thread not found' }, { status: 404 });
+      }
+
+      await prisma.communicationThread.update({
+        where: { id: threadId },
+        data: { status: 'archived' }
+      });
+
+      return NextResponse.json({
+        success: true,
+        threadId,
+        status: 'archived'
+      });
+    }
     
-    return NextResponse.json({
-      success: true,
-      threadId,
-      unreadCount: 0
-    });
+    return NextResponse.json(
+      { error: 'Invalid action. Supported: mark_read, archive' },
+      { status: 400 }
+    );
+  } catch (error: any) {
+    console.error('POST /api/communications/threads error:', error);
+    const { createSafeErrorResponse } = await import('@/lib/error-handler');
+    return createSafeErrorResponse(error, 'POST /api/communications/threads');
   }
-  
-  return NextResponse.json(
-    { error: 'Invalid action' },
-    { status: 400 }
-  );
 }
