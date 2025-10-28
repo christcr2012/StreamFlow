@@ -5,11 +5,6 @@
   "framework": "nextjs",
   "installCommand": "cd ../.. && npm install",
   "ignoreCommand": "npx turbo-ignore marketing-cortiware",
-  "git": {
-    "deploymentEnabled": {
-      "main": false
-    }
-  },
   "rewrites": [
     {
       "source": "/app/:path*",
@@ -17,4 +12,3 @@
     }
   ]
 }
-

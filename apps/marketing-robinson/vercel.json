@@ -5,11 +5,6 @@
   "framework": "nextjs",
   "installCommand": "cd ../.. && npm install",
   "ignoreCommand": "npx turbo-ignore marketing-robinson",
-  "git": {
-    "deploymentEnabled": {
-      "main": false
-    }
-  },
   "redirects": [
     {
       "source": "/provider/:path*",
@@ -25,4 +20,3 @@
     }
   ]
 }
-
