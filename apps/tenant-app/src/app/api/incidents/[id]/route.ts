@@ -24,8 +24,9 @@ const updateIncidentSchema = z.object({
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
+  const { id } = await params;
   try {
     const auth = await getAuthContext();
     if (!auth.isAuthenticated || !auth.orgId) {
@@ -34,7 +35,7 @@ export async function GET(
 
     const incident = await prisma.incident.findFirst({
       where: {
-        id: params.id,
+        id,
         orgId: auth.orgId,
       },
       select: {
@@ -82,8 +83,9 @@ export async function GET(
  */
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
+  const { id } = await params;
   try {
     const auth = await getAuthContext();
     if (!auth.isAuthenticated || !auth.orgId) {
@@ -103,7 +105,7 @@ export async function PATCH(
     // Verify incident exists and belongs to org
     const existing = await prisma.incident.findFirst({
       where: {
-        id: params.id,
+        id,
         orgId: auth.orgId,
       },
       select: { id: true, status: true },
@@ -135,7 +137,7 @@ export async function PATCH(
       updateData.assigneeUserId = parsed.data.assigneeUserId;
 
     const updated = await prisma.incident.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
       select: {
         id: true,
@@ -169,8 +171,9 @@ export async function PATCH(
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
+  const { id } = await params;
   try {
     const auth = await getAuthContext();
     if (!auth.isAuthenticated || !auth.orgId) {
@@ -180,7 +183,7 @@ export async function DELETE(
     // Verify incident exists and belongs to org
     const existing = await prisma.incident.findFirst({
       where: {
-        id: params.id,
+        id,
         orgId: auth.orgId,
       },
       select: { id: true },
@@ -199,7 +202,7 @@ export async function DELETE(
     // TODO Phase 2: Log deletion to audit log
 
     await prisma.incident.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ ok: true, message: "Incident deleted" });

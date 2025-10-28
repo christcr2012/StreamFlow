@@ -13,6 +13,8 @@
   },
   "scripts": {
     "phase:0": "tsx scripts/operating/phase0_schema_audit.ts",
+    "phase:0:docs": "tsx scripts/operating/phase0_docs_audit.ts",
+    "phase:0:all": "npm run phase:0 && npm run phase:0:docs && npm run trace:update",
     "ci:slices:sync": "tsx scripts/ci/sync_slice_issues.ts",
     "setpwd": "tsx scripts/set-password.ts",
     "setup-accounts": "tsx scripts/setup-accounts.ts",

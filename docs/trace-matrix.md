@@ -1838,3 +1838,5 @@
 | MarketingPricingHistory.changedByEmail      | C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md                                                 |                                                                                                                       |                                                                                       |
 | MarketingPricingHistory.reason              | C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md                                                 |                                                                                                                       |                                                                                       |
 | MarketingPricingHistory.createdAt           | C:/Users/chris/Git Local/Cortiware/docs/trace-matrix.md                                                 |                                                                                                                       |                                                                                       |
+
+<!-- Updated: 2025-10-27T22:29:11.203Z (scaffold) -->

@@ -23,7 +23,7 @@ const updateReferralSchema = z.object({
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const auth = await getAuthContext();
@@ -33,7 +33,7 @@ export async function GET(
 
     const referral = await prisma.referral.findFirst({
       // TODO Phase 2: Scope to org via relation (employee/org) once schema verified
-      where: { id: params.id },
+      where: { id: id },
       select: {
         id: true,
         employeeId: true,
@@ -74,7 +74,7 @@ export async function GET(
  */
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const auth = await getAuthContext();
@@ -95,7 +95,7 @@ export async function PATCH(
     // Verify referral exists and belongs to org
     const existing = await prisma.referral.findFirst({
       // TODO Phase 2: Scope to org via relation (employee/org) once schema verified
-      where: { id: params.id },
+      where: { id: id },
       select: {
         id: true,
         status: true,
@@ -130,7 +130,7 @@ export async function PATCH(
     }
 
     const updated = await prisma.referral.update({
-      where: { id: params.id },
+      where: { id: id },
       data: updateData,
       select: {
         id: true,
@@ -159,7 +159,7 @@ export async function PATCH(
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const auth = await getAuthContext();
@@ -170,7 +170,7 @@ export async function DELETE(
     // Verify referral exists and belongs to org
     const existing = await prisma.referral.findFirst({
       // TODO Phase 2: Scope to org via relation (employee/org) once schema verified
-      where: { id: params.id },
+      where: { id: id },
       select: {
         id: true,
         status: true,
@@ -188,7 +188,7 @@ export async function DELETE(
     // TODO Phase 2: Log deletion to audit log
 
     await prisma.referral.delete({
-      where: { id: params.id },
+      where: { id: id },
     });
 
     return NextResponse.json({ ok: true, message: "Referral deleted" });

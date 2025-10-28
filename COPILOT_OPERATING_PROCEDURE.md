@@ -88,7 +88,7 @@ Autonomous execution through Phase 3A-4 unless a blocker requires user input.
 
 ---
 
-## PHASE 0 — Schema Audit & Plan Synthesis
+## PHASE 0 — Schema + Documentation Audit & Plan Synthesis
 
 **Status:** ✅ COMPLETE (Audit delivered October 27, 2025)
 
@@ -97,6 +97,7 @@ Autonomous execution through Phase 3A-4 unless a blocker requires user input.
 - ✅ `/PRISMA_SCHEMA_AUDIT.md` - Comprehensive gap analysis (95 models analyzed)
 - ✅ `/AUDIT_SUMMARY.md` - Executive summary with priorities
 - ✅ `/IMPLEMENTATION_CHECKLIST.md` - Tracking tool with checkboxes
+- ✅ `/docs/PHASE_0_DOCS_AUDIT.md` - Documentation ↔ code conformance audit (endpoints, file paths, coverage)
 
 ### Existing Reference Documents
 
@@ -112,6 +113,15 @@ Autonomous execution through Phase 3A-4 unless a blocker requires user input.
 - ✅ 0.3: Created trace matrix in audit document
 - ✅ 0.4: Emitted work plan (Phase 3A-4 roadmap)
 - ✅ 0.5: Ready for GitHub issue creation
+
+### Additional Phase 0 Tasks (Ongoing / Repeatable)
+
+- 🔁 0.6: Documentation ↔ Code Conformance Audit
+  - Scan all project docs for referenced files and routes
+  - Compare against actual repository files and Next.js App Router API routes
+  - Identify: documented-but-missing, existing-but-undocumented, endpoint mismatches
+  - Output: `/docs/PHASE_0_DOCS_AUDIT.md`
+  - Command: `npm run phase:0:docs` or `npm run phase:0:all`
 
 ### Next Action
 

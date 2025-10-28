@@ -12,8 +12,9 @@ import { getAuthContext } from "@/lib/auth-context";
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
+  const { id } = await params;
   try {
     const auth = await getAuthContext();
     if (!auth.isAuthenticated) {

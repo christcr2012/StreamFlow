@@ -22,7 +22,7 @@ const updateContactSchema = z.object({
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const auth = await getAuthContext();
@@ -32,7 +32,7 @@ export async function GET(
 
     const contact = await prisma.customerContact.findFirst({
       where: {
-        id: params.id,
+        id: id,
         Customer: {
           orgId: auth.orgId,
         },
@@ -80,7 +80,7 @@ export async function GET(
  */
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const auth = await getAuthContext();
@@ -101,7 +101,7 @@ export async function PATCH(
     // Verify contact exists and belongs to org
     const existing = await prisma.customerContact.findFirst({
       where: {
-        id: params.id,
+        id: id,
         Customer: {
           orgId: auth.orgId,
         },
@@ -131,7 +131,7 @@ export async function PATCH(
       updateData.isPrimary = parsed.data.isPrimary;
 
     const updated = await prisma.customerContact.update({
-      where: { id: params.id },
+      where: { id: id },
       data: updateData,
       select: {
         id: true,
@@ -166,7 +166,7 @@ export async function PATCH(
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const auth = await getAuthContext();
@@ -177,7 +177,7 @@ export async function DELETE(
     // Verify contact exists and belongs to org
     const existing = await prisma.customerContact.findFirst({
       where: {
-        id: params.id,
+        id: id,
         Customer: {
           orgId: auth.orgId,
         },
@@ -198,7 +198,7 @@ export async function DELETE(
     // TODO Phase 2: Log deletion to audit log
 
     await prisma.customerContact.delete({
-      where: { id: params.id },
+      where: { id: id },
     });
 
     return NextResponse.json({ ok: true, message: "Contact deleted" });

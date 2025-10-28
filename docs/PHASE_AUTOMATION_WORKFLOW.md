@@ -21,11 +21,11 @@ This document explains how to use the automation infrastructure to systematicall
 
 ## 📊 Phase Definition
 
-### Phase 0: Schema Audit & Planning
+### Phase 0: Schema + Documentation Audit & Planning
 
-**Goal**: Analyze Prisma schema, generate implementation plan  
-**Output**: Gap analysis, trace matrix, vertical slices  
-**Automation**: `npm run phase:0`
+**Goal**: Analyze both Prisma schemas and audit the codebase against all project documentation to build an authoritative implementation plan.  
+**Output**: Gap analysis (schema + docs), trace matrix, vertical slices, docs-code conformance report  
+**Automation**: `npm run phase:0:all` (runs schema audit, docs audit, and updates trace matrix)
 
 ### Phase 1: Scaffolding
 
@@ -49,16 +49,25 @@ This document explains how to use the automation infrastructure to systematicall
 
 ## 🚀 Complete Workflow
 
-### Step 1: Run Phase 0 Audit (Optional - Already Done)
+### Step 1: Run Phase 0 Audits (Schema + Docs)
 
 ```powershell
-# Generate schema gap analysis
+# Option A: Full Phase 0 end-to-end (recommended)
+npm run phase:0:all
+
+# Option B: Run audits individually
+# 1) Schema gap analysis
 npm run phase:0
+# 2) Documentation ↔ code conformance audit
+npm run phase:0:docs
+# 3) Refresh trace matrix
+npm run trace:update
 
 # Output files:
-# - reports/schema-gap-report.md
-# - docs/trace-matrix.md
-# - docs/work-plan.md
+# - reports/schema-gap-report.md (if emitted by schema audit)
+# - docs/trace-matrix.md (refreshed)
+# - docs/work-plan.md (if emitted by schema audit)
+# - docs/PHASE_0_DOCS_AUDIT.md (new: docs ↔ code gaps)
 ```
 
 **When to use**:
@@ -66,6 +75,7 @@ npm run phase:0
 - New Prisma models added
 - Starting a major feature area
 - Need to understand full scope
+- Suspect documentation drift vs code
 
 ### Step 2: Check Current Placeholder Status
 

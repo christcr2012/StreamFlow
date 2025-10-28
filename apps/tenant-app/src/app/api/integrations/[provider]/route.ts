@@ -19,7 +19,7 @@ const updateIntegrationSchema = z.object({
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { provider: string } },
+  { params }: { params: Promise<{ provider: string }> },
 ) {
   try {
     const auth = await getAuthContext();
@@ -52,7 +52,7 @@ export async function GET(
  */
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { provider: string } },
+  { params }: { params: Promise<{ provider: string }> },
 ) {
   try {
     const auth = await getAuthContext();
@@ -95,7 +95,7 @@ export async function PATCH(
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { provider: string } },
+  { params }: { params: Promise<{ provider: string }> },
 ) {
   try {
     const auth = await getAuthContext();
