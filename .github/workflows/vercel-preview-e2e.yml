@@ -3,12 +3,28 @@ name: Vercel Preview E2E
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+    # Only run when app code that can trigger Vercel deployments changes
+    paths:
+      - "apps/**"
+      - "packages/**"
+      - "turbo.json"
+      - "package.json"
+      - "tsconfig*.json"
+      - "vercel.json"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Force run even if path filters would skip"
+        required: false
+        default: "false"
 
 jobs:
   wait-for-preview:
     name: Wait for Vercel Preview & Run E2E
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Allow manual override via workflow_dispatch input
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
