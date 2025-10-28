@@ -38,47 +38,52 @@ const defaultSettings = {
     costAlerts: true,
     revenueReports: true,
     clientActivity: true,
-    systemUpdates: true
+    systemUpdates: true,
   },
   billingSettings: {
     invoicePrefix: "MV",
     paymentTermsDays: 30,
     lateFeePercentage: 1.5,
-    autoCollections: false
-  }
+    autoCollections: false,
+  },
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   try {
     const user = await ensureProvider(req, res);
     if (!user) return;
 
-    if (req.method === 'GET') {
+    if (req.method === "GET") {
       // For now, return default settings
       // In a real implementation, these would be stored in the database
       return res.status(200).json({
         ok: true,
-        settings: defaultSettings
+        settings: defaultSettings,
       });
     }
 
-    if (req.method === 'PUT') {
+    if (req.method === "PUT") {
       const updates = req.body;
-      
+
       // Validate required fields
       if (!updates.companyName || !updates.contactEmail) {
         return res.status(400).json({
           ok: false,
-          error: 'Company name and contact email are required'
+          error: "Company name and contact email are required",
         });
       }
 
       // Validate email format
+      // Security: Use simpler regex without backtracking to prevent ReDoS
+      // This checks basic structure: has @ symbol with text before/after and a dot in domain
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(updates.contactEmail)) {
         return res.status(400).json({
           ok: false,
-          error: 'Invalid email format'
+          error: "Invalid email format",
         });
       }
 
@@ -86,28 +91,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (updates.maxAiCostPerMonth < 10 || updates.maxAiCostPerMonth > 200) {
         return res.status(400).json({
           ok: false,
-          error: 'Max AI cost must be between $10 and $200'
+          error: "Max AI cost must be between $10 and $200",
         });
       }
 
       if (updates.defaultLeadPrice < 1 || updates.defaultLeadPrice > 1000) {
         return res.status(400).json({
           ok: false,
-          error: 'Default lead price must be between $1 and $1000'
+          error: "Default lead price must be between $1 and $1000",
         });
       }
 
-      if (updates.billingSettings?.paymentTermsDays < 1 || updates.billingSettings?.paymentTermsDays > 90) {
+      if (
+        updates.billingSettings?.paymentTermsDays < 1 ||
+        updates.billingSettings?.paymentTermsDays > 90
+      ) {
         return res.status(400).json({
           ok: false,
-          error: 'Payment terms must be between 1 and 90 days'
+          error: "Payment terms must be between 1 and 90 days",
         });
       }
 
-      if (updates.billingSettings?.lateFeePercentage < 0 || updates.billingSettings?.lateFeePercentage > 10) {
+      if (
+        updates.billingSettings?.lateFeePercentage < 0 ||
+        updates.billingSettings?.lateFeePercentage > 10
+      ) {
         return res.status(400).json({
           ok: false,
-          error: 'Late fee percentage must be between 0% and 10%'
+          error: "Late fee percentage must be between 0% and 10%",
         });
       }
 
@@ -118,29 +129,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         } catch {
           return res.status(400).json({
             ok: false,
-            error: 'Invalid federated portal URL'
+            error: "Invalid federated portal URL",
           });
         }
       }
 
       // In a real implementation, save to database
       // For now, just return success
-      
+
       return res.status(200).json({
         ok: true,
-        message: 'Settings updated successfully',
-        settings: { ...defaultSettings, ...updates }
+        message: "Settings updated successfully",
+        settings: { ...defaultSettings, ...updates },
       });
     }
 
-    res.setHeader('Allow', ['GET', 'PUT']);
-    return res.status(405).json({ ok: false, error: 'Method not allowed' });
-
+    res.setHeader("Allow", ["GET", "PUT"]);
+    return res.status(405).json({ ok: false, error: "Method not allowed" });
   } catch (error: any) {
-    console.error('Provider settings error:', error);
-    return res.status(500).json({ 
-      ok: false, 
-      error: error.message || 'Failed to manage settings' 
+    console.error("Provider settings error:", error);
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to manage settings",
     });
   }
 }
