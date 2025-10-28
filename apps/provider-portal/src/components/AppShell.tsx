@@ -83,15 +83,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             {/* Dynamic logo with fallback */}
             {brandLogoUrl ? (
               // Use regular img tag for external URLs to avoid Next.js domain restrictions
-              <img
+              <Image
                 src={brandLogoUrl}
                 alt={`${brandName} Logo`}
+                width={180}
+                height={180}
+                unoptimized
                 style={{ height: "clamp(96px, 16vw, 180px)", width: "auto", maxWidth: "180px" }}
-                onError={({ currentTarget }) => {
-                  // Fallback to default logo on error and prevent infinite loops
-                  currentTarget.onerror = null;
-                  currentTarget.src = "/logo.png";
-                }}
               />
             ) : (
               <Image

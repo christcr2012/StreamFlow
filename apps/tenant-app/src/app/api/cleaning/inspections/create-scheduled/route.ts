@@ -1,15 +1,20 @@
 /**
  * Cleaning Inspections - Create Scheduled Inspections
- * 
+ *
  * POST /api/cleaning/inspections/create-scheduled - Create inspections for completed work orders
- * 
+ *
  * This endpoint is designed to be called by a cron job (daily at 8 AM)
  * to automatically create QA inspections for work orders completed in the last 24 hours.
+ *
+ * Now uses BullMQ queue for background processing.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAuthContext } from '@/lib/auth-context';
+import { enqueue } from '@/lib/queue/enqueue';
+import { QUEUE_NAMES } from '@cortiware/queue';
+import { randomUUID } from 'crypto';
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,86 +28,43 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get time window from request or use default (last 24 hours)
+    // Get parameters from request
     const body = await request.json().catch(() => ({}));
-    const hoursBack = body.hoursBack || 24;
-    
-    const cutoffDate = new Date(Date.now() - hoursBack * 60 * 60 * 1000);
+    const weekStartISO = body.weekStartISO || new Date().toISOString().split('T')[0];
+    const percent = body.percent || 10; // Default 10% inspection rate
+    const bias = body.bias || {};
 
-    // Find completed work orders
-    const workOrders = await prisma.cleaningWorkOrder.findMany({
+    // Get all unique orgIds that have completed work orders
+    const orgs = await prisma.cleaningWorkOrder.findMany({
       where: {
         status: 'COMPLETED',
-        actualEnd: { gte: cutoffDate }
-      }
-    });
-
-    // Get existing inspections for these work orders
-    const existingInspections = await prisma.cleaningInspection.findMany({
-      where: {
-        workOrderId: { in: workOrders.map(wo => wo.id) }
       },
-      select: {
-        workOrderId: true
-      }
+      select: { orgId: true },
+      distinct: ['orgId'],
     });
 
-    const existingWorkOrderIds = new Set(existingInspections.map(i => i.workOrderId));
-
-    // Filter to only work orders without inspections
-    const workOrdersNeedingInspection = workOrders.filter(wo => !existingWorkOrderIds.has(wo.id));
-
-    let created = 0;
-    const errors: string[] = [];
-
-    for (const wo of workOrdersNeedingInspection) {
-      try {
-        // Create default checklist based on space type
-        const defaultChecklist = generateDefaultChecklist(wo.spaceType);
-
-        // Create inspection
-        await prisma.cleaningInspection.create({
-          data: {
-            orgId: wo.orgId,
-            workOrderId: wo.id,
-            checklistJson: JSON.stringify(defaultChecklist),
-            defectsCount: 0,
-            status: 'PENDING'
-          }
-        });
-
-        created++;
-
-        // Log activity
-        await prisma.activity.create({
-          data: {
-            orgId: wo.orgId,
-            actorType: 'system',
-            actorId: 'inspection-cron',
-            entityType: 'cleaning_inspection',
-            entityId: wo.id,
-            action: 'created',
-            meta: JSON.stringify({
-              workOrderId: wo.id,
-              spaceType: wo.spaceType,
-              automated: true
-            })
-          }
-        });
-      } catch (error) {
-        console.error(`Error creating inspection for work order ${wo.id}:`, error);
-        errors.push(`Work order ${wo.id}: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      }
+    // Enqueue an inspection generation job for each org
+    const jobs = [];
+    for (const org of orgs) {
+      const job = await enqueue(
+        QUEUE_NAMES.QA,
+        'inspections.generate',
+        {
+          orgId: org.orgId,
+          weekStartISO,
+          percent,
+          bias,
+          idempotencyKey: randomUUID(),
+        }
+      );
+      jobs.push(job);
     }
 
     return NextResponse.json({
       success: true,
-      summary: {
-        workOrdersProcessed: workOrders.length,
-        inspectionsCreated: created,
-        errors: errors.length
-      },
-      errors: errors.length > 0 ? errors : undefined
+      message: `Queued ${jobs.length} inspection generation job(s) for background processing`,
+      jobIds: jobs,
+      orgsQueued: orgs.length,
     });
   } catch (error) {
     console.error('Error creating scheduled inspections:', error);

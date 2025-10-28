@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "node ../../node_modules/next/dist/bin/next dev -p 3000",
-    "build": "node ../../node_modules/prisma/build/index.js generate && node ../../node_modules/prisma/build/index.js migrate deploy && node ../../node_modules/next/dist/bin/next build",
+    "build": "node ../../node_modules/prisma/build/index.js generate --schema=prisma/schema.prisma && node ../../node_modules/prisma/build/index.js generate --schema=../../prisma/schema.prisma && node ../../node_modules/next/dist/bin/next build",
     "start": "node ../../node_modules/next/dist/bin/next start",
     "lint": "node ../../node_modules/next/dist/bin/next lint",
     "typecheck": "tsc --noEmit",
@@ -20,8 +20,7 @@
     "@cortiware/themes": "file:../../packages/themes",
     "@next/bundle-analyzer": "^15.5.5",
     "@cortiware/kv": "file:../../packages/kv",
-
-    "@prisma/client": "^6.16.2",
+    "@prisma/client": "^6.18.0",
     "@prisma/nextjs-monorepo-workaround-plugin": "^5.20.0",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-slot": "^1.2.3",
@@ -69,7 +68,7 @@
     "@typescript-eslint/parser": "^8.44.1",
     "eslint": "^9.36.0",
     "eslint-config-next": "^15.5.4",
-    "prisma": "^6.16.2",
+    "prisma": "^6.18.0",
     "tsx": "^4.19.2",
     "turbo": "^2.5.8",
     "typescript": "^5.7.3"

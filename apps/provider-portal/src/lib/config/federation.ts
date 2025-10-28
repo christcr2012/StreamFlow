@@ -1,5 +1,4 @@
-// Federation configuration flags
-// These flags allow enabling/disabling federation and toggling OIDC readiness.
+// Federation configuration flags (canonical only)
 
 function envBool(name: string, def: boolean): boolean {
   const v = process.env[name];
@@ -10,4 +9,5 @@ function envBool(name: string, def: boolean): boolean {
 
 export const FED_ENABLED = envBool('FED_ENABLED', false);
 export const FED_OIDC_ENABLED = envBool('FED_OIDC_ENABLED', false);
-
+export const FED_RATE_LIMIT_ENABLED = envBool('FED_RATE_LIMIT_ENABLED', false);
+export const FED_IDEMPOTENCY_ENABLED = envBool('FED_IDEMPOTENCY_ENABLED', false);

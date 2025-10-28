@@ -38,13 +38,20 @@
   --bg-elevated: #1a1a1a;
   --surface: #1e1e1e;
   --surface-hover: #2a2a2a;
+  /* Aliases for shared token names used across apps */
+  --surface-2: var(--surface-hover);
+  --glass-bg: rgba(30, 30, 30, 0.4);
+  --glass-bg-light: rgba(30, 30, 30, 0.25);
   --border: #333333;
   --border-hover: #444444;
+  --border-accent: rgba(255, 255, 255, 0.12);
   
   /* Text colors */
   --text: #ffffff;
   --text-muted: #a1a1aa;
   --text-subtle: #71717a;
+  --text-secondary: var(--text-muted);
+  --text-tertiary: var(--text-subtle);
   --text-on-brand: #ffffff;
 
   /* === Accent Colors === */

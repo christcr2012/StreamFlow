@@ -1,9 +1,15 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "cd ../.. && npm run build -- --filter=marketing-robinson",
   "outputDirectory": ".next",
   "framework": "nextjs",
   "installCommand": "cd ../.. && npm install",
   "ignoreCommand": "npx turbo-ignore marketing-robinson",
+  "git": {
+    "deploymentEnabled": {
+      "main": false
+    }
+  },
   "redirects": [
     {
       "source": "/provider/:path*",
@@ -17,10 +23,6 @@
       "source": "/portal/:path*",
       "destination": "https://provider-portal.vercel.app/:path*"
     }
-  ],
-  "github": {
-    "silent": true,
-    "autoJobCancelation": false
-  }
+  ]
 }
 

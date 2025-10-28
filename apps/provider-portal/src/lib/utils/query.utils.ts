@@ -4,7 +4,8 @@
  * Common database query patterns and error handling
  */
 
-import { Prisma } from '@prisma/client-provider';
+import { Prisma } from "@prisma/client-provider";
+import { logErrorUnlessBuild } from "@/lib/build-guard";
 
 /**
  * Standard pagination parameters
@@ -43,7 +44,7 @@ export function normalizePaginationLimit(limit?: number): number {
  */
 export function buildCursorPagination(params: PaginationParams) {
   const limit = normalizePaginationLimit(params.limit);
-  
+
   return {
     take: limit + 1, // Take one extra to check if there are more
     ...(params.cursor && {
@@ -58,7 +59,7 @@ export function buildCursorPagination(params: PaginationParams) {
  */
 export function processPaginatedResults<T extends { id: string }>(
   items: T[],
-  limit: number
+  limit: number,
 ): PaginatedResult<T> {
   const hasMore = items.length > limit;
   const resultItems = hasMore ? items.slice(0, limit) : items;
@@ -77,13 +78,13 @@ export function processPaginatedResults<T extends { id: string }>(
 export async function safeQuery<T>(
   queryFn: () => Promise<T>,
   fallback: T,
-  errorMessage?: string
+  errorMessage?: string,
 ): Promise<T> {
   try {
     return await queryFn();
   } catch (error) {
     if (errorMessage) {
-      console.error(errorMessage, error);
+      logErrorUnlessBuild(errorMessage, error);
     }
     return fallback;
   }
@@ -94,17 +95,17 @@ export async function safeQuery<T>(
  */
 export function buildTextSearchFilter(
   query: string | undefined,
-  fields: string[]
+  fields: string[],
 ): any {
-  if (!query || query.trim() === '') return undefined;
+  if (!query || query.trim() === "") return undefined;
 
   const searchTerm = query.trim();
-  
+
   return {
     OR: fields.map((field: any) => ({
       [field]: {
         contains: searchTerm,
-        mode: 'insensitive' as Prisma.QueryMode,
+        mode: "insensitive" as Prisma.QueryMode,
       },
     })),
   };
@@ -116,12 +117,12 @@ export function buildTextSearchFilter(
 export function buildDateRangeFilter(
   field: string,
   start?: Date,
-  end?: Date
+  end?: Date,
 ): any {
   if (!start && !end) return undefined;
 
   const filter: any = {};
-  
+
   if (start && end) {
     filter[field] = {
       gte: start,
@@ -146,7 +147,7 @@ export function buildDateRangeFilter(
 export function buildStatusFilter(
   field: string,
   status: string | undefined,
-  allValue: string = 'ALL'
+  allValue: string = "ALL",
 ): any {
   if (!status || status === allValue) return undefined;
 
@@ -159,8 +160,10 @@ export function buildStatusFilter(
  * Combine filters with AND logic
  */
 export function combineFilters(...filters: (any | undefined)[]): any {
-  const validFilters = filters.filter((f: any) => f !== undefined && f !== null);
-  
+  const validFilters = filters.filter(
+    (f: any) => f !== undefined && f !== null,
+  );
+
   if (validFilters.length === 0) return undefined;
   if (validFilters.length === 1) return validFilters[0];
 
@@ -175,7 +178,7 @@ export function combineFilters(...filters: (any | undefined)[]): any {
 export function calculatePercentage(
   numerator: number,
   denominator: number,
-  decimals: number = 2
+  decimals: number = 2,
 ): number {
   if (denominator === 0) return 0;
   return Number(((numerator / denominator) * 100).toFixed(decimals));
@@ -195,16 +198,19 @@ export function calculateAverage(values: number[]): number {
  */
 export function groupBy<T, K extends string | number>(
   items: T[],
-  keyFn: (item: T) => K
+  keyFn: (item: T) => K,
 ): Record<K, T[]> {
-  return items.reduce((acc: any, item: any) => {
-    const key = keyFn(item);
-    if (!acc[key]) {
-      acc[key] = [];
-    }
-    acc[key].push(item);
-    return acc;
-  }, {} as Record<K, T[]>);
+  return items.reduce(
+    (acc: any, item: any) => {
+      const key = keyFn(item);
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+      acc[key].push(item);
+      return acc;
+    },
+    {} as Record<K, T[]>,
+  );
 }
 
 /**
@@ -213,16 +219,15 @@ export function groupBy<T, K extends string | number>(
 export function sortBy<T>(
   items: T[],
   field: keyof T,
-  direction: 'asc' | 'desc' = 'asc'
+  direction: "asc" | "desc" = "asc",
 ): T[] {
   return [...items].sort((a, b) => {
     const aVal = a[field];
     const bVal = b[field];
-    
+
     if (aVal === bVal) return 0;
-    
+
     const comparison = aVal < bVal ? -1 : 1;
-    return direction === 'asc' ? comparison : -comparison;
+    return direction === "asc" ? comparison : -comparison;
   });
 }
-

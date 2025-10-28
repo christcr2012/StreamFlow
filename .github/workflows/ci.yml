@@ -1,9 +1,13 @@
 name: CI/CD
 
+permissions:
+  contents: read
+  issues: write
+
 on:
   pull_request:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   # ============================================================================
@@ -20,7 +24,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
@@ -39,6 +43,21 @@ jobs:
       - name: ESLint
         run: npm run lint
 
+      - name: Placeholder/Stub Detection
+        run: npm run ci:placeholders
+        continue-on-error: false
+        env:
+          PLACEHOLDER_STRICT: "true"
+          # Strict gate enabled: actionable placeholders will fail CI
+
+      - name: Sync Placeholder Issues
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: npm run ci:placeholders:sync
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          SYNC_ISSUES: "true"
+        continue-on-error: true
+
       # NOTE: We do NOT run builds in CI/CD anymore
       # Local builds are fundamentally different from Vercel builds
       # Testing builds locally repeatedly broke production deployments
@@ -49,9 +68,15 @@ jobs:
           echo "✅ TypeCheck and Lint passed - code quality verified"
           echo "🚀 Actual builds will run on Vercel with real DATABASE_URL"
 
-      - name: Unit Tests
+      - name: Unit Tests (Legacy harness)
         run: timeout 5m npm run test:unit || (echo "Tests timed out after 5 minutes" && exit 1)
         timeout-minutes: 6
+
+      - name: Unit Tests with Vitest (Coverage)
+        run: npm run test:coverage
+        continue-on-error: true
+        env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
 
       - name: Route Count Check (36-route cap)
         run: npx tsx scripts/ci/verify_route_count.ts
@@ -76,7 +101,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
@@ -95,4 +120,3 @@ jobs:
   # Manual deployment via GitHub Actions repeatedly broke production
   # All deployments now handled by Vercel's native Git integration
   # ============================================================================
-

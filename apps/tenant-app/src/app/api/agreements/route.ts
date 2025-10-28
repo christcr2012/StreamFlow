@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
         templateId: data.templateId,
         content,
         variables: data.variables as any,
-        status: 'DRAFT',
+        status: 'draft',
       },
       include: { Customer: true,
         AgreementTemplate: true,

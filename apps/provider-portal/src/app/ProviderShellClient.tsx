@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useProviderFlags } from '@/lib/useProviderFlags';
 
 /**
  * Provider Portal Shell - SEPARATE from client AppShell
@@ -15,6 +16,8 @@ import { usePathname } from 'next/navigation';
 export default function ProviderShellClient({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const active = (p: string) => Boolean(pathname === p || pathname?.startsWith(p + '/'));
+  const { flags } = useProviderFlags();
+  const aiCostEnabled = (flags && typeof flags === 'object' && (flags as any)['ai-cost'] !== false) || !flags; // default show until flags load
 
   return (
     <div
@@ -72,6 +75,11 @@ export default function ProviderShellClient({ children }: { children: React.Reac
           <ProviderNavLink href="/provider/ai" active={active('/provider/ai')}>
             AI
           </ProviderNavLink>
+          {aiCostEnabled && (
+            <ProviderNavLink href="/provider/ai/cost" active={active('/provider/ai/cost')}>
+              AI Cost
+            </ProviderNavLink>
+          )}
           <ProviderNavLink href="/provider/clients" active={active('/provider/clients')}>
             Client Accounts
           </ProviderNavLink>

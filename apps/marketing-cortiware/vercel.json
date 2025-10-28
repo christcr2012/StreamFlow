@@ -1,18 +1,20 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "cd ../.. && npm run build -- --filter=marketing-cortiware",
   "outputDirectory": ".next",
   "framework": "nextjs",
   "installCommand": "cd ../.. && npm install",
   "ignoreCommand": "npx turbo-ignore marketing-cortiware",
+  "git": {
+    "deploymentEnabled": {
+      "main": false
+    }
+  },
   "rewrites": [
     {
       "source": "/app/:path*",
       "destination": "https://tenant-app.vercel.app/:path*"
     }
-  ],
-  "github": {
-    "silent": true,
-    "autoJobCancelation": false
-  }
+  ]
 }
 

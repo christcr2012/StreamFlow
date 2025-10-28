@@ -19,6 +19,9 @@ import { run as runRoutingOptimization } from './routing_optimization.test';
 import { run as runUiComponents } from './ui_components.test';
 import { run as runImportersSchema } from './importers_schema.test';
 import { run as runVerticals } from './verticals.test';
+import { run as runStripeWebhookVerify } from './stripe.webhook.verify.test';
+import { run as runFedFlagsCompat } from './federation.flags.compat.test';
+
 
 process.env.UNIT_TESTS = '1';
 
@@ -44,6 +47,8 @@ async function main() {
     await runUiComponents(),
     await runImportersSchema(),
     await runVerticals(),
+    await runStripeWebhookVerify(),
+    await runFedFlagsCompat(),
   ];
   const totals = results.reduce((acc, r) => ({
     passed: acc.passed + r.passed,

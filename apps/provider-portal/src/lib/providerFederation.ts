@@ -31,7 +31,11 @@ export type FederationResponse<T = unknown> = {
   error?: string;
 };
 
-const USE_SHA256 = (process.env.PROVIDER_FEDERATION_SIG_SHA256 || "").trim() === "1";
+const USE_SHA256 = (() => {
+  const canon = (process.env.FED_SIG_SHA256 || "").trim().toLowerCase();
+  if (["1","true","yes","on","y","t"].includes(canon)) return true;
+  return (process.env.PROVIDER_FEDERATION_SIG_SHA256 || "").trim() === "1";
+})();
 
 function h31(secret: string, payload: string): string {
   const enc = new TextEncoder().encode(payload + secret);

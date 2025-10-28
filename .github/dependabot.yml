@@ -1,0 +1,44 @@
+version: 2
+updates:
+  # Keep GitHub Actions up to date
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  # Root workspace npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    versioning-strategy: increase
+    open-pull-requests-limit: 10
+
+  # Apps and packages in Turborepo
+  - package-ecosystem: "npm"
+    directory: "/apps/provider-portal"
+    schedule:
+      interval: "weekly"
+    versioning-strategy: increase
+  - package-ecosystem: "npm"
+    directory: "/apps/tenant-app"
+    schedule:
+      interval: "weekly"
+    versioning-strategy: increase
+  - package-ecosystem: "npm"
+    directory: "/apps/company-website"
+    schedule:
+      interval: "weekly"
+    versioning-strategy: increase
+  - package-ecosystem: "npm"
+    directory: "/apps/cortiware-marketing"
+    schedule:
+      interval: "weekly"
+    versioning-strategy: increase
+  - package-ecosystem: "npm"
+    directory: "/packages/*"
+    schedule:
+      interval: "weekly"
+    versioning-strategy: increase
+

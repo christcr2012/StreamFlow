@@ -1,0 +1,5 @@
+      - name: Placeholder/Stub Detection
+        run: npm run ci:placeholders
+        continue-on-error: true
+        env:
+          PLACEHOLDER_STRICT: "false"

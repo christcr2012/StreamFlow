@@ -1,0 +1,23 @@
+FROM node:18-alpine
+
+RUN corepack enable && apk add --no-cache dumb-init
+
+WORKDIR /app
+
+# Copy worker package files
+COPY package.json ./
+COPY tsconfig.json ./
+COPY src ./src
+
+# Install dependencies (no lockfile in worker, so skip frozen-lockfile)
+RUN pnpm install --no-frozen-lockfile
+
+# Build worker
+RUN pnpm build
+
+ENV NODE_ENV=production
+
+EXPOSE 8080
+
+CMD ["dumb-init", "node", "dist/server.js"]
+

@@ -1,228 +1,241 @@
-# Actual Remaining Work - Based on Codebase Reality
+# ACTUAL_REMAINING_WORK (auto-generated)
 
-**Last Updated**: 2025-01-15  
-**Source**: Actual codebase scan, not documentation  
-**Status**: M2 Phase 6 in progress (TypeScript errors blocking)
+## Now
+- #61 Deployment secrets (Option C) – complete required secrets for auth flows
+- #60 M2 Phase 6 – Fix TypeScript build blockers for Vercel
+- #53 Backlog migration tracker: convert docs + TODOs into GitHub Issues
+- #51 Retire legacy federation env toggles and docs (standardize on FED_ENABLED/FED_OIDC_ENABLED)
+- #47 Provider Portal UX: Make navigation and labels intuitive for first-time users
 
----
+## Next
+- #76 Tenant auth – RefreshToken model or logout refactor
+- #75 Provider DB guardrail – verify Prisma migrate status in CI
+- #74 Performance monitoring guardrails: thresholds, baseline capture policy, retention
+- #73 Pricing Admin – Enforce super admin role check
+- #68 Import Wizard – verify deployment status, add smoke test and docs
+- #67 SAM.gov integration – verify E2E; seed test tenant; smoke tests
+- #66 _disabled endpoints inventory → per-route decisions and archiving
+- #64 Enable Stripe webhook (basic) + smoke test
+- #63 Standardize federation flags – retire legacy PROVIDER_FEDERATION_*; use FED_*
+- #62 Decide which disabled features to enable next
+- #57 Documentation cleanup + binder archival (mark reference-only, index active vs archived)
+- #54 Theme follow-ups – WCAG AA tune + increase variety
+- #52 Enable Stripe webhook (basic) via Vercel env + smoke test
+- #50 Decide which disabled features to enable next
+- #48 Deployment secrets (Option C): finalize required secrets via Vercel CLI
 
-## ⚠️ CRITICAL: Documentation vs Reality
+## Later
+- #263 [Action Required] Migrate Domain Names from Spaceship.com to Cloudflare
+- #262 [MCP] Domain Registrar MCP Server - Research & Implementation
+- #261 [MCP] Build Comprehensive Twilio MCP Server
+- #260 [MCP] Build Comprehensive Resend MCP Server
+- #259 [Feature] Type 2 Communications - Client-to-Customer Messaging System
+- #258 Implement AI Cost Management for Provider Portal
+- #257 Implement AI Cost Management for Tenant Portal
+- #256 [MCP] Build Google Workspace MCP Server (100+ tools)
+- #255 [MCP] Robinson AI MCP Servers - Progress Update & Roadmap
+- #253 [MCP] Design and Build Custom Multi-Account Stripe MCP
+- #251 Provider Observability & AI Monitoring Dashboard
+- #250 Vertical Pack: Pet Services (Grooming, Boarding, Training)
+- #249 Vertical Pack: Fitness & Personal Training Services
+- #248 Vertical Pack: Event Services (AV, Staging, Catering)
+- #247 Vertical Pack: IT & Managed Services
+- #246 Vertical Pack: Property Management Services
+- #245 Vertical Pack: Solar Installation Services
+- #244 Vertical Pack: Snow Removal Services
+- #243 Vertical Pack: Moving & Relocation Services
+- #242 Core Feature: AI-Powered Anomaly Detection & Monitoring
+- #241 Core Feature: Third-Party Integration Marketplace
+- #240 Core Feature: Advanced Reporting & Analytics Dashboard
+- #239 Core Feature: AI-Powered Job Costing & Estimation Engine
+- #238 Core Feature: Role-Based Access Control (RBAC) System
+- #237 Vertical Pack: Roofing Services
+- #236 Vertical Pack: Pest Control Services
+- #235 Vertical Pack: Security & Fire Safety Services
+- #234 Vertical Pack: Courier & Delivery Services
+- #233 Vertical Pack: Handyman Services
+- #232 Vertical Pack: Junk Removal Services
+- #231 Vertical Pack: Septic Services
+- #230 Vertical Pack: Windows & Doors Services
+- #229 Core Feature: Provider Observability & Profitability Dashboard
+- #228 Core Feature: Advanced Search & Global Indexing
+- #227 Core Feature: Loyalty & Referral Programs
+- #226 Core Feature: Service Contracts & SLA Management
+- #225 Vertical Pack: HVAC Services
+- #224 Core Feature: Field Inspection Forms & Checklists
+- #223 Core Feature: Change Order Management
+- #222 Vertical Pack: Flooring Services
+- #221 Core Feature: Subcontractor Management & Marketplace
+- #220 Core Feature: Marketing Automation & Email Campaign Builder
+- #219 Vertical Pack: Painting Services
+- #218 Vertical Pack: Concrete Services
+- #217 Vertical Pack: Pool Services
+- #216 Core Feature: Data Import/Export & Bulk Operations
+- #215 Vertical Pack: Moving Services
+- #214 Vertical Pack: Pest Control Services
+- #213 Vertical Pack: Roofing Services
+- #212 Vertical Pack: Appliance Services
+- #211 Vertical Pack: Auto/Mechanic Services
+- #210 Core Feature: Compliance & Safety Management
+- #209 Core Feature: Webhooks & API Platform
+- #208 Core Feature: Knowledge Base & Help Center
+- #207 Core Feature: Crew & Team Management with Dispatch Board
+- #206 Core Feature: Multi-Location & Franchise Management
+- #205 Vertical Pack: Landscaping Services
+- #204 Vertical Pack: Trucking & Logistics Services
+- #203 Vertical Pack: Electrical Services
+- #202 Vertical Pack: Plumbing Services
+- #201 Vertical Pack: Fencing Services (ProDBX Competitor)
+- #200 Vertical Pack: Cleaning Services (First Client - Mountain Vista)
+- #199 Vertical Pack: Porta-John/Portable Restroom Services
+- #198 Vertical Pack: Roll-Off Dumpster Services
+- #197 Vertical Pack: HVAC Services
+- #196 Data Import/Export & Bulk Operations
+- #195 Provider Observability & Profitability Dashboard
+- #194 Advanced Search & Global Indexing
+- #193 Customer Loyalty & Referral Programs
+- #192 Service Contracts & SLA Management
+- #191 Field Inspection Forms & Checklists
+- #190 Change Order Management System
+- #189 Subcontractor Management & Marketplace
+- #188 Email/SMS Campaign Builder & Marketing Automation
+- #187 Customer Self-Service Portal
+- #186 Advanced Reporting & Custom Report Builder
+- #185 Mobile Field Tech PWA (Progressive Web App)
+- #184 Time Tracking & Payroll Integration System
+- #183 Document Management & E-Signature System
+- #182 Multi-Crew & Multi-Location Management System
+- #181 Knowledge Base & Help Center System
+- #180 Webhooks & External API Integration Platform
+- #179 Customer Equipment Registry & Warranty Tracking System
+- #178 Customer Equipment Registry & Warranty Tracking System
+- #177 [Epic] Advanced RBAC & Permissions System
+- #176 [Epic] Notification System & Inbox
+- #175 [Epic] GPS Tracking & Geolocation Services
+- #174 [Epic] Job Costing & Profitability Analysis
+- #173 [Epic] Recurring Services & Maintenance Contracts
+- #172 [Epic] Document Management & E-Signatures
+- #171 [Epic] Email/SMS Campaigns & Marketing Automation
+- #170 [Epic] Migration Frameworks - Competitor Data Import (Jobber, ServiceTitan, ProDBX)
+- #169 [Epic] Time Tracking & Payroll Integration - Labor Cost Management
+- #168 [Epic] Reporting & Analytics - Business Intelligence Dashboard
+- #167 [Epic] Payment Processing & Billing - Dual Stripe Architecture
+- #166 [Epic] Estimates & Invoicing System - Quote-to-Cash Workflow
+- #165 [Epic] Scheduling & Dispatch System - Advanced Route Optimization
+- #164 [Architecture] Tiered Vertical Subscription System - Standardized Module Bundles
+- #163 [Epic] Mobile Field Tech PWA - Offline-First Progressive Web App
+- #162 [Epic] Subcontractor & Vendor Management + Marketplace
+- #161 [Epic] Feature Toggle & Module System - Per-Tenant Feature Enablement
+- #160 [Epic] Inventory Management System
+- #159 [Epic] Customer Portal - Branded Self-Service Portal
+- #158 [Epic] Work Orders & Job Tickets System
+- #157 [Integration] Holman Fuel Card Integration
+- #156 [Integration] Paylocity HR/Payroll API Integration
+- #155 [Integration] Geotab MyGeotab API Integration (DVIR, ELD, Telematics)
+- #154 [Epic] Fleet Management & Asset Tracking System
+- #153 [Epic] Multi-Location & Multi-Vertical Architecture
+- #152 [UX] Comprehensive Tutorial & Onboarding System
+- #151 [AI Agent] AI Concierge System - Baseline Implementation
+- #150 [Self-Healing] Implement Zero-Downtime Federation Updates
+- #149 [Self-Healing] Build Automated Incident Resolution
+- #148 [EPIC] Self-Healing Federation (Phase 1)
+- #147 [Network Effects] Build Federation Marketplace
+- #146 [Network Effects] Build Cross-Client Intelligence
+- #145 [EPIC] Federation Network Effects (Phase 1)
+- #144 [AI Intelligence] Build Intelligent Resource Allocation
+- #143 [AI Intelligence] Build Predictive Escalation Prevention
+- #142 [EPIC] AI-Powered Provider Intelligence Layer (Phase 1)
+- #141 [Analytics] Implement Fraud/Abuse Detection
+- #140 [Analytics] Build Federation Analytics API
+- #139 [Analytics] Build Role Insights & Error Heatmaps
+- #138 [EPIC] Cross-Client Analytics
+- #137 [Federation] Implement Policy Engine as Code
+- #136 [Federation] Build Approval Workbench
+- #135 [Federation] Build Role Simulator & Impersonation
+- #134 [EPIC] Governance & Access Control
+- #133 [Federation] Build Change Broadcasts System
+- #132 [Federation] Implement Release Channels
+- #131 [Federation] Build Product & Bundle Catalog
+- #130 [EPIC] Provider Marketplace & Packaging
+- #129 [Federation] Build Budgets & Kill-switches
+- #128 [Federation] Implement Disputes & Write-offs
+- #127 [Federation] Build Invoice Mediation System
+- #126 [EPIC] Billing & Revenue Operations
+- #125 [Federation] Build SLA/SLO Board
+- #124 [Federation] Implement Lifecycle Tracking
+- #123 [Federation] Build Escalation Inbox
+- #122 [EPIC] Incident & Escalation Operations
+- #121 [Federation] Build Audit & Compliance Hub
+- #120 [Federation] Implement API Versioning + Idempotency
+- #119 [Federation] Build Webhook Gateway (Provider→Client)
+- #118 [Federation] Implement Key & Signature Operations
+- #117 [Federation] Build Federated Client Directory
+- #116 [EPIC] Federation Control Plane - Multi-System, Multi-Tenant
+- #115 [AI Agent] Build Provider-Side AI Developer Agent + Dev Portal
+- #114 [META] Complete GitHub Issues System - All Work Tracked
+- #113 [AI Agent] Build Conversational AI Assistant
+- #112 [AI Agent] Build Document Generation Agent
+- #111 [AI Agent] Build Customer Insights Agent
+- #110 [AI Agent] Build Follow-Up Automation Agent
+- #109 [AI Agent] Build Scheduling Optimization Agent
+- #108 [AI Agent] Build Lead Qualification Agent
+- #107 [Provider Portal] Implement Advanced Analytics & Reporting
+- #106 [Provider Portal] Implement Billing Automation (Stripe Integration)
+- #105 [Provider Portal] Implement Tenant Provisioning Automation
+- #104 [Provider Portal] Complete RBAC Implementation
+- #103 [Marketing] Improve Robinson AI Systems Corporate Site
+- #102 [Marketing] Fix Cortiware Site - Align with Product Reality
+- #101 [Infrastructure] Security Hardening & Audit
+- #100 [Infrastructure] Performance Optimization (Caching, CDN, Code Splitting)
+- #99 [Infrastructure] Implement Comprehensive Testing Infrastructure
+- #98 [Infrastructure] Set Up Observability Stack (DataDog, Sentry, LogRocket)
+- #97 [Infrastructure] Implement Real-Time Features (SSE/WebSockets)
+- #96 [EPIC] Infrastructure & Real-Time Features
+- #95 [MCP] Document MCP Setup and Usage Guide
+- #94 [MCP] Custom Redis MCP for Cortiware
+- #93 [MCP] Neon Official MCP (OAuth)
+- #92 [MCP] Create Test Stripe Account for Tenant Development
+- #91 [MCP] Set up Augment Stripe MCP for Provider Billing
+- #90 [EPIC] MCP Infrastructure Setup & Optimization
+- #89 [Tenant App] Implement Reports/Analytics System
+- #88 [Tenant App] Implement Settings/Configuration System
+- #87 [Tenant App] Implement Agreements/Contracts System
+- #86 [Tenant App] Implement Wallet/Payments System
+- #85 [Tenant App] Recover Opportunities Management from Legacy
+- #84 [Tenant App] Recover SAM.gov Integration from Legacy
+- #81 [EPIC] Fix Marketing Sites
+- #80 [EPIC] Enhance Provider Portal
+- #79 [EPIC] Build AI Agent System
+- #78 [EPIC] Complete Tenant App MVP
+- #69 Agreement models – DB schema, API, UI per TODO_AGREEMENT_MODELS.md
+- #65 Stripe Connect – enablement plan or keep disabled
+- #56 Code TODOs sweep – security/federation/metrics
+- #55 API v2 endpoints – design and implement (leads, opportunities, organizations)
+- #43 Epic: Single-tenant Provider/Developer Portals (tenant-app)
+- #42 Docs: Emergency Toolkit usage guide for single-tenant Provider/Developer portals
+- #41 Tests: E2E flows for emergency Provider/Developer portals in tenant-app
+- #40 Portals UX: Error states (403/429/SSO-down) and consistent loading patterns
+- #39 Emergency Toolkit MVP (Developer): Webhooks configuration and logs (read-only)
+- #38 Emergency Toolkit MVP (Developer): API keys (read-only)
+- #37 Emergency Toolkit MVP (Provider): Audit trail (read-only)
+- #36 Emergency Toolkit MVP (Provider): User lookup + MFA reset
+- #35 Emergency Toolkit MVP (Provider): Tenant overview (read-only)
+- #34 Portals: Define permissions/entitlements for single-tenant Provider/Developer areas
+- #33 tenant-app: Build /developer area shell (layout, nav, banner, placeholder routes)
+- #32 tenant-app: Build /provider area shell (layout, nav, banner, placeholder routes)
+- #31 Portals IA: Information architecture and navigation for single-tenant Provider/Developer areas (tenant-app)
+- #30 Epic: Option C Per-App Auth (Unified login per app + shared auth-service)
+- #29 Phase 2: Implement refresh token model with short-lived app cookies
+- #28 Phase 2: Replace in-memory nonce store with Redis/KV for replay protection
+- #10 [Federation] Optional scheduled E2E smoke (staging)
+- #9 [Federation] Extend .env.example + docs for OIDC configuration
+- #8 [Federation] Update contracts + E2E after services return 200
+- #7 [Federation] OIDC readiness & cutover (providers/dev)
+- #6 [Federation] Audit logging persistence
+- #5 [Federation] Entitlements model & enforcement (+403 coverage)
+- #4 [Federation] Implement Durable Idempotency Store
+- #3 [Federation] Implement Rate Limiter backend (KV/Redis/Upstash)
+- #2 [Federation] Implement DeveloperFederationService (Diagnostics)
+- #1 [Federation] Implement ProviderFederationService (Prisma)
 
-**IMPORTANT**: Binder documents and architecture plans are **REFERENCE ONLY** to understand intent and goals. They are **NOT** a source of truth for what needs to be done.
-
-**Sources of Truth** (in order):
-1. **The actual codebase** - What's really implemented
-2. **You (the user)** - What you actually want built
-3. **TODO comments in code** - Real unfinished work
-4. **Disabled/stubbed code** - Features that exist but aren't active
-
-**NOT Sources of Truth**:
-- ❌ Binder documents (reference only)
-- ❌ Architecture gap closure plans (aspirational)
-- ❌ Phase completion documents (may be outdated)
-- ❌ Implementation guides (templates, not requirements)
-
----
-
-## 🔥 Immediate Blocker (Must Fix First)
-
-### M2 Phase 6: TypeScript Errors Blocking Vercel Deployment
-
-**Status**: 🚨 BLOCKING ALL DEPLOYMENTS  
-**Priority**: CRITICAL  
-**Estimated Time**: 30-45 minutes
-
-**Errors** (7 categories):
-1. Modal component needs "use client" directive
-2. Pagination component has wrong button import
-3. Button `style` props need removal (~8 files)
-4. Input `onChange` handlers need signature update (~10+ files)
-5. Event handler type errors (~5 files)
-6. Implicit any errors (~3 files)
-7. Missing @prisma/client-provider (expected, will resolve after migrations)
-
-**See**: `docs/M2_CURRENT_STATUS_AND_PLAN.md` for detailed fixes
-
----
-
-## 📊 What's Actually Implemented (Tenant-App)
-
-### ✅ Working Pages
-- `/dashboard` - Main dashboard
-- `/customers` - Customer management
-- `/jobs` - Job management
-- `/invoices` - Invoice management
-- `/reports` - Reporting
-- `/settings` - Settings & theme customization
-- `/wallet` - Wallet management
-- `/agreements` - Agreements
-- `/pay` - Payment pages
-- `/login` - Authentication
-- `/emergency` - Emergency access
-- `/offline` - Offline mode
-- `/403` - Forbidden page
-
-### ✅ Working API Routes (Tenant-App)
-- `/api/auth/*` - Authentication
-- `/api/settings/theme` - Theme customization
-- Various other API routes for customers, jobs, invoices
-
----
-
-## 📊 What's Actually Implemented (Provider-Portal)
-
-### ✅ Working Pages
-- `/provider` - Provider dashboard
-- `/providers` - Provider management
-- `/developer` - Developer tools
-- `/login` - Authentication
-- `/(owner)` - Owner-specific pages
-- `/(provider)` - Provider-specific pages
-
-### ✅ Working API Routes (Provider-Portal)
-- `/api/auth/*` - Authentication including ticket generation
-- Various provider management APIs
-
----
-
-## 🔍 What's Actually Missing (From Code Scan)
-
-### 1. Disabled Features (in `src/_disabled/`)
-
-**Location**: `apps/*/src/_disabled/`
-
-**What's There**:
-- Stripe Connect integration pages
-- Billing webhooks
-- Integration APIs (Fort Collins permits, etc.)
-- Accountant authentication diagnosis
-- Quick actions API
-- Various other features
-
-**Status**: Code exists but is disabled  
-**Decision Needed**: Do you want any of these enabled?
-
-### 2. Stub/Incomplete Code (From TODO Scan)
-
-**From `UNIMPLEMENTED_FEATURES_SCAN.md` and `GITHUB_CIRCLECI_TASKS_SCAN.md`**:
-
-#### Medium Priority TODOs Found in Code:
-1. **Billing Service - Unbilled Leads Filter**
-   - File: `src/services/provider/billing.service.ts:125`
-   - Issue: Incomplete TODO comment
-   - Estimate: 1-2 hours
-
-#### Low Priority Items:
-- Schema constraint validation tests
-- Audit log export to CSV
-- Conversion alerts via email/Slack
-- CSRF protection
-- Webhook signature validation
-- Audit log retention policy
-- Database indexing optimization
-- Caching layer
-
-### 3. Vertical Packs (Partially Implemented)
-
-**Location**: `packages/verticals/src/packs/`
-
-**Status**: Some packs are stubs (e.g., plumbing.ts has skeleton implementation)
-
-**Decision Needed**: Which verticals do you actually need?
-
----
-
-## 🎯 What You Should Focus On (My Recommendation)
-
-### Option A: Complete M2 Only
-**Time**: 1-2 hours  
-**Impact**: Get both apps deploying successfully  
-**Tasks**:
-1. Fix all TypeScript errors
-2. Verify Vercel builds pass
-3. Complete Phase 6 validation
-4. Optionally: Tone down remaining bright theme colors
-
-### Option B: M2 + Enable Specific Disabled Features
-**Time**: Varies by feature  
-**Impact**: Depends on which features you enable  
-**Process**:
-1. Complete M2 first (Option A)
-2. You tell me which disabled features you want
-3. I move them from `_disabled/` to active code
-4. Test and deploy
-
-### Option C: M2 + Build New Features
-**Time**: Varies by feature  
-**Impact**: Depends on what you want built  
-**Process**:
-1. Complete M2 first (Option A)
-2. You describe what you want built
-3. I build it based on your requirements (not binder docs)
-4. Test and deploy
-
----
-
-## ❓ Questions for You
-
-To create an accurate remaining work plan, I need to know:
-
-1. **M2 Completion**: Do you want me to finish M2 Phase 6 (fix TypeScript errors)?
-
-2. **Disabled Features**: Are there any features in `src/_disabled/` you want enabled?
-   - Stripe Connect integration?
-   - Billing webhooks?
-   - Integration APIs?
-   - Other disabled features?
-
-3. **Stub Code**: Do you want me to complete any of the stub implementations?
-   - Billing service unbilled leads filter?
-   - Vertical packs (plumbing, etc.)?
-   - Other stubs?
-
-4. **New Features**: Is there anything NEW you want built that isn't in the codebase?
-   - Describe it to me directly
-   - Don't reference binder docs unless you specifically want that exact implementation
-
-5. **Theme Work**: Do you want me to continue with theme color adjustments after M2?
-   - Tone down remaining bright colors?
-   - Add more theme variety?
-   - Or is current theme system good enough?
-
----
-
-## 📝 How to Use This Document
-
-**For Next Agent**:
-1. Read this document first
-2. Ask the user which option (A, B, or C) they want
-3. Get specific answers to the questions above
-4. Build based on user's actual requirements, not documentation
-5. Use binder docs only as reference for understanding intent
-
-**For User**:
-1. Tell me which option you prefer (A, B, or C)
-2. Answer the questions above
-3. Describe any new features you want in your own words
-4. I'll build exactly what you ask for
-
----
-
-## 🚫 What NOT to Do
-
-**Don't**:
-- Assume binder documents are a to-do list
-- Implement features just because they're documented
-- Follow architecture plans without user confirmation
-- Build features the user hasn't explicitly requested
-
-**Do**:
-- Fix actual bugs and errors (like M2 TypeScript errors)
-- Complete work the user explicitly requests
-- Ask for clarification when documentation conflicts with user intent
-- Treat the codebase as the source of truth
-
----
-
-**End of Document**
-
+## Blocked

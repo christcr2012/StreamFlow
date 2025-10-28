@@ -24,14 +24,17 @@ export async function GET(request: NextRequest) {
     // Load feature flags from database
     const config = await prisma.providerConfig.findFirst();
 
-    // Parse feature flags from JSON field
-    const flags = (config?.featureFlags as Record<string, boolean>) || {
+    // Parse feature flags from JSON field with sensible defaults
+    const defaults: Record<string, boolean> = {
       'analytics-v2': true,
       'action-center': true,
       'api-key-management': true,
       'advanced-monitoring': false,
       'multi-region': false,
+      'ai-cost': true,
     };
+    const stored = (config?.featureFlags as Record<string, boolean>) || {};
+    const flags = { ...defaults, ...stored };
 
     return NextResponse.json({ flags });
   } catch (error) {

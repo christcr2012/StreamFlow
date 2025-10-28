@@ -4,20 +4,29 @@
   "version": "0.0.1",
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "services/*"
   ],
   "packageManager": "npm@10.8.2",
   "engines": {
     "node": "22.x"
   },
   "scripts": {
+    "phase:0": "tsx scripts/operating/phase0_schema_audit.ts",
+    "phase:0:docs": "tsx scripts/operating/phase0_docs_audit.ts",
+    "phase:0:all": "npm run phase:0 && npm run phase:0:docs && npm run trace:update",
+    "ci:slices:sync": "tsx scripts/ci/sync_slice_issues.ts",
     "setpwd": "tsx scripts/set-password.ts",
     "setup-accounts": "tsx scripts/setup-accounts.ts",
     "dev": "turbo run dev --parallel",
     "build": "turbo run build",
+    "vercel-build": "node scripts/run-migrations-if-configured.js && npm run prisma:generate && turbo run build",
+    "vercel-build:provider": "npm run prisma:generate && cd apps/provider-portal && npm run build",
+    "vercel-build:tenant": "npm run prisma:generate && cd apps/tenant-app && npm run build",
     "clean": "turbo run clean && rm -rf node_modules/.cache",
     "seed": "tsx prisma/seed.ts",
     "seed:provider": "cd apps/provider-portal && npm run prisma:seed",
+    "db:seed:preview": "tsx prisma/seed-preview.ts",
     "prisma:generate": "npx prisma generate --schema=prisma/schema.prisma && cd apps/provider-portal && npx prisma generate",
     "prisma:studio:tenant": "npx prisma studio --schema=prisma/schema.prisma",
     "prisma:studio:provider": "cd apps/provider-portal && npx prisma studio",
@@ -27,6 +36,9 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
+    "test:vitest": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest",
     "test:unit": "tsx tests/unit/run.ts",
     "test:e2e": "tsx tests/e2e/run.ts",
     "test:e2e:playwright": "playwright test",
@@ -45,10 +57,17 @@
     "perf:baseline": "node scripts/performance/measure-baseline.js",
     "perf:measure": "node scripts/performance/measure-baseline.js && mv scripts/performance/baseline.json scripts/performance/current.json",
     "perf:compare": "node scripts/performance/compare-results.js",
-    "prepare": "node -e \"try{require('husky').install()}catch(e){process.exit(0)}\""
+    "trace:update": "tsx scripts/trace/update-trace-matrix.ts",
+    "ci:placeholders": "tsx scripts/ci/verify_no_placeholders.ts",
+    "ci:placeholders:sync": "tsx scripts/ci/sync_placeholder_issues.ts",
+    "prepare": "node -e \"try{require('husky').install()}catch(e){process.exit(0)}\"",
+    "mcp:dryrun": "tsx scripts/mcp-launcher.ts --dry",
+    "mcp:launch": "tsx scripts/mcp-launcher.ts",
+    "mcp:stop": "tsx scripts/mcp-stop.ts",
+    "dev:with-mcp": "npx tsx scripts/mcp-launcher.ts --detach --servers=github-robinsonai,vercel-robinsonai,neon-robinsonai && npm run dev"
   },
   "dependencies": {
-    "@prisma/client": "^6.16.2",
+    "@prisma/client": "^6.18.0",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-slot": "^1.2.3",
     "@sendgrid/mail": "8.1.0",
@@ -56,6 +75,7 @@
     "@stripe/stripe-js": "^7.9.0",
     "@tremor/react": "^3.18.7",
     "bcryptjs": "^3.0.2",
+    "bullmq": "^5.14.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "csv-parse": "^6.1.0",
@@ -78,8 +98,7 @@
     "tailwind-merge": "^3.3.1",
     "twilio": "4.22.0",
     "uuid": "^13.0.0",
-    "xlsx": "^0.18.5",
-    "zod": "^3.23.8"
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",
@@ -96,18 +115,32 @@
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.44.1",
     "@typescript-eslint/parser": "^8.44.1",
+    "@vitest/coverage-v8": "^4.0.4",
+    "@vitest/ui": "^4.0.4",
     "autoprefixer": "10.4.20",
     "detect-secrets": "^1.0.6",
     "eslint": "^9.36.0",
     "eslint-config-next": "^15.5.4",
     "glob": "^11.0.3",
     "husky": "^9.1.7",
+    "lint-staged": "^16.2.6",
     "playwright": "^1.56.0",
     "postcss": "8.4.47",
-    "prisma": "^6.16.2",
+    "prettier": "^3.6.2",
+    "prisma": "^6.18.0",
     "tailwindcss": "3.4.10",
     "tsx": "^4.20.5",
     "turbo": "^2.5.8",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "vitest": "^4.0.4",
+    "zod": "^3.25.76"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml,css,scss}": [
+      "prettier --write"
+    ]
   }
 }

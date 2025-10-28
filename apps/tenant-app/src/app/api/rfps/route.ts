@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 
+// Note: Cannot use edge runtime with Prisma due to WASM limitations
+// export const runtime = 'edge';
+
 /**
  * GET /api/rfps
  * List RFPs for the authenticated tenant

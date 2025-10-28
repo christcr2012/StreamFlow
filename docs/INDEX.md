@@ -1,9 +1,17 @@
 # Cortiware Documentation Index
-**Last Updated:** 2025-10-12  
-**Total Documents:** 120+ files  
+**Last Updated:** 2025-10-12
+**Total Documents:** 120+ files
 **Status:** ✅ Current
 
 ---
+
+> Reference and Archival Policy
+>
+> - Codebase is the source of truth; documents are supportive.
+> - Execute/* (Binder System) is reference-only; do not execute binders.
+> - Outdated docs are moved to docs/archive and marked as Historical.
+> - Use docs/AI_AGENT_REFERENCE.md for the operative rules and build policy.
+
 
 ## Quick Navigation
 

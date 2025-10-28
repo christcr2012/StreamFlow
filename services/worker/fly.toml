@@ -1,0 +1,48 @@
+# Fly.io configuration for Cortiware Worker
+# Deploy with: flyctl launch --now --path ./services/worker
+
+app = "cortiware-worker"
+primary_region = "dfw"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  NODE_ENV = "production"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 8080
+  processes = ["app"]
+
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 1000
+    soft_limit = 800
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [services.tcp_checks]
+    enabled = true
+    grace_period = "5s"
+    interval = "15s"
+    timeout = "10s"
+    restart_limit = 5
+
+[metrics]
+  port = 9090
+

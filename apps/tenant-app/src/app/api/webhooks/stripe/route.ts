@@ -1,14 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
+import Stripe from 'stripe';
+import { decrypt } from '@/lib/encryption';
 import { processSuccessfulPayment } from '@/lib/stripe-service';
 import { sendEmail, getPaymentReceivedEmailTemplate } from '@/lib/email-service';
 import { prisma } from '@/lib/prisma';
 
+// Ensure Node.js runtime for Stripe signature verification (requires crypto)
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 /**
  * Stripe Webhook Handler
- * 
+ *
  * Handles webhook events from Stripe for payment processing.
- * Each tenant has their own Stripe account, so we need to identify
- * which organization this webhook is for based on metadata.
+ * Each tenant has their own Stripe account. We use the orgId in the payload
+ * only as a hint to look up that tenant's webhook secret, and we do not trust
+ * any fields until the signature is verified with that secret.
  */
 
 export async function POST(request: NextRequest) {
@@ -20,29 +27,59 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing signature' }, { status: 400 });
     }
 
-    // Parse the event
-    const event = JSON.parse(body);
+    // 1) Use the untrusted payload only to read orgId hint (do not act on it yet)
+    let hintedOrgId: string | undefined;
+    try {
+      const unverified = JSON.parse(body);
+      hintedOrgId = unverified?.data?.object?.metadata?.orgId;
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+    }
 
-    // Extract orgId from metadata
-    const orgId = event.data?.object?.metadata?.orgId;
-
-    if (!orgId) {
-      console.error('Webhook missing orgId in metadata');
+    if (!hintedOrgId) {
+      console.warn('Webhook missing orgId in metadata');
       return NextResponse.json({ error: 'Missing orgId' }, { status: 400 });
     }
 
-    // Handle different event types
+    // 2) Load tenant's webhook secret and verify signature
+    const org = await prisma.org.findUnique({
+      where: { id: hintedOrgId },
+      select: { stripeWebhookSecret: true },
+    });
+
+    if (!org?.stripeWebhookSecret) {
+      return NextResponse.json({ error: 'Webhook secret not configured for org' }, { status: 400 });
+    }
+
+    const webhookSecret = decrypt(org.stripeWebhookSecret);
+    const stripe = new Stripe('sk_test_dummy', { apiVersion: '2023-10-16' });
+
+    let event: Stripe.Event;
+    try {
+      event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+    } catch (err: any) {
+      console.warn('Invalid Stripe signature:', err?.message);
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
+    }
+
+    // 3) Re-derive orgId from the verified event and ensure consistency
+    const orgId = (event.data as any)?.object?.metadata?.orgId as string | undefined;
+    if (!orgId || orgId !== hintedOrgId) {
+      return NextResponse.json({ error: 'orgId mismatch or missing after verification' }, { status: 400 });
+    }
+
+    // 4) Handle event types using the verified event
     switch (event.type) {
       case 'payment_intent.succeeded':
-        await handlePaymentSuccess(event.data.object, orgId);
+        await handlePaymentSuccess((event.data as any).object, orgId);
         break;
 
       case 'payment_intent.payment_failed':
-        await handlePaymentFailure(event.data.object, orgId);
+        await handlePaymentFailure((event.data as any).object, orgId);
         break;
 
       case 'charge.refunded':
-        await handleRefund(event.data.object, orgId);
+        await handleRefund((event.data as any).object, orgId);
         break;
 
       default:
@@ -52,10 +89,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ received: true });
   } catch (error) {
     console.error('Webhook error:', error);
-    return NextResponse.json(
-      { error: 'Webhook handler failed' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Webhook handler failed' }, { status: 500 });
   }
 }
 

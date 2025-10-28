@@ -6,7 +6,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 
 interface CleaningEstimate {
@@ -37,20 +37,15 @@ export default function CleaningEstimatesPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
 
-  useEffect(() => {
-    fetchEstimates();
-  }, [filter]);
-
-  const fetchEstimates = async () => {
+  const fetchEstimates = useCallback(async () => {
+    setLoading(true);
     try {
       const params = new URLSearchParams();
       if (filter !== 'all') {
         params.set('status', filter);
       }
-      
       const response = await fetch(`/api/cleaning/estimates?${params}`);
       if (!response.ok) throw new Error('Failed to fetch estimates');
-      
       const data = await response.json();
       setEstimates(data.estimates || []);
     } catch (error) {
@@ -58,7 +53,13 @@ export default function CleaningEstimatesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
+
+  useEffect(() => {
+    fetchEstimates();
+  }, [fetchEstimates]);
+
+
 
   const getStatusBadge = (status: string) => {
     const colors: Record<string, string> = {

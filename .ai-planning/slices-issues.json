@@ -1,0 +1,992 @@
+[
+  {
+    "id": "slice:Activity",
+    "title": "Vertical Slice: Activity",
+    "body": "## Scope\n- Model(s): Activity\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:AddonPurchase",
+    "title": "Vertical Slice: AddonPurchase",
+    "body": "## Scope\n- Model(s): AddonPurchase\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Agreement",
+    "title": "Vertical Slice: Agreement",
+    "body": "## Scope\n- Model(s): Agreement\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:AgreementTemplate",
+    "title": "Vertical Slice: AgreementTemplate",
+    "body": "## Scope\n- Model(s): AgreementTemplate\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:AiModelTest",
+    "title": "Vertical Slice: AiModelTest",
+    "body": "## Scope\n- Model(s): AiModelTest\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:AiModelTestResult",
+    "title": "Vertical Slice: AiModelTestResult",
+    "body": "## Scope\n- Model(s): AiModelTestResult\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:AiMonthlySummary",
+    "title": "Vertical Slice: AiMonthlySummary",
+    "body": "## Scope\n- Model(s): AiMonthlySummary\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:AiUsageEvent",
+    "title": "Vertical Slice: AiUsageEvent",
+    "body": "## Scope\n- Model(s): AiUsageEvent\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:AIUsageLog",
+    "title": "Vertical Slice: AIUsageLog",
+    "body": "## Scope\n- Model(s): AIUsageLog\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:SMSLog",
+    "title": "Vertical Slice: SMSLog",
+    "body": "## Scope\n- Model(s): SMSLog\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:CostAlert",
+    "title": "Vertical Slice: CostAlert",
+    "body": "## Scope\n- Model(s): CostAlert\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:AnalyticsSnapshot",
+    "title": "Vertical Slice: AnalyticsSnapshot",
+    "body": "## Scope\n- Model(s): AnalyticsSnapshot\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:AuditEvent",
+    "title": "Vertical Slice: AuditEvent",
+    "body": "## Scope\n- Model(s): AuditEvent\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:AuditLog",
+    "title": "Vertical Slice: AuditLog",
+    "body": "## Scope\n- Model(s): AuditLog\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:BillingLedger",
+    "title": "Vertical Slice: BillingLedger",
+    "body": "## Scope\n- Model(s): BillingLedger\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:BreakglassActivationLog",
+    "title": "Vertical Slice: BreakglassActivationLog",
+    "body": "## Scope\n- Model(s): BreakglassActivationLog\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:CleaningChecklistTemplate",
+    "title": "Vertical Slice: CleaningChecklistTemplate",
+    "body": "## Scope\n- Model(s): CleaningChecklistTemplate\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:CleaningContract",
+    "title": "Vertical Slice: CleaningContract",
+    "body": "## Scope\n- Model(s): CleaningContract\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:CleaningEstimate",
+    "title": "Vertical Slice: CleaningEstimate",
+    "body": "## Scope\n- Model(s): CleaningEstimate\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:CleaningInspection",
+    "title": "Vertical Slice: CleaningInspection",
+    "body": "## Scope\n- Model(s): CleaningInspection\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:CleaningLead",
+    "title": "Vertical Slice: CleaningLead",
+    "body": "## Scope\n- Model(s): CleaningLead\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:CleaningWorkOrder",
+    "title": "Vertical Slice: CleaningWorkOrder",
+    "body": "## Scope\n- Model(s): CleaningWorkOrder\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:CleaningWorkOrderEvent",
+    "title": "Vertical Slice: CleaningWorkOrderEvent",
+    "body": "## Scope\n- Model(s): CleaningWorkOrderEvent\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Coupon",
+    "title": "Vertical Slice: Coupon",
+    "body": "## Scope\n- Model(s): Coupon\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Customer",
+    "title": "Vertical Slice: Customer",
+    "body": "## Scope\n- Model(s): Customer\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:CustomerContact",
+    "title": "Vertical Slice: CustomerContact",
+    "body": "## Scope\n- Model(s): CustomerContact\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:EmailTemplate",
+    "title": "Vertical Slice: EmailTemplate",
+    "body": "## Scope\n- Model(s): EmailTemplate\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:FederationKey",
+    "title": "Vertical Slice: FederationKey",
+    "body": "## Scope\n- Model(s): FederationKey\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:GlobalMonetizationConfig",
+    "title": "Vertical Slice: GlobalMonetizationConfig",
+    "body": "## Scope\n- Model(s): GlobalMonetizationConfig\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:ImportError",
+    "title": "Vertical Slice: ImportError",
+    "body": "## Scope\n- Model(s): ImportError\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:ImportJob",
+    "title": "Vertical Slice: ImportJob",
+    "body": "## Scope\n- Model(s): ImportJob\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:ImportMapping",
+    "title": "Vertical Slice: ImportMapping",
+    "body": "## Scope\n- Model(s): ImportMapping\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Incident",
+    "title": "Vertical Slice: Incident",
+    "body": "## Scope\n- Model(s): Incident\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:InfrastructureLimit",
+    "title": "Vertical Slice: InfrastructureLimit",
+    "body": "## Scope\n- Model(s): InfrastructureLimit\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:InfrastructureMetric",
+    "title": "Vertical Slice: InfrastructureMetric",
+    "body": "## Scope\n- Model(s): InfrastructureMetric\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Invoice",
+    "title": "Vertical Slice: Invoice",
+    "body": "## Scope\n- Model(s): Invoice\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:InvoiceLine",
+    "title": "Vertical Slice: InvoiceLine",
+    "body": "## Scope\n- Model(s): InvoiceLine\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:InvoiceReminder",
+    "title": "Vertical Slice: InvoiceReminder",
+    "body": "## Scope\n- Model(s): InvoiceReminder\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Job",
+    "title": "Vertical Slice: Job",
+    "body": "## Scope\n- Model(s): Job\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:JobPhoto",
+    "title": "Vertical Slice: JobPhoto",
+    "body": "## Scope\n- Model(s): JobPhoto\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:JobTimeline",
+    "title": "Vertical Slice: JobTimeline",
+    "body": "## Scope\n- Model(s): JobTimeline\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Lead",
+    "title": "Vertical Slice: Lead",
+    "body": "## Scope\n- Model(s): Lead\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:LeadInvoice",
+    "title": "Vertical Slice: LeadInvoice",
+    "body": "## Scope\n- Model(s): LeadInvoice\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:LeadInvoiceLine",
+    "title": "Vertical Slice: LeadInvoiceLine",
+    "body": "## Scope\n- Model(s): LeadInvoiceLine\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Notification",
+    "title": "Vertical Slice: Notification",
+    "body": "## Scope\n- Model(s): Notification\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:OIDCConfig",
+    "title": "Vertical Slice: OIDCConfig",
+    "body": "## Scope\n- Model(s): OIDCConfig\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Offer",
+    "title": "Vertical Slice: Offer",
+    "body": "## Scope\n- Model(s): Offer\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:OnboardingInvite",
+    "title": "Vertical Slice: OnboardingInvite",
+    "body": "## Scope\n- Model(s): OnboardingInvite\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Opportunity",
+    "title": "Vertical Slice: Opportunity",
+    "body": "## Scope\n- Model(s): Opportunity\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Org",
+    "title": "Vertical Slice: Org",
+    "body": "## Scope\n- Model(s): Org\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Payment",
+    "title": "Vertical Slice: Payment",
+    "body": "## Scope\n- Model(s): Payment\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:PlanPrice",
+    "title": "Vertical Slice: PlanPrice",
+    "body": "## Scope\n- Model(s): PlanPrice\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:PricePlan",
+    "title": "Vertical Slice: PricePlan",
+    "body": "## Scope\n- Model(s): PricePlan\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:PricingPlan",
+    "title": "Vertical Slice: PricingPlan",
+    "body": "## Scope\n- Model(s): PricingPlan\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:ProviderConfig",
+    "title": "Vertical Slice: ProviderConfig",
+    "body": "## Scope\n- Model(s): ProviderConfig\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:ProviderIntegration",
+    "title": "Vertical Slice: ProviderIntegration",
+    "body": "## Scope\n- Model(s): ProviderIntegration\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:RbacPermission",
+    "title": "Vertical Slice: RbacPermission",
+    "body": "## Scope\n- Model(s): RbacPermission\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:RbacRole",
+    "title": "Vertical Slice: RbacRole",
+    "body": "## Scope\n- Model(s): RbacRole\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:RbacRolePermission",
+    "title": "Vertical Slice: RbacRolePermission",
+    "body": "## Scope\n- Model(s): RbacRolePermission\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:RbacUserRole",
+    "title": "Vertical Slice: RbacUserRole",
+    "body": "## Scope\n- Model(s): RbacUserRole\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:RecoveryRequest",
+    "title": "Vertical Slice: RecoveryRequest",
+    "body": "## Scope\n- Model(s): RecoveryRequest\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:RecurringInvoice",
+    "title": "Vertical Slice: RecurringInvoice",
+    "body": "## Scope\n- Model(s): RecurringInvoice\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Referral",
+    "title": "Vertical Slice: Referral",
+    "body": "## Scope\n- Model(s): Referral\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:RefreshToken",
+    "title": "Vertical Slice: RefreshToken",
+    "body": "## Scope\n- Model(s): RefreshToken\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Rfp",
+    "title": "Vertical Slice: Rfp",
+    "body": "## Scope\n- Model(s): Rfp\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Subscription",
+    "title": "Vertical Slice: Subscription",
+    "body": "## Scope\n- Model(s): Subscription\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:TenantPriceOverride",
+    "title": "Vertical Slice: TenantPriceOverride",
+    "body": "## Scope\n- Model(s): TenantPriceOverride\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:UpgradeRecommendation",
+    "title": "Vertical Slice: UpgradeRecommendation",
+    "body": "## Scope\n- Model(s): UpgradeRecommendation\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:UsageMeter",
+    "title": "Vertical Slice: UsageMeter",
+    "body": "## Scope\n- Model(s): UsageMeter\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:User",
+    "title": "Vertical Slice: User",
+    "body": "## Scope\n- Model(s): User\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:UserBreakglassAccount",
+    "title": "Vertical Slice: UserBreakglassAccount",
+    "body": "## Scope\n- Model(s): UserBreakglassAccount\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:UserDeviceFingerprint",
+    "title": "Vertical Slice: UserDeviceFingerprint",
+    "body": "## Scope\n- Model(s): UserDeviceFingerprint\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:UserLoginHistory",
+    "title": "Vertical Slice: UserLoginHistory",
+    "body": "## Scope\n- Model(s): UserLoginHistory\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:UserRecoveryCode",
+    "title": "Vertical Slice: UserRecoveryCode",
+    "body": "## Scope\n- Model(s): UserRecoveryCode\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:UserSecurityQuestion",
+    "title": "Vertical Slice: UserSecurityQuestion",
+    "body": "## Scope\n- Model(s): UserSecurityQuestion\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:FeatureFlag",
+    "title": "Vertical Slice: FeatureFlag",
+    "body": "## Scope\n- Model(s): FeatureFlag\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:FeatureModule",
+    "title": "Vertical Slice: FeatureModule",
+    "body": "## Scope\n- Model(s): FeatureModule\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:AIBudget",
+    "title": "Vertical Slice: AIBudget",
+    "body": "## Scope\n- Model(s): AIBudget\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:AIAlert",
+    "title": "Vertical Slice: AIAlert",
+    "body": "## Scope\n- Model(s): AIAlert\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Communication",
+    "title": "Vertical Slice: Communication",
+    "body": "## Scope\n- Model(s): Communication\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:CommunicationThread",
+    "title": "Vertical Slice: CommunicationThread",
+    "body": "## Scope\n- Model(s): CommunicationThread\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:SubscriptionTier",
+    "title": "Vertical Slice: SubscriptionTier",
+    "body": "## Scope\n- Model(s): SubscriptionTier\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:VerticalTierConfig",
+    "title": "Vertical Slice: VerticalTierConfig",
+    "body": "## Scope\n- Model(s): VerticalTierConfig\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:TenantSubscription",
+    "title": "Vertical Slice: TenantSubscription",
+    "body": "## Scope\n- Model(s): TenantSubscription\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:TenantUsage",
+    "title": "Vertical Slice: TenantUsage",
+    "body": "## Scope\n- Model(s): TenantUsage\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:TimeEntry",
+    "title": "Vertical Slice: TimeEntry",
+    "body": "## Scope\n- Model(s): TimeEntry\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Subcontractor",
+    "title": "Vertical Slice: Subcontractor",
+    "body": "## Scope\n- Model(s): Subcontractor\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:RecurringService",
+    "title": "Vertical Slice: RecurringService",
+    "body": "## Scope\n- Model(s): RecurringService\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:JobCost",
+    "title": "Vertical Slice: JobCost",
+    "body": "## Scope\n- Model(s): JobCost\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:VerticalPack",
+    "title": "Vertical Slice: VerticalPack",
+    "body": "## Scope\n- Model(s): VerticalPack\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Org",
+    "title": "Vertical Slice: Org",
+    "body": "## Scope\n- Model(s): Org\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:User",
+    "title": "Vertical Slice: User",
+    "body": "## Scope\n- Model(s): User\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:UserRecoveryCode",
+    "title": "Vertical Slice: UserRecoveryCode",
+    "body": "## Scope\n- Model(s): UserRecoveryCode\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:UserSecurityQuestion",
+    "title": "Vertical Slice: UserSecurityQuestion",
+    "body": "## Scope\n- Model(s): UserSecurityQuestion\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:UserBreakglassAccount",
+    "title": "Vertical Slice: UserBreakglassAccount",
+    "body": "## Scope\n- Model(s): UserBreakglassAccount\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:UserDeviceFingerprint",
+    "title": "Vertical Slice: UserDeviceFingerprint",
+    "body": "## Scope\n- Model(s): UserDeviceFingerprint\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:UserLoginHistory",
+    "title": "Vertical Slice: UserLoginHistory",
+    "body": "## Scope\n- Model(s): UserLoginHistory\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:BreakglassActivationLog",
+    "title": "Vertical Slice: BreakglassActivationLog",
+    "body": "## Scope\n- Model(s): BreakglassActivationLog\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:RecoveryRequest",
+    "title": "Vertical Slice: RecoveryRequest",
+    "body": "## Scope\n- Model(s): RecoveryRequest\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Lead",
+    "title": "Vertical Slice: Lead",
+    "body": "## Scope\n- Model(s): Lead\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Customer",
+    "title": "Vertical Slice: Customer",
+    "body": "## Scope\n- Model(s): Customer\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Opportunity",
+    "title": "Vertical Slice: Opportunity",
+    "body": "## Scope\n- Model(s): Opportunity\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Invoice",
+    "title": "Vertical Slice: Invoice",
+    "body": "## Scope\n- Model(s): Invoice\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Payment",
+    "title": "Vertical Slice: Payment",
+    "body": "## Scope\n- Model(s): Payment\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Rfp",
+    "title": "Vertical Slice: Rfp",
+    "body": "## Scope\n- Model(s): Rfp\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Job",
+    "title": "Vertical Slice: Job",
+    "body": "## Scope\n- Model(s): Job\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Referral",
+    "title": "Vertical Slice: Referral",
+    "body": "## Scope\n- Model(s): Referral\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:BillingLedger",
+    "title": "Vertical Slice: BillingLedger",
+    "body": "## Scope\n- Model(s): BillingLedger\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:LeadInvoice",
+    "title": "Vertical Slice: LeadInvoice",
+    "body": "## Scope\n- Model(s): LeadInvoice\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:LeadInvoiceLine",
+    "title": "Vertical Slice: LeadInvoiceLine",
+    "body": "## Scope\n- Model(s): LeadInvoiceLine\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:AuditLog",
+    "title": "Vertical Slice: AuditLog",
+    "body": "## Scope\n- Model(s): AuditLog\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:RbacPermission",
+    "title": "Vertical Slice: RbacPermission",
+    "body": "## Scope\n- Model(s): RbacPermission\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:RbacRole",
+    "title": "Vertical Slice: RbacRole",
+    "body": "## Scope\n- Model(s): RbacRole\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:RbacRolePermission",
+    "title": "Vertical Slice: RbacRolePermission",
+    "body": "## Scope\n- Model(s): RbacRolePermission\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:RbacUserRole",
+    "title": "Vertical Slice: RbacUserRole",
+    "body": "## Scope\n- Model(s): RbacUserRole\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:ProviderConfig",
+    "title": "Vertical Slice: ProviderConfig",
+    "body": "## Scope\n- Model(s): ProviderConfig\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:PricingPlan",
+    "title": "Vertical Slice: PricingPlan",
+    "body": "## Scope\n- Model(s): PricingPlan\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:AiUsageEvent",
+    "title": "Vertical Slice: AiUsageEvent",
+    "body": "## Scope\n- Model(s): AiUsageEvent\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:AiMonthlySummary",
+    "title": "Vertical Slice: AiMonthlySummary",
+    "body": "## Scope\n- Model(s): AiMonthlySummary\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:InfrastructureMetric",
+    "title": "Vertical Slice: InfrastructureMetric",
+    "body": "## Scope\n- Model(s): InfrastructureMetric\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:InfrastructureLimit",
+    "title": "Vertical Slice: InfrastructureLimit",
+    "body": "## Scope\n- Model(s): InfrastructureLimit\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:UpgradeRecommendation",
+    "title": "Vertical Slice: UpgradeRecommendation",
+    "body": "## Scope\n- Model(s): UpgradeRecommendation\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Activity",
+    "title": "Vertical Slice: Activity",
+    "body": "## Scope\n- Model(s): Activity\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Subscription",
+    "title": "Vertical Slice: Subscription",
+    "body": "## Scope\n- Model(s): Subscription\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:UsageMeter",
+    "title": "Vertical Slice: UsageMeter",
+    "body": "## Scope\n- Model(s): UsageMeter\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:AddonPurchase",
+    "title": "Vertical Slice: AddonPurchase",
+    "body": "## Scope\n- Model(s): AddonPurchase\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:FederationKey",
+    "title": "Vertical Slice: FederationKey",
+    "body": "## Scope\n- Model(s): FederationKey\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:OIDCConfig",
+    "title": "Vertical Slice: OIDCConfig",
+    "body": "## Scope\n- Model(s): OIDCConfig\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:ProviderIntegration",
+    "title": "Vertical Slice: ProviderIntegration",
+    "body": "## Scope\n- Model(s): ProviderIntegration\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:AuditEvent",
+    "title": "Vertical Slice: AuditEvent",
+    "body": "## Scope\n- Model(s): AuditEvent\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:AnalyticsSnapshot",
+    "title": "Vertical Slice: AnalyticsSnapshot",
+    "body": "## Scope\n- Model(s): AnalyticsSnapshot\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Incident",
+    "title": "Vertical Slice: Incident",
+    "body": "## Scope\n- Model(s): Incident\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:InvoiceLine",
+    "title": "Vertical Slice: InvoiceLine",
+    "body": "## Scope\n- Model(s): InvoiceLine\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Notification",
+    "title": "Vertical Slice: Notification",
+    "body": "## Scope\n- Model(s): Notification\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:PricePlan",
+    "title": "Vertical Slice: PricePlan",
+    "body": "## Scope\n- Model(s): PricePlan\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:PlanPrice",
+    "title": "Vertical Slice: PlanPrice",
+    "body": "## Scope\n- Model(s): PlanPrice\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Offer",
+    "title": "Vertical Slice: Offer",
+    "body": "## Scope\n- Model(s): Offer\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:Coupon",
+    "title": "Vertical Slice: Coupon",
+    "body": "## Scope\n- Model(s): Coupon\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:TenantPriceOverride",
+    "title": "Vertical Slice: TenantPriceOverride",
+    "body": "## Scope\n- Model(s): TenantPriceOverride\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:GlobalMonetizationConfig",
+    "title": "Vertical Slice: GlobalMonetizationConfig",
+    "body": "## Scope\n- Model(s): GlobalMonetizationConfig\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:OnboardingInvite",
+    "title": "Vertical Slice: OnboardingInvite",
+    "body": "## Scope\n- Model(s): OnboardingInvite\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:FederatedClient",
+    "title": "Vertical Slice: FederatedClient",
+    "body": "## Scope\n- Model(s): FederatedClient\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:WebhookRegistration",
+    "title": "Vertical Slice: WebhookRegistration",
+    "body": "## Scope\n- Model(s): WebhookRegistration\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:EscalationTicket",
+    "title": "Vertical Slice: EscalationTicket",
+    "body": "## Scope\n- Model(s): EscalationTicket\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:FederationInvoice",
+    "title": "Vertical Slice: FederationInvoice",
+    "body": "## Scope\n- Model(s): FederationInvoice\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:IdempotencyKey",
+    "title": "Vertical Slice: IdempotencyKey",
+    "body": "## Scope\n- Model(s): IdempotencyKey\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:DeveloperAPIKey",
+    "title": "Vertical Slice: DeveloperAPIKey",
+    "body": "## Scope\n- Model(s): DeveloperAPIKey\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:SecretsRotationPolicy",
+    "title": "Vertical Slice: SecretsRotationPolicy",
+    "body": "## Scope\n- Model(s): SecretsRotationPolicy\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:SecretsRotationHistory",
+    "title": "Vertical Slice: SecretsRotationHistory",
+    "body": "## Scope\n- Model(s): SecretsRotationHistory\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:CustomFieldDefinition",
+    "title": "Vertical Slice: CustomFieldDefinition",
+    "body": "## Scope\n- Model(s): CustomFieldDefinition\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:CustomFieldValue",
+    "title": "Vertical Slice: CustomFieldValue",
+    "body": "## Scope\n- Model(s): CustomFieldValue\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:ComplianceFramework",
+    "title": "Vertical Slice: ComplianceFramework",
+    "body": "## Scope\n- Model(s): ComplianceFramework\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:ComplianceAudit",
+    "title": "Vertical Slice: ComplianceAudit",
+    "body": "## Scope\n- Model(s): ComplianceAudit\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:ComplianceFinding",
+    "title": "Vertical Slice: ComplianceFinding",
+    "body": "## Scope\n- Model(s): ComplianceFinding\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:DataRetentionPolicy",
+    "title": "Vertical Slice: DataRetentionPolicy",
+    "body": "## Scope\n- Model(s): DataRetentionPolicy\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:EncryptionConfig",
+    "title": "Vertical Slice: EncryptionConfig",
+    "body": "## Scope\n- Model(s): EncryptionConfig\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:VulnerabilityScan",
+    "title": "Vertical Slice: VulnerabilityScan",
+    "body": "## Scope\n- Model(s): VulnerabilityScan\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:WebhookEndpoint",
+    "title": "Vertical Slice: WebhookEndpoint",
+    "body": "## Scope\n- Model(s): WebhookEndpoint\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:WebhookDelivery",
+    "title": "Vertical Slice: WebhookDelivery",
+    "body": "## Scope\n- Model(s): WebhookDelivery\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:DeveloperApiKey",
+    "title": "Vertical Slice: DeveloperApiKey",
+    "body": "## Scope\n- Model(s): DeveloperApiKey\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:ApiUsageMetric",
+    "title": "Vertical Slice: ApiUsageMetric",
+    "body": "## Scope\n- Model(s): ApiUsageMetric\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:AiAssistantConversation",
+    "title": "Vertical Slice: AiAssistantConversation",
+    "body": "## Scope\n- Model(s): AiAssistantConversation\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:MarketingPricingPlan",
+    "title": "Vertical Slice: MarketingPricingPlan",
+    "body": "## Scope\n- Model(s): MarketingPricingPlan\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:MarketingPricingFeature",
+    "title": "Vertical Slice: MarketingPricingFeature",
+    "body": "## Scope\n- Model(s): MarketingPricingFeature\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  },
+  {
+    "id": "slice:MarketingPricingHistory",
+    "title": "Vertical Slice: MarketingPricingHistory",
+    "body": "## Scope\n- Model(s): MarketingPricingHistory\n\n## Acceptance Criteria\n- [ ] DB migration(s) and Prisma client updated\n- [ ] Backend endpoints/services implemented with validation + auth/ACL\n- [ ] Frontend route(s)/component(s)/form(s) implemented\n- [ ] Tests: unit, integration, e2e passing\n- [ ] Observability added (logs/errors)\n- [ ] Docs + Trace Matrix updated\n- [ ] Zero placeholders in code\n",
+    "labels": ["slice"]
+  }
+]

@@ -6,7 +6,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 
 interface CleaningContract {
@@ -29,20 +29,15 @@ export default function CleaningContractsPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
 
-  useEffect(() => {
-    fetchContracts();
-  }, [filter]);
-
-  const fetchContracts = async () => {
+  const fetchContracts = useCallback(async () => {
+    setLoading(true);
     try {
       const params = new URLSearchParams();
       if (filter !== 'all') {
         params.set('status', filter);
       }
-      
       const response = await fetch(`/api/cleaning/contracts?${params}`);
       if (!response.ok) throw new Error('Failed to fetch contracts');
-      
       const data = await response.json();
       setContracts(data.contracts || []);
     } catch (error) {
@@ -50,7 +45,13 @@ export default function CleaningContractsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
+
+  useEffect(() => {
+    fetchContracts();
+  }, [fetchContracts]);
+
+
 
   const getStatusBadge = (status: string) => {
     const colors: Record<string, string> = {

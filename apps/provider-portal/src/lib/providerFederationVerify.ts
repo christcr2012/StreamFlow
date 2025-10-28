@@ -57,16 +57,20 @@ export type FederationVerification = {
 
 /** Enable/disable federation entirely. If disabled, verifier returns ok:false. */
 function isEnabled(): boolean {
-  return (process.env.PROVIDER_FEDERATION_ENABLED || "").trim() === "1";
+  const canon = (process.env.FED_ENABLED || "").trim().toLowerCase();
+  return ["1","true","yes","on","y","t"].includes(canon);
 }
 
 /** Use HMAC-SHA256 (recommended for production). Default is dev-friendly h31. */
-const USE_SHA256 = (process.env.PROVIDER_FEDERATION_SIG_SHA256 || "").trim() === "1";
+const USE_SHA256 = (() => {
+  const canon = (process.env.FED_SIG_SHA256 || "").trim().toLowerCase();
+  return ["1","true","yes","on","y","t"].includes(canon);
+})();
 
 /** Allowed timestamp skew in seconds (default 300s = ±5 minutes). */
 function getClockSkewSec(): number {
-  const n = parseInt(process.env.PROVIDER_CLOCK_SKEW_SEC || "300", 10);
-  return Number.isFinite(n) && n > 0 ? n : 300;
+  const canon = parseInt(process.env.FED_CLOCK_SKEW_SEC || "300", 10);
+  return Number.isFinite(canon) && canon > 0 ? canon : 300;
 }
 
 /** Look up shared secret by keyId from env JSON. */

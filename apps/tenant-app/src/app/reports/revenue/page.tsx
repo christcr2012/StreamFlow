@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   description: 'Track revenue over time',
 };
 
+// ISR: Revalidate report data every 5 minutes
+export const revalidate = 300;
+
 export default async function RevenueReportPage() {
   const authContext = await getAuthContext();
   if (!authContext.isAuthenticated || !authContext.orgId) {

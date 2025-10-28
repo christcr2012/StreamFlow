@@ -6,6 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@cortiware/ui';
 import Link from 'next/link';
 
+// ISR: Revalidate agreements list every 15 minutes
+export const revalidate = 900;
+
 async function getAgreements(orgId: string) {
   const agreements = await prisma.agreement.findMany({
     where: { orgId },
@@ -106,7 +109,7 @@ export default async function AgreementsPage() {
                         </Link>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {agreement.template.name}
+                        {agreement.AgreementTemplate.name}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <Badge variant={

@@ -12,6 +12,8 @@ import {
   DocumentTextIcon,
   ChartBarIcon,
   Cog6ToothIcon,
+  ChatBubbleLeftRightIcon,
+  CalendarDaysIcon,
 } from '@heroicons/react/24/outline';
 
 interface NavItem {
@@ -22,8 +24,10 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
+  { name: 'Schedule', href: '/schedule', icon: CalendarDaysIcon },
   { name: 'Customers', href: '/customers', icon: UserGroupIcon },
   { name: 'Jobs', href: '/jobs', icon: BriefcaseIcon },
+  { name: 'Communications', href: '/communications', icon: ChatBubbleLeftRightIcon },
   { name: 'Invoices', href: '/invoices', icon: DocumentTextIcon },
   { name: 'Reports', href: '/reports', icon: ChartBarIcon },
   { name: 'Settings', href: '/settings', icon: Cog6ToothIcon },

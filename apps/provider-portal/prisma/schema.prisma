@@ -2,11 +2,14 @@ generator client {
   provider      = "prisma-client-js"
   output        = "../../../node_modules/@prisma/client-provider"
   binaryTargets = ["native", "rhel-openssl-3.0.x"]
+  // Updated to Prisma 6.18.0 - 2025-01-28
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  // Use a non-pooled direct connection for migrations (recommended for Neon/Vercel)
+  directUrl = env("DIRECT_DATABASE_URL")
 }
 
 model Org {

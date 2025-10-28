@@ -4,6 +4,8 @@ import { useState, useRef } from 'react';
 import { Card, CardHeader } from '@cortiware/ui';
 import { Button } from '@cortiware/ui';
 import { Input } from '@cortiware/ui';
+import { useAutoImageCompression } from '@/hooks/useImageCompression';
+import { COMPRESSION_PRESETS } from '@/lib/image-compression';
 import { showToast } from './ui/toast';
 import Image from 'next/image';
 
@@ -27,6 +29,12 @@ export function JobPhotoGallery({ jobId, initialPhotos, onPhotosChange }: JobPho
   const [selectedPhoto, setSelectedPhoto] = useState<JobPhoto | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Image compression hook
+  const compression = useAutoImageCompression({
+    ...COMPRESSION_PRESETS.STANDARD,
+    autoCompress: true,
+  });
+
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -37,7 +45,7 @@ export function JobPhotoGallery({ jobId, initialPhotos, onPhotosChange }: JobPho
       return;
     }
 
-    // Validate file size (10MB)
+    // Validate file size (10MB before compression)
     if (file.size > 10 * 1024 * 1024) {
       showToast('File size must be less than 10MB', 'error');
       return;
@@ -45,8 +53,12 @@ export function JobPhotoGallery({ jobId, initialPhotos, onPhotosChange }: JobPho
 
     setIsUploading(true);
     try {
+      // Compress image before upload (50-80% size reduction)
+      const compressedFiles = await compression.handleFileChange(e);
+      const compressedFile = compressedFiles[0] || file;
+
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', compressedFile);
       if (caption) {
         formData.append('caption', caption);
       }

@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { getAiUsage } from '@/lib/aiMeter';
 
+// Note: Cannot use edge runtime with Prisma due to WASM limitations
+// export const runtime = 'edge';
+
 /**
  * GET /api/ai-usage
  * Get AI usage statistics for the authenticated tenant

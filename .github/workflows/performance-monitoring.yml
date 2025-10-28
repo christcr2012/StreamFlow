@@ -10,11 +10,18 @@ on:
         required: false
         default: ''
 
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 jobs:
   performance_check:
+    if: >-
+      ${{ github.event_name != 'pull_request' || (!github.event.pull_request.head.repo.fork && (github.actor == 'christcr2012' || github.actor == 'github-actions[bot]' || github.actor == 'dependabot[bot]' || github.actor == 'Bot-Helper')) }}
     name: Performance Regression Check
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout PR
         uses: actions/checkout@v4
@@ -64,53 +71,45 @@ jobs:
             scripts/performance/results/*.json
           retention-days: 30
       
-      - name: Comment PR with results
-        if: github.event_name == 'pull_request' && steps.check_baseline.outputs.baseline_exists == 'true'
+      - name: Write results to job summary and PR comment
+        if: steps.check_baseline.outputs.baseline_exists == 'true'
         uses: actions/github-script@v7
-        continue-on-error: true
         with:
+          github-token: ${{ secrets.USER_GH_TOKEN != '' && secrets.USER_GH_TOKEN || secrets.CHRIS_GH_PAT != '' && secrets.CHRIS_GH_PAT || secrets.GH_PAT != '' && secrets.GH_PAT || secrets.BOT_HELPER_TOKEN != '' && secrets.BOT_HELPER_TOKEN || github.token }}
           script: |
             const fs = require('fs');
-            
-            let comment = '## 📊 Performance Comparison\n\n';
-            
+            const core = require('@actions/core');
+
+            let out = '## 📊 Performance Comparison\n\n';
             try {
               const baseline = JSON.parse(fs.readFileSync('scripts/performance/baseline.json', 'utf-8'));
               const current = JSON.parse(fs.readFileSync('scripts/performance/current.json', 'utf-8'));
-              
-              comment += `**Baseline**: ${baseline.timestamp}\n`;
-              comment += `**Current**: ${current.timestamp}\n\n`;
-              comment += '### Results\n\n';
-              comment += '| App | Bundle Size | Build Time | Status |\n';
-              comment += '|-----|-------------|------------|--------|\n';
-              
-              for (const [appName, metrics] of Object.entries(current.apps)) {
-                const baseMetrics = baseline.apps[appName];
-                if (!baseMetrics) continue;
-                
-                const bundleChange = metrics.bundleSize.total !== baseMetrics.bundleSize.total 
-                  ? `${baseMetrics.bundleSize.total} → ${metrics.bundleSize.total}` 
-                  : metrics.bundleSize.total;
-                
-                const buildChange = metrics.buildTime.duration !== baseMetrics.buildTime.duration
-                  ? `${baseMetrics.buildTime.duration} → ${metrics.buildTime.duration}`
-                  : metrics.buildTime.duration;
-                
-                const status = '✅';
-                
-                comment += `| ${appName} | ${bundleChange} | ${buildChange} | ${status} |\n`;
-              }
-              
-              comment += '\n*Note: Performance monitoring is informational. Significant regressions should be investigated.*';
-              
-            } catch (error) {
-              comment += `⚠️ Could not generate comparison: ${error.message}`;
-            }
-            
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: comment
-            });
 
+              out += `**Baseline**: ${baseline.timestamp}\n**Current**: ${current.timestamp}\n\n### Results\n\n| App | Bundle Size | Build Time |\n|-----|-------------|------------|\n`;
+
+              for (const [app, m] of Object.entries(current.apps)) {
+                const b = baseline.apps[app];
+                if (!b) continue;
+                const bundle = m.bundleSize.total !== b.bundleSize.total ? `${b.bundleSize.total} → ${m.bundleSize.total}` : m.bundleSize.total;
+                const build = m.buildTime.duration !== b.buildTime.duration ? `${b.buildTime.duration} → ${m.buildTime.duration}` : m.buildTime.duration;
+                out += `| ${app} | ${bundle} | ${build} |\n`;
+              }
+            } catch (e) {
+              out += `⚠️ Could not generate comparison: ${e.message}`;
+            }
+
+            // Write to job summary
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, out);
+
+            // Post to PR if this is a PR event
+            if (context.eventName === 'pull_request' && context.payload.pull_request) {
+              const {owner, repo} = context.repo;
+              const number = context.payload.pull_request.number;
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: number,
+                body: out
+              });
+              core.info(`Posted performance comparison to PR #${number}`);
+            }

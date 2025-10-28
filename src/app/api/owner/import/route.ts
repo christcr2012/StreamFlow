@@ -7,6 +7,9 @@ import { suggestMappings, classifyTier, calculateAICosts, getRetailPricing } fro
 import { parseSample, validateFile, parseFile } from '@/lib/import/file-parser';
 import { processImport } from '@/lib/import/batch-processor';
 import { ImportStatus, ImportEntityType } from '@prisma/client';
+import { enqueue } from '@/lib/queue/enqueue';
+import { QUEUE_NAMES } from '@cortiware/queue';
+import { randomUUID } from 'crypto';
 
 /**
  * Import Wizard API - Single consolidated endpoint
@@ -350,48 +353,36 @@ async function handleExecute(body: any, userId: string, orgId: string) {
     );
   }
 
-  // Parse full file
-  let parsed;
-  try {
-    parsed = parseFile(fileName || job.fileName, fileContent);
-  } catch (error: any) {
-    return NextResponse.json(
-      { ok: false, error: 'file_parsing_failed', details: error.message },
-      { status: 400 }
-    );
-  }
-
-  // Start batch processing asynchronously
-  // Note: In production, this should be moved to a background job queue
-  processImport({
-    importJobId,
-    orgId,
-    entityType: job.entityType,
-    records: parsed.rows,
-    fieldMappings: (job.fieldMappings as any[]) || [],
-    transformRules: (job.transformRules as any[]) || [],
-    validationRules: (job.validationRules as any[]) || [],
-    dedupeFields: [], // TODO: Extract from job configuration
-    batchSize,
-  }).catch(error => {
-    console.error('Batch processing error:', error);
-    // Update job status to failed
-    prisma.importJob.update({
-      where: { id: importJobId },
-      data: {
-        status: ImportStatus.FAILED,
-        errorSummary: error.message || 'Batch processing failed',
-        completedAt: new Date(),
-      },
-    }).catch(console.error);
+  // Update job status to PROCESSING
+  await prisma.importJob.update({
+    where: { id: importJobId },
+    data: { status: ImportStatus.PROCESSING },
   });
+
+  // Enqueue import job for background processing
+  const jobId = await enqueue(
+    QUEUE_NAMES.IMPORT,
+    'csv.import',
+    {
+      orgId,
+      importJobId,
+      kind: job.entityType.toLowerCase(),
+      fileContent,
+      fileName: fileName || job.fileName,
+      fieldMappings: (job.fieldMappings as any[]) || [],
+      transformRules: (job.transformRules as any[]) || [],
+      validationRules: (job.validationRules as any[]) || [],
+      batchSize,
+      idempotencyKey: randomUUID(),
+    }
+  );
 
   return NextResponse.json({
     ok: true,
     importJobId,
-    status: 'PROCESSING',
-    totalRecords: parsed.rows.length,
-    estimatedDuration: `${Math.ceil(parsed.rows.length / batchSize)} minutes`,
+    jobId: jobId.id,
+    status: 'QUEUED',
+    message: 'Import job queued for background processing',
   });
 }
 

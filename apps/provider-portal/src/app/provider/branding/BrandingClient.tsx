@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import {
   Palette,
   Upload,
@@ -384,7 +385,7 @@ export default function BrandingClient({ initialConfigs, initialStats, templates
                   >
                     <div className="flex items-center gap-3 mb-4">
                       {editingConfig.logoUrl ? (
-                        <img src={editingConfig.logoUrl} alt="Logo" className="h-12 w-12 rounded" />
+                        <Image src={editingConfig.logoUrl} alt="Logo" width={48} height={48} unoptimized className="h-12 w-12 rounded" />
                       ) : (
                         <div className="h-12 w-12 rounded bg-white/20 flex items-center justify-center">
                           <Palette className="h-6 w-6" />
