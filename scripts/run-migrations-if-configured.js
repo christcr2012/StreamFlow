@@ -42,17 +42,9 @@ function main() {
   }
 
   try {
-    // Use node node_modules/.bin/prisma instead of npx to avoid permission issues on Vercel
-    const prismaPath = path.join(
-      process.cwd(),
-      "node_modules",
-      ".bin",
-      "prisma",
-    );
-
     // Tenant schema first (root prisma/schema.prisma)
     const tenantSchema = path.join(process.cwd(), "prisma", "schema.prisma");
-    run("node", [prismaPath, "migrate", "deploy", `--schema=${tenantSchema}`]);
+    run("npx", ["prisma", "migrate", "deploy", `--schema=${tenantSchema}`]);
 
     // Provider schema next (apps/provider-portal/prisma/schema.prisma)
     const providerSchema = path.join(
@@ -62,12 +54,7 @@ function main() {
       "prisma",
       "schema.prisma",
     );
-    run("node", [
-      prismaPath,
-      "migrate",
-      "deploy",
-      `--schema=${providerSchema}`,
-    ]);
+    run("npx", ["prisma", "migrate", "deploy", `--schema=${providerSchema}`]);
 
     log("Migrations applied successfully.");
   } catch (err) {
