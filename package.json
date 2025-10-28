@@ -27,7 +27,7 @@
     "seed": "tsx prisma/seed.ts",
     "seed:provider": "cd apps/provider-portal && npm run prisma:seed",
     "db:seed:preview": "tsx prisma/seed-preview.ts",
-    "prisma:generate": "npx prisma generate --schema=prisma/schema.prisma && cd apps/provider-portal && npx prisma generate",
+    "prisma:generate": "node node_modules/.bin/prisma generate --schema=prisma/schema.prisma && cd apps/provider-portal && node ../node_modules/.bin/prisma generate",
     "prisma:studio:tenant": "npx prisma studio --schema=prisma/schema.prisma",
     "prisma:studio:provider": "cd apps/provider-portal && npx prisma studio",
     "prisma:migrate:tenant": "npx prisma migrate dev --schema=prisma/schema.prisma",
